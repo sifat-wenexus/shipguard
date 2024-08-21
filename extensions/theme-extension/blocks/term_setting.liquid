@@ -1,0 +1,82 @@
+{% if app.metafields.terms_settings.enabled == true %}
+  <script>
+    window.WeNexusOverallTermsSettings = {{ app.metafields.terms_settings |json }};
+  </script>
+  {% comment %}
+    <div onload='disableSubmit()'>
+      <input type='checkbox' name='terms' id='terms-settings' onchange='activateButton(this)'> I Agree
+      <a target='_blank' href='{{ app.metafields.terms_settings.url }}'>Terms & Conditions</a>
+      <input type='submit' name='submit' id='submit'>
+      <p id='warning-text'>{{ app.metafields.terms_settings.warning_text }}</p>
+    </div>
+  {% endcomment %}
+
+  {% comment %}  {% endcomment %}
+
+  <div style='position: relative'>
+    <div
+      class='wenexus_checkbox-wrap'
+      id='append-text'
+      style='text-align:{{ app.metafields.terms_settings.text_align | downcase}}; color: {{app.metafields.terms_settings.text_color  }}; font-size: {{app.metafields.terms_settings.font_size }}px;'
+      {% comment %} onload='makeMarkDown("{{ app.metafields.terms_settings.text }}","terms-text")' {% endcomment %}
+      text='{{ app.metafields.terms_settings.text }}'
+    >
+      {% if app.metafields.terms_settings.checked == true %}
+        <input
+          type='checkbox'
+          id='wenexus_checkbox2'
+          checked
+          onclick='makeMarkDown("{{ app.metafields.terms_settings.warning_text }}","Wenexus_warning_message2")'
+        >
+      {% else %}
+        <input
+          type='checkbox'
+          id='wenexus_checkbox2'
+          onclick='makeMarkDown("{{ app.metafields.terms_settings.warning_text }}","Wenexus_warning_message2")'
+        >
+      {% endif %}
+
+      <label
+        for='wenexus_checkbox2'
+        id='terms-text'
+        style='text-align:{{ app.metafields.terms_settings.text_align | downcase}};'
+      >
+        {% comment %} {{- app.metafields.terms_settings.text }} {% endcomment %}
+
+        {% comment %} <a href='{{  app.metafields.terms_settings.link }}' target='_blank'>Terms & Condition</a> {% endcomment %}
+      </label>
+    </div>
+    <div
+      class='wenexus_warning'
+      id='wenexus_warning2'
+      style='text-align:{{ app.metafields.terms_settings.text_align | downcase}}; color: {{app.metafields.terms_settings.warning_text_color  }}'
+    >
+      <p>⚠️</p>
+      <p id='Wenexus_warning_message2'>
+        <span
+          class='font-bold text-green-700'
+          style='font-size:{{ app.metafields.terms_settings.warning_font_size}}px;'
+        >
+          I accepted your
+
+          <a
+            href='https://www.google.com'
+            target='_blank'
+            style='color:{{ app.metafields.terms_settings.text_link_color }}; '
+            >Terms & Condition</a
+          >
+          To Proceed With Checkout.
+        </span>
+      </p>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Terms and Conditions",
+  "target": "section",
+  "javascript": "terms-setting.js",
+  "stylesheet": "terms-setting.css"
+}
+{% endschema %}

@@ -1,0 +1,8 @@
+node_modules
+build
+public/build
+app/shopify-api
+app/shopify-app-remix
+app/shopify-session-storage
+*/*.yml
+.shopify

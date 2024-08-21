@@ -1,0 +1,625 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "./client"
+  previewFeatures = ["postgresqlExtensions", "fullTextIndex", "fullTextSearch", "views", "metrics"]
+}
+
+datasource db {
+  provider     = "postgresql"
+  relationMode = "foreignKeys"
+  url          = env("DATABASE_URL")
+}
+
+enum AppStatus {
+  INSTALLED
+  INITIALIZING
+  UPDATING
+  READY
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  PENDING
+  PROCESSING
+  DISABLED
+  DELETING
+}
+
+enum ScrollToTopButtonShape {
+  CIRCLE
+  SQUARE
+  ROUNDED
+}
+
+enum SalesCampaignDiscountType {
+  PERCENTAGE
+  FIXED_PRICE
+  AMOUNT_OFF
+}
+
+enum InsurancePricingType {
+  PERCENTAGE
+  FIXED_PRICE
+}
+
+enum SalesCampaignGroupType {
+  INCLUDE
+  EXCLUDE
+}
+
+enum SalesCampaignRangeType {
+  ALL_PRODUCTS_SAME_DISCOUNT
+  DIFFERENT_DISCOUNTS_PER_GROUP
+}
+
+enum JobStatus {
+  CREATED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum ElementPlacementPosition {
+  INSIDE_BEGIN
+  INSIDE_END
+  REPLACE
+  BEFORE
+  AFTER
+}
+
+enum TextAlignment {
+  CENTER
+  RIGHT
+  LEFT
+}
+
+enum ClaimStatus {
+  REQUESTED
+  INPROGRESS
+  CANCEL
+  APPROVE
+  PARTIALLYAPPROVE
+}
+
+enum FullfillmentStatus {
+  UNFULFILLED
+  FULFILLED
+  PARTIALLY_FULFILLED
+}
+
+enum ClaimIssue {
+  DAMAGED
+  STOLLEN
+  LOST
+  OTHER_ISSUE
+}
+
+enum ClaimRequested {
+  RESHIP
+  REFUND
+  OTHERS
+}
+
+model Country {
+  id   String @id
+  name String
+
+  Timezones Timezone[]
+}
+
+model Timezone {
+  id        String @id
+  countryId String
+  gmtOffset String
+
+  Country                   Country         @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  SalesCampaignsByStartDate SalesCampaign[] @relation("start")
+  SalesCampaignsByEndDate   SalesCampaign[] @relation("end")
+  Stores                    Store[]
+}
+
+view TimezoneSimplified {
+  id        String @id
+  gmtOffset String
+  countries String
+}
+
+model Session {
+  id      String  @id
+  userId  BigInt?
+  storeId String?
+
+  shop        String
+  state       String
+  isOnline    Boolean   @default(false)
+  scope       String?
+  expires     DateTime? @db.Timestamptz()
+  accessToken String
+  sseToken    String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  Store Store? @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([shop, userId])
+}
+
+model Store {
+  id                String @id
+  appInstallationId String
+
+  domain                          String    @unique
+  name                            String
+  description                     String?
+  logo                            String?
+  appStatus                       AppStatus @default(INSTALLED)
+  timezoneId                      String
+  currencyCode                    String
+  moneyFormat                     String
+  moneyInEmailsFormat             String
+  moneyWithCurrencyFormat         String
+  moneyWithCurrencyInEmailsFormat String
+  lastMigrationId                 String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  Migrations Migration[]
+  File       File[]
+
+  BadgeSettings               BadgeSettings?
+  ScrollToTopSettings         ScrollToTopSettings?
+  Campaigns                   SalesCampaign[]
+  Products                    Product[]
+  Collections                 Collection[]
+  Jobs                        Job[]
+  Timezone                    Timezone                      @relation(fields: [timezoneId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ProductTags                 ProductTag[]
+  ProductTypes                ProductType[]
+  ProductVendors              ProductVendor[]
+  Sessions                    Session[]
+  CheckoutTermsSettings       CheckoutTermsSettings?
+  PackageProtection           PackageProtection?
+  PackageProtectionOrders     PackageProtectionOrder[]
+  PackageProtectionClaimOrder PackageProtectionClaimOrder[]
+
+  @@index([appInstallationId])
+}
+
+model Job {
+  id      Int    @id @default(autoincrement())
+  storeId String
+
+  status   JobStatus @default(CREATED)
+  name     String
+  payload  Json?
+  result   Json?
+  progress Int       @default(0)
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([status, storeId, name])
+}
+
+model File {
+  id      String  @id @default(uuid())
+  storeId String?
+
+  size     Int
+  mimeType String
+  name     String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  Store       Store?       @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  BadgeImages BadgeImage[]
+  BadgeGroups BadgeGroup[]
+
+  @@index([storeId])
+}
+
+model BadgeImage {
+  id        String
+  settingId String
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  File     File          @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Settings BadgeSettings @relation(fields: [settingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([settingId, id])
+}
+
+model BadgeGroup {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  Files File[]
+}
+
+model BadgeSettings {
+  id String @id
+
+  enabled Boolean @default(false)
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  Store       Store        @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  BadgeImages BadgeImage[]
+}
+
+model ScrollToTopSettings {
+  id String @id
+
+  icon            String                 @default("one")
+  enabled         Boolean                @default(false)
+  showOnMobile    Boolean                @default(true)
+  showOnDesktop   Boolean                @default(true)
+  backgroundColor String                 @default("#ffffff")
+  iconColor       String                 @default("#000000")
+  padding         Int                    @default(10)
+  iconSize        Int                    @default(25)
+  right           Int                    @default(10)
+  bottom          Int                    @default(5)
+  shape           ScrollToTopButtonShape @default(ROUNDED)
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  Store Store @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Collection {
+  id      String @id
+  storeId String
+
+  title         String
+  featuredImage String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  Store                 Store                  @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Products              Product[]
+  SalesCampaignIncludes SalesCampaignInclude[]
+  SalesCampaignExcludes SalesCampaignExclude[]
+
+  @@index([storeId])
+}
+
+model Product {
+  id      String @id
+  storeId String
+
+  status ContentStatus @default(DRAFT)
+
+  title         String
+  vendor        String
+  productType   String
+  featuredImage String?
+  handle        String
+  tags          String[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  Store                 Store                  @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Variants              ProductVariant[]
+  Collections           Collection[]
+  SalesCampaignIncludes SalesCampaignInclude[]
+  SalesCampaignExcludes SalesCampaignExclude[]
+
+  FixedPackageProtection      PackageProtection[] @relation("fixed")
+  PercentagePackageProtection PackageProtection[] @relation("percentage")
+
+  @@index([storeId])
+}
+
+view ProductTag {
+  tag     String
+  storeId String
+
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([storeId, tag])
+}
+
+view ProductType {
+  productType String
+  storeId     String
+
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([storeId, productType])
+}
+
+view ProductVendor {
+  vendor  String
+  storeId String
+
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([storeId, vendor])
+}
+
+model ProductVariant {
+  id        String @id
+  productId String
+
+  sku                    String?
+  title                  String
+  featuredImage          String?
+  price                  Decimal @db.Decimal(10, 2)
+  compareAtPrice         Decimal @default(0) @db.Decimal(10, 2)
+  inventoryQuantity      Int     @default(0)
+  sellableOnlineQuantity Int     @default(0)
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  Product               Product                @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  CampaignVariants      SalesCampaignVariant[]
+  SalesCampaignIncludes SalesCampaignInclude[]
+  SalesCampaignExcludes SalesCampaignExclude[]
+
+  @@index([productId])
+}
+
+model SalesCampaign {
+  id      Int    @id @default(autoincrement())
+  storeId String
+
+  status    ContentStatus          @default(DRAFT)
+  rangeType SalesCampaignRangeType @default(ALL_PRODUCTS_SAME_DISCOUNT)
+
+  name             String
+  description      String?
+  createCollection Boolean @default(false)
+  collectionHandle String?
+  revenue          Decimal @default(0) @db.Decimal(10, 2)
+
+  startDate DateTime  @default(now()) @db.Timestamptz()
+  endDate   DateTime? @db.Timestamptz()
+
+  startDateTimezoneId String
+  endDateTimezoneId   String
+
+  statusUpdatedAt DateTime? @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @db.Timestamptz()
+  updatedAt       DateTime? @updatedAt @db.Timestamptz()
+
+  StartDateTimeZone Timezone               @relation("start", fields: [startDateTimezoneId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  EndDateTimeZone   Timezone               @relation("end", fields: [endDateTimezoneId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Store             Store                  @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Variants          SalesCampaignVariant[]
+  Includes          SalesCampaignInclude[]
+  Excludes          SalesCampaignExclude[]
+
+  @@index([storeId])
+}
+
+model SalesCampaignInclude {
+  id         Int @id @default(autoincrement())
+  campaignId Int
+
+  name String?
+
+  allProducts    Boolean  @default(false)
+  productVendors String[] @default([])
+  productTypes   String[] @default([])
+  productTags    String[] @default([])
+  productTitle   Json[]   @default([])
+
+  discountType  SalesCampaignDiscountType?
+  discountValue Decimal?                   @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  Collections Collection[]
+  Products    Product[]
+  Variants    ProductVariant[]
+
+  Campaign SalesCampaign          @relation(fields: [campaignId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Excludes SalesCampaignExclude[]
+}
+
+model SalesCampaignExclude {
+  id         Int  @id @default(autoincrement())
+  includeId  Int?
+  campaignId Int?
+
+  productVendors String[] @default([])
+  productTypes   String[] @default([])
+  productTags    String[] @default([])
+  productTitle   Json[]   @default([])
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  Collections Collection[]
+  Products    Product[]
+  Variants    ProductVariant[]
+  Include     SalesCampaignInclude? @relation(fields: [includeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Campaign    SalesCampaign?        @relation(fields: [campaignId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model SalesCampaignVariant {
+  campaignId Int
+  variantId  String
+
+  backupPrice          Decimal @db.Decimal(10, 2)
+  backupCompareAtPrice Decimal @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  Campaign SalesCampaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Variant  ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([campaignId, variantId])
+}
+
+model Migration {
+  id      String
+  storeId String
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([storeId, id])
+}
+
+model CheckoutTermsSettings {
+  storeId String @id
+
+  enabled                  Boolean                  @default(false)
+  text                     String?
+  warningText              String?
+  position                 ElementPlacementPosition @default(AFTER)
+  checked                  Boolean                  @default(false)
+  textFontSize             String                   @default("14px")
+  textColor                String                   @default("#000000")
+  textLinkColor            String                   @default("#115ccf")
+  textLinkUnderline        Boolean                  @default(false)
+  warningTextFontSize      String                   @default("14px")
+  warningTextColor         String                   @default("#ff0000")
+  warningTextLinkColor     String                   @default("#115ccf")
+  warningTextLinkUnderline Boolean                  @default(false)
+  showOnCartPage           Boolean                  @default(false)
+  showOnMiniCart           Boolean                  @default(false)
+  textAlign                TextAlignment            @default(LEFT)
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model PackageProtection {
+  storeId             String  @id
+  fixedProductId      String?
+  percentageProductId String?
+
+  enabled                         Boolean                  @default(false)
+  insurancePriceType              InsurancePricingType     @default(PERCENTAGE)
+  price                           Float                    @default(0)
+  percentage                      Float                    @default(0.25)
+  defaultPercentage               Float                    @default(0)
+  icon                            String                   @default("one")
+  switchColor                     String                   @default("#000000")
+  title                           String?
+  enabledDescription              String?
+  disabledDescription             String?
+  policyUrl                       String?
+  insuranceDisplayButton          Boolean                  @default(false)
+  insuranceFulfillmentStatus      String?
+  css                             String?
+  defaultSetting                  Boolean                  @default(true)
+  cssSelector                     String?
+  position                        ElementPlacementPosition @default(BEFORE)
+  showOnCartPage                  Boolean                  @default(true)
+  showOnMiniCart                  Boolean                  @default(false)
+  packageProtectionDefaultSetting Boolean                  @default(true)
+
+  // ExcludedVariants ExcludedPackageProtectionVariant[]
+  excludedPackageProtectionProducts ExcludedPackageProtectionProduct[]
+
+  FixedProduct      Product? @relation("fixed", fields: [fixedProductId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  PercentageProduct Product? @relation("percentage", fields: [percentageProductId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model ExcludedPackageProtectionProduct {
+  id      String @id
+  storeId String
+
+  title          String?
+  productId      String
+  image          String
+  productType    String?
+  status         String?
+  totalInventory Int
+  totalVariants  Int
+  vendor         String?
+
+  excludedPackageProtectionVariants ExcludedPackageProtectionVariant[]
+
+  PackageProtection PackageProtection @relation(fields: [storeId], references: [storeId], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model ExcludedPackageProtectionVariant {
+  id        String @id
+  productId String
+
+  availableForSale    Boolean?
+  barcode             String?
+  compareAtPrice      Float?
+  displayName         String?
+  image               String?
+  inventoryManagement String?
+  inventoryPolicy     String?
+  inventoryQuantity   Int
+  price               String
+  selectedOptions     Json[]
+  sku                 String?
+  title               String?
+
+  ExcludedPackageProtectionProduct ExcludedPackageProtectionProduct @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model PackageProtectionOrder {
+  id      Int    @id @default(autoincrement())
+  orderId String @unique
+  storeId String
+
+  protectionFee     Float              @default(0.00)
+  orderAmount       Float              @default(0.00)
+  hasClaimRequest   Boolean            @default(false)
+  fulfillmentStatus FullfillmentStatus @default(UNFULFILLED)
+  orderName         String
+  refundAmount      Float              @default(0.00)
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+  claimDate DateTime @default(now()) @db.Timestamptz()
+
+  Store                       Store                         @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  PackageProtectionClaimOrder PackageProtectionClaimOrder[]
+}
+
+model PackageProtectionClaimOrder {
+  id      Int    @id @default(autoincrement())
+  orderId String
+  storeId String
+
+  issue                 ClaimIssue?
+  requestedResulation   ClaimRequested?
+  hasClaimRequest       Boolean         @default(false)
+  claimStatus           ClaimStatus?
+  comments              String?
+  images                String?
+  fulfillmentLineItemId String          @unique
+  fulfillmentId         String
+  claimStatusMessage    String?
+  fulfillClaim          Boolean         @default(false)
+
+  createdAt DateTime  @default(now()) @db.Timestamptz()
+  updatedAt DateTime? @updatedAt @db.Timestamptz()
+
+  Store                  Store                  @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  packageProtectionOrder PackageProtectionOrder @relation(fields: [orderId], references: [orderId], onDelete: Cascade, onUpdate: Cascade)
+}

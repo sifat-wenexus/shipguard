@@ -1,0 +1,65 @@
+.Polaris-Page>div.Polaris-Box:first-child {
+  position: sticky !important;
+  top: 0;
+  background: var(--p-color-bg);
+  z-index: 50;
+}
+
+#AppFrameMain>div>div>div:nth-child(2)>div>div:nth-child(2) {
+  position: sticky;
+  top: 94px;
+}
+
+
+
+.wenexus_checkout-disabled {
+  opacity: 0.5;
+}
+
+#Wenexus_warning_message2 {
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.wenexus_warning {
+  background-color: #fff;
+  box-shadow: 0px 5px 25px rgba(83, 116, 131, 0.16);
+  border-radius: 6px;
+  /* text-align: center;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 6px; */
+  padding: 5px 10px;
+  transform: translateY(30px);
+  transition: all .4s cubic-bezier(0.5, 1.75, 0.75, 1.25);
+  /* opacity: 0;
+visibility: hidden; */
+  border: 1px solid rgb(255, 0, 0, 0.5);
+  /* position: absolute; */
+  z-index: 1;
+}
+
+.wenexus_checkbox-wrap {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.wenexus_checkbox-wrap span {
+  margin-left: 5px;
+}
+
+.wenexus_active {
+  visibility: visible;
+  transform: translateY(12px);
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+
+  .wenexus_warning {
+    padding: 5px;
+  }
+}
+

@@ -1,0 +1,15 @@
+<head>
+  <link href='{{ 'package-protection-claim.css' | asset_url }}' rel='stylesheet' type='text/css'>
+</head>
+<body>
+  <div id='claim-liquid'></div>
+</body>
+
+<script src='{{ 'package-protection-claim.js' | asset_url }}' defer></script>
+
+{% schema %}
+{
+  "name": "Claim Page by Overall",
+  "target": "section"
+}
+{% endschema %}

@@ -1,0 +1,81 @@
+.Polaris-Page>div.Polaris-Box:first-child {
+  position: sticky !important;
+  top: 0;
+  background: var(--p-color-bg);
+  z-index: 50;
+}
+
+/* #AppFrameMain>div>div>div:nth-child(2)>div>div:nth-child(3) {
+  position: sticky;
+  top: 94px;
+} */
+#AppFrameMain>div>div>div>div>div:nth-child(1) {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--p-color-bg);
+}
+
+
+#AppFrameMain>div>div>div>div>div:nth-child(3) {
+  position: sticky;
+  top: 94px;
+  /* background-color: red; */
+}
+
+/* chart style */
+#chart_chart-4 {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+._ChartDimensions_qgx6z_1 {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+._ChartDimensions_qgx6z_1 svg>g:nth-child(3) {
+  display: none !important;
+}
+
+._ChartDimensions_qgx6z_1 svg>g:nth-child(4) {
+  display: none !important;
+}
+
+._ChartDimensions_qgx6z_1 svg>g:nth-child(5) {
+  display: none !important;
+}
+
+
+.wenexus-tree-view-ResourceList .Polaris-Box {
+  padding: 0px !important;
+}
+
+.wenexus-icon-size .Polaris-Icon {
+  height: 50px;
+  width: 50px;
+}
+
+.claim-request .Polaris-Select {
+  height: 2rem;
+  /* font-size: 14px; */
+}
+
+.claim-request .Polaris-TextField__Input {
+  height: 2rem;
+}
+
+.reorder-text-field .Polaris-TextField__Input {
+  height: 2rem;
+}
+
+
+.bg-vector-img {
+  color: white;
+  background-color: #61cb69;
+  /* background-image: url('../../../assets/images/worker-vector.png'); */
+  background-size: cover;
+  background-position: center;
+  height: 100%;
+
+}

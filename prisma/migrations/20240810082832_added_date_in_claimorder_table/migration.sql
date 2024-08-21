@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "PackageProtectionClaimOrder" ADD COLUMN     "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "updatedAt" TIMESTAMPTZ;

@@ -1,0 +1,14 @@
+#wenexus_scrollToTopBtn {
+  position: fixed;
+  bottom: var(--wenexus_scrollToTopBtn_bottom);
+  right: var(--wenexus_scrollToTopBtn_right);
+  line-height: 2;
+  cursor: pointer;
+  display: none;
+  padding: 10px;
+  margin: 0;
+}
+.rounded {
+  border-radius: 50%;
+}
+

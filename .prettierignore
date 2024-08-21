@@ -1,0 +1,15 @@
+package.json
+.cache
+.shadowenv.d
+.vscode
+build
+node_modules
+prisma
+public
+app/shopify-api
+app/shopify-app-remix
+app/shopify-session-storage
+.github
+tmp
+*.yml
+.shopify

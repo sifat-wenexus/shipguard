@@ -1,0 +1,11 @@
+.Polaris-Page > div.Polaris-Box:first-child {
+  position: sticky !important;
+  top: 0;
+  background: var(--p-color-bg);
+  z-index: 50;
+}
+
+#AppFrameMain > div > div > div:nth-child(2) > div > div:nth-child(2) {
+  position: sticky;
+  top: 94px;
+}
