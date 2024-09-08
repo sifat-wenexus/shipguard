@@ -26,6 +26,8 @@ import {
   Links,
   Meta,
 } from '@remix-run/react';
+import { MainNav } from './components/main-nav';
+import { Nav } from './components/nav';
 export const links = () => [
   { rel: 'stylesheet', href: tailwindStyles },
   { rel: 'stylesheet', href: polarisStyles },
@@ -46,7 +48,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (
     !url.pathname.startsWith('/auth') &&
-    !url.pathname.startsWith('/webhooks')
+    !url.pathname.startsWith('/webhooks') &&
+    !url.pathname.startsWith('/test')
   ) {
     const ctx = await shopify.authenticate.admin(request);
 
@@ -121,7 +124,7 @@ export default function Root() {
   return (
     <html>
       <head>
-        <title>Overall</title>
+        <title>Package Protection</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
@@ -140,7 +143,11 @@ export default function Root() {
               }}
             >
               {data.appStatus === 'READY' ? (
-                <Outlet />
+                <>
+                  <Nav />
+                  <MainNav />
+                  <Outlet />
+                </>
               ) : (
                 <div className="flex justify-center items-center w-full h-full">
                   <Card>

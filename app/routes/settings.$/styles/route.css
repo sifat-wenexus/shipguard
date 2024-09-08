@@ -1,0 +1,14 @@
+#AppFrameMain .Polaris-Page>div>div>div {
+  position: sticky;
+  top: 65px;
+}
+
+
+.wenexus-icon-size .Polaris-Icon {
+  height: 50px;
+  width: 50px;
+}
+
+.reorder-text-field .Polaris-TextField__Input {
+  height: 2rem;
+}

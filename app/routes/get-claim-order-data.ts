@@ -1,11 +1,11 @@
 import { ActionFunctionArgs, json, LoaderFunction } from '@remix-run/node';
+import { IClaimType } from './claim-request/claim-fulfill-modal';
+import { prisma } from '~/modules/prisma.server';
+import { ClaimStatus } from '#prisma-client';
 import {
   getShopifyGQLClient,
   shopify as shopifyRemix,
 } from '../modules/shopify.server';
-import { prisma } from '~/modules/prisma.server';
-import { ClaimStatus } from '#prisma-client';
-import { IClaimType } from './package-protection/components/claim-request/claim-fulfill-modal';
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -183,6 +183,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
     });
   } catch (err) {
+    console.error(err);
     return json({
       message: 'Error fetching order!',
       success: false,
@@ -306,6 +307,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           claimStatusMessage: message,
         },
         where: { fulfillmentId: fulfillmentId },
+      });
+      const orderId = await prisma.packageProtectionClaimOrder.findFirst({
+        where: { fulfillmentId: fulfillmentId },
+        select: { orderId: true },
+      });
+
+      const r = await prisma.packageProtectionOrder.update({
+        where: { orderId: orderId?.orderId },
+        data: { claimStatus: selectedStatus.toString() as ClaimStatus },
       });
 
       return json({
@@ -526,13 +536,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               },
             },
           });
-
-          console.log('response--:  ', JSON.stringify(response.body.data));
-          // if (response.body.data.refundCreate.userErrors?.length > 0) {
-          //   throw Error('can not refund this item');
-          // }
-
-          // end transaction
         });
 
         return json({

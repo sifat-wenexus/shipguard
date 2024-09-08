@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "f1f70dfa2c97edf5dceb4b251f9ae79c"
-name = "Overall"
+name = "Package Protection"
 application_url = "https://youth-diego-development-items.trycloudflare.com"
 embedded = true
 

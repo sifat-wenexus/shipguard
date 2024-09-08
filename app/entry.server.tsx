@@ -8,12 +8,7 @@ import { PassThrough } from 'stream';
 
 import './modules/job/job-runner.server';
 import './listeners/index.server';
-
-import './routes/sales-campaign_.legacy.$/modules/sales-campaign-listener.server';
-import './routes/package-protection/modules/package-protection-listener.server';
-import './routes/scroll-to-top/modules/scroll-to-top-listener.server';
-import './routes/terms-setting/modules/terms-setting-listener.server';
-import './routes/trust-badge/modules/trust-badge-listener.server';
+import './routes/settings.widget-setup/modules/package-protection-listener.server';
 import './modules/query/query.server';
 
 const ABORT_DELAY = 5000;

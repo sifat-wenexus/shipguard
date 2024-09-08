@@ -10,7 +10,7 @@ import {
   Divider,
   Box,
 } from '@shopify/polaris';
-import useDebounce from '~/hooks/use-debouncer';
+import useDebounce from '~/hooks/use-debounce';
 
 interface ColorPicker extends Omit<BaseProps, 'id' | 'fullWidth'> {
   placeholder: string;

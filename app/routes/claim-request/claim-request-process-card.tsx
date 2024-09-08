@@ -1,0 +1,224 @@
+import {
+  Badge,
+  BlockStack,
+  Card,
+  DataTable,
+  Divider,
+  IndexTable,
+  InlineGrid,
+  Link,
+  Text,
+  Thumbnail,
+} from '@shopify/polaris';
+import { useI18n } from '@shopify/react-i18n';
+import ClaimStatusModal from './claim-status-modal';
+import ClaimFulfillModal from './claim-fulfill-modal';
+
+const ClaimRequestProcessCard = ({
+  data,
+  packageProtectionOrder,
+  setRefetch,
+}) => {
+  const [i18n] = useI18n();
+
+  // console.log('claimStatusLabel', claimStatusLabel);
+
+  function formatDateTime(input) {
+    const formatTime = new Intl.DateTimeFormat('en', {
+      day: 'numeric',
+      month: 'short',
+      hour: 'numeric',
+      minute: 'numeric',
+    });
+    return formatTime.format(new Date(input));
+  }
+
+  const { claimStatus, fulfillmentLineItems } = data;
+  const { taxRate } = fulfillmentLineItems[0];
+  const totalAmount = fulfillmentLineItems.reduce(
+    (a, b) =>
+      a +
+      (Number(b.originalPrice) - Number(b.discountPrice)) * Number(b.quantity),
+    0
+  );
+  const totalVat =
+    fulfillmentLineItems
+      .filter((e) => e.taxable)
+      .reduce(
+        (a, b) =>
+          a +
+          (Number(b.originalPrice) - Number(b.discountPrice)) *
+            Number(b.quantity),
+
+        0
+      ) * taxRate;
+
+  const totalAmountWithVat = totalAmount + totalVat;
+  return (
+    <div key={data.id}>
+      <Card roundedAbove="sm">
+        <BlockStack gap="200">
+          <InlineGrid columns="1fr auto">
+            <Text as="h2" variant="headingLg">
+              Claim {data.name}{' '}
+              <Badge
+                tone={
+                  claimStatus === 'INPROGRESS'
+                    ? 'warning'
+                    : claimStatus === 'APPROVE'
+                    ? 'success'
+                    : claimStatus === 'CANCEL'
+                    ? 'critical'
+                    : claimStatus === 'REQUESTED'
+                    ? 'info'
+                    : 'new'
+                }
+              >
+                {claimStatus === 'INPROGRESS'
+                  ? 'In Progress'
+                  : claimStatus
+                      ?.toLowerCase()
+                      .replace(/^\w/, (c) => c.toUpperCase()) ??
+                    'Not requested'}
+              </Badge>
+            </Text>
+            <ClaimStatusModal data={data} setRefetch={setRefetch} />
+          </InlineGrid>
+          <Text as="p" variant="bodyMd">
+            <span className="font-bold">Date: </span>
+            {packageProtectionOrder &&
+              formatDateTime(
+                packageProtectionOrder?.PackageProtectionClaimOrder[0].createdAt
+              )}
+          </Text>
+
+          <IndexTable
+            // resourceName={{ singular: 'item', plural: 'items' }}
+            itemCount={fulfillmentLineItems?.length}
+            selectable={false}
+            headings={[
+              { title: 'Item' },
+              { title: 'Price' },
+              { title: 'Total' },
+            ]}
+          >
+            {fulfillmentLineItems.map(
+              (
+                {
+                  id,
+                  title,
+                  originalPrice,
+                  discountPrice,
+                  quantity,
+                  image,
+                  name,
+                  sku,
+                },
+                index
+              ) => {
+                return (
+                  <IndexTable.Row
+                    id={id?.toString()}
+                    key={id}
+                    //selected={selectedResources?.includes(OrderId)}
+                    position={index}
+                  >
+                    <IndexTable.Cell>
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '5px',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Thumbnail source={image} size="small" alt={name} />
+                        <div>
+                          <Text variant="bodyMd" fontWeight="bold" as="span">
+                            {title}
+                          </Text>
+                          <Text
+                            as="span"
+                            variant="bodySm"
+                            tone="subdued"
+                            truncate
+                          >
+                            {sku ? `SKU:${sku}` : null}
+                          </Text>
+                        </div>
+                      </div>
+                    </IndexTable.Cell>
+                    <IndexTable.Cell>
+                      <Text
+                        textDecorationLine="line-through"
+                        as="span"
+                        tone="subdued"
+                      >
+                        {i18n.formatCurrency(Number(originalPrice))}
+                      </Text>
+                      &nbsp;{' '}
+                      {i18n.formatCurrency(
+                        Number(originalPrice) - Number(discountPrice)
+                      )}{' '}
+                      x {quantity}
+                    </IndexTable.Cell>
+                    <IndexTable.Cell>
+                      {i18n.formatCurrency(
+                        Number(originalPrice) - Number(discountPrice) * quantity
+                      )}
+                    </IndexTable.Cell>
+                  </IndexTable.Row>
+                );
+              }
+            )}
+          </IndexTable>
+          <Divider borderColor="border-hover" />
+
+          <div className="flex justify-end mr-4">
+            <div className="w-full sm:w-2/5 ">
+              <DataTable
+                rows={[
+                  [
+                    <b>Total Amount:</b>,
+                    <b>{i18n.formatCurrency(totalAmountWithVat)}</b>,
+                  ],
+                ]}
+                headings={[]}
+                columnContentTypes={['text', 'text', 'text', 'text']}
+              />
+            </div>
+          </div>
+
+          <Divider borderColor="border-hover" />
+          <Text as="p" variant="bodyMd">
+            <span className="font-bold">Customer Note: </span> {data.comments}
+          </Text>
+          <Text as="p" variant="headingMd">
+            Attachments:
+          </Text>
+          <div className="flex gap-2 ">
+            {data?.imageUrls?.map((img) => (
+              <Link target="_blank" url={img} key={img}>
+                {' '}
+                <Thumbnail source={img} alt={img} size="large" />
+              </Link>
+            ))}
+          </div>
+        </BlockStack>
+        <ClaimFulfillModal
+          fulfillmentLineItems={fulfillmentLineItems.map((e, i) => ({
+            ...e,
+            id: i + 1,
+            refundQuantity: 0,
+            reorderQuantity: 0,
+          }))}
+          setRefetch={setRefetch}
+          fulfillClaim={data.fulfillClaim}
+        />
+      </Card>
+
+      <br />
+    </div>
+  );
+};
+
+export default ClaimRequestProcessCard;

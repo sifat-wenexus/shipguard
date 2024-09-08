@@ -26,23 +26,30 @@ export const CalloutCard: FC<CalloutCardProps> = ({
 }) => {
   return (
     <Card padding="400">
-      <InlineStack wrap={false} gap="1000">
-        <Image alt={description} source={image} width={80} />
+      <InlineStack wrap={false} gap="400">
+        <Image
+          alt={description}
+          source={image}
+          width={80}
+          className="opacity-60"
+        />
 
-        <BlockStack>
-          <Box paddingBlockEnd="300">
-            <InlineStack align="space-between">
-              <Text as="h3" variant="headingSm">
-                {title}
-              </Text>
+        <div className="w-full">
+          <BlockStack>
+            <Box paddingBlockEnd="300">
+              <InlineStack align="space-between">
+                <Text as="h3" variant="headingMd">
+                  {title}
+                </Text>
 
-              {badge ? badge : null}
-            </InlineStack>
-          </Box>
-          <Text as="p">{description}</Text>
+                <span>{badge ? badge : null}</span>
+              </InlineStack>
+            </Box>
+            <Text as="p">{description}</Text>
 
-          {button ? <Box paddingBlockStart="400">{button}</Box> : null}
-        </BlockStack>
+            {button ? <Box paddingBlockStart="400">{button}</Box> : null}
+          </BlockStack>
+        </div>
       </InlineStack>
     </Card>
   );

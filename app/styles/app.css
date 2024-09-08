@@ -3,7 +3,6 @@
 }
 
 
-
 /* custom css and override polaris components */
 /* ----check box style */
 .Polaris-Checkbox__Backdrop {
@@ -86,4 +85,29 @@
 .hide-header .Polaris-IndexTable__StickyTableHeadings {
   display: none !important;
   margin-top: 10px;
+}
+
+#wenexus-nav-link {
+  color: black;
+}
+
+.wenexus-tab {
+  position: sticky;
+  top: 20;
+}
+
+.bg-vector-img {
+  color: white;
+  background-color: #61cb69;
+  background-size: cover;
+  background-position: center;
+  height: 100%;
+
+}
+
+/* guideline-icon size */
+
+.guideline-icon .Polaris-Icon {
+  height: 25px;
+  width: 25px;
 }

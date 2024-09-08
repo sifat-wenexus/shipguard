@@ -181,6 +181,7 @@ export const models = defineModels(() => {
     'orderName',
     'createdAt',
     'updatedAt',
+    'claimStatus',
     'orderAmount',
     'refundAmount',
     'protectionFee',

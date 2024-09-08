@@ -350,7 +350,11 @@ export const action: ActionFunction = async ({ request }) => {
   });
   const res = await prisma.packageProtectionOrder.update({
     where: { orderId: jsonData[0].orderId },
-    data: { claimDate: new Date(), hasClaimRequest: true },
+    data: {
+      claimDate: new Date(),
+      hasClaimRequest: true,
+      claimStatus: 'REQUESTED',
+    },
   });
   return json({
     success: true,

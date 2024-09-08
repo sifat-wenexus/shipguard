@@ -590,6 +590,7 @@ model PackageProtectionOrder {
   orderAmount       Float              @default(0.00)
   hasClaimRequest   Boolean            @default(false)
   fulfillmentStatus FullfillmentStatus @default(UNFULFILLED)
+  claimStatus       ClaimStatus?
   orderName         String
   refundAmount      Float              @default(0.00)
 

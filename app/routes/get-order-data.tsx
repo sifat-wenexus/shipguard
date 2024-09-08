@@ -13,13 +13,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const startDate = params.startDate;
   const endDate = params.endDate;
 
-  // where: {
-  //   createdAt: {
-  //     gte: startDate,
-  //     lte: endDate,
-  //   },
-  // }
-
   try {
     const total = await prisma.packageProtectionOrder.aggregate({
       _sum: {
@@ -97,11 +90,9 @@ export const loader: LoaderFunction = async ({ request }) => {
       {}
     );
 
-    const result = await prisma.packageProtectionOrder.groupBy({
+    const getLineData = await prisma.packageProtectionOrder.groupBy({
       by: ['createdAt'],
-      _count: {
-        id: true, // Counting the number of orders per date
-      },
+      _sum: { orderAmount: true, refundAmount: true },
       where: {
         createdAt: {
           gte: startDate,
@@ -112,40 +103,25 @@ export const loader: LoaderFunction = async ({ request }) => {
         createdAt: 'desc', // Order by date ascending
       },
     });
-
-    const lineData = result.map((e) => ({
-      value: e._count.id,
-      key: e.createdAt,
-    }));
-    const sDate = new Date(startDate);
-    sDate.setMonth(sDate.getMonth() - 1);
-
-    const prevLineData = await prisma.packageProtectionOrder.groupBy({
-      by: ['createdAt'],
-      _count: {
-        id: true, // Counting the number of orders per date
-      },
-      where: {
-        createdAt: {
-          gte: sDate,
-          lte: startDate,
-        },
-      },
-      orderBy: {
-        createdAt: 'desc', // Order by date ascending
-      },
+    const lineData = getLineData.map((e) => {
+      if (
+        (e._sum.orderAmount === 0 || e._sum.orderAmount) &&
+        (e._sum.refundAmount === 0 || e._sum.refundAmount)
+      ) {
+        return {
+          value: (e?._sum?.orderAmount - e._sum.refundAmount).toFixed(2),
+          key: e.createdAt,
+        };
+      }
     });
-    const prevData = prevLineData.map((e) => ({
-      value: e._count.id,
-      key: e.createdAt,
-    }));
+
     return json({
       message: 'Dashboard Data fetched successfully',
       status: true,
       data: {
-        totals: total._count,
+        totals: total._count.id,
         sum: total._sum,
-        lineData: { prevData, currentData: lineData },
+        lineData,
         claimed,
         notProcess,
         pieData: issueCounts,
@@ -200,9 +176,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             {
               OR: filterFields || [],
             },
+
             {
               OR: [{ orderName: { contains: searchTerm } }],
             },
+
             {
               createdAt: {
                 gte: startDate,
