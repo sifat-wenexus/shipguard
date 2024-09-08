@@ -56,16 +56,16 @@ export function Nav() {
         </Link>
       ),
     },
-    {
-      id: 'notification',
-      content: (
-        <Link url="/notification" removeUnderline id="wenexus-nav-link">
-          <div className="flex items-center gap-1">
-            <Icon source={NotificationIcon}></Icon> Notification
-          </div>
-        </Link>
-      ),
-    },
+    // {
+    //   id: 'notification',
+    //   content: (
+    //     <Link url="/notification" removeUnderline id="wenexus-nav-link">
+    //       <div className="flex items-center gap-1">
+    //         <Icon source={NotificationIcon}></Icon> Notification
+    //       </div>
+    //     </Link>
+    //   ),
+    // },
     {
       id: 'pricing',
       content: (
@@ -82,7 +82,9 @@ export function Nav() {
     const indexOfTab = tabs.findIndex((tab) => `/${tab.id}` === urlPath);
     if (
       urlPath === '/settings/claim-page' ||
-      urlPath === '/settings/widget-setup'
+      urlPath === '/settings/widget-setup' ||
+      urlPath === '/settings/smtp-setup' ||
+      urlPath === '/settings/email-template'
     ) {
       setSelected(3);
       return;

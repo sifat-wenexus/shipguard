@@ -1,6 +1,9 @@
 import checkoutIcon from '~/assets/icons/checkout-extension.svg';
 import pageIcon from '~/assets/icons/customer-claim-page.svg';
 import widgetIcon from '~/assets/icons/widget-setup.svg';
+import emailIcon from '~/assets/icons/email-outline.svg';
+import serverIcon from '~/assets/icons/server.svg';
+
 import { CalloutCard } from '~/components/callout-card';
 import { json, useLoaderData } from '@remix-run/react';
 import { shopify } from '~/modules/shopify.server';
@@ -28,7 +31,24 @@ import {
 export async function loader({ request }) {
   const ctx = await shopify.authenticate.admin(request);
   const restAdminApi = await ctx.admin.rest.resources;
-
+  const settingsCartSecond = [
+    {
+      id: 'settings/smtp-setup',
+      name: 'SMTP Setup',
+      description: 'Steps to enable Outgoing Mail Server.',
+      installed: false,
+      illustration: serverIcon,
+      available: true,
+    },
+    {
+      id: 'settings/email-template',
+      name: 'Email Template Setup',
+      description: 'Steps to enable .',
+      installed: false,
+      illustration: emailIcon,
+      available: true,
+    },
+  ];
   try {
     const installed = await prisma.packageProtection.findFirst({
       where: { storeId: ctx.session.storeId },
@@ -78,7 +98,7 @@ export async function loader({ request }) {
       // },
     ];
 
-    return json({ settingsCart });
+    return json({ settingsCart, settingsCartSecond });
   } catch (err) {
     console.log('li error ebar dekha jabe', err);
     return json({
@@ -100,31 +120,13 @@ export async function loader({ request }) {
           available: true,
         },
       ],
+      settingsCartSecond,
     });
   }
 }
 
-const settingsCartSecond = [
-  {
-    id: 'settings/smtp-setup',
-    name: 'SMTP Setup',
-    description: 'Steps to enable Outgoing Mail Server.',
-    installed: false,
-    illustration: widgetIcon,
-    available: true,
-  },
-  {
-    id: 'settings/email-template',
-    name: 'Email Template Setup',
-    description: 'Steps to enable .',
-    installed: false,
-    illustration: pageIcon,
-    available: true,
-  },
-];
-
 const Settings = () => {
-  const { settingsCart } = useLoaderData<typeof loader>();
+  const { settingsCart, settingsCartSecond } = useLoaderData<typeof loader>();
   const columns = useMemo<InlineGridProps['columns']>(
     () => ({
       xl: 2,
