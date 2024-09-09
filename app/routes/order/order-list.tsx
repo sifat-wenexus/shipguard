@@ -27,6 +27,7 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
   const [orderList, setOrderList] = useState<Record<string, any>[]>([]);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState(false);
+  const [shop, setShop] = useState('');
 
   const pageSize = 20;
 
@@ -43,12 +44,6 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
     : //.split('T')[0]
       new Date().toISOString(); //.split('T')[0];
   // let startPoint = 0;
-
-  const url = useLocation();
-
-  const params = new URLSearchParams(url.search);
-
-  const shop = params.get('shop')?.split('.')[0];
 
   const handleNext = () => {
     setPage((prev) => prev + 1);
@@ -87,10 +82,14 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
             <Link
               removeUnderline
               target="_blank"
-              url={`https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
-                'gid://shopify/Order/',
-                ''
-              )}`}
+              url={
+                shop
+                  ? `https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
+                      'gid://shopify/Order/',
+                      ''
+                    )}`
+                  : ''
+              }
             >
               <Text variant="bodyMd" fontWeight="bold" as="span">
                 {orderName}
@@ -206,12 +205,14 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
         updatedAt: Date;
       }[];
       totalOrder: number;
+      shop: string;
     };
 
     if (data) {
       setLoading(false);
       setOrderList(data.orderList);
       setOrderCount(data.totalOrder);
+      setShop(data.shop.split('.')[0]);
     } else {
       setLoading(false);
     }

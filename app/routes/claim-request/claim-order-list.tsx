@@ -18,6 +18,7 @@ import {
 import ClaimOrderSearchAndFilter, {
   IFilterOptions,
 } from './claim-order-search-and-filter';
+import { queryProxy } from '~/modules/query/query-proxy';
 
 const ClaimOrderList = ({
   activeDates,
@@ -36,6 +37,7 @@ const ClaimOrderList = ({
   const [orderList, setOrderList] = useState<Record<string, any>[]>([]);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState(false);
+  const [shop, setShop] = useState('');
 
   const pageSize = 20;
 
@@ -53,10 +55,6 @@ const ClaimOrderList = ({
       new Date().toISOString(); //.split('T')[0];
   // console.log(period, startDate, endDate);
   // let startPoint = 0;
-
-  const url = useLocation();
-  const params = new URLSearchParams(url.search);
-  const shop = params.get('shop')?.split('.')[0];
 
   const handleNext = () => {
     setPage((prev) => prev + 1);
@@ -102,10 +100,14 @@ const ClaimOrderList = ({
               <Link
                 removeUnderline
                 target="_blank"
-                url={`https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
-                  'gid://shopify/Order/',
-                  ''
-                )}`}
+                url={
+                  shop
+                    ? `https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
+                        'gid://shopify/Order/',
+                        ''
+                      )}`
+                    : ''
+                }
               >
                 {' '}
                 {orderName}
@@ -221,16 +223,17 @@ const ClaimOrderList = ({
         updatedAt: Date;
       }[];
       totalOrder: number;
+      shop: string;
     };
     if (data) {
       setLoading(false);
       setOrderList(data.orderList);
       setOrderCount(data.totalOrder);
+      setShop(data.shop.split('.')[0]);
     } else {
       setLoading(false);
     }
   };
-  console.log(loading);
 
   useEffect(() => {
     getData();

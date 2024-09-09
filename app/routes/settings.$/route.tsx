@@ -60,17 +60,17 @@ export async function loader({ request }) {
     })
       .then((r) => r.data.find((item) => item.role === 'main'))
       .catch((err) => console.error(err));
-    console.log(theme?.id);
+
     const template = await restAdminApi.Asset.all({
       session: ctx.session,
       theme_id: theme?.id,
       asset: { key: 'templates/page.claim-request.json' },
     });
-    console.log('----------------------------', template?.data[0]?.value);
-    claimPage = JSON.stringify(template?.data[0]?.value).includes(
-      'package-protection-claim'
-    );
-    console.log(claimPage);
+    if (template) {
+      claimPage = JSON.stringify(template?.data[0]?.value).includes(
+        'package-protection-claim'
+      );
+    }
     const settingsCart = [
       {
         id: 'settings/widget-setup',
@@ -100,7 +100,7 @@ export async function loader({ request }) {
 
     return json({ settingsCart, settingsCartSecond });
   } catch (err) {
-    console.log('li error ebar dekha jabe', err);
+    console.log(err);
     return json({
       settingsCart: [
         {
@@ -138,10 +138,10 @@ const Settings = () => {
     []
   );
   return (
-    <div className="ml-4 sm:ml-4">
+    <div className="ml-0 sm:ml-4">
       <Page>
         <Layout>
-          <div className="w-full  my-3 m-2 ml-6 sm:ml-0 mt-2">
+          <div className="w-full  my-3 m-2 ml-6 sm:ml-0 mt-8">
             <h1 className="font-bold text-lg text-center">Store Code Setup</h1>{' '}
             <p className="text-center">
               Code setup for in-house shipping protection
@@ -206,7 +206,7 @@ const Settings = () => {
               )}
             </Box>
             <br />
-            <h1 className="font-bold text-lg text-center mt-4">
+            <h1 className="font-bold text-lg text-center mt-8">
               Setup SMTP Server & Mail Template
             </h1>{' '}
             <p className="text-center">

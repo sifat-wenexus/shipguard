@@ -17,6 +17,7 @@
     "prisma": "prisma"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^9.1.0",
     "@google-cloud/storage": "^7.12.1",
     "@iarna/toml": "^2.2.5",
     "@monaco-editor/react": "^4.6.0",
@@ -34,6 +35,8 @@
     "@shopify/react-i18n": "^7.13.1",
     "@shopify/ui-extensions": "2024.7.x",
     "@shopify/ui-extensions-react": "^2024.7.0",
+    "ckeditor5": "^43.1.0",
+    "ckeditor5-premium-features": "^43.1.0",
     "compare-versions": "^6.1.1",
     "cross-env": "^7.0.3",
     "eventemitter2": "^6.4.9",

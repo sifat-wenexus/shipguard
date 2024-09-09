@@ -6,6 +6,8 @@ import {
   getShopifyGQLClient,
   shopify as shopifyRemix,
 } from '../modules/shopify.server';
+import { findOfflineSession } from '~/modules/find-offline-session.server';
+import { getOfflineSession } from '~/shopify-app-remix/server/unauthenticated/helpers';
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -195,6 +197,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const ctx = await shopifyRemix.authenticate.admin(request);
   const gql = await getShopifyGQLClient(ctx.session);
+  const store = await prisma.session.findFirst({
+    where: { storeId: ctx.session.storeId },
+    select: { shop: true },
+  });
   const body = await request.formData();
   const action = body.get('action') as IClaimType &
     'filterOption' &
@@ -283,6 +289,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         data: {
           orderList: filterData,
           totalOrder: filterData.length > 0 ? totalOrder : 0,
+          shop: store?.shop,
         },
       });
     } else if (action === 'changeClaimStatus') {

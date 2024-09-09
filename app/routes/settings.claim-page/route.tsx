@@ -14,11 +14,11 @@ const ClaimPageSetup = () => {
   const { storeInfo } = useLivePageData();
   console.log(storeInfo ? '=' : '-');
   return (
-    <div className="m-2 sm:m-0">
+    <div className="m-2 sm:m-0 ">
       <Page>
         <Layout>
           <Layout.Section variant="fullWidth">
-            <div className="mb-4 flex items-center gap-4">
+            <div className="mb-4 flex items-center gap-4 mt-6">
               <Button icon={ArrowLeftIcon} url="/settings"></Button>
               <Text as="h1" variant="headingLg">
                 Customer Claim Page Setup

@@ -266,7 +266,6 @@ const Settings = () => {
       console.error(e);
     }
   }, [fetcher, state]);
-  console.count('rendering');
 
   return (
     <div className="m-2 sm:m-0">

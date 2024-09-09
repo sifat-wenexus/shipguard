@@ -10,6 +10,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   let searchParams = url.searchParams;
   const params = Object.fromEntries(searchParams.entries());
   const ctx = await shopifyRemix.authenticate.admin(request);
+
   const startDate = params.startDate;
   const endDate = params.endDate;
 
@@ -140,6 +141,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const ctx = await shopifyRemix.authenticate.admin(request);
+  const store = await prisma.session.findFirst({
+    where: { storeId: ctx.session.storeId },
+    select: { shop: true },
+  });
   const body = await request.formData();
   const action = body.get('action');
   try {
@@ -220,7 +225,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       return json({
         message: 'Order fetched Successfully!',
         status: true,
-        data: { orderList, totalOrder },
+        data: { orderList, totalOrder, shop: store?.shop },
       });
     }
   } catch (err) {
