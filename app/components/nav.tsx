@@ -92,10 +92,8 @@ export function Nav() {
     setSelected(indexOfTab === -1 ? 0 : indexOfTab);
   }, [urlPath]);
   const switchTab = useCallback((e) => {
-    // window.location.href = tabs[e].id;
     console.log(tabs[e].id);
   }, []);
-  // console.log(sele)
 
   return (
     <div

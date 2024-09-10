@@ -9,32 +9,24 @@ import {
   Text,
   TextField,
 } from '@shopify/polaris';
-import { ArrowLeftIcon, EditIcon, ThemeEditIcon } from '@shopify/polaris-icons';
+import { ArrowLeftIcon, EditIcon } from '@shopify/polaris-icons';
 import style from './styles/route.css';
 import { useState } from 'react';
-
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import {
-  ClassicEditor,
-  Bold,
-  Essentials,
-  Italic,
-  Mention,
-  Paragraph,
-  Undo,
-} from 'ckeditor5';
-import { SlashCommand } from 'ckeditor5-premium-features';
-
-import 'ckeditor5/ckeditor5.css';
-import 'ckeditor5-premium-features/ckeditor5-premium-features.css';
+import TextEditor from './components/text-editor';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const EmailTemplate = () => {
   const [template, setTemplate] = useState(null);
+  const [editorState, setEditorState] = useState(null);
+
   const handleEditButton = (e) => {
-    console.log(e);
     setTemplate(e);
   };
+
+  const onEditorStateChange = (e) => {
+    console.log('onEditorStateChange', e);
+  };
+
   const templateItems = [
     { name: 'Claim Request Email For Admin' },
     { name: 'Claim Request Email For Customer' },
@@ -42,6 +34,72 @@ const EmailTemplate = () => {
     { name: 'Claim Re-order Email For Customer' },
     { name: 'Claim Cancel Email For Customer' },
   ];
+
+  const defaultTemplateContent = `<p>Mr/Mrs/Ms {customer_name}</p>
+${
+  template === 'Claim Request Email For Admin' ||
+  template === 'Claim Request Email For Customer'
+    ? '<p>You have requested claim on your order : {order_no}. Your claim has been requested.</p>'
+    : ''
+}
+${
+  template === 'Claim Refund Email For Customer'
+    ? '<p>You have requested claim on your order : {order_no}. Your claim has been approved and soon you will be refunded you amount in your account.</p>'
+    : ''
+}
+${
+  template === 'Claim Re-order Email For Customer'
+    ? '<p>You have requested claim on your order :  {order_no}. Your claim will be reorder soon.</p>'
+    : ''
+}
+${
+  template === 'Claim Cancel Email For Customer'
+    ? '<p>You have requested claim on your order : {order_no}. Your claim has been canceled.</p>'
+    : ''
+}
+<p>Order Detail :&nbsp;</p>
+<table style="border-collapse: collapse; width: 100.035%; height: 108.516px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+<tbody>
+<tr style="height: 36.1719px;">
+<td>Customer Name</td>
+<td>{customer_name}</td>
+</tr>
+<tr style="height: 36.1719px;">
+<td>Order No</td>
+<td>{order_no}</td>
+</tr>
+<tr style="height: 36.1719px;">
+<td>Status</td>
+<td>{claimed}</td>
+</tr>
+</tbody>
+</table>
+<p>Thank You.</p>`;
+
+  const adminTemplate = `<p>Dear Admin,</p>
+<p>A new claim has been requested for the following order:</p>
+<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+<tbody>
+<tr style="height: 36.1648px;">
+<td>Order ID</td>
+<td><strong>{order_ID}</strong></td>
+</tr>
+<tr style="height: 36.0795px;">
+<td>Customer Name</td>
+<td><strong>{customer_name}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Order No</td>
+<td><strong>{order_no}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Status</td>
+<td><strong>{claimed}</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Please review the claim request and take appropriate action.</p>
+<p>Best regards,<br><strong>Inhouse Shipping Protection</strong> <strong>Team</strong></p>`;
 
   return (
     <>
@@ -108,30 +166,8 @@ const EmailTemplate = () => {
                           requiredIndicator
                         />
                       </Box>
-                      <div>
-                        <CKEditor
-                          editor={ClassicEditor}
-                          config={{
-                            toolbar: {
-                              items: ['undo', 'redo', '|', 'bold', 'italic'],
-                            },
-                            plugins: [
-                              Bold,
-                              Essentials,
-                              Italic,
-                              Mention,
-                              Paragraph,
-                              SlashCommand,
-                              Undo,
-                            ],
-                            licenseKey: '<YOUR_LICENSE_KEY>',
-                            mention: {
-                              // Mention configuration
-                            },
-                            initialData:
-                              '<p>Hello from CKEditor 5 in React!</p>',
-                          }}
-                        />
+                      <div className="mt-2">
+                        <TextEditor defaultContent={adminTemplate} />
                       </div>
                     </div>
                   </div>
