@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Card,
-  Checkbox,
   Icon,
   Layout,
   Page,
@@ -15,7 +14,7 @@ import { useCallback, useState } from 'react';
 import SwitchButton from './components/switch-button';
 
 const SMTP = () => {
-  const [selected, setSelected] = useState('custom');
+  const [selected, setSelected] = useState('google');
   const [selectedSmtp, setSelectedSmtp] = useState('smtp');
   const [TLS, setTLS] = useState(false);
   const [proxy, setProxy] = useState(false);
@@ -35,8 +34,8 @@ const SMTP = () => {
     []
   );
   const options = [
-    { label: 'Custom', value: 'custom' },
     { label: 'Google', value: 'google' },
+    { label: 'Custom', value: 'custom' },
   ];
   const protocolOptions = [
     { label: 'SMTP', value: 'smtp' },
@@ -63,15 +62,6 @@ const SMTP = () => {
               <Card>
                 <div className="w-full sm:p-4">
                   <Box paddingBlockStart="200" paddingBlockEnd="200">
-                    <TextField
-                      autoComplete="true"
-                      label="Mail From"
-                      placeholder="name@company.com"
-                      tone="magic"
-                      requiredIndicator
-                    />
-                  </Box>{' '}
-                  <Box paddingBlockStart="200" paddingBlockEnd="200">
                     <Select
                       label="SMTP Provider"
                       options={options}
@@ -89,11 +79,28 @@ const SMTP = () => {
                         size="large"
                         icon={<Icon source={LogoGoogleIcon} />}
                       >
-                        Login With Google
+                        Connect With Google
                       </Button>
+                      {/* <Button
+                        // tone="success"
+                        variant="primary"
+                        size="large"
+                        icon={<Icon source={LogoGoogleIcon} />}
+                      >
+                        Disconnect
+                      </Button> */}
                     </Box>
                   ) : (
                     <>
+                      <Box paddingBlockStart="200" paddingBlockEnd="200">
+                        <TextField
+                          autoComplete="true"
+                          label="Mail From"
+                          placeholder="name@company.com"
+                          tone="magic"
+                          requiredIndicator
+                        />
+                      </Box>{' '}
                       <div className="border border-gray-400 p-4 rounded my-4">
                         <Box paddingBlockStart="200" paddingBlockEnd="200">
                           <Text as="p" variant="headingMd">

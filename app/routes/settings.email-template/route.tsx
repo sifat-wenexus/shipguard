@@ -1,4 +1,4 @@
-import { LinksFunction } from '@remix-run/node';
+import { json, LinksFunction } from '@remix-run/node';
 import {
   Box,
   Button,
@@ -13,123 +13,176 @@ import { ArrowLeftIcon, EditIcon } from '@shopify/polaris-icons';
 import style from './styles/route.css';
 import { useState } from 'react';
 import TextEditor from './components/text-editor';
+import { shopify } from '~/modules/shopify.server';
+import { prisma } from '~/modules/prisma.server';
+import { useLoaderData } from '@remix-run/react';
+const reqAdminTemplate = `<p>Dear Admin,</p>
+<p>A new claim has been requested for the following order:</p>
+<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+<tbody>
+<tr style="height: 36.1648px;">
+<td>Order ID</td>
+<td><strong>{order_ID}</strong></td>
+</tr>
+<tr style="height: 36.0795px;">
+<td>Customer Name</td>
+<td><strong>{customer_name}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Claim Reason</td>
+<td><strong>{claim_reason}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Claim Date</td>
+<td><strong>{claim_date}</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Please review the claim request and take appropriate action.</p>
+<p>Best regards,<br><strong>Inhouse Shipping Protection</strong> <strong>Team</strong></p>
+<p>&nbsp;</p>`;
+
+const reqCustomerTemplate = `<p>Dear {customer_name},</p>
+<p>We have received your claim request for Order {order_id}. Our team will review your claim and get back to you within 24hours.</p>
+<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+<tbody>
+<tr style="height: 36.1648px;">
+<td>Order ID</td>
+<td><strong>{order_ID}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Claim Reason</td>
+<td><strong>{claim_reason}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Claim Date</td>
+<td><strong>{claim_date}</strong></td>
+</tr>
+</tbody>
+</table>
+<p>If you have any questions, feel free to contact us.</p>
+<p>Best regards,<br><strong>{shop_name}</strong></p>
+<p>&nbsp;</p>`;
+
+const refundCustomerTemplate = `<p>Dear {customer_name},</p>
+<p>Your claim for Order {order_id} has been approved, and a refund of {refund_amount} has been processed. The refund will appear in your account within 24hours.</p>
+<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+<tbody>
+<tr style="height: 36.1648px;">
+<td>Order ID</td>
+<td><strong>{order_ID}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Refund Amount</td>
+<td><strong>{refund_amount}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Refund Processed On</td>
+<td><strong>{date}</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Thank you for your patience.</p>
+<p>Best regards,<br><strong>{shop_name}</strong></p>
+<p>&nbsp;</p>`;
+
+const reOrderCustomerTemplate = `<p>Dear {customer_name},</p>
+<p>Your claim for Order {order_id} has been approved, and we have initiated a replacement order. You can expect your new shipment soon.</p>
+<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+<tbody>
+<tr style="height: 36.1648px;">
+<td>Order ID</td>
+<td><strong>{order_ID}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Replacement Order ID</td>
+<td><strong>{replacement_order_id}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Shipping Details</td>
+<td><strong>{shipping_details}</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Thank you for your continued support.</p>
+<p>Best regards,<br><strong>{shop_name}</strong></p>
+<p>&nbsp;</p>`;
+
+const cancelCustomerTemplate = `<p>Dear {customer_name},</p>
+<p>Your claim request for Order {order_id} has been canceled. If you have any questions or believe this was done in error, please reach out to our support team.</p>
+<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+<tbody>
+<tr style="height: 36.1648px;">
+<td>Order ID</td>
+<td><strong>{order_ID}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Cancellation Reason</td>
+<td><strong>{cancellation_reason}</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Thank you for your understanding.</p>
+<p>Best regards,<br><strong>{shop_name}</strong></p>
+<p>&nbsp;</p>`;
+export async function loader({ request }) {
+  const ctx = await shopify.authenticate.admin(request);
+  const templates = await prisma.emailTemplate.findMany({
+    where: { storeId: ctx.session.storeId },
+  });
+  if (!templates) {
+    const defaultTemplatesPayload = [
+      {
+        storeId: ctx.session.storeId!,
+        body: JSON.stringify('lol'),
+        subject: 'New Claim Request Submitted: Order {order_ID}',
+      },
+      {
+        storeId: ctx.session.storeId!,
+        body: JSON.stringify('lol'),
+        subject: 'Claim Request Received: Order {order_ID}',
+      },
+      {
+        storeId: ctx.session.storeId!,
+        body: JSON.stringify('lol'),
+        subject: 'Claim Approved: Refund Issued for Order {order_ID}',
+      },
+      {
+        storeId: ctx.session.storeId!,
+        body: JSON.stringify('lol'),
+        subject: 'Claim Approved: Replacement Order Confirmed for Order',
+      },
+      {
+        storeId: ctx.session.storeId!,
+        body: JSON.stringify('lol'),
+        subject: 'Claim Request Canceled: Order {order_ID}',
+      },
+    ];
+    const create = await prisma.emailTemplate.createMany({
+      data: {
+        storeId: ctx.session.storeId!,
+        body: JSON.stringify('lol'),
+        subject: '',
+      },
+    });
+    return json({ message: 'something is wrong', status: false, data: null });
+  }
+  return json({
+    message: 'Successfully fetched templates!',
+    data: templates,
+    status: true,
+  });
+}
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const EmailTemplate = () => {
+  const { data, message } = useLoaderData<typeof loader>();
   const [template, setTemplate] = useState<string>('');
   const [defaultTemplate, setDefaultTemplate] = useState('');
   const [editorState, setEditorState] = useState(null);
 
   console.log('editorState', editorState);
-  const reqAdminTemplate = `<p>Dear Admin,</p>
-  <p>A new claim has been requested for the following order:</p>
-  <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-  <tbody>
-  <tr style="height: 36.1648px;">
-  <td>Order ID</td>
-  <td><strong>{order_ID}</strong></td>
-  </tr>
-  <tr style="height: 36.0795px;">
-  <td>Customer Name</td>
-  <td><strong>{customer_name}</strong></td>
-  </tr>
-  <tr style="height: 36.1648px;">
-  <td>Claim Reason</td>
-  <td><strong>{claim_reason}</strong></td>
-  </tr>
-  <tr style="height: 36.1648px;">
-  <td>Claim Date</td>
-  <td><strong>{claim_date}</strong></td>
-  </tr>
-  </tbody>
-  </table>
-  <p>Please review the claim request and take appropriate action.</p>
-  <p>Best regards,<br><strong>Inhouse Shipping Protection</strong> <strong>Team</strong></p>
-  <p>&nbsp;</p>`;
 
-  const reqCustomerTemplate = `<p>Dear {customer_name},</p>
-  <p>We have received your claim request for Order {order_id}. Our team will review your claim and get back to you within 24hours.</p>
-  <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-  <tbody>
-  <tr style="height: 36.1648px;">
-  <td>Order ID</td>
-  <td><strong>{order_ID}</strong></td>
-  </tr>
-  <tr style="height: 36.1648px;">
-  <td>Claim Reason</td>
-  <td><strong>{claim_reason}</strong></td>
-  </tr>
-  <tr style="height: 36.1648px;">
-  <td>Claim Date</td>
-  <td><strong>{claim_date}</strong></td>
-  </tr>
-  </tbody>
-  </table>
-  <p>If you have any questions, feel free to contact us.</p>
-  <p>Best regards,<br><strong>{shop_name}</strong></p>
-  <p>&nbsp;</p>`;
-
-  const refundCustomerTemplate = `<p>Dear {customer_name},</p>
-  <p>Your claim for Order {order_id} has been approved, and a refund of {refund_amount} has been processed. The refund will appear in your account within 24hours.</p>
-  <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-  <tbody>
-  <tr style="height: 36.1648px;">
-  <td>Order ID</td>
-  <td><strong>{order_ID}</strong></td>
-  </tr>
-  <tr style="height: 36.1648px;">
-  <td>Refund Amount</td>
-  <td><strong>{refund_amount}</strong></td>
-  </tr>
-  <tr style="height: 36.1648px;">
-  <td>Refund Processed On</td>
-  <td><strong>{date}</strong></td>
-  </tr>
-  </tbody>
-  </table>
-  <p>Thank you for your patience.</p>
-  <p>Best regards,<br><strong>{shop_name}</strong></p>
-  <p>&nbsp;</p>`;
-
-  const reOrderCustomerTemplate = `<p>Dear {customer_name},</p>
-  <p>Your claim for Order {order_id} has been approved, and we have initiated a replacement order. You can expect your new shipment soon.</p>
-  <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-  <tbody>
-  <tr style="height: 36.1648px;">
-  <td>Order ID</td>
-  <td><strong>{order_ID}</strong></td>
-  </tr>
-  <tr style="height: 36.1648px;">
-  <td>Replacement Order ID</td>
-  <td><strong>{replacement_order_id}</strong></td>
-  </tr>
-  <tr style="height: 36.1648px;">
-  <td>Shipping Details</td>
-  <td><strong>{shipping_details}</strong></td>
-  </tr>
-  </tbody>
-  </table>
-  <p>Thank you for your continued support.</p>
-  <p>Best regards,<br><strong>{shop_name}</strong></p>
-  <p>&nbsp;</p>`;
-
-  const cancelCustomerTemplate = `<p>Dear {customer_name},</p>
-  <p>Your claim request for Order {order_id} has been canceled. If you have any questions or believe this was done in error, please reach out to our support team.</p>
-  <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-  <tbody>
-  <tr style="height: 36.1648px;">
-  <td>Order ID</td>
-  <td><strong>{order_ID}</strong></td>
-  </tr>
-  <tr style="height: 36.1648px;">
-  <td>Cancellation Reason</td>
-  <td><strong>{cancellation_reason}</strong></td>
-  </tr>
-  </tbody>
-  </table>
-  <p>Thank you for your understanding.</p>
-  <p>Best regards,<br><strong>{shop_name}</strong></p>
-  <p>&nbsp;</p>`;
   const handleEditButton = (e) => {
     if (e === 'Claim Request Email For Admin') {
       setTemplate('New Claim Request Submitted: Order {order_ID}');
@@ -237,14 +290,6 @@ const EmailTemplate = () => {
                   <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-md hover:bg-green-500">
                     Update
                   </button>
-                </div>
-                <div contentEditable onChange={(e) => console.log(e)}>
-                  {' '}
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Iusto, perferendis?
-                  </p>{' '}
-                  <span>Lorem ipsum dolor sit amet.</span>
                 </div>
               </Layout.Section>
             )}
