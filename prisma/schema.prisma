@@ -30,31 +30,9 @@ enum ContentStatus {
   DELETING
 }
 
-enum ScrollToTopButtonShape {
-  CIRCLE
-  SQUARE
-  ROUNDED
-}
-
-enum SalesCampaignDiscountType {
-  PERCENTAGE
-  FIXED_PRICE
-  AMOUNT_OFF
-}
-
 enum InsurancePricingType {
   PERCENTAGE
   FIXED_PRICE
-}
-
-enum SalesCampaignGroupType {
-  INCLUDE
-  EXCLUDE
-}
-
-enum SalesCampaignRangeType {
-  ALL_PRODUCTS_SAME_DISCOUNT
-  DIFFERENT_DISCOUNTS_PER_GROUP
 }
 
 enum JobStatus {
@@ -118,10 +96,8 @@ model Timezone {
   countryId String
   gmtOffset String
 
-  Country                   Country         @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  SalesCampaignsByStartDate SalesCampaign[] @relation("start")
-  SalesCampaignsByEndDate   SalesCampaign[] @relation("end")
-  Stores                    Store[]
+  Country Country @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Stores  Store[]
 }
 
 view TimezoneSimplified {
@@ -173,9 +149,6 @@ model Store {
   Migrations Migration[]
   File       File[]
 
-  BadgeSettings               BadgeSettings?
-  ScrollToTopSettings         ScrollToTopSettings?
-  Campaigns                   SalesCampaign[]
   Products                    Product[]
   Collections                 Collection[]
   Jobs                        Job[]
@@ -184,10 +157,10 @@ model Store {
   ProductTypes                ProductType[]
   ProductVendors              ProductVendor[]
   Sessions                    Session[]
-  CheckoutTermsSettings       CheckoutTermsSettings?
   PackageProtection           PackageProtection?
   PackageProtectionOrders     PackageProtectionOrder[]
   PackageProtectionClaimOrder PackageProtectionClaimOrder[]
+  EmailTemplates              EmailTemplate[]
 
   @@index([appInstallationId])
 }
@@ -221,66 +194,9 @@ model File {
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @updatedAt @db.Timestamptz()
 
-  Store       Store?       @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  BadgeImages BadgeImage[]
-  BadgeGroups BadgeGroup[]
+  Store Store? @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([storeId])
-}
-
-model BadgeImage {
-  id        String
-  settingId String
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-
-  File     File          @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Settings BadgeSettings @relation(fields: [settingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@id([settingId, id])
-}
-
-model BadgeGroup {
-  id Int @id @default(autoincrement())
-
-  name String
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-
-  Files File[]
-}
-
-model BadgeSettings {
-  id String @id
-
-  enabled Boolean @default(false)
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
-
-  Store       Store        @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  BadgeImages BadgeImage[]
-}
-
-model ScrollToTopSettings {
-  id String @id
-
-  icon            String                 @default("one")
-  enabled         Boolean                @default(false)
-  showOnMobile    Boolean                @default(true)
-  showOnDesktop   Boolean                @default(true)
-  backgroundColor String                 @default("#ffffff")
-  iconColor       String                 @default("#000000")
-  padding         Int                    @default(10)
-  iconSize        Int                    @default(25)
-  right           Int                    @default(10)
-  bottom          Int                    @default(5)
-  shape           ScrollToTopButtonShape @default(ROUNDED)
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
-
-  Store Store @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Collection {
@@ -293,10 +209,8 @@ model Collection {
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @updatedAt @db.Timestamptz()
 
-  Store                 Store                  @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Products              Product[]
-  SalesCampaignIncludes SalesCampaignInclude[]
-  SalesCampaignExcludes SalesCampaignExclude[]
+  Store    Store     @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Products Product[]
 
   @@index([storeId])
 }
@@ -317,11 +231,9 @@ model Product {
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @updatedAt @db.Timestamptz()
 
-  Store                 Store                  @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Variants              ProductVariant[]
-  Collections           Collection[]
-  SalesCampaignIncludes SalesCampaignInclude[]
-  SalesCampaignExcludes SalesCampaignExclude[]
+  Store       Store            @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Variants    ProductVariant[]
+  Collections Collection[]
 
   FixedPackageProtection      PackageProtection[] @relation("fixed")
   PercentagePackageProtection PackageProtection[] @relation("percentage")
@@ -371,104 +283,9 @@ model ProductVariant {
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @updatedAt @db.Timestamptz()
 
-  Product               Product                @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  CampaignVariants      SalesCampaignVariant[]
-  SalesCampaignIncludes SalesCampaignInclude[]
-  SalesCampaignExcludes SalesCampaignExclude[]
+  Product Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([productId])
-}
-
-model SalesCampaign {
-  id      Int    @id @default(autoincrement())
-  storeId String
-
-  status    ContentStatus          @default(DRAFT)
-  rangeType SalesCampaignRangeType @default(ALL_PRODUCTS_SAME_DISCOUNT)
-
-  name             String
-  description      String?
-  createCollection Boolean @default(false)
-  collectionHandle String?
-  revenue          Decimal @default(0) @db.Decimal(10, 2)
-
-  startDate DateTime  @default(now()) @db.Timestamptz()
-  endDate   DateTime? @db.Timestamptz()
-
-  startDateTimezoneId String
-  endDateTimezoneId   String
-
-  statusUpdatedAt DateTime? @db.Timestamptz()
-  createdAt       DateTime  @default(now()) @db.Timestamptz()
-  updatedAt       DateTime? @updatedAt @db.Timestamptz()
-
-  StartDateTimeZone Timezone               @relation("start", fields: [startDateTimezoneId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  EndDateTimeZone   Timezone               @relation("end", fields: [endDateTimezoneId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Store             Store                  @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Variants          SalesCampaignVariant[]
-  Includes          SalesCampaignInclude[]
-  Excludes          SalesCampaignExclude[]
-
-  @@index([storeId])
-}
-
-model SalesCampaignInclude {
-  id         Int @id @default(autoincrement())
-  campaignId Int
-
-  name String?
-
-  allProducts    Boolean  @default(false)
-  productVendors String[] @default([])
-  productTypes   String[] @default([])
-  productTags    String[] @default([])
-  productTitle   Json[]   @default([])
-
-  discountType  SalesCampaignDiscountType?
-  discountValue Decimal?                   @db.Decimal(10, 2)
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-
-  Collections Collection[]
-  Products    Product[]
-  Variants    ProductVariant[]
-
-  Campaign SalesCampaign          @relation(fields: [campaignId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Excludes SalesCampaignExclude[]
-}
-
-model SalesCampaignExclude {
-  id         Int  @id @default(autoincrement())
-  includeId  Int?
-  campaignId Int?
-
-  productVendors String[] @default([])
-  productTypes   String[] @default([])
-  productTags    String[] @default([])
-  productTitle   Json[]   @default([])
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-
-  Collections Collection[]
-  Products    Product[]
-  Variants    ProductVariant[]
-  Include     SalesCampaignInclude? @relation(fields: [includeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Campaign    SalesCampaign?        @relation(fields: [campaignId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-}
-
-model SalesCampaignVariant {
-  campaignId Int
-  variantId  String
-
-  backupPrice          Decimal @db.Decimal(10, 2)
-  backupCompareAtPrice Decimal @db.Decimal(10, 2)
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-
-  Campaign SalesCampaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Variant  ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@id([campaignId, variantId])
 }
 
 model Migration {
@@ -480,32 +297,6 @@ model Migration {
   Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([storeId, id])
-}
-
-model CheckoutTermsSettings {
-  storeId String @id
-
-  enabled                  Boolean                  @default(false)
-  text                     String?
-  warningText              String?
-  position                 ElementPlacementPosition @default(AFTER)
-  checked                  Boolean                  @default(false)
-  textFontSize             String                   @default("14px")
-  textColor                String                   @default("#000000")
-  textLinkColor            String                   @default("#115ccf")
-  textLinkUnderline        Boolean                  @default(false)
-  warningTextFontSize      String                   @default("14px")
-  warningTextColor         String                   @default("#ff0000")
-  warningTextLinkColor     String                   @default("#115ccf")
-  warningTextLinkUnderline Boolean                  @default(false)
-  showOnCartPage           Boolean                  @default(false)
-  showOnMiniCart           Boolean                  @default(false)
-  textAlign                TextAlignment            @default(LEFT)
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
-
-  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model PackageProtection {
@@ -623,4 +414,14 @@ model PackageProtectionClaimOrder {
 
   Store                  Store                  @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   packageProtectionOrder PackageProtectionOrder @relation(fields: [orderId], references: [orderId], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model EmailTemplate {
+  id      Int    @id @default(autoincrement())
+  storeId String
+
+  subject String
+  body    String
+
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

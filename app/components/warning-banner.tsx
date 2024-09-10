@@ -11,7 +11,7 @@ const WarningBanner = ({ storeInfo }) => {
   const activator = <Button onClick={handlePopUp}>Check instructions</Button>;
   return (
     <>
-      {storeInfo?.ebbedBlock && (
+      {storeInfo?.ebbedBlock ? null : (
         <div className="w-full mb-4">
           <Banner
             title="Package protection isn't showing up on your store yet"

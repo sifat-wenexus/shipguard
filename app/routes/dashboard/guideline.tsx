@@ -31,7 +31,7 @@ const GuideLine = ({ storeInfo }) => {
     claim: false,
   });
   useEffect(() => {
-    if (storeInfo?.claimPage && !storeInfo?.ebbedBlock && storeInfo?.install) {
+    if (storeInfo?.claimPage && storeInfo?.ebbedBlock && storeInfo?.install) {
       setOpen(false);
     } else {
       setOpen(true);
@@ -196,9 +196,9 @@ const GuideLine = ({ storeInfo }) => {
                 <div className="flex gap-3">
                   <span className="guideline-icon mt-1">
                     {storeInfo?.ebbedBlock ? (
-                      <Icon source={MenuHorizontalIcon} tone="info" />
-                    ) : (
                       <Icon source={CheckCircleIcon} tone="success" />
+                    ) : (
+                      <Icon source={MenuHorizontalIcon} tone="info" />
                     )}
                   </span>
                   <div className="flex justify-between w-full">

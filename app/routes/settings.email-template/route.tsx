@@ -16,15 +16,137 @@ import TextEditor from './components/text-editor';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const EmailTemplate = () => {
-  const [template, setTemplate] = useState(null);
+  const [template, setTemplate] = useState<string>('');
+  const [defaultTemplate, setDefaultTemplate] = useState('');
   const [editorState, setEditorState] = useState(null);
 
-  const handleEditButton = (e) => {
-    setTemplate(e);
-  };
+  console.log('editorState', editorState);
+  const reqAdminTemplate = `<p>Dear Admin,</p>
+  <p>A new claim has been requested for the following order:</p>
+  <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+  <tbody>
+  <tr style="height: 36.1648px;">
+  <td>Order ID</td>
+  <td><strong>{order_ID}</strong></td>
+  </tr>
+  <tr style="height: 36.0795px;">
+  <td>Customer Name</td>
+  <td><strong>{customer_name}</strong></td>
+  </tr>
+  <tr style="height: 36.1648px;">
+  <td>Claim Reason</td>
+  <td><strong>{claim_reason}</strong></td>
+  </tr>
+  <tr style="height: 36.1648px;">
+  <td>Claim Date</td>
+  <td><strong>{claim_date}</strong></td>
+  </tr>
+  </tbody>
+  </table>
+  <p>Please review the claim request and take appropriate action.</p>
+  <p>Best regards,<br><strong>Inhouse Shipping Protection</strong> <strong>Team</strong></p>
+  <p>&nbsp;</p>`;
 
-  const onEditorStateChange = (e) => {
-    console.log('onEditorStateChange', e);
+  const reqCustomerTemplate = `<p>Dear {customer_name},</p>
+  <p>We have received your claim request for Order {order_id}. Our team will review your claim and get back to you within 24hours.</p>
+  <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+  <tbody>
+  <tr style="height: 36.1648px;">
+  <td>Order ID</td>
+  <td><strong>{order_ID}</strong></td>
+  </tr>
+  <tr style="height: 36.1648px;">
+  <td>Claim Reason</td>
+  <td><strong>{claim_reason}</strong></td>
+  </tr>
+  <tr style="height: 36.1648px;">
+  <td>Claim Date</td>
+  <td><strong>{claim_date}</strong></td>
+  </tr>
+  </tbody>
+  </table>
+  <p>If you have any questions, feel free to contact us.</p>
+  <p>Best regards,<br><strong>{shop_name}</strong></p>
+  <p>&nbsp;</p>`;
+
+  const refundCustomerTemplate = `<p>Dear {customer_name},</p>
+  <p>Your claim for Order {order_id} has been approved, and a refund of {refund_amount} has been processed. The refund will appear in your account within 24hours.</p>
+  <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+  <tbody>
+  <tr style="height: 36.1648px;">
+  <td>Order ID</td>
+  <td><strong>{order_ID}</strong></td>
+  </tr>
+  <tr style="height: 36.1648px;">
+  <td>Refund Amount</td>
+  <td><strong>{refund_amount}</strong></td>
+  </tr>
+  <tr style="height: 36.1648px;">
+  <td>Refund Processed On</td>
+  <td><strong>{date}</strong></td>
+  </tr>
+  </tbody>
+  </table>
+  <p>Thank you for your patience.</p>
+  <p>Best regards,<br><strong>{shop_name}</strong></p>
+  <p>&nbsp;</p>`;
+
+  const reOrderCustomerTemplate = `<p>Dear {customer_name},</p>
+  <p>Your claim for Order {order_id} has been approved, and we have initiated a replacement order. You can expect your new shipment soon.</p>
+  <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+  <tbody>
+  <tr style="height: 36.1648px;">
+  <td>Order ID</td>
+  <td><strong>{order_ID}</strong></td>
+  </tr>
+  <tr style="height: 36.1648px;">
+  <td>Replacement Order ID</td>
+  <td><strong>{replacement_order_id}</strong></td>
+  </tr>
+  <tr style="height: 36.1648px;">
+  <td>Shipping Details</td>
+  <td><strong>{shipping_details}</strong></td>
+  </tr>
+  </tbody>
+  </table>
+  <p>Thank you for your continued support.</p>
+  <p>Best regards,<br><strong>{shop_name}</strong></p>
+  <p>&nbsp;</p>`;
+
+  const cancelCustomerTemplate = `<p>Dear {customer_name},</p>
+  <p>Your claim request for Order {order_id} has been canceled. If you have any questions or believe this was done in error, please reach out to our support team.</p>
+  <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+  <tbody>
+  <tr style="height: 36.1648px;">
+  <td>Order ID</td>
+  <td><strong>{order_ID}</strong></td>
+  </tr>
+  <tr style="height: 36.1648px;">
+  <td>Cancellation Reason</td>
+  <td><strong>{cancellation_reason}</strong></td>
+  </tr>
+  </tbody>
+  </table>
+  <p>Thank you for your understanding.</p>
+  <p>Best regards,<br><strong>{shop_name}</strong></p>
+  <p>&nbsp;</p>`;
+  const handleEditButton = (e) => {
+    if (e === 'Claim Request Email For Admin') {
+      setTemplate('New Claim Request Submitted: Order {order_ID}');
+      setDefaultTemplate(reqAdminTemplate);
+    } else if (e === 'Claim Request Email For Customer') {
+      setTemplate('Claim Request Received: Order {order_ID}');
+      setDefaultTemplate(reqCustomerTemplate);
+    } else if (e === 'Claim Refund Email For Customer') {
+      setTemplate('Claim Approved: Refund Issued for Order {order_ID}');
+      setDefaultTemplate(refundCustomerTemplate);
+    } else if (e === 'Claim Re-order Email For Customer') {
+      setTemplate('Claim Approved: Replacement Order Confirmed for Order');
+      setDefaultTemplate(reOrderCustomerTemplate);
+    } else if (e === 'Claim Cancel Email For Customer') {
+      setTemplate('Claim Request Canceled: Order {order_ID}');
+      setDefaultTemplate(cancelCustomerTemplate);
+    }
   };
 
   const templateItems = [
@@ -34,72 +156,6 @@ const EmailTemplate = () => {
     { name: 'Claim Re-order Email For Customer' },
     { name: 'Claim Cancel Email For Customer' },
   ];
-
-  const defaultTemplateContent = `<p>Mr/Mrs/Ms {customer_name}</p>
-${
-  template === 'Claim Request Email For Admin' ||
-  template === 'Claim Request Email For Customer'
-    ? '<p>You have requested claim on your order : {order_no}. Your claim has been requested.</p>'
-    : ''
-}
-${
-  template === 'Claim Refund Email For Customer'
-    ? '<p>You have requested claim on your order : {order_no}. Your claim has been approved and soon you will be refunded you amount in your account.</p>'
-    : ''
-}
-${
-  template === 'Claim Re-order Email For Customer'
-    ? '<p>You have requested claim on your order :  {order_no}. Your claim will be reorder soon.</p>'
-    : ''
-}
-${
-  template === 'Claim Cancel Email For Customer'
-    ? '<p>You have requested claim on your order : {order_no}. Your claim has been canceled.</p>'
-    : ''
-}
-<p>Order Detail :&nbsp;</p>
-<table style="border-collapse: collapse; width: 100.035%; height: 108.516px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-<tbody>
-<tr style="height: 36.1719px;">
-<td>Customer Name</td>
-<td>{customer_name}</td>
-</tr>
-<tr style="height: 36.1719px;">
-<td>Order No</td>
-<td>{order_no}</td>
-</tr>
-<tr style="height: 36.1719px;">
-<td>Status</td>
-<td>{claimed}</td>
-</tr>
-</tbody>
-</table>
-<p>Thank You.</p>`;
-
-  const adminTemplate = `<p>Dear Admin,</p>
-<p>A new claim has been requested for the following order:</p>
-<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-<tbody>
-<tr style="height: 36.1648px;">
-<td>Order ID</td>
-<td><strong>{order_ID}</strong></td>
-</tr>
-<tr style="height: 36.0795px;">
-<td>Customer Name</td>
-<td><strong>{customer_name}</strong></td>
-</tr>
-<tr style="height: 36.1648px;">
-<td>Order No</td>
-<td><strong>{order_no}</strong></td>
-</tr>
-<tr style="height: 36.1648px;">
-<td>Status</td>
-<td><strong>{claimed}</strong></td>
-</tr>
-</tbody>
-</table>
-<p>Please review the claim request and take appropriate action.</p>
-<p>Best regards,<br><strong>Inhouse Shipping Protection</strong> <strong>Team</strong></p>`;
 
   return (
     <>
@@ -149,7 +205,7 @@ ${
                 <div className="mb-4 flex items-center gap-4 ">
                   <Button
                     icon={ArrowLeftIcon}
-                    onClick={() => setTemplate(null)}
+                    onClick={() => setTemplate('')}
                   ></Button>
                   <Text as="h1" variant="headingLg">
                     Email Template
@@ -163,15 +219,33 @@ ${
                           autoComplete="true"
                           label="Email Subject"
                           value={template}
+                          onChange={(e) => setTemplate(e)}
                           requiredIndicator
                         />
                       </Box>
                       <div className="mt-2">
-                        <TextEditor defaultContent={adminTemplate} />
+                        <h1 className="my-1">Email Content</h1>
+                        <TextEditor
+                          defaultContent={editorState ?? defaultTemplate}
+                          setEditorState={setEditorState}
+                        />
                       </div>
                     </div>
                   </div>
                 </Card>
+                <div className="flex justify-end my-4">
+                  <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-md hover:bg-green-500">
+                    Update
+                  </button>
+                </div>
+                <div contentEditable onChange={(e) => console.log(e)}>
+                  {' '}
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Iusto, perferendis?
+                  </p>{' '}
+                  <span>Lorem ipsum dolor sit amet.</span>
+                </div>
               </Layout.Section>
             )}
           </Layout>

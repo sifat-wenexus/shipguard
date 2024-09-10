@@ -36,7 +36,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       theme_id: theme?.id,
       asset: { key: 'templates/page.claim-request.json' },
     });
-    let ebbedBlock = null;
+    let ebbedBlock = false;
     let claimPage = false;
     if (!asset.data[0].value) {
       return json({
@@ -57,7 +57,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
             typeof blocks[block][check] === 'string' &&
             blocks[block][check].includes('package-protection')
           ) {
-            ebbedBlock = blocks[block].disabled;
+            ebbedBlock = !blocks[block].disabled;
           }
         }
       }
