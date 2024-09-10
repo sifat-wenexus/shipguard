@@ -25,22 +25,6 @@ export interface ModelTypes {
     model: Base.File;
     whereInput: Base.Prisma.FileWhereInput;
   };
-  badgeImage: {
-    model: Base.BadgeImage;
-    whereInput: Base.Prisma.BadgeImageWhereInput;
-  };
-  badgeGroup: {
-    model: Base.BadgeGroup;
-    whereInput: Base.Prisma.BadgeGroupWhereInput;
-  };
-  badgeSettings: {
-    model: Base.BadgeSettings;
-    whereInput: Base.Prisma.BadgeSettingsWhereInput;
-  };
-  scrollToTopSettings: {
-    model: Base.ScrollToTopSettings;
-    whereInput: Base.Prisma.ScrollToTopSettingsWhereInput;
-  };
   collection: {
     model: Base.Collection;
     whereInput: Base.Prisma.CollectionWhereInput;
@@ -64,26 +48,6 @@ export interface ModelTypes {
   productVariant: {
     model: Base.ProductVariant;
     whereInput: Base.Prisma.ProductVariantWhereInput;
-  };
-  salesCampaign: {
-    model: Base.SalesCampaign;
-    whereInput: Base.Prisma.SalesCampaignWhereInput;
-  };
-  salesCampaignInclude: {
-    model: Base.SalesCampaignInclude;
-    whereInput: Base.Prisma.SalesCampaignIncludeWhereInput;
-  };
-  salesCampaignExclude: {
-    model: Base.SalesCampaignExclude;
-    whereInput: Base.Prisma.SalesCampaignExcludeWhereInput;
-  };
-  salesCampaignVariant: {
-    model: Base.SalesCampaignVariant;
-    whereInput: Base.Prisma.SalesCampaignVariantWhereInput;
-  };
-  checkoutTermsSettings: {
-    model: Base.CheckoutTermsSettings;
-    whereInput: Base.Prisma.CheckoutTermsSettingsWhereInput;
   };
   packageProtection: {
     model: Base.PackageProtection;

@@ -15,19 +15,6 @@ export const models = defineModels(() => {
     };
   }
 
-  function salesCampaignIncludePermission(session: Session) {
-    return {
-      Campaign: {
-        storeId: session.storeId!,
-      },
-    };
-  }
-  function checkoutTermsSettingsPermission(session: Session) {
-    return {
-      storeId: session.storeId!,
-    };
-  }
-
   function packageProtectionPermission(session: Session) {
     return { storeId: session.storeId! };
   }
