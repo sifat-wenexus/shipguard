@@ -130,40 +130,41 @@ export async function loader({ request }) {
   const templates = await prisma.emailTemplate.findMany({
     where: { storeId: ctx.session.storeId },
   });
-  if (!templates) {
-    const defaultTemplatesPayload = [
+
+  if (!templates.length) {
+    const defaultTemplatesPayload: {
+      storeId: string;
+      body: string;
+      subject: string;
+    }[] = [
       {
         storeId: ctx.session.storeId!,
-        body: JSON.stringify('lol'),
+        body: reqAdminTemplate,
         subject: 'New Claim Request Submitted: Order {order_ID}',
       },
       {
         storeId: ctx.session.storeId!,
-        body: JSON.stringify('lol'),
+        body: reqCustomerTemplate,
         subject: 'Claim Request Received: Order {order_ID}',
       },
       {
         storeId: ctx.session.storeId!,
-        body: JSON.stringify('lol'),
+        body: refundCustomerTemplate,
         subject: 'Claim Approved: Refund Issued for Order {order_ID}',
       },
       {
         storeId: ctx.session.storeId!,
-        body: JSON.stringify('lol'),
+        body: reOrderCustomerTemplate,
         subject: 'Claim Approved: Replacement Order Confirmed for Order',
       },
       {
         storeId: ctx.session.storeId!,
-        body: JSON.stringify('lol'),
+        body: cancelCustomerTemplate,
         subject: 'Claim Request Canceled: Order {order_ID}',
       },
     ];
-    const create = await prisma.emailTemplate.createMany({
-      data: {
-        storeId: ctx.session.storeId!,
-        body: JSON.stringify('lol'),
-        subject: '',
-      },
+    await prisma.emailTemplate.createMany({
+      data: defaultTemplatesPayload,
     });
     return json({ message: 'something is wrong', status: false, data: null });
   }
@@ -181,9 +182,13 @@ const EmailTemplate = () => {
   const [defaultTemplate, setDefaultTemplate] = useState('');
   const [editorState, setEditorState] = useState(null);
 
-  console.log('editorState', editorState);
-
   const handleEditButton = (e) => {
+    const currentTemplate = data?.find((t) => t.subject === e);
+    if (currentTemplate) {
+      setTemplate(currentTemplate.subject);
+      setDefaultTemplate(currentTemplate.body);
+      return;
+    }
     if (e === 'Claim Request Email For Admin') {
       setTemplate('New Claim Request Submitted: Order {order_ID}');
       setDefaultTemplate(reqAdminTemplate);

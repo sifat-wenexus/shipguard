@@ -8,7 +8,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const ctx = await shopifyRemix.authenticate.admin(request);
 
     const restAdminApi = await ctx.admin.rest.resources;
-
+    let ebbedBlock = false;
+    let claimPage = false;
     const install = await prisma.packageProtection.findFirst({
       where: { storeId: ctx.session.storeId },
       select: { enabled: true },
@@ -26,44 +27,64 @@ export async function loader({ request }: LoaderFunctionArgs) {
       .then((r) => r.data[0])
       .catch((err) => console.error(err));
 
-    const asset = await restAdminApi.Asset.all({
-      session: ctx.session,
-      theme_id: theme?.id,
-      asset: { key: 'config/settings_data.json' },
-    });
-    const template = await restAdminApi.Asset.all({
-      session: ctx.session,
-      theme_id: theme?.id,
-      asset: { key: 'templates/page.claim-request.json' },
-    });
-    let ebbedBlock = false;
-    let claimPage = false;
-    if (!asset.data[0].value) {
-      return json({
-        theme,
-        store,
-        ebbedBlock,
-        install: install?.enabled,
-        claimPage,
+    try {
+      const asset = await restAdminApi.Asset.all({
+        session: ctx.session,
+        theme_id: theme?.id,
+        asset: { key: 'config/settings_data.json' },
       });
-    }
+      if (!asset.data[0].value) {
+        return json({
+          theme,
+          store,
+          ebbedBlock,
+          install: install?.enabled,
+          claimPage,
+        });
+      }
 
-    const blocks = await JSON.parse(asset.data[0].value).current.blocks;
+      const blocks = await JSON.parse(asset.data[0].value).current.blocks;
 
-    for (const block in blocks) {
-      if (typeof blocks[block] === 'object') {
-        for (const check in blocks[block]) {
-          if (
-            typeof blocks[block][check] === 'string' &&
-            blocks[block][check].includes('package-protection')
-          ) {
-            ebbedBlock = !blocks[block].disabled;
+      for (const block in blocks) {
+        if (typeof blocks[block] === 'object') {
+          for (const check in blocks[block]) {
+            if (
+              typeof blocks[block][check] === 'string' &&
+              blocks[block][check].includes('package-protection')
+            ) {
+              ebbedBlock = !blocks[block].disabled;
+            }
           }
         }
       }
-    }
 
-    if (!template.data[0].value) {
+      const template = await restAdminApi.Asset.all({
+        session: ctx.session,
+        theme_id: theme?.id,
+        // asset: { key: 'templates/page.claim-request.json' },
+      });
+      if (
+        template.data.find((t) => t.key === 'templates/page.claim-request.json')
+      ) {
+        claimPage = true;
+        return json({
+          theme,
+          store,
+          ebbedBlock,
+          install: install?.enabled,
+          claimPage,
+        });
+      }
+
+      return json({
+        theme,
+        store,
+        ebbedBlock,
+        install: install?.enabled,
+        claimPage,
+      });
+    } catch (err) {
+      console.error(err);
       return json({
         theme,
         store,
@@ -72,13 +93,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         claimPage,
       });
     }
-    claimPage = JSON.stringify(template?.data[0]?.value).includes(
-      'package-protection-claim'
-    );
-
-    return json({
-      data: { theme, store, ebbedBlock, install: install?.enabled, claimPage },
-    });
   } catch (err) {
     console.error('error in loader', err);
     return json({ error: 'Error in loader', success: false });

@@ -10,13 +10,10 @@ export function useLivePageData(delay: number = 10000) {
       setLoading(true);
       const response = await fetch(`/get-guide-line-data`);
       const res = await response.json();
-
-      if (
-        JSON.stringify(res.data) !== JSON.stringify(previousDataRef.current)
-      ) {
+      if (JSON.stringify(res) !== JSON.stringify(previousDataRef.current)) {
         setLoading(false);
-        setStoreInfo(res.data);
-        previousDataRef.current = res.data;
+        setStoreInfo(res);
+        previousDataRef.current = res;
       }
     } catch (err) {
       console.error(err);

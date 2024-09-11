@@ -225,7 +225,11 @@ const GuideLine = ({ storeInfo }) => {
                             <Button
                               variant="primary"
                               tone="success"
-                              url={`https://admin.shopify.com/store/${storeInfo?.store?.name}/themes/${storeInfo?.theme?.id}/editor?context=apps`}
+                              url={`https://admin.shopify.com/store/${
+                                storeInfo?.store?.domain.split('.')[0]
+                              }/themes/${
+                                storeInfo?.theme?.id
+                              }/editor?context=apps`}
                               target="_blank"
                             >
                               Enable App Embed

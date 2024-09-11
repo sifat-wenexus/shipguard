@@ -51,7 +51,6 @@ const Dashboard = () => {
   // let startPoint = 0;
 
   const { storeInfo } = useLivePageData();
-
   const getData = async () => {
     if (startDate === endDate && activeDates?.alias !== 'Today') return;
     setLoading(true);

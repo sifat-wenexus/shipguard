@@ -205,23 +205,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
       insurancePriceType: settingsData?.insurancePriceType ?? 'PERCENTAGE',
       insuranceDisplayButton: settingsData?.insuranceDisplayButton ?? false,
       disabledDescription:
-        settingsData?.disabledDescription ?? 'Write your disabled description.',
+        settingsData?.disabledDescription ??
+        'By deselecting we are not liable for lost, damaged, or stolen items.',
       enabledDescription:
-        settingsData?.enabledDescription ?? 'Covers Damage, Lost & Theft.',
-      defaultPercentage: settingsData?.defaultPercentage ?? 2,
+        settingsData?.enabledDescription ?? '100% Covers Damage, Lost & Theft',
+      defaultPercentage: settingsData?.defaultPercentage ?? 0.75,
       percentage: settingsData?.percentage ?? 3,
-      policyUrl: settingsData?.policyUrl ?? 'www.yourpolicyurl.com',
+      policyUrl: settingsData?.policyUrl ?? '',
       title: settingsData?.title ?? 'Package Protection',
       price: settingsData?.price ?? 0,
-      icon: settingsData?.icon ?? 'one',
+      icon: settingsData?.icon ?? 'three',
       css: settingsData?.css ?? '',
 
       switchColor: settingsData?.switchColor
         ? hexToHsba(settingsData.switchColor)
-        : hexToHsba('#22c122'),
+        : hexToHsba('#6bce6a'),
       insuranceFulfillmentStatus:
         settingsData?.insuranceFulfillmentStatus ??
-        'Mark as fulfilled when first item(s) are fulfilled',
+        'Mark as fulfilled immediately after purchase',
 
       defaultSetting: settingsData?.defaultSetting ?? true,
       cssSelector: settingsData?.cssSelector ?? '',

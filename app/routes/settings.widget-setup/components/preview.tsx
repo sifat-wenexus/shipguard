@@ -1,7 +1,7 @@
 import { hsbaToHexWithAlpha } from '~/modules/utils/color-utils';
 import { ShadowBevelBox } from '~/components/shadow-bevel-box';
 import { InfoIcon, ViewIcon } from '@shopify/polaris-icons';
-import { Box, Divider, Icon } from '@shopify/polaris';
+import { Box, Divider, Icon, Link } from '@shopify/polaris';
 import { packageIcons } from './package-icons';
 import ProductCard from './product-preview';
 
@@ -27,13 +27,13 @@ const Preview = ({ formState }) => {
                 <h5 className="text-[1.1rem] sm:text-lg font-bold">
                   {formState.state.title}
                 </h5>
-                <span className="text-3xl cursor-pointer ms-1">
+                <Link url={formState.state.policyUrl ?? ''} target="_blank">
                   <Icon
                     source={InfoIcon}
                     tone="info"
                     accessibilityLabel="info"
                   />
-                </span>
+                </Link>
               </span>
 
               {formState.state.insuranceDisplayButton ? (

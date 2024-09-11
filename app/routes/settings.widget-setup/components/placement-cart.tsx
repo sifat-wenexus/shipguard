@@ -36,13 +36,19 @@ const PlacementCard = ({ formState }) => {
         <FormLayout.Group>
           <Box paddingBlockStart="100" paddingBlockEnd="100">
             <b>Package protection placement</b>
-            <Radio
-              onChange={() => formState.addChange({ defaultSetting: true })}
-              checked={formState.staged.defaultSetting}
-              label="Default settings (recommended)"
-              id="defaultSetting on"
-              type="radio"
-            />
+            <div className="flex items-center">
+              {' '}
+              <Radio
+                onChange={() => formState.addChange({ defaultSetting: true })}
+                checked={formState.staged.defaultSetting}
+                label="Automatic "
+                id="defaultSetting on"
+                type="radio"
+              />{' '}
+              <span className="font-bold mt-2 ms-1 text-blue-600">
+                (Recommended)
+              </span>{' '}
+            </div>
             <Radio
               onChange={() => formState.addChange({ defaultSetting: false })}
               checked={!formState.staged.defaultSetting}
@@ -51,16 +57,17 @@ const PlacementCard = ({ formState }) => {
               type="radio"
             />
           </Box>
-          <Divider />
+          {/* <Divider /> */}
           {formState.staged.defaultSetting ? (
             <Box paddingBlockEnd="100">
               <Text as="p">
-                The app will try to{' '}
+                The app will attempt to{' '}
                 <Text variant="headingSm" as="span">
                   automatically
                 </Text>{' '}
-                position the widget but, if you want to select its placement
-                yourself, use custom settings to configure it.
+                position the widget, but if automatic placement doesn’t work,
+                you can use custom settings to configure the widget's placement
+                on your store's theme.
               </Text>
             </Box>
           ) : (
@@ -116,7 +123,7 @@ const PlacementCard = ({ formState }) => {
               </Box>
             </>
           )}{' '}
-          <Divider />
+          {/* <Divider />
           <Box paddingBlockStart="100" paddingBlockEnd="100">
             <b>Placement</b>
             <Box paddingBlockStart="100">
@@ -138,7 +145,7 @@ const PlacementCard = ({ formState }) => {
                 checked={formState.staged.showOnMiniCart}
               />
             </Box>
-          </Box>
+          </Box> */}
         </FormLayout.Group>
       </FormLayout>
     </ShadowBevelBox>

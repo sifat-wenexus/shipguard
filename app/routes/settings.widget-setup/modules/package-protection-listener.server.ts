@@ -1,14 +1,15 @@
 import { GraphqlClient } from '~/shopify-api/lib/clients/graphql/graphql_client';
-import packageYellow from '~/assets/icons/Package_Protection-yellow.jpg';
-import packageGreen from '~/assets/icons/Package_Protection-green.jpg';
-import packageBlack from '~/assets/icons/Package_Protection-black.jpg';
-import packageFour from '~/assets/icons/Package_Protection-(1).jpg';
+import packageYellow from '~/assets/icons/svg/Package_Protection yellow.svg';
+import packageGreen from '~/assets/icons/svg/Package_Protection-green.svg';
+import packageBlack from '~/assets/icons/svg/Package_Protection-black.svg';
+import packageFour from '~/assets/icons/svg/Package_Protection.svg';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { onDBEvtBuffered } from '~/modules/emitter.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { getConfig } from '~/modules/get-config.server';
 import { prisma } from '~/modules/prisma.server';
 import { sleep } from '~/modules/utils/sleep';
+import productImage from '~/assets/images/Inhouse Shipping Protection.png';
 import _ from 'lodash';
 
 const icons: {
@@ -42,6 +43,7 @@ onDBEvtBuffered(
           include: { excludedPackageProtectionVariants: true },
         });
       const icon = icons.find((i) => i.id === data.icon)?.icon ?? packageGreen;
+
       const gql = getShopifyGQLClient(session);
 
       let metafields: Record<string, any> = [];
@@ -252,20 +254,20 @@ onDBEvtBuffered(
               await shopifyProductUpdate({
                 productId: existingProduct.fixedProductId,
                 status: 'ACTIVE',
-                imageUrl: icon,
+                imageUrl: productImage,
                 gql,
               });
               await shopifyProductUpdate({
                 productId: existingProduct.percentageProductId,
                 status: 'DRAFT',
-                imageUrl: icon,
+                imageUrl: productImage,
                 gql,
               });
             } else {
               await shopifyProductUpdate({
                 productId: existingProduct.fixedProductId,
                 status: 'DRAFT',
-                imageUrl: icon,
+                imageUrl: productImage,
                 gql,
               });
             }
@@ -313,21 +315,21 @@ onDBEvtBuffered(
               await shopifyProductUpdate({
                 productId: existingProduct.percentageProductId,
                 status: 'ACTIVE',
-                imageUrl: icon,
+                imageUrl: productImage,
                 gql: gql,
               });
 
               await shopifyProductUpdate({
                 productId: existingProduct.fixedProductId,
                 status: 'DRAFT',
-                imageUrl: icon,
+                imageUrl: productImage,
                 gql,
               });
             } else {
               await shopifyProductUpdate({
                 productId: existingProduct.percentageProductId,
                 status: 'DRAFT',
-                imageUrl: icon,
+                imageUrl: productImage,
                 gql: gql,
               });
             }
@@ -632,7 +634,6 @@ onDBEvtBuffered(
             },
           },
         });
-        console.log('metafields added', JSON.stringify(res.body.data));
       } catch (err) {
         console.log('error-meta-filed', err);
       }

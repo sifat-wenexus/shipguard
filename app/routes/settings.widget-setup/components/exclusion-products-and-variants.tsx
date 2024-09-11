@@ -10,15 +10,24 @@ import {
   Text,
   Box,
   Thumbnail,
+  Button,
+  IndexTable,
+  useIndexResourceState,
 } from '@shopify/polaris';
 
 const ExclusionProductsAndVariants = ({ formState }) => {
+  const resourcesSelected = formState.state.excludeProductVariant;
+  const {
+    selectedResources,
+    allResourcesSelected,
+    handleSelectionChange,
+    clearSelection,
+  } = useIndexResourceState(resourcesSelected);
   const [selectedItems, setSelectedItems] = useState<
     ResourceListProps['selectedItems']
   >([]);
   const [resourcesSelection, setResourcesSelection] = useState<any>([]);
   const [inputText, setInputText] = useState('');
-  const resourcesSelected = formState.state.excludeProductVariant;
   const searchText = useDebounce(inputText, 500);
 
   // this effect for show modal on search something
@@ -35,24 +44,25 @@ const ExclusionProductsAndVariants = ({ formState }) => {
   // handleRemove fn
   const handleRemove = () => {
     const notRemoveItem = resourcesSelected.filter(
-      (item) => !selectedItems?.includes(item.id)
+      (item) => !selectedResources?.includes(item.id)
     );
     const resourceSelected = notRemoveItem.map((el) => {
       return { id: el.id, variants: el.variants.map((e) => ({ id: e.id })) };
     });
     setResourcesSelection(resourceSelected);
     formState.addChange({ excludeProductVariant: notRemoveItem });
-    setSelectedItems([]);
+    clearSelection();
+    // setSelectedItems([]);
   };
 
   // handle click fn
-  const handleClick = (e) => {
-    setSelectedItems((prev: any) =>
-      prev?.includes(e)
-        ? Array(prev).filter((item) => item !== e)
-        : [...prev, e]
-    );
-  };
+  // const handleClick = (e) => {
+  //   setSelectedItems((prev: any) =>
+  //     prev?.includes(e)
+  //       ? Array(prev).filter((item) => item !== e)
+  //       : [...prev, e]
+  //   );
+  // };
 
   const clicked = async () => {
     const res = await shopify.resourcePicker({
@@ -87,7 +97,9 @@ const ExclusionProductsAndVariants = ({ formState }) => {
     setResourcesSelection(prevSelected);
   }, [resourcesSelected]);
 
-  console.log(resourcesSelected, selectedItems);
+  // -----
+
+  console.log(resourcesSelected, selectedItems, selectedResources);
   return (
     <>
       <Box paddingBlockStart="100" paddingBlockEnd="100">
@@ -115,57 +127,117 @@ const ExclusionProductsAndVariants = ({ formState }) => {
 
       <Box paddingBlockStart="025" paddingBlockEnd="100">
         {resourcesSelected?.length > 0 && resourcesSelected ? (
-          <ResourceList
-            resourceName={{
-              singular: 'Product',
-              plural: 'Products',
-            }}
-            promotedBulkActions={[
-              {
-                content: 'Remove product',
-                onAction: handleRemove,
-              },
-            ]}
-            items={resourcesSelected}
-            renderItem={(item) => {
-              const { id, title, images, image, variants, totalVariants } =
-                item;
+          <>
+            <IndexTable
+              headings={[{ title: 'Product' }]}
+              itemCount={resourcesSelected?.length}
+              selectedItemsCount={
+                allResourcesSelected ? 'All' : selectedResources.length
+              }
+              onSelectionChange={handleSelectionChange}
+              promotedBulkActions={[
+                {
+                  content: 'Remove product',
+                  onAction: handleRemove,
+                },
+              ]}
+            >
+              {resourcesSelected.map(
+                (
+                  { id, title, images, image, variants, totalVariants },
+                  index
+                ) => {
+                  const imageUrl = !image
+                    ? images[0]?.originalSrc
+                    : JSON.parse(images)[0]?.originalSrc;
 
-              const imageUrl = !image
-                ? images[0]?.originalSrc
-                : JSON.parse(images)[0]?.originalSrc;
+                  return (
+                    <IndexTable.Row
+                      id={id}
+                      key={id}
+                      selected={selectedResources.includes(id)}
+                      position={index}
+                    >
+                      <IndexTable.Cell>
+                        <div className="flex gap-2 items-center">
+                          <Thumbnail
+                            source={imageUrl}
+                            alt="product"
+                            size="small"
+                          />
+                          <div>
+                            <Text variant="bodyMd" fontWeight="bold" as="h3">
+                              {title}
+                            </Text>
+                            <div className="font-thin text-xs text-gray-600">
+                              {variants.length === totalVariants
+                                ? null
+                                : variants.length === 1
+                                ? variants.length + ' Variant Selected'
+                                : variants.length + ' Variants Selected'}
+                            </div>
+                          </div>
+                        </div>
+                      </IndexTable.Cell>
+                    </IndexTable.Row>
+                  );
+                }
+              )}
+            </IndexTable>
 
-              const media = (
-                <Thumbnail
-                  alt="product-image"
-                  size="small"
-                  source={imageUrl ?? undefined}
-                />
-              );
-              return (
-                <ResourceItem
-                  id={id}
-                  media={media}
-                  accessibilityLabel={`View details for ${title}`}
-                  onClick={(e): void => handleClick(e)}
-                >
-                  <Text variant="bodyMd" fontWeight="bold" as="h3">
-                    {title}
-                  </Text>
-                  <div className="font-thin text-xs text-gray-600">
-                    {variants.length === totalVariants
-                      ? null
-                      : variants.length === 1
-                      ? variants.length + ' Variant Selected'
-                      : variants.length + ' Variants Selected'}
-                  </div>
-                </ResourceItem>
-              );
-            }}
-            selectedItems={selectedItems}
-            onSelectionChange={setSelectedItems}
-            selectable
-          />
+            {/* <ResourceList
+              resourceName={{
+                singular: 'Product',
+                plural: 'Products',
+              }}
+              promotedBulkActions={[
+                {
+                  content: 'Remove product',
+                  onAction: handleRemove,
+                },
+              ]}
+              selectedItems={selectedItems}
+              onSelectionChange={setSelectedItems}
+              selectable
+              showHeader
+              items={resourcesSelected}
+              renderItem={(item) => {
+                const { id, title, images, image, variants, totalVariants } =
+                  item;
+
+                const imageUrl = !image
+                  ? images[0]?.originalSrc
+                  : JSON.parse(images)[0]?.originalSrc;
+
+                const media = (
+                  <Thumbnail
+                    alt="product-image"
+                    size="small"
+                    source={imageUrl ?? undefined}
+                  />
+                );
+                return (
+                  <ResourceItem
+                    id={id}
+                    media={media}
+                    accessibilityLabel={`View details for ${title}`}
+                    onClick={(e): void => handleClick(e)}
+                  >
+                    <Text variant="bodyMd" fontWeight="bold" as="h3">
+                      {title}
+                    </Text>
+                    <div className="font-thin text-xs text-gray-600">
+                      {variants.length === totalVariants
+                        ? null
+                        : variants.length === 1
+                        ? variants.length + ' Variant Selected'
+                        : variants.length + ' Variants Selected'}
+                    </div>
+                  </ResourceItem>
+                );
+              }}
+            /> */}
+          </>
         ) : null}
       </Box>
     </>

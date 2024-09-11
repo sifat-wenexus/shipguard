@@ -1,1 +1,228 @@
-var CartAPI=function(d){"use strict";var f=Object.defineProperty;var w=(d,a,o)=>a in d?f(d,a,{enumerable:!0,configurable:!0,writable:!0,value:o}):d[a]=o;var p=(d,a,o)=>(w(d,typeof a!="symbol"?a+"":a,o),o);const u=class u extends XMLHttpRequest{static addEventListener(e,t,n=!0){n?this.beforeListeners[e].add(t):this.afterListeners[e].add(t)}static removeEventListener(e,t,n=!0){n?this.beforeListeners[e].delete(t):this.afterListeners[e].delete(t)}open(e,t,n=!0,r,s){for(const i of u.beforeListeners.open)i(this,e,t,n,r,s);super.open(e,t,n,r,s);for(const i of u.afterListeners.open)i(this,e,t,n,r,s)}};p(u,"beforeListeners",{open:new Set}),p(u,"afterListeners",{open:new Set});let a=u;const h=class h{constructor(e){p(this,"listeners",new Set);p(this,"cart",null);if(this.fetchFn=e,!h.instance)h.instance=this;else return h.instance;window.fetch=async(t,n)=>{const r=typeof t=="string"||t instanceof URL?t.toString():t.url,s=this.getCartEndpoint(r);if(s){const i=await e(t,n);return await this.notifyListeners(s),i}return e(t,n)},window.XMLHttpRequest=a,a.addEventListener("open",(t,n,r)=>{const s=this.getCartEndpoint(r);s&&t.addEventListener("load",async()=>this.notifyListeners(s))},!0)}getCartEndpoint(e){const t=typeof e=="string"?e:e.toString(),n=new URL(!t.startsWith("http://")||!t.startsWith("https://")?`${window.location.origin}/${t}`:t),r={add:"/cart/add",update:"/cart/update",change:"/cart/change",clear:"/cart/clear"};for(const s in r){const i=r[s];if([i,`${i}.js`].some(c=>n.pathname.endsWith(c)))return s}return null}async notifyListeners(e){const t=this.cart,n=await this.get(!0);if(JSON.stringify(t,null,0)===JSON.stringify(n,null,0))return t;for(const r of this.listeners)r(n,{requestType:e,updatedBy:"api"});return n}addListener(e){return this.listeners.add(e),()=>{this.listeners.delete(e)}}removeListener(e){this.listeners.delete(e)}async request(e,t,n=!0){const r=await this.fetchFn.call(window,`/cart/${e}.js`,{method:"POST",headers:t?{"Content-Type":"application/json"}:void 0,body:t?JSON.stringify(t):void 0});return n?{cart:await this.notifyListeners(e),response:await r.json()}:{cart:await this.get(!n),response:await r.json()}}async get(e=!1){if(this.cart&&!e)return this.cart;const n=await(await fetch("/cart.js")).json();return this.cart=n,n}async update(e,t=!0){const{cart:n}=await this.request("update",{updates:e},t);return n}async append(e,t=!0){const{cart:n}=await this.request("add",{items:e},t);return n}async prepend(e,t=!0){const n=await this.get(),r=e.concat(Array.from(n.items).reverse().map(s=>{var i;return{id:s.variant_id,quantity:s.quantity,selling_plan:(i=s.selling_plan)==null?void 0:i.id,properties:s.properties}}));return this.replace(r,t)}async change(e,t=!0){const{cart:n}=await this.request("change",e,t);return n}async remove(e,t=!0){const n=e.filter(s=>{var i;return(i=this.cart)==null?void 0:i.items.some(c=>c.variant_id===s)});if(!n.length)return await this.get();const{cart:r}=await this.request("update",{updates:n.reduce((s,i)=>({...s,[i]:0}),{})},t);return r}async move(e,t,n=!0){const r=await this.get(),s=r.items.find(c=>c.variant_id===e);if(!s)return r;const i=r.items.filter(c=>c.variant_id!==e);return i.splice(t,0,s),this.replace(i.map(c=>{var l;return{id:c.variant_id,quantity:c.quantity,selling_plan:(l=c.selling_plan)==null?void 0:l.id,properties:c.properties}}),n)}async replace(e,t=!0){return await this.clear(!1),this.append(e,t)}async clear(e=!0){const{cart:t}=await this.request("clear",void 0,e);return t}};p(h,"instance");let o=h;return window.weNexusCartApi=new o(fetch),d.CartApi=o,Object.defineProperty(d,Symbol.toStringTag,{value:"Module"}),d}({});
+var CartAPI = function(exports) {
+  "use strict";var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
+
+  const _XHRCustom = class _XHRCustom extends XMLHttpRequest {
+    static addEventListener(type, listener, before = true) {
+      if (before) {
+        this.beforeListeners[type].add(listener);
+      } else {
+        this.afterListeners[type].add(listener);
+      }
+    }
+    static removeEventListener(type, listener, before = true) {
+      if (before) {
+        this.beforeListeners[type].delete(listener);
+      } else {
+        this.afterListeners[type].delete(listener);
+      }
+    }
+    open(method, url, async = true, user, password) {
+      for (const listener of _XHRCustom.beforeListeners.open) {
+        listener(this, method, url, async, user, password);
+      }
+      super.open(method, url, async, user, password);
+      for (const listener of _XHRCustom.afterListeners.open) {
+        listener(this, method, url, async, user, password);
+      }
+    }
+  };
+  __publicField(_XHRCustom, "beforeListeners", {
+    open: /* @__PURE__ */ new Set()
+  });
+  __publicField(_XHRCustom, "afterListeners", {
+    open: /* @__PURE__ */ new Set()
+  });
+  let XHRCustom = _XHRCustom;
+  const _CartApi = class _CartApi {
+    constructor(fetchFn) {
+      __publicField(this, "listeners", /* @__PURE__ */ new Set());
+      __publicField(this, "cart", null);
+      this.fetchFn = fetchFn;
+      if (!_CartApi.instance) {
+        _CartApi.instance = this;
+      } else {
+        return _CartApi.instance;
+      }
+      window.fetch = async (url, options) => {
+        const urlStr = typeof url === "string" || url instanceof URL ? url.toString() : url.url;
+        const type = this.getCartEndpoint(urlStr);
+        if (type) {
+          const res = await fetchFn(url, options);
+          await this.notifyListeners(type);
+          return res;
+        }
+        return fetchFn(url, options);
+      };
+      window.XMLHttpRequest = XHRCustom;
+      XHRCustom.addEventListener(
+        "open",
+        (xhr, _method, url) => {
+          const type = this.getCartEndpoint(url);
+          if (type) {
+            xhr.addEventListener("load", async () => this.notifyListeners(type));
+          }
+        },
+        true
+      );
+    }
+    getCartEndpoint(url) {
+      const urlStr = typeof url === "string" ? url : url.toString();
+      const urlObj = new URL(
+        !urlStr.startsWith("http://") || !urlStr.startsWith("https://") ? `${window.location.origin}/${urlStr}` : urlStr
+      );
+      const matchMap = {
+        add: "/cart/add",
+        update: "/cart/update",
+        change: "/cart/change",
+        clear: "/cart/clear"
+      };
+      for (const key in matchMap) {
+        const path = matchMap[key];
+        if ([path, `${path}.js`].some((p) => urlObj.pathname.endsWith(p))) {
+          return key;
+        }
+      }
+      return null;
+    }
+    async notifyListeners(requestType) {
+      const oldCart = this.cart;
+      const newCart = await this.get(true);
+      if (JSON.stringify(oldCart, null, 0) === JSON.stringify(newCart, null, 0)) {
+        return oldCart;
+      }
+      for (const listener of this.listeners) {
+        listener(newCart, { requestType, updatedBy: "api" });
+      }
+      return newCart;
+    }
+    addListener(listener) {
+      this.listeners.add(listener);
+      return () => {
+        this.listeners.delete(listener);
+      };
+    }
+    removeListener(listener) {
+      this.listeners.delete(listener);
+    }
+    async request(type, payload, trigger = true) {
+      const response = await this.fetchFn.call(window, `/cart/${type}.js`, {
+        method: "POST",
+        headers: payload ? {
+          "Content-Type": "application/json"
+        } : void 0,
+        body: payload ? JSON.stringify(payload) : void 0
+      });
+      if (trigger) {
+        return {
+          cart: await this.notifyListeners(type),
+          response: await response.json()
+        };
+      }
+      return {
+        cart: await this.get(!trigger),
+        response: await response.json()
+      };
+    }
+    async get(refresh = false) {
+      if (this.cart && !refresh) {
+        return this.cart;
+      }
+      const response = await fetch(`/cart.js`);
+      const cart = await response.json();
+      this.cart = cart;
+      return cart;
+    }
+    async update(updates, trigger = true) {
+      const { cart } = await this.request("update", { updates }, trigger);
+      return cart;
+    }
+    async append(items, trigger = true) {
+      const { cart } = await this.request("add", { items }, trigger);
+      return cart;
+    }
+    async prepend(items, trigger = true) {
+      const oldCart = await this.get();
+      const updates = items.concat(
+        Array.from(oldCart.items).reverse().map((item) => {
+          var _a;
+          return {
+            id: item.variant_id,
+            quantity: item.quantity,
+            selling_plan: (_a = item.selling_plan) == null ? void 0 : _a.id,
+            properties: item.properties
+          };
+        })
+      );
+      return this.replace(updates, trigger);
+    }
+    async change(item, trigger = true) {
+      const { cart } = await this.request("change", item, trigger);
+      return cart;
+    }
+    async remove(variantIds, trigger = true) {
+      const toRemove = variantIds.filter(
+        (id) => {
+          var _a;
+          return (_a = this.cart) == null ? void 0 : _a.items.some((item) => item.variant_id === id);
+        }
+      );
+      if (!toRemove.length) {
+        return await this.get();
+      }
+      const { cart } = await this.request(
+        "update",
+        {
+          updates: toRemove.reduce(
+            (acc, id) => ({
+              ...acc,
+              [id]: 0
+            }),
+            {}
+          )
+        },
+        trigger
+      );
+      return cart;
+    }
+    async move(id, index, trigger = true) {
+      const oldCart = await this.get();
+      const item = oldCart.items.find((item2) => item2.variant_id === id);
+      if (!item) {
+        return oldCart;
+      }
+      const items = oldCart.items.filter((item2) => item2.variant_id !== id);
+      items.splice(index, 0, item);
+      return this.replace(
+        items.map((item2) => {
+          var _a;
+          return {
+            id: item2.variant_id,
+            quantity: item2.quantity,
+            selling_plan: (_a = item2.selling_plan) == null ? void 0 : _a.id,
+            properties: item2.properties
+          };
+        }),
+        trigger
+      );
+    }
+    async replace(items, trigger = true) {
+      await this.clear(false);
+      return this.append(items, trigger);
+    }
+    async clear(trigger = true) {
+      const { cart } = await this.request("clear", void 0, trigger);
+      return cart;
+    }
+  };
+  __publicField(_CartApi, "instance");
+  let CartApi = _CartApi;
+  window.weNexusCartApi = new CartApi(fetch);
+  exports.CartApi = CartApi;
+  Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+  return exports;
+}({});
