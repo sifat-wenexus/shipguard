@@ -6,7 +6,7 @@ COPY . .
 
 RUN apk add --update --no-cache ruby ruby-dev ruby-bundler build-base curl
 
-RUN pnpm install
+RUN corepack enable pnpm
 RUN pnpm install
 RUN pnpm run build
 RUN pnpx prisma generate
