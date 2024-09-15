@@ -11,6 +11,6 @@ RUN pnpm install
 RUN pnpm run build
 RUN pnpx prisma generate
 RUN pnpm prune --prod
-RUN pnpm cache clean --force
+RUN pnpm store prune --force
 
 CMD ["pnpm", "start"]
