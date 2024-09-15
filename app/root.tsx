@@ -49,7 +49,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (
     !url.pathname.startsWith('/auth') &&
     !url.pathname.startsWith('/webhooks') &&
-    !url.pathname.startsWith('/test')
+    !url.pathname.startsWith('/test') &&
+    !url.pathname.startsWith('/gmail-oauth-callback')
   ) {
     const ctx = await shopify.authenticate.admin(request);
 
@@ -83,7 +84,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   return json({
-    appStatus: 'INSTALLED' as AppStatus,
+    appStatus: url.pathname.startsWith('/gmail-oauth-callback') ? 'READY' : 'INSTALLED' as AppStatus,
     apiKey: process.env.SHOPIFY_API_KEY!,
     currencyCode: 'USD',
   });

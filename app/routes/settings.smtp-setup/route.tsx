@@ -1,17 +1,70 @@
-import {
-  Box,
-  Button,
-  Card,
-  Icon,
-  Layout,
-  Page,
-  Select,
-  Text,
-  TextField,
-} from '@shopify/polaris';
-import { ArrowLeftIcon, LogoGoogleIcon } from '@shopify/polaris-icons';
-import { useCallback, useState } from 'react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { useBetterFetcher } from '~/hooks/use-better-fetcher';
+import { queryProxy } from '~/modules/query/query-proxy';
+import { ArrowLeftIcon } from '@shopify/polaris-icons';
+import { useCallback, useMemo, useState } from 'react';
+import { Link, useLoaderData } from '@remix-run/react';
 import SwitchButton from './components/switch-button';
+import { shopify } from '~/modules/shopify.server';
+import GmailLogo from '~/assets/images/gmail.png';
+import { prisma } from '~/modules/prisma.server';
+import { useQuery } from '~/hooks/use-query';
+import { json } from '@remix-run/node';
+
+import {
+  AccountConnection,
+  TextField,
+  Button,
+  Select,
+  Layout,
+  Card,
+  Page,
+  Text,
+  Box,
+} from '@shopify/polaris';
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const { session } = await shopify.authenticate.admin(request);
+
+  const gmailAuth = await prisma.gmailAuthCredential.findFirst({
+    where: {
+      id: session.storeId,
+    },
+  });
+
+  return json({
+    isGmailConnected: !!gmailAuth?.payload,
+  });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const { session } = await shopify.authenticate.admin(request);
+
+  const data = await request.formData();
+  const action = data.get('action');
+
+  if (action === 'disconnect') {
+    const provider = data.get('provider');
+
+    if (provider === 'google') {
+      await queryProxy.gmailAuthCredential.delete({
+        where: {
+          id: session.storeId,
+        },
+      }, { session });
+
+      return json({
+        message: 'Google account disconnected.',
+        success: true,
+      });
+    }
+
+    return json({
+      message: 'Something went wrong, please try again. If the problem persists, contact support.',
+      success: false,
+    });
+  }
+}
 
 const SMTP = () => {
   const [selected, setSelected] = useState('google');
@@ -20,18 +73,21 @@ const SMTP = () => {
   const [proxy, setProxy] = useState(false);
   const [TLSVersion, setTLSVersion] = useState('');
   const [button, setButton] = useState(false);
+  const fetcher = useBetterFetcher();
+
+  const loaderData = useLoaderData<typeof loader>();
 
   const handleSelectChange = useCallback(
     (value: string) => setSelected(value),
-    []
+    [],
   );
   const handleSelectSmtpChange = useCallback(
     (value: string) => setSelectedSmtp(value),
-    []
+    [],
   );
   const handleTLSVersionChange = useCallback(
     (value: string) => setTLSVersion(value),
-    []
+    [],
   );
   const options = [
     { label: 'Google', value: 'google' },
@@ -47,6 +103,30 @@ const SMTP = () => {
     { label: 'TLSv1.2', value: 'TLSv1.2' },
     { label: 'TLSv1.3', value: 'TLSv1.3' },
   ];
+
+  const gmailAuthQuery = useMemo(() => queryProxy.gmailAuthCredential.subscribeFindFirst(), []);
+  const gmailAuth = useQuery(gmailAuthQuery);
+
+  const isGmailConnected = useMemo(() => loaderData.isGmailConnected || !!gmailAuth.data?.payload, [gmailAuth.data?.payload, loaderData.isGmailConnected]);
+
+  const authorize = useCallback(async () => {
+    const url = await fetch('/gmail-oauth-url').then(r => r.text());
+
+    window.open(url, '_blank'/*, `height=800,width=800,toolbar=no,resizable=no,left=${window.screen.width / 2 - 400},top=${window.screen.height / 2 - 400}`*/);
+  }, []);
+
+  const disconnectGmail = useCallback(async () => {
+    await fetcher.submit({
+      toast: true,
+      loading: true,
+    }, {
+      action: 'disconnect',
+      provider: 'google',
+    }, {
+      method: 'POST',
+    });
+  }, [fetcher]);
+
   return (
     <>
       <div className="mt-8 sm:mt-4 m-2">
@@ -73,22 +153,26 @@ const SMTP = () => {
                   </Box>
                   {selected === 'google' ? (
                     <Box paddingBlockStart="200" paddingBlockEnd="200">
-                      <Button
-                        tone="success"
-                        variant="primary"
-                        size="large"
-                        icon={<Icon source={LogoGoogleIcon} />}
-                      >
-                        Connect With Google
-                      </Button>
-                      {/* <Button
-                        // tone="success"
-                        variant="primary"
-                        size="large"
-                        icon={<Icon source={LogoGoogleIcon} />}
-                      >
-                        Disconnect
-                      </Button> */}
+                      <AccountConnection
+                        details={!isGmailConnected ? 'Connect with your Google account to send emails using Gmail\'s SMTP server.' : 'Your Google account is connected.'}
+                        termsOfService={
+                          isGmailConnected ? null : (
+                            <p>
+                              By connecting your Google account, you agree to accept our{' '} <Link
+                              to="/gmail-terms-of-service" className="underline">Terms of Service</Link> and{' '} <Link
+                              to="/gmail-privacy-policy" className="underline">Privacy Policy</Link>.
+                            </p>
+                          )
+                        }
+                        connected={isGmailConnected}
+                        title="Google Account"
+                        avatarUrl={GmailLogo}
+                        accountName="Google"
+                        action={{
+                          content: isGmailConnected ? 'Disconnect' : 'Connect',
+                          onAction: isGmailConnected ? disconnectGmail : authorize,
+                          external: !isGmailConnected,
+                        }} />
                     </Box>
                   ) : (
                     <>

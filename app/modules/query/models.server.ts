@@ -327,5 +327,34 @@ export const models = defineModels(() => {
         permission: packageProtectionPermission,
       },
     },
+
+    gmailAuthCredential: {
+      permissions: {
+        subscribe: true,
+        read: {
+          fields: true,
+          permission(session) {
+            return {
+              id: session.storeId!,
+            };
+          },
+        },
+        delete: {
+          permission(session) {
+            return {
+              id: session.storeId!,
+            };
+          },
+        },
+        update: {
+          fields: new Set(['payload']),
+          permission(session) {
+            return {
+              id: session.storeId!,
+            };
+          },
+        },
+      },
+    },
   };
 });

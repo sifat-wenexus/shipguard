@@ -161,6 +161,7 @@ model Store {
   PackageProtectionOrders     PackageProtectionOrder[]
   PackageProtectionClaimOrder PackageProtectionClaimOrder[]
   EmailTemplates              EmailTemplate[]
+  GmailAuthCredential         GmailAuthCredential?
 
   @@index([appInstallationId])
 }
@@ -424,4 +425,15 @@ model EmailTemplate {
   body    String
 
   Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model GmailAuthCredential {
+  id String @id
+
+  oauthState String
+  payload    Json?
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  Store Store @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

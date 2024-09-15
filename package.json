@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "NODE_ENV=production remix build",
-    "dev": "shopify app dev",
+    "dev": "cli/run.ts",
     "config:link": "shopify app config link",
     "config:push": "shopify app config push",
     "generate": "shopify app generate",
@@ -17,6 +17,7 @@
     "prisma": "prisma"
   },
   "dependencies": {
+    "@google-cloud/local-auth": "2.1.0",
     "@google-cloud/storage": "^7.12.1",
     "@iarna/toml": "^2.2.5",
     "@monaco-editor/react": "^4.6.0",
@@ -39,11 +40,10 @@
     "cross-env": "^7.0.3",
     "draft-js": "^0.11.7",
     "eventemitter2": "^6.4.9",
-    "execa": "^8.0.1",
+    "googleapis": "105",
     "joi": "^17.13.3",
     "jose": "^5.8.0",
     "lodash": "^4.17.21",
-    "node-fetch": "^3.3.2",
     "node-html-parser": "^6.1.13",
     "prisma": "^5.19.1",
     "react": "^18.3.1",
@@ -53,7 +53,8 @@
     "remix-utils": "^7.6.0",
     "semver": "^7.6.3",
     "tslib": "^2.7.0",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.11.2",
@@ -62,8 +63,11 @@
     "@types/lodash": "^4.17.7",
     "@types/node": "^20.16.5",
     "@types/uuid": "^9.0.8",
+    "@types/ws": "^8.5.12",
+    "esbuild-register": "^3.6.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.10.0",
+    "node-fetch": "^3.3.2",
     "prettier": "^2.8.8",
     "tailwindcss": "^3.4.10"
   },
