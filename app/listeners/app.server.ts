@@ -14,7 +14,7 @@ emitter.on(
       where: { Store: { domain: shop } },
     });
 
-    const bucket = gcloudStorage.bucket(process.env.GCLOUD_BUCKET_NAME!);
+    const bucket = gcloudStorage.bucket(process.env.GC_STORAGE_BUCKET_NAME!);
 
     for (const file of files) {
       await bucket.file(file.id).delete();
@@ -32,22 +32,10 @@ emitter.on(
       where: { Store: { domain: session?.shop } },
     });
 
-    const bucket = gcloudStorage.bucket(process.env.GCLOUD_BUCKET_NAME!);
+    const bucket = gcloudStorage.bucket(process.env.GC_STORAGE_BUCKET_NAME!);
 
     for (const file of files) {
       await bucket.file(file.id).delete();
     }
-
-    await prisma.store.update({
-      where: { domain: shop },
-      data: {
-        BadgeSettings: {
-          delete: {},
-        },
-        ScrollToTopSettings: {
-          delete: {},
-        },
-      },
-    });
   }
 );

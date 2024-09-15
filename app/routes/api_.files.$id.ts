@@ -43,7 +43,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
       );
 
       await gcloudStorage
-        .bucket(process.env.GCLOUD_BUCKET_NAME!)
+        .bucket(process.env.GC_STORAGE_BUCKET_NAME!)
         .file(params.id!)
         .delete({
           ignoreNotFound: true,
@@ -83,7 +83,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   }
 
   const [file] = await gcloudStorage
-    .bucket(process.env.GCLOUD_BUCKET_NAME!)
+    .bucket(process.env.GC_STORAGE_BUCKET_NAME!)
     .file(params.id!)
     .download();
 

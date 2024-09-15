@@ -46,7 +46,7 @@ export async function action({ request }: ActionFunctionArgs) {
           },
         });
 
-        const bucket = gcloudStorage.bucket(process.env.GCLOUD_BUCKET_NAME!);
+        const bucket = gcloudStorage.bucket(process.env.GC_STORAGE_BUCKET_NAME!);
 
         await bucket
           .file(fileInDB.id)

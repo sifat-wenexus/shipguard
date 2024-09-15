@@ -313,7 +313,7 @@ export const action: ActionFunction = async ({ request }) => {
             },
           });
 
-          const bucket = gcloudStorage.bucket(process.env.GCLOUD_BUCKET_NAME!);
+          const bucket = gcloudStorage.bucket(process.env.GC_STORAGE_BUCKET_NAME!);
           await bucket
             .file(fileInDB.id)
             .save(Buffer.from(await file.arrayBuffer()), {

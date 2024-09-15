@@ -6,10 +6,11 @@ COPY . .
 
 RUN apk add --update --no-cache ruby ruby-dev ruby-bundler build-base curl
 
-RUN npm install
-RUN npm run build
-RUN npx prisma generate
-RUN npm prune --omit=dev
-RUN npm cache clean --force
+RUN pnpm install
+RUN pnpm install
+RUN pnpm run build
+RUN pnpx prisma generate
+RUN pnpm prune --prod
+RUN pnpm cache clean --force
 
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "start"]

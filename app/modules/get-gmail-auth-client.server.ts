@@ -5,7 +5,7 @@ import process from 'node:process';
 
 export async function getGmailAuthClient(storeId?: string) {
   const client = new OAuth2Client(
-    process.env.GMAIL_CLIENT_ID,
+    process.env.GMAIL_CLIENT_USER_ID,
     process.env.GMAIL_CLIENT_SECRET,
     process.env.GMAIL_OAUTH_REDIRECT_URI,
   );
