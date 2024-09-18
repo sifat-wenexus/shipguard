@@ -108,7 +108,7 @@ onDBEvtBuffered(
           value: data.icon,
         });
       }
-      if (data.switchColor !== undefined) {
+      if (data.switchColor) {
         metafields.push({
           key: 'switchColor',
           namespace: 'package_protection',
@@ -116,7 +116,7 @@ onDBEvtBuffered(
           value: data.switchColor,
         });
       }
-      if (data.title !== undefined) {
+      if (data.title) {
         metafields.push({
           key: 'title',
           namespace: 'package_protection',
@@ -125,7 +125,7 @@ onDBEvtBuffered(
         });
       }
 
-      if (data.enabledDescription !== undefined) {
+      if (data.enabledDescription) {
         metafields.push({
           key: 'enabledDescription',
           namespace: 'package_protection',
@@ -134,7 +134,7 @@ onDBEvtBuffered(
         });
       }
 
-      if (data.disabledDescription !== undefined) {
+      if (data.disabledDescription) {
         metafields.push({
           key: 'disabledDescription',
           namespace: 'package_protection',
@@ -142,7 +142,7 @@ onDBEvtBuffered(
           value: data.disabledDescription,
         });
       }
-      if (data.policyUrl !== undefined) {
+      if (data.policyUrl) {
         metafields.push({
           key: 'policyUrl',
           namespace: 'package_protection',
@@ -158,7 +158,7 @@ onDBEvtBuffered(
           value: data.insuranceDisplayButton.toString(),
         });
       }
-      if (data.insuranceFulfillmentStatus !== undefined) {
+      if (data.insuranceFulfillmentStatus) {
         metafields.push({
           key: 'insuranceFulfillmentStatus',
           namespace: 'package_protection',
@@ -166,7 +166,7 @@ onDBEvtBuffered(
           value: data.insuranceFulfillmentStatus,
         });
       }
-      if (data.css !== undefined) {
+      if (data.css) {
         metafields.push({
           key: 'css',
           namespace: 'package_protection',
@@ -174,7 +174,7 @@ onDBEvtBuffered(
           value: JSON.stringify(data.css) || 'null',
         });
       }
-      if (data.cssSelector !== undefined) {
+      if (data.cssSelector) {
         metafields.push({
           key: 'cssSelector',
           namespace: 'package_protection',
