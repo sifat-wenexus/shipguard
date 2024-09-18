@@ -3,7 +3,6 @@
 client_id = "014656fd1817c91322f981a3ad07bb4b"
 name = "Inhouse Package Protection"
 application_url = "https://shipping-protection.wenexus.io"
-include_config_on_deploy = true
 embedded = true
 
 [access_scopes]
