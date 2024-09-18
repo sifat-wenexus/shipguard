@@ -1,4 +1,4 @@
-import { GraphqlClient } from '~/shopify-api/lib/clients/graphql/graphql_client';
+import type { GraphqlClient } from '~/shopify-api/lib/clients/graphql/graphql_client';
 import packageYellow from '~/assets/icons/svg/Package_Protection yellow.svg';
 import packageGreen from '~/assets/icons/svg/Package_Protection-green.svg';
 import packageBlack from '~/assets/icons/svg/Package_Protection-black.svg';
@@ -33,7 +33,10 @@ onDBEvtBuffered(
       const data = payload?.newData ?? payload?.oldData;
       const session = payload?.session;
 
+      console.log(`Package Protection Listener: Processing store ${storeId}`);
+
       if (!data || !session) {
+        console.log('No data or session');
         continue;
       }
 
@@ -226,7 +229,7 @@ onDBEvtBuffered(
             appInstallationId: true,
           },
         },
-        session
+        session,
       );
 
       if (!store) {
@@ -283,7 +286,7 @@ onDBEvtBuffered(
                   id: variantExists.id,
                   options: data.price.toString(),
                 },
-                gql
+                gql,
               );
               await metafields.push({
                 key: 'productVariants',
@@ -293,7 +296,7 @@ onDBEvtBuffered(
                   {
                     id: singleVariant.id.replace(
                       'gid://shopify/ProductVariant/',
-                      ''
+                      '',
                     ),
                     price: singleVariant.price,
                   },
@@ -359,18 +362,18 @@ onDBEvtBuffered(
             const result = await gql.query<any>({
               data: {
                 query: `#graphql
-                        mutation productVariantsBulkUpdate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
-                          productVariantsBulkUpdate(productId: $productId, variants: $variants) {
-                            productVariants{
-                              id
-                              price
-                            }
-                            userErrors{
-                              field
-                              message
-                            }
-                          }
-                        }`,
+                mutation productVariantsBulkUpdate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+                  productVariantsBulkUpdate(productId: $productId, variants: $variants) {
+                    productVariants{
+                      id
+                      price
+                    }
+                    userErrors{
+                      field
+                      message
+                    }
+                  }
+                }`,
                 variables: {
                   productId: existingProduct.percentageProductId,
                   variants: productVariantsUpdate,
@@ -387,8 +390,8 @@ onDBEvtBuffered(
                   (v) => ({
                     id: v.id.replace('gid://shopify/ProductVariant/', ''),
                     price: v.price,
-                  })
-                )
+                  }),
+                ),
               ),
             });
           }
@@ -453,7 +456,7 @@ onDBEvtBuffered(
                     create: percentageProduct,
                     update: percentageProduct,
                     where: { id: productGqlDraftId },
-                  }
+                  },
                 );
 
                 await queryProxy.packageProtection.update({
@@ -484,7 +487,7 @@ onDBEvtBuffered(
                   id: variantExists?.id,
                   options: data.price.toString(),
                 },
-                gql
+                gql,
               );
               await metafields.push({
                 key: 'productVariants',
@@ -494,7 +497,7 @@ onDBEvtBuffered(
                   {
                     id: singleVariant.id.replace(
                       'gid://shopify/ProductVariant/',
-                      ''
+                      '',
                     ),
                     price: singleVariant.price,
                   },
@@ -570,7 +573,7 @@ onDBEvtBuffered(
                     create: percentageProduct,
                     update: percentageProduct,
                     where: { id: productId },
-                  }
+                  },
                 );
                 await queryProxy.packageProtection.update({
                   where: { storeId: data.storeId },
@@ -598,7 +601,7 @@ onDBEvtBuffered(
                 res.map((e) => ({
                   id: e.id.replace('gid://shopify/ProductVariant/', ''),
                   price: e.price,
-                }))
+                })),
               ),
             });
           }
@@ -611,6 +614,8 @@ onDBEvtBuffered(
         ...metafield,
         ownerId: store.appInstallationId,
       }));
+
+      console.log(`Metafields: ${JSON.stringify(metafields)}`);
 
       // add metafields
       try {
@@ -634,11 +639,13 @@ onDBEvtBuffered(
             },
           },
         });
+
+        console.log(`Metafields set response: ${JSON.stringify(res.body)}`);
       } catch (err) {
         console.log('error-meta-filed', err);
       }
     }
-  }
+  },
 );
 
 interface IShopifyBulkProductVariantCreateArgs {
@@ -657,10 +664,10 @@ interface IProductVariant {
 }
 
 async function shopifyBulkProductVariantCreate({
-  defaultPrice,
-  productId,
-  gql,
-}: IShopifyBulkProductVariantCreateArgs): Promise<any> {
+                                                 defaultPrice,
+                                                 productId,
+                                                 gql,
+                                               }: IShopifyBulkProductVariantCreateArgs): Promise<any> {
   const productVariants: IProductVariant[] = [];
   let price = defaultPrice;
   for (let i = 1; i <= 100; i++) {
@@ -678,19 +685,19 @@ async function shopifyBulkProductVariantCreate({
   const variantCreate = await gql.query<any>({
     data: {
       query: `#graphql
-            mutation productVariantsBulkCreate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
-              productVariantsBulkCreate(productId: $productId, variants: $variants) {
-                productVariants{
-                  id
-                  price
-                  sku
-                }
-                userErrors {
-                  field
-                  message
-                }
-              }
-            }`,
+      mutation productVariantsBulkCreate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+        productVariantsBulkCreate(productId: $productId, variants: $variants) {
+          productVariants{
+            id
+            price
+            sku
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }`,
       variables: {
         productId: productId,
         variants: productVariants,
@@ -706,7 +713,7 @@ async function shopifyBulkProductVariantCreate({
           productId,
           title: variant.price.toString(),
         };
-      }
+      },
     );
 
   await queryProxy.productVariant.createMany({
@@ -719,21 +726,21 @@ async function shopifySingleVariantUpdate(input, gql: GraphqlClient) {
   const res = await gql.query<any>({
     data: {
       query: `#graphql
-            mutation updateProductVariantMetafields($input: ProductVariantInput!) {
-              productVariantUpdate(input: $input) {
-                product {
-                  id
-                },
-                productVariant{
-                  price
-                  id
-                }
-                userErrors {
-                  field
-                  message
-                }
-              }
-            }`,
+      mutation updateProductVariantMetafields($input: ProductVariantInput!) {
+        productVariantUpdate(input: $input) {
+          product {
+            id
+          },
+          productVariant{
+            price
+            id
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }`,
       variables: {
         input: input,
       },
@@ -751,22 +758,22 @@ interface IShopifyProductCreateAndUpdateArgs {
 }
 
 async function shopifyProductUpdate({
-  productId,
-  status,
-  imageUrl,
-  gql,
-}: IShopifyProductCreateAndUpdateArgs): Promise<void> {
+                                      productId,
+                                      status,
+                                      imageUrl,
+                                      gql,
+                                    }: IShopifyProductCreateAndUpdateArgs): Promise<void> {
   await gql.query<any>({
     data: {
       query: `#graphql
-          mutation  productUpdate($input:ProductInput!,$media:[CreateMediaInput!]) {
-            productUpdate(input:$input,media:$media){
-              product {
-                id
-              }
-            }
+      mutation  productUpdate($input:ProductInput!,$media:[CreateMediaInput!]) {
+        productUpdate(input:$input,media:$media){
+          product {
+            id
           }
-          `,
+        }
+      }
+      `,
       variables: {
         input: {
           id: productId,
@@ -782,29 +789,29 @@ async function shopifyProductUpdate({
 }
 
 async function shopifyCreateProduct({
-  tags,
-  imageUrl,
-  status,
-  gql,
-}: IShopifyProductCreateAndUpdateArgs): Promise<any> {
+                                      tags,
+                                      imageUrl,
+                                      status,
+                                      gql,
+                                    }: IShopifyProductCreateAndUpdateArgs): Promise<any> {
   console.log(
-    '------------------------------------product creating---------------------------------------------'
+    '------------------------------------product creating---------------------------------------------',
   );
   const res = await gql.query<any>({
     data: {
       query: `#graphql
-        mutation productCreate($input:ProductInput!,$media:[CreateMediaInput!]) {
-          productCreate(input:$input,media:$media){
-            product {
-              id
-            }
-            userErrors{
-              field
-              message
-            }
+      mutation productCreate($input:ProductInput!,$media:[CreateMediaInput!]) {
+        productCreate(input:$input,media:$media){
+          product {
+            id
+          }
+          userErrors{
+            field
+            message
           }
         }
-        `,
+      }
+      `,
       variables: {
         input: {
           title: 'Package Protection',
@@ -838,7 +845,7 @@ const productPublish = async (productId: string, gql: GraphqlClient) => {
   const getPublications = await gql.query<any>({
     data: {
       query: `#graphql
-        query publications {
+      query publications {
         publications(first: 5) {
           edges {
             node {
@@ -850,26 +857,26 @@ const productPublish = async (productId: string, gql: GraphqlClient) => {
     },
   });
   const publicationsIds = getPublications.body.data.publications.edges.map(
-    (e) => e.node.id
+    (e) => e.node.id,
   );
   // published
   const published = await gql.query<any>({
     data: {
       query: `#graphql
-       mutation publishablePublish($id: ID!, $input: [PublicationInput!]!) {
-    publishablePublish(id: $id, input: $input) {
-      publishable {
-        availablePublicationCount
-      }
-      shop {
-        publicationCount
-      }
-      userErrors {
-        field
-        message
-      }
-    }
-  }   `,
+      mutation publishablePublish($id: ID!, $input: [PublicationInput!]!) {
+        publishablePublish(id: $id, input: $input) {
+          publishable {
+            availablePublicationCount
+          }
+          shop {
+            publicationCount
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }   `,
       variables: {
         id: productId,
         input: {
