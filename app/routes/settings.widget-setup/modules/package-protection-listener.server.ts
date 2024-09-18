@@ -640,7 +640,13 @@ onDBEvtBuffered(
           },
         });
 
-        console.log(`Metafields set response: ${JSON.stringify(res.body)}`);
+        if (res.body.data.userErrors.length > 0) {
+          throw new Error(
+            `Error setting metafields: ${JSON.stringify(
+              res.body.data.userErrors,
+            )}`,
+          );
+        }
       } catch (err) {
         console.log('error-meta-filed', err);
       }
