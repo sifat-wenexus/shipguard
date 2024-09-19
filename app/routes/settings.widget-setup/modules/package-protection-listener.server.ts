@@ -615,8 +615,6 @@ onDBEvtBuffered(
         ownerId: store.appInstallationId,
       }));
 
-      console.log(`Metafields: ${JSON.stringify(metafields)}`);
-
       // add metafields
       try {
         const res = await gql.query<any>({
@@ -640,7 +638,7 @@ onDBEvtBuffered(
           },
         });
 
-        if (res.body.data.userErrors.length > 0) {
+        if (res.body.data?.userErrors?.length > 0) {
           throw new Error(
             `Error setting metafields: ${JSON.stringify(
               res.body.data.userErrors,

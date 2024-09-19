@@ -1,4 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { getGmailUserInfo } from '~/modules/get-gmail-user-info.server';
 import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { ArrowLeftIcon } from '@shopify/polaris-icons';
@@ -34,6 +35,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return json({
     isGmailConnected: !!gmailAuth?.payload,
+    email: 'ibrahim@wenexus.io',
   });
 }
 
@@ -154,7 +156,7 @@ const SMTP = () => {
                   {selected === 'google' ? (
                     <Box paddingBlockStart="200" paddingBlockEnd="200">
                       <AccountConnection
-                        details={!isGmailConnected ? 'Connect with your Google account to send emails using Gmail\'s SMTP server.' : 'Your Google account is connected.'}
+                        details={!isGmailConnected ? 'Connect with your Google account to send emails using Gmail\'s SMTP server.' : `Your Google account (${loaderData.email}) is connected.`}
                         termsOfService={
                           isGmailConnected ? null : (
                             <p>

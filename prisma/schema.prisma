@@ -432,6 +432,7 @@ model GmailAuthCredential {
 
   oauthState String
   payload    Json?
+  email      String?
 
   createdAt DateTime @default(now()) @db.Timestamptz()
 
