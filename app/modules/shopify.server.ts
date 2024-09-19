@@ -46,7 +46,7 @@ export const shopify = shopifyApp({
     REFUNDS_CREATE: webhookHandler,
     ORDERS_FULFILLED: webhookHandler,
     ORDERS_PARTIALLY_FULFILLED: webhookHandler,
-    CUSTOMERS_DATA_REDACT: webhookHandler,
+    CUSTOMERS_REDACT: webhookHandler,
     CUSTOMERS_DATA_REQUEST: webhookHandler,
     SHOP_REDACT: webhookHandler,
   },

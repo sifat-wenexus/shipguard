@@ -145,6 +145,7 @@ export default function Root() {
             >
               {data.appStatus === 'READY' ? (
                 <>
+                  {/* TODO: Remove the top Nav bar from this root file, so it doesn't show on every pages */}
                   <Nav />
                   <MainNav />
                   <Outlet />

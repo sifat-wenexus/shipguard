@@ -7,6 +7,8 @@ emitter.on(
   'APP_UNINSTALLED',
   async ({ ctx: { session, shop } }: WebhookListenerArgs) => {
     console.log(`App uninstalled for shop ${shop}`);
+
+    // TODO: Move package protection products to Draft status when uninstalled
   },
 );
 
@@ -37,7 +39,7 @@ emitter.on('CUSTOMERS_DATA_REQUEST', async ({ ctx: { shop } }: WebhookListenerAr
   console.log(`Customer data request for shop ${shop}`);
 });
 
-emitter.on('CUSTOMERS_DATA_REDACT', async ({ ctx: { shop } }: WebhookListenerArgs) => {
+emitter.on('CUSTOMERS_REDACT', async ({ ctx: { shop } }: WebhookListenerArgs) => {
   // TODO: Implement customer data redact handling
   console.log(`Customer data redact for shop ${shop}`);
 });
