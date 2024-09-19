@@ -11,8 +11,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (ctx.payload !== null && typeof ctx.payload === 'object' && !Array.isArray(ctx.payload)) {
     console.log('Payload:');
 
-    for (const [key, value] of (ctx.payload as any).entries()) {
-      console.log(` --> ${key}: ${value}`);
+    for (const key in ctx.payload) {
+      console.log(`  ${key}:`, ctx.payload[key]);
     }
   } else {
     console.log('Payload:', ctx.payload);
