@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE "GmailAuthCredential" ADD COLUMN     "email" TEXT NOT NULL;
+ALTER TABLE "GmailAuthCredential" ADD COLUMN     "email" TEXT;
