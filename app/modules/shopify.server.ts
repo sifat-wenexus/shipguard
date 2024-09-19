@@ -46,10 +46,21 @@ export const shopify = shopifyApp({
     REFUNDS_CREATE: webhookHandler,
     ORDERS_FULFILLED: webhookHandler,
     ORDERS_PARTIALLY_FULFILLED: webhookHandler,
+    CUSTOMERS_DATA_REDACT: webhookHandler,
+    CUSTOMERS_DATA_REQUEST: webhookHandler,
+    SHOP_REDACT: webhookHandler,
   },
   hooks: {
     afterAuth: async ({ session }) => {
       await shopify.registerWebhooks({ session });
+
+      console.log(`Webhooks registered for shop ${session.shop}`);
+      console.log('Topics:');
+
+      for (const topic of shopify.api.webhooks.getTopicsAdded()) {
+        console.log(` - ${topic}`);
+      }
+
       await new InitStore(session).run();
     },
   },

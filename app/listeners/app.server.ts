@@ -6,6 +6,13 @@ import { prisma } from '~/modules/prisma.server';
 emitter.on(
   'APP_UNINSTALLED',
   async ({ ctx: { session, shop } }: WebhookListenerArgs) => {
+    console.log(`App uninstalled for shop ${shop}`);
+  },
+);
+
+emitter.on(
+  'SHOP_REDACT',
+  async ({ ctx: { session, shop } }: WebhookListenerArgs) => {
     if (session) {
       await prisma.session.deleteMany({ where: { shop } });
     }
@@ -22,20 +29,15 @@ emitter.on(
 
     await prisma.store.deleteMany({ where: { domain: shop } });
     await prisma.session.deleteMany({ where: { shop } });
-  }
+  },
 );
 
-emitter.on(
-  'SHOP_REDACT',
-  async ({ ctx: { session, shop } }: WebhookListenerArgs) => {
-    const files = await prisma.file.findMany({
-      where: { Store: { domain: session?.shop } },
-    });
+emitter.on('CUSTOMERS_DATA_REQUEST', async ({ ctx: { shop } }: WebhookListenerArgs) => {
+  // TODO: Implement customer data request handling
+  console.log(`Customer data request for shop ${shop}`);
+});
 
-    const bucket = gcloudStorage.bucket(process.env.GC_STORAGE_BUCKET_NAME!);
-
-    for (const file of files) {
-      await bucket.file(file.id).delete();
-    }
-  }
-);
+emitter.on('CUSTOMERS_DATA_REDACT', async ({ ctx: { shop } }: WebhookListenerArgs) => {
+  // TODO: Implement customer data redact handling
+  console.log(`Customer data redact for shop ${shop}`);
+});
