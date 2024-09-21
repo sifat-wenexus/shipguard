@@ -1,5 +1,6 @@
 import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
+import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
 
@@ -15,22 +16,30 @@ emitter.on(
 emitter.on(
   'SHOP_REDACT',
   async ({ ctx: { session, shop } }: WebhookListenerArgs) => {
+    // TODO: Redact shop data within 25 days
+
     if (session) {
       await prisma.session.deleteMany({ where: { shop } });
     }
 
-    const files = await prisma.file.findMany({
+    const filesQuery = await queryProxy.file.findMany({
       where: { Store: { domain: shop } },
     });
 
     const bucket = gcloudStorage.bucket(process.env.GC_STORAGE_BUCKET_NAME!);
 
-    for (const file of files) {
-      await bucket.file(file.id).delete();
-    }
+    filesQuery.addListener(async (files) => {
+      for (const file of files) {
+        await bucket.file(file.id).delete();
+      }
 
-    await prisma.store.deleteMany({ where: { domain: shop } });
-    await prisma.session.deleteMany({ where: { shop } });
+      if (filesQuery.hasNext) {
+        return filesQuery.next();
+      }
+
+      await prisma.store.deleteMany({ where: { domain: shop } });
+      await prisma.session.deleteMany({ where: { shop } });
+    });
   },
 );
 
