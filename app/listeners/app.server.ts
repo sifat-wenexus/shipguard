@@ -3,6 +3,7 @@ import { gcloudStorage } from '~/modules/gcloud-storage.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
+import { internalMailer } from '~/modules/internal-mailer.server';
 
 emitter.on(
   'APP_UNINSTALLED',
@@ -43,9 +44,41 @@ emitter.on(
   },
 );
 
-emitter.on('CUSTOMERS_DATA_REQUEST', async ({ ctx: { shop } }: WebhookListenerArgs) => {
-  // TODO: Implement customer data request handling
-  console.log(`Customer data request for shop ${shop}`);
+emitter.on('CUSTOMERS_DATA_REQUEST', async ({ ctx: { shop, payload, session } }: WebhookListenerArgs) => {
+  const customerId = (payload as any).customer.id;
+  const ordersRequested = (payload as any).orders_requested as string[] | undefined;
+
+  const store = await prisma.store.findUniqueOrThrow({
+    where: { id: session!.storeId },
+    include: {
+      PackageProtectionOrders: {
+        where: {
+          customerId,
+          orderId: ordersRequested?.length ? {
+            in: ordersRequested.map((id) => `gid://shopify/Order/${id}`),
+          } : undefined,
+        },
+        include: {
+          PackageProtectionClaimOrder: true,
+        },
+      },
+    },
+  });
+
+  await internalMailer.sendMail({
+    from: `no-reply@${process.env.INTERNAL_MAILER_DOMAIN}`,
+    to: store.email!,
+    text: `Customer data request for ${customerId}`,
+    subject: `Customer data request for ${customerId}`,
+    attachments: [
+      {
+        filename: 'customer-data.json',
+        content: JSON.stringify(store),
+        contentType: 'application/json',
+        contentDisposition: 'attachment',
+      },
+    ],
+  });
 });
 
 emitter.on('CUSTOMERS_REDACT', async ({ ctx: { payload, session } }: WebhookListenerArgs) => {

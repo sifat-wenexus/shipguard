@@ -33,6 +33,7 @@ export class InitStore {
         shop {
           id
           name
+          email
           description
           ianaTimezone
           currencyCode

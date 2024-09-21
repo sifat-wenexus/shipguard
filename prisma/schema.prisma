@@ -132,6 +132,7 @@ model Store {
 
   domain                          String    @unique
   name                            String
+  email                           String?
   description                     String?
   logo                            String?
   appStatus                       AppStatus @default(INSTALLED)
