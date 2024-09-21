@@ -374,9 +374,10 @@ model ExcludedPackageProtectionVariant {
 }
 
 model PackageProtectionOrder {
-  id      Int    @id @default(autoincrement())
-  orderId String @unique
-  storeId String
+  id         Int     @id @default(autoincrement())
+  orderId    String  @unique
+  customerId String?
+  storeId    String
 
   protectionFee     Float              @default(0.00)
   orderAmount       Float              @default(0.00)

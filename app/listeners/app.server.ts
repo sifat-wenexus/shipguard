@@ -16,7 +16,7 @@ emitter.on(
 emitter.on(
   'SHOP_REDACT',
   async ({ ctx: { session, shop } }: WebhookListenerArgs) => {
-    // TODO: Redact shop data within 25 days
+    // TODO: Wait 25 days before deleting the shop data
 
     if (session) {
       await prisma.session.deleteMany({ where: { shop } });
@@ -48,7 +48,21 @@ emitter.on('CUSTOMERS_DATA_REQUEST', async ({ ctx: { shop } }: WebhookListenerAr
   console.log(`Customer data request for shop ${shop}`);
 });
 
-emitter.on('CUSTOMERS_REDACT', async ({ ctx: { shop } }: WebhookListenerArgs) => {
-  // TODO: Implement customer data redact handling
-  console.log(`Customer data redact for shop ${shop}`);
+emitter.on('CUSTOMERS_REDACT', async ({ ctx: { payload, session } }: WebhookListenerArgs) => {
+  const ordersToRedact = (payload as any)?.orders_to_redact as string[] | undefined;
+  const customerId = (payload as any)?.customer.id;
+
+  if (!ordersToRedact?.length) {
+    return;
+  }
+
+  await prisma.packageProtectionOrder.deleteMany({
+    where: {
+      customerId,
+      storeId: session!.storeId,
+      orderId: {
+        in: ordersToRedact.map((id) => `gid://shopify/Order/${id}`),
+      },
+    },
+  });
 });

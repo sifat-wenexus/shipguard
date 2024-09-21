@@ -6,7 +6,7 @@ import { WebhookListenerArgs } from '~/types/webhook-listener-args';
 
 const makePackageProtectionFulfill = async (
   data: Record<string, any>[],
-  gqlClient: GraphqlClient
+  gqlClient: GraphqlClient,
 ) => {
   const result: { orderId: string; id: string; productTitle: string }[] = [];
   const orders = await data;
@@ -29,25 +29,25 @@ const makePackageProtectionFulfill = async (
   if (result.length) {
     const fulfillment = await gqlClient.query({
       data: `#graphql
-                mutation {
-              fulfillmentCreateV2(fulfillment: {
-              lineItemsByFulfillmentOrder:{
-                fulfillmentOrderId:"${result[0].orderId}",
-                fulfillmentOrderLineItems:{id:"${result[0].id}",quantity:1}
-              }
+      mutation {
+        fulfillmentCreateV2(fulfillment: {
+          lineItemsByFulfillmentOrder:{
+            fulfillmentOrderId:"${result[0].orderId}",
+            fulfillmentOrderLineItems:{id:"${result[0].id}",quantity:1}
+          }
 
-              }) {
-              fulfillment {
-                id
-                status
-              }
-              userErrors {
-                field
-                message
-              }
-              }
+        }) {
+          fulfillment {
+            id
+            status
+          }
+          userErrors {
+            field
+            message
+          }
+        }
 
-                }`,
+      }`,
     });
   }
 
@@ -94,8 +94,8 @@ const makePackageProtectionFulfill = async (
 // }
 
 const orderCreateEvent = async ({
-  ctx: { shop, payload: _payload, session },
-}: WebhookListenerArgs) => {
+                                  ctx: { shop, payload: _payload, session },
+                                }: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -104,7 +104,7 @@ const orderCreateEvent = async ({
 
   const existPackageProtection = payload.line_items.find(
     (line) =>
-      line.title === 'Package Protection' || line.vendor === 'OverallInsurance'
+      line.title === 'Package Protection' || line.vendor === 'OverallInsurance',
   );
 
   try {
@@ -120,45 +120,45 @@ const orderCreateEvent = async ({
 
       const updatedOrder = await gqlClient.query<any>({
         data: `#graphql
-      mutation{
-              orderUpdate(input:{id: "${orderId}",tags:["Overall-Package-Protection"]}){
-                order{
-                  id
-                  name
-                  totalPriceSet{
+        mutation{
+          orderUpdate(input:{id: "${orderId}",tags:["Overall-Package-Protection"]}){
+            order{
+              id
+              name
+              totalPriceSet{
+                shopMoney{
+                  amount
+                }
+              }
+              lineItems(first:250){
+                nodes{
+                  title
+                  originalTotalSet{
                     shopMoney{
                       amount
                     }
                   }
-                  lineItems(first:250){
-                    nodes{
-                      title
-                      originalTotalSet{
-                        shopMoney{
-                          amount
-                        }
-                      }
-                    }
-                  }
-
-                    fulfillmentOrders(first:250){
-                      nodes{
-                        id
-                        lineItems(first:250){
-                          nodes{
-                            id
-                            productTitle
-
-                          }
-                        }
-                      }
-                    }
-                  }userErrors{
-                  message
-                  field
                 }
               }
+
+              fulfillmentOrders(first:250){
+                nodes{
+                  id
+                  lineItems(first:250){
+                    nodes{
+                      id
+                      productTitle
+
+                    }
+                  }
+                }
+              }
+            }userErrors{
+              message
+              field
             }
+          }
+        }
         `,
       });
       console.log('updatedOrder', JSON.stringify(updatedOrder));
@@ -177,15 +177,16 @@ const orderCreateEvent = async ({
 
       const orderPayload = {
         orderId: orderId,
+        customerId: payload.customer.id,
         orderName: updatedOrder.body.data.orderUpdate.order.name,
         storeId: session?.storeId,
         orderAmount:
-          updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
-            .amount,
+        updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
+          .amount,
         protectionFee: protectionFee,
       };
 
-      const orderCreate = await queryProxy.packageProtectionOrder.create({
+      await queryProxy.packageProtectionOrder.create({
         data: orderPayload,
       });
 
@@ -195,21 +196,21 @@ const orderCreateEvent = async ({
       ) {
         await makePackageProtectionFulfill(
           updatedOrder.body.data.orderUpdate.order.fulfillmentOrders.nodes,
-          gqlClient
+          gqlClient,
         );
       }
     }
   } catch (err) {
     console.log(
       '--------------------------------------ERROR----------------------------------',
-      err
+      err,
     );
   }
 };
 
 const orderRefundEvent = async ({
-  ctx: { shop, payload: _payload, session },
-}: WebhookListenerArgs) => {
+                                  ctx: { shop, payload: _payload, session },
+                                }: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -220,17 +221,17 @@ const orderRefundEvent = async ({
   const orderId = 'gid://shopify/Order/' + payload.order_id;
   const result = await gqlClient.query<any>({
     data: `#graphql
-      mutation{
-              orderUpdate(input:{id: "${orderId}",tags:["Overall-Package-Refund"]}){
-                order{
-                  id
-                }userErrors{
-                  message
-                  field
-                }
-              }
-            }
-        `,
+    mutation{
+      orderUpdate(input:{id: "${orderId}",tags:["Overall-Package-Refund"]}){
+        order{
+          id
+        }userErrors{
+          message
+          field
+        }
+      }
+    }
+    `,
   });
 };
 
@@ -239,8 +240,8 @@ const orderFulfilledEvent = async () => {
 };
 
 const orderPartiallyFulfilledEvent = async ({
-  ctx: { shop, payload: _payload, session },
-}: WebhookListenerArgs) => {
+                                              ctx: { shop, payload: _payload, session },
+                                            }: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -257,43 +258,43 @@ const orderPartiallyFulfilledEvent = async ({
 
   const existPackageProtection = payload.line_items.find(
     (line) =>
-      line.title === 'Package Protection' || line.vendor === 'OverallInsurance'
+      line.title === 'Package Protection' || line.vendor === 'OverallInsurance',
   );
   if (existPackageProtection) {
     const orderId = payload.admin_graphql_api_id;
 
     const getOrder = await gqlClient.query<any>({
       data: `#graphql
-        query{
-          order(id:"${orderId}"){
-            displayFulfillmentStatus
-            fulfillmentOrders(first:250){
-              nodes{
-                id
-                status
-                lineItems(first:250){
-                  nodes{
-                    id
-                    productTitle
-                  }
+      query{
+        order(id:"${orderId}"){
+          displayFulfillmentStatus
+          fulfillmentOrders(first:250){
+            nodes{
+              id
+              status
+              lineItems(first:250){
+                nodes{
+                  id
+                  productTitle
                 }
               }
             }
-            fulfillments(first:250){
-              id
-              name
-              displayStatus
-              fulfillmentLineItems(first:250){
-                nodes{
-                  lineItem{
-                    title
-                    id
-                  }
+          }
+          fulfillments(first:250){
+            id
+            name
+            displayStatus
+            fulfillmentLineItems(first:250){
+              nodes{
+                lineItem{
+                  title
+                  id
                 }
               }
             }
           }
         }
+      }
       `,
     });
 
@@ -336,7 +337,7 @@ const orderPartiallyFulfilledEvent = async ({
       const isExistFulfillmentPackageItem = fulfillmentOrder
         .filter((order) => order.status !== 'CLOSED')
         .filter((e) =>
-          fulfillmentLineItems.every((i) => i.productTitle !== e.productTitle)
+          fulfillmentLineItems.every((i) => i.productTitle !== e.productTitle),
         )
         .filter((item) => item.productTitle === 'Package Protection');
 
@@ -344,31 +345,31 @@ const orderPartiallyFulfilledEvent = async ({
         'ache reee',
         isExistFulfillmentPackageItem,
         fulfillmentOrder,
-        fulfillmentLineItems
+        fulfillmentLineItems,
       );
 
       if (isExistFulfillmentPackageItem.length) {
         isExistFulfillmentPackageItem.forEach(async (item) => {
           await gqlClient.query<any>({
             data: `#graphql
-                    mutation {
-                  fulfillmentCreateV2(fulfillment: {
-                  lineItemsByFulfillmentOrder:{
-                    fulfillmentOrderId:"${item.fulfillmentOrderId}",
-                    fulfillmentOrderLineItems:{id:"${item.productId}",quantity:1}
-                  }
+            mutation {
+              fulfillmentCreateV2(fulfillment: {
+                lineItemsByFulfillmentOrder:{
+                  fulfillmentOrderId:"${item.fulfillmentOrderId}",
+                  fulfillmentOrderLineItems:{id:"${item.productId}",quantity:1}
+                }
 
-                  }) {
-                  fulfillment {
-                    id
-                    status
-                  }
-                  userErrors {
-                    field
-                    message
-                  }
-                  }
-                    }`,
+              }) {
+                fulfillment {
+                  id
+                  status
+                }
+                userErrors {
+                  field
+                  message
+                }
+              }
+            }`,
           });
         });
       }
@@ -380,7 +381,7 @@ const orderPartiallyFulfilledEvent = async ({
     ) {
       await makePackageProtectionFulfill(
         getOrder.body.data.order.fulfillmentOrders.nodes,
-        gqlClient
+        gqlClient,
       );
     }
   }
@@ -390,10 +391,10 @@ const orderPartiallyFulfilledEvent = async ({
 };
 
 const orderUpdatedEvent = async ({
-  ctx: { shop, payload: _payload, session },
-}: WebhookListenerArgs) => {
+                                   ctx: { shop, payload: _payload, session },
+                                 }: WebhookListenerArgs) => {
   console.log(
-    '-------------------------orderUpdated-----------------------------'
+    '-------------------------orderUpdated-----------------------------',
   );
   if (!_payload) {
     return;
@@ -403,43 +404,43 @@ const orderUpdatedEvent = async ({
 
   const existPackageProtection = payload.line_items.find(
     (line) =>
-      line.title === 'Package Protection' || line.vendor === 'OverallInsurance'
+      line.title === 'Package Protection' || line.vendor === 'OverallInsurance',
   );
   if (existPackageProtection) {
     const orderId = payload.admin_graphql_api_id;
 
     const getOrder = await gqlClient.query<any>({
       data: `#graphql
-        query{
-          order(id:"${orderId}"){
-            displayFulfillmentStatus
-            fulfillmentOrders(first:250){
-              nodes{
-                id
-                status
-                lineItems(first:250){
-                  nodes{
-                    id
-                    productTitle
-                  }
+      query{
+        order(id:"${orderId}"){
+          displayFulfillmentStatus
+          fulfillmentOrders(first:250){
+            nodes{
+              id
+              status
+              lineItems(first:250){
+                nodes{
+                  id
+                  productTitle
                 }
               }
             }
-            fulfillments(first:250){
-              id
-              name
-              displayStatus
-              fulfillmentLineItems(first:250){
-                nodes{
-                  lineItem{
-                    title
-                    id
-                  }
+          }
+          fulfillments(first:250){
+            id
+            name
+            displayStatus
+            fulfillmentLineItems(first:250){
+              nodes{
+                lineItem{
+                  title
+                  id
                 }
               }
             }
           }
         }
+      }
       `,
     });
 
