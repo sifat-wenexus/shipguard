@@ -92,7 +92,6 @@ export default function Root() {
   const data = useLoaderData<typeof loader>();
   const validator = useRevalidator();
   const location = useLocation();
-  console.log('first location', location);
   useEffect(() => {
     if (data.appStatus === 'READY' || validator.state === 'loading') {
       return;
@@ -144,9 +143,12 @@ export default function Root() {
             >
               {data.appStatus === 'READY' ? (
                 <>
-                  {/* TODO: Remove the top Nav bar from this root file, so it doesn't show on every pages */}
-                  <Nav />
-                  <MainNav />
+                  {location.pathname !== '/auth/login' && (
+                    <>
+                      <Nav />
+                      <MainNav />
+                    </>
+                  )}
                   <Outlet />
                 </>
               ) : (

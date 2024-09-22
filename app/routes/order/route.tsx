@@ -1,6 +1,6 @@
 import { Box, Layout, Page, Text } from '@shopify/polaris';
 import DateRangePicker from '../dashboard/date-range';
-import { default30Days } from '../dashboard';
+import { default30Days } from '../dashboard/dashboard';
 import OrderList from './order-list';
 import { useState } from 'react';
 

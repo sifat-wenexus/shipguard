@@ -12,7 +12,7 @@ import PublishButton from './components/publish-button';
 import PlacementCard from './components/placement-cart';
 import WarningBanner from '~/components/warning-banner';
 import { ArrowLeftIcon } from '@shopify/polaris-icons';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useFormState } from '~/hooks/use-form-state';
 import { prisma } from '~/modules/prisma.server';
 import { useLoaderData } from '@remix-run/react';
@@ -202,7 +202,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({
     enabled: settingsData?.enabled ?? false,
     data: {
-      insurancePriceType: settingsData?.insurancePriceType ?? 'PERCENTAGE',
+      insurancePriceType: '', // settingsData?.insurancePriceType ?? '',
       insuranceDisplayButton: settingsData?.insuranceDisplayButton ?? false,
       disabledDescription:
         settingsData?.disabledDescription ??
@@ -245,6 +245,7 @@ const Settings = () => {
   const initialState = useMemo(() => data.data, [data.data]);
   const formState = useFormState(initialState);
   const [enabled, setEnabled] = useState(data.enabled);
+  const [insurancePriceError, setInsurancePriceError] = useState(false);
   const { state } = formState;
   const { storeInfo } = useLivePageData();
 
@@ -268,6 +269,11 @@ const Settings = () => {
     }
   }, [fetcher, state]);
 
+  useEffect(() => {
+    if (state.insurancePriceType) {
+      setInsurancePriceError(false);
+    }
+  }, [state.insurancePriceType]);
   return (
     <div className="m-2 sm:m-0">
       <SaveBar formState={formState} onSave={save} />
@@ -288,9 +294,16 @@ const Settings = () => {
             <div className="sm:hidden block">
               <Preview formState={formState} />
             </div>
-            <PublishButton enabled={enabled} />
+            <PublishButton
+              enabled={enabled}
+              formState={formState}
+              setInsurancePriceError={setInsurancePriceError}
+            />
             <PlacementCard formState={formState} />
-            <InsurancePricing formState={formState} />
+            <InsurancePricing
+              formState={formState}
+              insurancePriceError={insurancePriceError}
+            />
             <CustomizedInsuranceStyle formState={formState} />
             <Content formState={formState} />
             <SpecialSettings formState={formState} />

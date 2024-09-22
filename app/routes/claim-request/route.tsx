@@ -4,7 +4,7 @@ import Tutorial from '../settings.$/components/tutorial';
 import DateRangePicker from '../dashboard/date-range';
 import ClaimOrderList from './claim-order-list';
 import { IActiveDates } from '../order/route';
-import { default30Days } from '../dashboard';
+import { default30Days } from '../dashboard/dashboard';
 import { useState } from 'react';
 
 const FileClaimRequest = () => {

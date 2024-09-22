@@ -6,6 +6,8 @@ import {
   Text,
   Icon,
   Box,
+  InlineStack,
+  Button,
 } from '@shopify/polaris';
 import {
   DiscountFilledIcon,
@@ -14,24 +16,28 @@ import {
   InfoIcon,
 } from '@shopify/polaris-icons';
 
-const InsurancePricing = ({ formState }) => {
+const InsurancePricing = ({ formState, insurancePriceError }) => {
   const { state } = formState;
   return (
     <ShadowBevelBox
       icon={<Icon source={PriceListIcon} />}
-      title="Insurance pricing"
-      className="my-4"
+      title={
+        insurancePriceError
+          ? 'Insurance pricing (Required)'
+          : 'Insurance pricing'
+      }
+      className={`my-4 ${insurancePriceError ? 'border-red-400 border-2' : ''}`}
     >
       <FormLayout>
         <FormLayout.Group>
           <div className="grid grid-cols-2 gap-2">
             <Box paddingBlockStart="100" paddingBlockEnd="100">
               <div
-                onClick={() =>
+                onClick={() => {
                   formState.addChange({
                     insurancePriceType: 'PERCENTAGE',
-                  })
-                }
+                  });
+                }}
                 className={`p-3 h-full text-center shadow-md border rounded-md wenexus-icon-size cursor-pointer ${
                   state.insurancePriceType === 'PERCENTAGE' &&
                   'ring-2 ring-green-500 ring-offset-0 bg-[#6BCE6A] text-white'
@@ -98,9 +104,18 @@ const InsurancePricing = ({ formState }) => {
               </div>
             </Box>
           </div>
-          {state.insurancePriceType === 'FIXED_PRICE' ? (
+          {state.insurancePriceType === 'FIXED_PRICE' && (
             <Box paddingBlockStart="100" paddingBlockEnd="100">
-              <TextField
+              <div className="flex items-center mb-2">
+                <Text variant="headingMd" as="strong">
+                  {2} Plan added
+                </Text>
+                <div className="ms-5"></div>
+                <Button onClick={() => {}} variant="primary">
+                  Add Plan
+                </Button>
+              </div>
+              {/* <TextField
                 onChange={(price) => formState.addToStaged({ price })}
                 onBlur={() => formState.commitStaged()}
                 label="Fixed price"
@@ -109,9 +124,10 @@ const InsurancePricing = ({ formState }) => {
                 inputMode="decimal"
                 autoComplete="yes"
                 suffix={'$'}
-              />
+              /> */}
             </Box>
-          ) : (
+          )}
+          {state.insurancePriceType === 'PERCENTAGE' && (
             <div className="grid grid-cols-2 gap-2">
               <Box paddingBlockStart="100" paddingBlockEnd="100">
                 <TextField

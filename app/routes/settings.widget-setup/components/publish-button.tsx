@@ -5,11 +5,23 @@ import { Icon, Link, Text } from '@shopify/polaris';
 import { useCallback, useState } from 'react';
 import { Switch } from '~/components/switch';
 
-const PublishButton = ({ enabled: isEnabled }) => {
+const PublishButton = ({
+  enabled: isEnabled,
+  formState,
+  setInsurancePriceError,
+}) => {
   const fetcher = useBetterFetcher();
+  const { state } = formState;
+
   const [enabled, setEnabled] = useState(isEnabled);
+
   const toggleEnabled = useCallback(
     (enabled: boolean) => {
+      if (!state.insurancePriceType) {
+        setInsurancePriceError(true);
+        return;
+      }
+      setInsurancePriceError(false);
       setEnabled(enabled);
 
       return fetcher.submit(

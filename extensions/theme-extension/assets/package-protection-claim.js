@@ -19293,7 +19293,7 @@ const ri = ({
         p.preventDefault(),
           n(!0),
           fetch(
-            `https://${m}/apps/overall/get-order-fulfilment-data?email=${o}&orderId=${a.replace(
+            `https://${m}/apps/Shipping-Protection/get-order-fulfilment-data?email=${o}&orderId=${a.replace(
               '#',
               ''
             )}&url=${m}`
@@ -19513,7 +19513,7 @@ const ri = ({
             for (let N of r) D.append('files', N);
             try {
               await fetch(
-                `https://${S}/apps/overall/get-order-fulfilment-data?url=${S}`,
+                `https://${S}/apps/Shipping-Protection/get-order-fulfilment-data?url=${S}`,
                 { method: 'POST', body: D }
               ),
                 t((N) => N + 1);

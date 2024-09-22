@@ -227,9 +227,10 @@ onDBEvtBuffered(
         {
           select: {
             appInstallationId: true,
+            name,
           },
         },
-        session,
+        session
       );
 
       if (!store) {
@@ -286,7 +287,7 @@ onDBEvtBuffered(
                   id: variantExists.id,
                   options: data.price.toString(),
                 },
-                gql,
+                gql
               );
               await metafields.push({
                 key: 'productVariants',
@@ -296,7 +297,7 @@ onDBEvtBuffered(
                   {
                     id: singleVariant.id.replace(
                       'gid://shopify/ProductVariant/',
-                      '',
+                      ''
                     ),
                     price: singleVariant.price,
                   },
@@ -390,8 +391,8 @@ onDBEvtBuffered(
                   (v) => ({
                     id: v.id.replace('gid://shopify/ProductVariant/', ''),
                     price: v.price,
-                  }),
-                ),
+                  })
+                )
               ),
             });
           }
@@ -404,6 +405,7 @@ onDBEvtBuffered(
                 status: 'ACTIVE',
                 tags: ['insurancetype-fixed', 'overall-insurance'],
                 gql,
+                vendor: store.name,
               });
 
               productId = createFixedProduct.productCreate.product.id;
@@ -413,6 +415,7 @@ onDBEvtBuffered(
                 status: 'DRAFT',
                 tags: ['insurancetype-fixed', 'overall-insurance'],
                 gql,
+                vendor: store.name,
               });
               productId = createFixedProduct.productCreate.product.id;
             }
@@ -421,6 +424,7 @@ onDBEvtBuffered(
               status: 'DRAFT',
               tags: ['insurancetype-percentage', 'overall-insurance'],
               gql,
+              vendor: store.name,
             });
             const productGqlDraftId =
               createPercentProduct.productCreate.product.id;
@@ -431,7 +435,7 @@ onDBEvtBuffered(
                   productType: 'Warranty',
                   tags: ['insurancetype-fixed', 'overall-insurance'],
                   handle: 'package-protection-fixed',
-                  vendor: 'OverallInsurance',
+                  vendor: store.name,
                   status: 'PUBLISHED',
                   storeId: data.storeId,
                   id: productId,
@@ -441,7 +445,7 @@ onDBEvtBuffered(
                   productType: 'Warranty',
                   handle: 'package-protection-percentage',
                   tags: ['insurancetype-percentage', 'overall-insurance'],
-                  vendor: 'OverallInsurance',
+                  vendor: store.name,
                   status: 'DRAFT',
                   storeId: data.storeId,
                   id: productGqlDraftId,
@@ -456,7 +460,7 @@ onDBEvtBuffered(
                     create: percentageProduct,
                     update: percentageProduct,
                     where: { id: productGqlDraftId },
-                  },
+                  }
                 );
 
                 await queryProxy.packageProtection.update({
@@ -487,7 +491,7 @@ onDBEvtBuffered(
                   id: variantExists?.id,
                   options: data.price.toString(),
                 },
-                gql,
+                gql
               );
               await metafields.push({
                 key: 'productVariants',
@@ -497,7 +501,7 @@ onDBEvtBuffered(
                   {
                     id: singleVariant.id.replace(
                       'gid://shopify/ProductVariant/',
-                      '',
+                      ''
                     ),
                     price: singleVariant.price,
                   },
@@ -522,6 +526,7 @@ onDBEvtBuffered(
                 status: 'ACTIVE',
                 tags: ['insurancetype-percentage', 'overall-insurance'],
                 gql,
+                vendor: store.name,
               });
               productId = await createPercentProduct.productCreate.product.id;
             } else {
@@ -530,6 +535,7 @@ onDBEvtBuffered(
                 status: 'DRAFT',
                 tags: ['insurancetype-percentage', 'overall-insurance'],
                 gql,
+                vendor: store.name,
               });
               productId = await createPercentProduct.productCreate.product.id;
             }
@@ -538,6 +544,7 @@ onDBEvtBuffered(
               status: 'DRAFT',
               tags: ['insurancetype-fixed', 'overall-insurance'],
               gql,
+              vendor: store.name,
             });
             const productGqlDraftId = await createFixedProduct.productCreate
               .product.id;
@@ -548,7 +555,7 @@ onDBEvtBuffered(
                   productType: 'Warranty',
                   handle: 'package-protection-fixed',
                   tags: ['insurancetype-fixed', 'overall-insurance'],
-                  vendor: 'OverallInsurance',
+                  vendor: store.name,
                   status: 'PUBLISHED',
                   storeId: data.storeId,
                   id: productGqlDraftId,
@@ -558,7 +565,7 @@ onDBEvtBuffered(
                   productType: 'Warranty',
                   handle: 'package-protection-percentage',
                   tags: ['insurancetype-percentage', 'overall-insurance'],
-                  vendor: 'OverallInsurance',
+                  vendor: store.name,
                   status: 'DRAFT',
                   storeId: data.storeId,
                   id: productId,
@@ -573,7 +580,7 @@ onDBEvtBuffered(
                     create: percentageProduct,
                     update: percentageProduct,
                     where: { id: productId },
-                  },
+                  }
                 );
                 await queryProxy.packageProtection.update({
                   where: { storeId: data.storeId },
@@ -601,7 +608,7 @@ onDBEvtBuffered(
                 res.map((e) => ({
                   id: e.id.replace('gid://shopify/ProductVariant/', ''),
                   price: e.price,
-                })),
+                }))
               ),
             });
           }
@@ -641,15 +648,15 @@ onDBEvtBuffered(
         if (res.body.data?.userErrors?.length > 0) {
           throw new Error(
             `Error setting metafields: ${JSON.stringify(
-              res.body.data.userErrors,
-            )}`,
+              res.body.data.userErrors
+            )}`
           );
         }
       } catch (err) {
         console.log('error-meta-filed', err);
       }
     }
-  },
+  }
 );
 
 interface IShopifyBulkProductVariantCreateArgs {
@@ -668,10 +675,10 @@ interface IProductVariant {
 }
 
 async function shopifyBulkProductVariantCreate({
-                                                 defaultPrice,
-                                                 productId,
-                                                 gql,
-                                               }: IShopifyBulkProductVariantCreateArgs): Promise<any> {
+  defaultPrice,
+  productId,
+  gql,
+}: IShopifyBulkProductVariantCreateArgs): Promise<any> {
   const productVariants: IProductVariant[] = [];
   let price = defaultPrice;
   for (let i = 1; i <= 100; i++) {
@@ -717,7 +724,7 @@ async function shopifyBulkProductVariantCreate({
           productId,
           title: variant.price.toString(),
         };
-      },
+      }
     );
 
   await queryProxy.productVariant.createMany({
@@ -759,14 +766,15 @@ interface IShopifyProductCreateAndUpdateArgs {
   imageUrl: string;
   tags?: string[];
   gql: GraphqlClient;
+  vendor?: string;
 }
 
 async function shopifyProductUpdate({
-                                      productId,
-                                      status,
-                                      imageUrl,
-                                      gql,
-                                    }: IShopifyProductCreateAndUpdateArgs): Promise<void> {
+  productId,
+  status,
+  imageUrl,
+  gql,
+}: IShopifyProductCreateAndUpdateArgs): Promise<void> {
   await gql.query<any>({
     data: {
       query: `#graphql
@@ -793,13 +801,14 @@ async function shopifyProductUpdate({
 }
 
 async function shopifyCreateProduct({
-                                      tags,
-                                      imageUrl,
-                                      status,
-                                      gql,
-                                    }: IShopifyProductCreateAndUpdateArgs): Promise<any> {
+  tags,
+  imageUrl,
+  status,
+  gql,
+  vendor,
+}: IShopifyProductCreateAndUpdateArgs): Promise<any> {
   console.log(
-    '------------------------------------product creating---------------------------------------------',
+    '------------------------------------product creating---------------------------------------------'
   );
   const res = await gql.query<any>({
     data: {
@@ -820,7 +829,7 @@ async function shopifyCreateProduct({
         input: {
           title: 'Package Protection',
           productType: 'Warranty',
-          vendor: 'OverallInsurance',
+          vendor: vendor,
           status: status,
           tags: tags,
 
@@ -861,7 +870,7 @@ const productPublish = async (productId: string, gql: GraphqlClient) => {
     },
   });
   const publicationsIds = getPublications.body.data.publications.edges.map(
-    (e) => e.node.id,
+    (e) => e.node.id
   );
   // published
   const published = await gql.query<any>({

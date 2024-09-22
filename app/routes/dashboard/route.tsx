@@ -4,7 +4,7 @@ import {
   LoaderFunctionArgs,
   redirect,
 } from '@remix-run/node';
-import Dashboard from '.';
+import Dashboard from './dashboard';
 import { Page } from '@shopify/polaris';
 import { useLoaderData } from '@remix-run/react';
 
