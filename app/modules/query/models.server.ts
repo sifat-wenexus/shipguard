@@ -15,10 +15,6 @@ export const models = defineModels(() => {
     };
   }
 
-  function packageProtectionPermission(session: Session) {
-    return { storeId: session.storeId! };
-  }
-
   const readAndSubscribeTrue = {
     subscribe: true,
     read: true,
@@ -216,25 +212,26 @@ export const models = defineModels(() => {
         },
       },
     },
+
     packageProtection: {
       permissions: {
         subscribe: true,
         read: {
           fields: true,
-          permission: packageProtectionPermission,
+          permission: oneLevelPermission,
         },
         create: {
           fields: packageProtectionMultipleFields,
-          preset: packageProtectionPermission,
-          permission: packageProtectionPermission,
-          validation: packageProtectionPermission,
+          preset: oneLevelPermission,
+          permission: oneLevelPermission,
+          validation: oneLevelPermission,
         },
         update: {
           fields: packageProtectionMultipleFields,
-          permission: packageProtectionPermission,
+          permission: oneLevelPermission,
         },
         delete: {
-          permission: packageProtectionPermission,
+          permission: oneLevelPermission,
         },
       },
     },
@@ -289,42 +286,44 @@ export const models = defineModels(() => {
         subscribe: true,
         read: {
           fields: true,
-          permission: packageProtectionPermission,
+          permission: oneLevelPermission,
         },
         create: {
           fields: packageProtectionOrderMultipleFields,
-          preset: packageProtectionPermission,
-          permission: packageProtectionPermission,
-          validation: packageProtectionPermission,
+          preset: oneLevelPermission,
+          permission: oneLevelPermission,
+          validation: oneLevelPermission,
         },
         update: {
           fields: packageProtectionOrderMultipleFields,
-          permission: packageProtectionPermission,
+          permission: oneLevelPermission,
         },
         delete: {
-          permission: packageProtectionPermission,
+          permission: oneLevelPermission,
         },
       },
     },
 
     packageProtectionClaimOrder: {
-      subscribe: true,
-      read: {
-        fields: true,
-        permission: packageProtectionPermission,
-      },
-      create: {
-        fields: packageProtectionClaimOrderMultipleFields,
-        preset: packageProtectionPermission,
-        permission: packageProtectionPermission,
-        validation: packageProtectionPermission,
-      },
-      update: {
-        fields: packageProtectionClaimOrderMultipleFields,
-        permission: packageProtectionPermission,
-      },
-      delete: {
-        permission: packageProtectionPermission,
+      permissions: {
+        subscribe: true,
+        read: {
+          fields: true,
+          permission: oneLevelPermission,
+        },
+        create: {
+          fields: packageProtectionClaimOrderMultipleFields,
+          preset: oneLevelPermission,
+          permission: oneLevelPermission,
+          validation: oneLevelPermission,
+        },
+        update: {
+          fields: packageProtectionClaimOrderMultipleFields,
+          permission: oneLevelPermission,
+        },
+        delete: {
+          permission: oneLevelPermission,
+        },
       },
     },
 

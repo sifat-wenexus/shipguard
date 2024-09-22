@@ -1,7 +1,9 @@
+import ImgLogo from '~/assets/images/Inhouse Shipping Protection.png';
 import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
 import { I18nContext, I18nManager } from '@shopify/react-i18n';
 import type { LoaderFunctionArgs } from '@remix-run/node';
+import { queryProxy } from '~/modules/query/query-proxy';
 import { InitStore } from '~/modules/init-store.server';
 import { AppProvider } from '~/shopify-app-remix/react';
 import { Card, Frame, Spinner } from '@shopify/polaris';
@@ -10,9 +12,10 @@ import { shopify } from '~/modules/shopify.server';
 import tailwindStyles from '~/styles/tailwind.css';
 import { prisma } from '~/modules/prisma.server';
 import type { AppStatus } from '#prisma-client';
-import ImgLogo from '~/assets/images/Inhouse Shipping Protection.png';
+import { MainNav } from './components/main-nav';
 import { useEffect, useMemo } from 'react';
 import { json } from '@remix-run/node';
+import { Nav } from './components/nav';
 import appCss from '~/styles/app.css';
 
 import {
@@ -28,8 +31,7 @@ import {
   Meta,
   useLocation,
 } from '@remix-run/react';
-import { MainNav } from './components/main-nav';
-import { Nav } from './components/nav';
+
 export const links = () => [
   { rel: 'stylesheet', href: tailwindStyles },
   { rel: 'stylesheet', href: polarisStyles },
@@ -119,6 +121,12 @@ export default function Root() {
       },
     });
   }, [data.currencyCode]);
+
+  useEffect(() => {
+    if (window !== undefined) {
+      (window as any).queryProxy = queryProxy;
+    }
+  }, []);
 
   return (
     <html>

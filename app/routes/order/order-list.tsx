@@ -1,35 +1,27 @@
-import { ClaimStatus, FullfillmentStatus } from '#prisma-client';
-import { useBetterFetcher } from '~/hooks/use-better-fetcher';
+import type { ClaimStatus, FullfillmentStatus } from '#prisma-client';
+import { useQueryPaginated } from '~/hooks/use-query-paginated';
+import type { IFilterOptions } from './order-search-and-filter';
+import OrderSearchAndFilter from './order-search-and-filter';
+import { queryProxy } from '~/modules/query/query-proxy';
 import useDebounce from '~/hooks/use-debounce';
-import { useLocation } from '@remix-run/react';
 import { useI18n } from '@shopify/react-i18n';
-import { useEffect, useState } from 'react';
-import { IActiveDates } from './route';
-import OrderSearchAndFilter, {
-  IFilterOptions,
-} from './order-search-and-filter';
+import type { IActiveDates } from './route';
+import { useMemo, useState } from 'react';
+
 import {
-  Badge,
   EmptySearchResult,
-  IndexTable,
-  Link,
-  Spinner,
-  Text,
   useBreakpoints,
+  IndexTable,
+  Spinner,
+  Badge,
+  Link,
+  Text,
 } from '@shopify/polaris';
 
 const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
-  const [i18n] = useI18n();
-  const fetcher = useBetterFetcher();
-  const [inputText, setInputText] = useState('');
   const [filterItems, setFilterItems] = useState<IFilterOptions[]>([]);
-  const [orderCount, setOrderCount] = useState<number>(0);
-  const [orderList, setOrderList] = useState<Record<string, any>[]>([]);
-  const [page, setPage] = useState<number>(1);
-  const [loading, setLoading] = useState(false);
-  const [shop, setShop] = useState('');
-
-  const pageSize = 20;
+  const [inputText, setInputText] = useState('');
+  const [i18n] = useI18n();
 
   const searchTerm = useDebounce(inputText, 500);
 
@@ -39,20 +31,64 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
     : new Date().toISOString(); //.split('T')[0];
   const endDate = period
     ? new Date(
-        new Date(period?.until).setDate(new Date(period.until).getDate() + 1)
-      ).toISOString()
+      new Date(period?.until).setDate(new Date(period.until).getDate() + 1),
+    ).toISOString()
     : //.split('T')[0]
-      new Date().toISOString(); //.split('T')[0];
+    new Date().toISOString(); //.split('T')[0];
   // let startPoint = 0;
 
-  const handleNext = () => {
-    setPage((prev) => prev + 1);
-  };
-  const handlePrevious = () => {
-    setPage((prev) => prev - 1);
-  };
+  const mediaDevice = useBreakpoints().mdDown;
 
-  const rowMarkup = orderList?.map(
+  const query = useMemo(() => {
+    const ClaimStatus: ClaimStatus[] = [
+      'REQUESTED',
+      'INPROGRESS',
+      'CANCEL',
+      'APPROVE',
+      'PARTIALLYAPPROVE',
+    ];
+
+    const FullfillmentStatus: FullfillmentStatus[] = [
+      'UNFULFILLED',
+      'FULFILLED',
+      'PARTIALLY_FULFILLED',
+    ];
+
+    return queryProxy.packageProtectionOrder.subscribeFindMany({
+      where: {
+        AND: [
+          {
+            OR: filterItems.map(item => {
+              if ((ClaimStatus as string[]).includes(item.value)) {
+                return { claimStatus: { equals: item.value } };
+              } else if ((FullfillmentStatus as string[]).includes(item.value)) {
+                return { fulfillmentStatus: { equals: item.value } };
+              }
+
+              return null;
+            }),
+          },
+
+          {
+            OR: [{ orderName: { contains: searchTerm } }],
+          },
+
+          {
+            createdAt: {
+              gte: startDate,
+              lte: endDate,
+            },
+          },
+        ],
+      },
+      orderBy: { createdAt: 'desc' },
+      include: { PackageProtectionClaimOrder: true },
+    });
+  }, [endDate, filterItems, searchTerm, startDate]);
+
+  const subscription = useQueryPaginated(query);
+
+  const rowMarkup = useMemo(() => subscription.data?.map(
     (
       {
         id,
@@ -65,19 +101,20 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
         hasClaimRequest,
         PackageProtectionClaimOrder,
       },
-      index
+      index,
     ) => {
       const status = PackageProtectionClaimOrder.map((i) => i.claimStatus);
+      const shop = 'shopify';
       const claimStatus: 'Requested' | 'Processing' | 'Canceled' | 'Approved' =
         status.every((i) => i === 'CANCEL')
           ? 'Canceled'
           : status.every((i) => i === 'REQUESTED')
-          ? 'Requested'
-          : status.every((i) => i === 'APPROVE')
-          ? 'Approved'
-          : 'Processing';
+            ? 'Requested'
+            : status.every((i) => i === 'APPROVE')
+              ? 'Approved'
+              : 'Processing';
       return (
-        <IndexTable.Row id={id} key={id} position={index}>
+        <IndexTable.Row id={id.toString()} key={id} position={index}>
           <IndexTable.Cell>
             <Link
               removeUnderline
@@ -85,9 +122,9 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
               url={
                 shop
                   ? `https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
-                      'gid://shopify/Order/',
-                      ''
-                    )}`
+                    'gid://shopify/Order/',
+                    '',
+                  )}`
                   : ''
               }
             >
@@ -112,8 +149,8 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
                   fulfillmentStatus === 'PARTIALLY_FULFILLED'
                     ? 'warning'
                     : fulfillmentStatus === 'FULFILLED'
-                    ? 'success'
-                    : 'attention'
+                      ? 'success'
+                      : 'attention'
                 }
               >
                 {fulfillmentStatus.toLowerCase()}
@@ -129,17 +166,17 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
                     claimStatus === 'Requested'
                       ? 'incomplete'
                       : claimStatus === 'Approved'
-                      ? 'complete'
-                      : 'partiallyComplete'
+                        ? 'complete'
+                        : 'partiallyComplete'
                   }
                   tone={
                     claimStatus === 'Approved'
                       ? 'success'
                       : claimStatus === 'Canceled'
-                      ? 'critical'
-                      : claimStatus === 'Requested'
-                      ? 'warning'
-                      : 'info'
+                        ? 'critical'
+                        : claimStatus === 'Requested'
+                          ? 'warning'
+                          : 'info'
                   }
                 >
                   {claimStatus}
@@ -149,13 +186,13 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
                     claimStatus === 'Approved'
                       ? 'success'
                       : claimStatus === 'Canceled'
-                      ? 'critical'
-                      : claimStatus === 'Requested'
-                      ? 'warning'
-                      : 'info'
+                        ? 'critical'
+                        : claimStatus === 'Requested'
+                          ? 'warning'
+                          : 'info'
                   }
                 >
-                  {PackageProtectionClaimOrder.length}
+                  {PackageProtectionClaimOrder.length.toString()}
                 </Badge>
               </>
             ) : (
@@ -167,59 +204,8 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
           <IndexTable.Cell>{createdAt.split('T')[0]}</IndexTable.Cell>
         </IndexTable.Row>
       );
-    }
-  );
-
-  const mediaDevice = useBreakpoints().mdDown;
-
-  const getData = async () => {
-    setLoading(true);
-    const data = (await fetcher.submit(
-      { loading: false, toast: false },
-      {
-        action: 'filterOption',
-        state: JSON.stringify({
-          searchTerm: searchTerm,
-          filterItems: filterItems,
-          startDate: startDate, //+ 'T00:00:01.000Z',
-          endDate: endDate, //+ 'T23:59:59.000Z',
-          page: page,
-          pageSize: pageSize,
-        }),
-      },
-      {
-        action: '/get-order-data',
-        method: 'POST',
-      }
-    )) as {
-      orderList: {
-        id: number;
-        storeId: string;
-        protectionFee: number;
-        orderAmount: number;
-        claimStatus: ClaimStatus;
-        fulfillmentStatus: FullfillmentStatus;
-        orderId: string;
-        orderName: string;
-        createdAt: Date;
-        updatedAt: Date;
-      }[];
-      totalOrder: number;
-      shop: string;
-    };
-
-    if (data) {
-      setLoading(false);
-      setOrderList(data.orderList);
-      setOrderCount(data.totalOrder);
-      setShop(data.shop.split('.')[0]);
-    } else {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    getData();
-  }, [filterItems, searchTerm, activeDates, page]);
+    },
+  ), [i18n, subscription.data]);
 
   const emptyStateMarkup = (
     <EmptySearchResult
@@ -239,7 +225,7 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
         condensed={false}
         // useBreakpoints().smDown
         // resourceName={{ singular: 'order', plural: 'orders' }}
-        itemCount={orderCount}
+        itemCount={subscription.loading ? Infinity : subscription.count as number}
         headings={[
           { title: 'Order' },
           { title: 'Protection Fees' },
@@ -251,13 +237,13 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
         selectable={false}
         emptyState={emptyStateMarkup}
         pagination={{
-          hasNext: page < orderCount / pageSize,
-          hasPrevious: page > 1,
-          onNext: handleNext,
-          onPrevious: handlePrevious,
+          hasNext: Boolean(subscription.page && subscription.pages !== subscription.page),
+          hasPrevious: Boolean(subscription.page && subscription.page > 1),
+          onNext: subscription.next,
+          onPrevious: subscription.previous,
         }}
       >
-        {loading ? (
+        {subscription.loading ? (
           <IndexTable.Cell colSpan={6}>
             <div className="flex justify-center">
               <Spinner accessibilityLabel="Loading..." size="large" />
