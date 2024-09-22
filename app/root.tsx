@@ -1,3 +1,4 @@
+import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
 import { I18nContext, I18nManager } from '@shopify/react-i18n';
 import type { LoaderFunctionArgs } from '@remix-run/node';
@@ -13,7 +14,7 @@ import ImgLogo from '~/assets/images/logo.png';
 import { useEffect, useMemo } from 'react';
 import { json } from '@remix-run/node';
 import appCss from '~/styles/app.css';
-import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
+
 import {
   isRouteErrorResponse,
   ScrollRestoration,
@@ -58,12 +59,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       await Migration.attempt(ctx.session);
     } catch (e) {
       await new InitStore(ctx.session).run();
-    }
-
-    if (process.env.NODE_ENV === 'development') {
-      if (await Migration.updateAppUrl(ctx.session)) {
-        await shopify.registerWebhooks({ session: ctx.session });
-      }
     }
 
     const store = await prisma.store.findFirstOrThrow({
@@ -120,7 +115,7 @@ export default function Root() {
         console.error(error);
       },
     });
-  }, []);
+  }, [data.currencyCode]);
 
   return (
     <html>
