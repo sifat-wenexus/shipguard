@@ -8,12 +8,7 @@ import { InitStore } from '~/modules/init-store.server';
 import { getConfig } from './get-config.server';
 import { prisma } from './prisma.server';
 
-import {
-  LATEST_API_VERSION,
-  AppDistribution,
-  DeliveryMethod,
-  shopifyApp,
-} from '~/shopify-app-remix/server';
+import { ApiVersion, AppDistribution, DeliveryMethod, shopifyApp } from '~/shopify-app-remix/server';
 
 const _config = getConfig();
 const webhookHandler: WebhookHandler = {
@@ -25,7 +20,7 @@ export const shopify = shopifyApp({
   isEmbeddedApp: true,
   apiKey: _config.apiKey,
   apiSecretKey: _config.apiSecretKey,
-  apiVersion: LATEST_API_VERSION,
+  apiVersion: ApiVersion.January24,
   scopes: _config.scopes,
   appUrl: _config.appUrl.toString(),
   authPathPrefix: '/auth',
@@ -76,13 +71,13 @@ export const shopify = shopifyApp({
 export function getShopifyGQLClient(session: Session) {
   return new shopify.api.clients.Graphql({
     session: session,
-    apiVersion: LATEST_API_VERSION,
+    apiVersion: ApiVersion.January24,
   });
 }
 
 export function getShopifyRestClient(session: Session) {
   return new shopify.api.clients.Rest({
     session: session,
-    apiVersion: LATEST_API_VERSION,
+    apiVersion: ApiVersion.January24,
   });
 }
