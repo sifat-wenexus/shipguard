@@ -227,7 +227,7 @@ onDBEvtBuffered(
         {
           select: {
             appInstallationId: true,
-            name,
+            name: true,
           },
         },
         session

@@ -8,16 +8,94 @@ import {
   Box,
   InlineStack,
   Button,
+  Modal,
 } from '@shopify/polaris';
 import {
   DiscountFilledIcon,
   CashDollarIcon,
   PriceListIcon,
   InfoIcon,
+  DeleteIcon,
 } from '@shopify/polaris-icons';
+import { useState } from 'react';
+import { queryProxy } from '~/modules/query/query-proxy';
 
 const InsurancePricing = ({ formState, insurancePriceError }) => {
+  const currencyCode = queryProxy.store.findFirst({ where: {} });
   const { state } = formState;
+  const [active, setActive] = useState(false);
+
+  const handleAddItem = () => {};
+
+  const handleAddPlan = () => {
+    setActive(true);
+  };
+  const activator = (
+    <Button onClick={handleAddPlan} variant="primary">
+      Add Plan
+    </Button>
+  );
+  const modal = (
+    <Modal
+      size="large"
+      activator={activator}
+      open={active}
+      onClose={() => setActive(false)}
+      title="Create Fixed Type Protection Plan"
+      primaryAction={{
+        content: 'Save',
+        onAction: handleAddPlan,
+      }}
+      secondaryActions={[
+        {
+          content: 'Cancel',
+          onAction: () => setActive(false),
+        },
+      ]}
+    >
+      <Modal.Section>
+        <div>
+          <div className="sm:flex gap-2 justify-center items-center">
+            <TextField
+              label="Protection Fees"
+              placeholder="Enter Protection Fees"
+              autoComplete="off"
+              type="number"
+            />
+            <TextField
+              label="Cart Min Price"
+              placeholder="Enter Cart Min Price"
+              autoComplete="off"
+              type="number"
+            />
+            <TextField
+              label="Cart Max Price"
+              placeholder="Enter Cart Max Price"
+              autoComplete="off"
+              type="number"
+            />
+            <div className="mt-4">
+              <Button
+                size="large"
+                icon={
+                  <Icon
+                    accessibilityLabel="delete-plan-item"
+                    source={DeleteIcon}
+                  />
+                }
+              ></Button>
+            </div>
+          </div>
+          <div className="flex justify-center my-4">
+            <Button variant="primary" onClick={handleAddItem}>
+              Add New Plan
+            </Button>
+          </div>
+        </div>
+      </Modal.Section>
+    </Modal>
+  );
+
   return (
     <ShadowBevelBox
       icon={<Icon source={PriceListIcon} />}
@@ -111,9 +189,8 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                   {2} Plan added
                 </Text>
                 <div className="ms-5"></div>
-                <Button onClick={() => {}} variant="primary">
-                  Add Plan
-                </Button>
+
+                {modal}
               </div>
               {/* <TextField
                 onChange={(price) => formState.addToStaged({ price })}
@@ -156,6 +233,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                   inputMode="decimal"
                   autoComplete="yes"
                   suffix={'$'}
+                  readOnly
                 />
               </Box>
               <Box paddingBlockStart="100" paddingBlockEnd="100">

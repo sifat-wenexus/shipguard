@@ -20,23 +20,24 @@ const PublishButton = ({
       if (!state.insurancePriceType) {
         setInsurancePriceError(true);
         return;
-      }
-      setInsurancePriceError(false);
-      setEnabled(enabled);
+      } else {
+        setInsurancePriceError(false);
+        setEnabled(enabled);
 
-      return fetcher.submit(
-        {
-          loading: true,
-          toast: true,
-        },
-        {
-          action: 'toggle',
-          enabled,
-        },
-        {
-          method: 'post',
-        }
-      );
+        return fetcher.submit(
+          {
+            loading: true,
+            toast: true,
+          },
+          {
+            action: 'toggle',
+            enabled,
+          },
+          {
+            method: 'post',
+          }
+        );
+      }
     },
     [fetcher]
   );

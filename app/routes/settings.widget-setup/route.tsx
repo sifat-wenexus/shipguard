@@ -202,7 +202,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({
     enabled: settingsData?.enabled ?? false,
     data: {
-      insurancePriceType: '', // settingsData?.insurancePriceType ?? '',
+      insurancePriceType: settingsData?.insurancePriceType ?? '',
       insuranceDisplayButton: settingsData?.insuranceDisplayButton ?? false,
       disabledDescription:
         settingsData?.disabledDescription ??
