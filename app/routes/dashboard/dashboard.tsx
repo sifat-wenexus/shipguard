@@ -7,7 +7,7 @@ import LineChartForDashboard from './line-chart';
 import '@shopify/polaris/build/esm/styles.css';
 import { IActiveDates } from '../order/route';
 import { useI18n } from '@shopify/react-i18n';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DateRangePicker from './date-range';
 import GuideLine from './guideline';
 import PieChart from './pie-chart';
@@ -23,18 +23,26 @@ import {
   Tooltip,
 } from '@shopify/polaris';
 
-export const default30Days = {
-  title: 'Last 30 days',
-  alias: 'last30days',
-  period: {
-    since: '2024-08-07T18:00:00.000Z',
-    until: '2024-09-06T18:00:00.000Z',
-  },
+export const default30Days = () => {
+  const till = new Date();
+  const since = new Date();
+
+  since.setDate(till.getDate() - 30);
+
+  return {
+    title: 'Last 30 days',
+    alias: 'last30days',
+    period: {
+      since: since.toISOString(),
+      until: till.toISOString(),
+    },
+  };
 };
 
 const Dashboard = ({ guidelineVisibility }) => {
+  const defaultActiveDates = useMemo(() => default30Days(), []);
   const [i18n] = useI18n();
-  const [activeDates, setActiveDates] = useState<IActiveDates>(default30Days);
+  const [activeDates, setActiveDates] = useState<IActiveDates>(defaultActiveDates);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>(null);
 

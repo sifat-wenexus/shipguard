@@ -2,7 +2,7 @@ import { Box, Layout, Page, Text } from '@shopify/polaris';
 import DateRangePicker from '../dashboard/date-range';
 import { default30Days } from '../dashboard/dashboard';
 import OrderList from './order-list';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export interface IActiveDates {
   title: string;
@@ -14,7 +14,8 @@ export interface IActiveDates {
 }
 
 const Order = () => {
-  const [activeDates, setActiveDates] = useState<IActiveDates>(default30Days);
+  const defaultActiveDates = useMemo(() => default30Days(), []);
+  const [activeDates, setActiveDates] = useState<IActiveDates>(defaultActiveDates);
   return (
     <div className="m-4 sm:m-0 mt-10 sm:mt-4">
       {' '}

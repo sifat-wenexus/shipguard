@@ -5,10 +5,11 @@ import DateRangePicker from '../dashboard/date-range';
 import ClaimOrderList from './claim-order-list';
 import { IActiveDates } from '../order/route';
 import { default30Days } from '../dashboard/dashboard';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const FileClaimRequest = () => {
-  const [activeDates, setActiveDates] = useState<IActiveDates>(default30Days);
+  const defaultActiveDates = useMemo(() => default30Days(), []);
+  const [activeDates, setActiveDates] = useState<IActiveDates>(defaultActiveDates);
   const [isProcess, setIsProcess] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<string>('');
   return (
