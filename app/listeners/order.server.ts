@@ -176,19 +176,16 @@ const orderCreateEvent = async ({
           })
           .join('');
 
-      const orderPayload = {
-        orderId: orderId,
-        customerId: payload.customer.id.toString(),
-        orderName: updatedOrder.body.data.orderUpdate.order.name,
-        storeId: session?.storeId,
-        orderAmount:
-        updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
-          .amount,
-        protectionFee: protectionFee,
-      };
-
       await queryProxy.packageProtectionOrder.create({
-        data: orderPayload,
+        data: {
+          orderId: orderId,
+          customerId: payload.customer.id.toString(),
+          orderName: updatedOrder.body.data.orderUpdate.order.name,
+          storeId: session?.storeId,
+          orderAmount: Number(updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
+            .amount),
+          protectionFee: Number(protectionFee),
+        },
       });
 
       if (
