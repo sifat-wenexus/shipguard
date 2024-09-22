@@ -102,6 +102,7 @@ const orderCreateEvent = async ({
   const gqlClient = getShopifyGQLClient(session!);
   const payload = _payload as Record<string, any>;
 
+  // TODO: Use product metafield to check if the product is package protection
   const existPackageProtection = payload.line_items.find(
     (line) =>
       line.title === 'Package Protection' || line.vendor === 'OverallInsurance',
@@ -177,7 +178,7 @@ const orderCreateEvent = async ({
 
       const orderPayload = {
         orderId: orderId,
-        customerId: payload.customer.id,
+        customerId: payload.customer.id.toString(),
         orderName: updatedOrder.body.data.orderUpdate.order.name,
         storeId: session?.storeId,
         orderAmount:
