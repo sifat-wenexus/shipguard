@@ -1,36 +1,36 @@
 const fs = require('node:fs');
-const apiVersion = '2023-10';
+const apiVersion = '2024-01';
 
 function getConfig() {
-    const config = {
-        projects: {
-            shopifyAdminApi: {
-                schema: `https://shopify.dev/admin-graphql-direct-proxy/${apiVersion}`,
-                documents: ['./app/**/*.{graphql,js,ts,jsx,tsx}']
-            }
-        }
-    }
+  const config = {
+    projects: {
+      shopifyAdminApi: {
+        schema: `https://shopify.dev/admin-graphql-direct-proxy/${apiVersion}`,
+        documents: ['./app/**/*.{graphql,js,ts,jsx,tsx}'],
+      },
+    },
+  };
 
-    let extensions = []
-    try {
-        extensions = fs.readdirSync('./extensions');
-    } catch {
-        // ignore if no extensions
-    }
+  let extensions = [];
+  try {
+    extensions = fs.readdirSync('./extensions');
+  } catch {
+    // ignore if no extensions
+  }
 
-    for (const entry of extensions) {
-        const extensionPath = `./extensions/${entry}`;
-        const schema = `${extensionPath}/schema.graphql`;
-        if(!fs.existsSync(schema)) {
-            continue;
-        }
-        config.projects[entry] = {
-            schema,
-            documents: [`${extensionPath}/input.graphql`]
-        }
+  for (const entry of extensions) {
+    const extensionPath = `./extensions/${entry}`;
+    const schema = `${extensionPath}/schema.graphql`;
+    if (!fs.existsSync(schema)) {
+      continue;
     }
+    config.projects[entry] = {
+      schema,
+      documents: [`${extensionPath}/input.graphql`],
+    };
+  }
 
-    return config;
+  return config;
 }
 
 module.exports = getConfig();
