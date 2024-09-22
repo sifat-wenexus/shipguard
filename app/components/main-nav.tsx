@@ -6,7 +6,7 @@ import type { FC } from 'react';
 export const MainNavContext = createContext([
   {
     id: 'dashboard',
-    url: '/app',
+    url: '/dashboard',
     content: 'Dashboard',
     accessibilityLabel: 'Dashboard',
     selected: true,

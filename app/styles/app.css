@@ -2,6 +2,11 @@
   display: none;
 }
 
+/* dashboard left and top margin none */
+.dashboard .Polaris-Layout__Section {
+  margin-top: 0px;
+  margin-left: 0px;
+}
 
 /* custom css and override polaris components */
 /* ----check box style */

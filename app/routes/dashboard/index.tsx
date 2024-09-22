@@ -32,7 +32,7 @@ export const default30Days = {
   },
 };
 
-const Dashboard = () => {
+const Dashboard = ({ guidelineVisibility }) => {
   const [i18n] = useI18n();
   const [activeDates, setActiveDates] = useState<IActiveDates>(default30Days);
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ const Dashboard = () => {
       new Date().toISOString(); //.split('T')[0];
   // let startPoint = 0;
 
-  const { storeInfo } = useLivePageData();
+  const { storeInfo, loading: apiLoading } = useLivePageData();
   const getData = async () => {
     if (startDate === endDate && activeDates?.alias !== 'Today') return;
     setLoading(true);
@@ -286,15 +286,20 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="m-2 sm:m-0">
-      <Layout.Section variant="fullWidth">
+    <div className="m-2 sm:m-0 dashboard">
+      <Layout.Section>
         <Text as="h1" variant="headingXl">
           Hi 👋, Welcome to Inhouse Shipping Protection
         </Text>
         <br />
         {<WarningBanner storeInfo={storeInfo} />}
 
-        {<GuideLine storeInfo={storeInfo} />}
+        {
+          <GuideLine
+            storeInfo={storeInfo}
+            guidelineVisibility={guidelineVisibility}
+          />
+        }
         <br />
         <DateRangePicker setActiveDates={setActiveDates} />
 

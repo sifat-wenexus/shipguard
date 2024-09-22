@@ -18,7 +18,7 @@ export function Nav() {
     {
       id: 'dashboard',
       content: (
-        <Link url="/app" removeUnderline id="wenexus-nav-link">
+        <Link url="/dashboard" removeUnderline id="wenexus-nav-link">
           <div className="flex items-center gap-1">
             <Icon source={ChartHistogramSecondLastIcon}></Icon> Dashboard
           </div>

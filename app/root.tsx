@@ -10,7 +10,7 @@ import { shopify } from '~/modules/shopify.server';
 import tailwindStyles from '~/styles/tailwind.css';
 import { prisma } from '~/modules/prisma.server';
 import type { AppStatus } from '#prisma-client';
-import ImgLogo from '~/assets/images/logo.png';
+import ImgLogo from '~/assets/images/Inhouse Shipping Protection.png';
 import { useEffect, useMemo } from 'react';
 import { json } from '@remix-run/node';
 import appCss from '~/styles/app.css';
@@ -26,6 +26,7 @@ import {
   Outlet,
   Links,
   Meta,
+  useLocation,
 } from '@remix-run/react';
 import { MainNav } from './components/main-nav';
 import { Nav } from './components/nav';
@@ -79,7 +80,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   return json({
-    appStatus: url.pathname.startsWith('/gmail-oauth-callback') ? 'READY' : 'INSTALLED' as AppStatus,
+    appStatus: url.pathname.startsWith('/gmail-oauth-callback')
+      ? 'READY'
+      : ('INSTALLED' as AppStatus),
     apiKey: process.env.SHOPIFY_API_KEY!,
     currencyCode: 'USD',
   });
@@ -88,7 +91,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Root() {
   const data = useLoaderData<typeof loader>();
   const validator = useRevalidator();
-
+  const location = useLocation();
+  console.log('first location', location);
   useEffect(() => {
     if (data.appStatus === 'READY' || validator.state === 'loading') {
       return;

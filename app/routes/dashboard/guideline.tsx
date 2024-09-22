@@ -18,9 +18,9 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import InstructionModal from './instruction-modal';
 
-const GuideLine = ({ storeInfo }) => {
+const GuideLine = ({ storeInfo, guidelineVisibility }) => {
   const [actionActive, toggleAction] = useState(false);
-  const [dismiss, setDismiss] = useState(false);
+  const [dismiss, setDismiss] = useState(guidelineVisibility ? true : false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(false);
 
@@ -47,6 +47,31 @@ const GuideLine = ({ storeInfo }) => {
     }));
   };
 
+  const form = new FormData();
+  const setCookie = async () => {
+    form.append('name', 'shipping-insurance-guideline');
+    form.append('value', 'true');
+    const res = await fetch('/cookie', {
+      method: 'POST',
+      body: form,
+    })
+      .then((response) => {
+        setDismiss(true);
+        return response;
+      })
+      .catch((err) => {
+        setDismiss(false);
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    if (guidelineVisibility) {
+      setDismiss(true);
+    } else {
+      setDismiss(false);
+    }
+  }, [guidelineVisibility]);
+
   const handleToggleAction = () => {
     toggleAction(!actionActive);
   };
@@ -69,8 +94,8 @@ const GuideLine = ({ storeInfo }) => {
         items={[
           {
             content: 'Dismiss',
-            onAction: () => {
-              setDismiss(true);
+            onAction: async () => {
+              await setCookie();
             },
           },
         ]}

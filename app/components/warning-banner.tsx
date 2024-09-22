@@ -1,12 +1,14 @@
 import { Banner, Button, Modal, Text } from '@shopify/polaris';
 import guidelineImage from '~/assets/images/guideline.png';
 import { AlertDiamondIcon } from '@shopify/polaris-icons';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { Link } from '@remix-run/react';
 
 const WarningBanner = ({ storeInfo }) => {
   const [active, setActive] = useState(false);
-
-  const handlePopUp = useCallback(() => setActive(!active), [active]);
+  const handlePopUp = useCallback(() => {
+    setActive(!active);
+  }, [active]);
 
   const activator = <Button onClick={handlePopUp}>Check instructions</Button>;
   return (
@@ -15,7 +17,7 @@ const WarningBanner = ({ storeInfo }) => {
         <div className="w-full mb-4">
           <Banner
             title="Package protection isn't showing up on your store yet"
-            onDismiss={() => {}}
+            hideIcon
             icon={AlertDiamondIcon}
             tone="warning"
           >
@@ -28,9 +30,13 @@ const WarningBanner = ({ storeInfo }) => {
               <Button
                 tone="success"
                 variant="primary"
-                url={`https://admin.shopify.com/store/${
-                  storeInfo?.store?.domain.split('.')[0]
-                }/themes/${storeInfo?.theme?.id}/editor?context=apps`}
+                url={
+                  storeInfo
+                    ? `https://admin.shopify.com/store/${
+                        storeInfo?.store?.domain.split('.')[0]
+                      }/themes/${storeInfo?.theme?.id}/editor?context=apps`
+                    : ''
+                }
                 target="_blank"
               >
                 Enable Package protection
@@ -44,8 +50,9 @@ const WarningBanner = ({ storeInfo }) => {
                   content: 'Goto Theme Editor',
                   onAction: () => {
                     window.open(
-                      `https://admin.shopify.com/store/${storeInfo?.store?.name}/themes/${storeInfo?.theme?.id}/editor?context=apps`,
-                      '_blank'
+                      storeInfo
+                        ? `https://admin.shopify.com/store/${storeInfo?.store?.name}/themes/${storeInfo?.theme?.id}/editor?context=apps`
+                        : ''
                     );
                   },
                 }}
