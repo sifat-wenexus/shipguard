@@ -97,9 +97,6 @@ const ExclusionProductsAndVariants = ({ formState }) => {
     setResourcesSelection(prevSelected);
   }, [resourcesSelected]);
 
-  // -----
-
-  console.log(resourcesSelected, selectedItems, selectedResources);
   return (
     <>
       <Box paddingBlockStart="100" paddingBlockEnd="100">

@@ -58,7 +58,6 @@ const OrderSearchAndFilter = ({
     () => setPopoverActive((popoverActive) => !popoverActive),
     []
   );
-  console.log(filterItems);
   const activator = (
     <div
       className="border border-gray-600 p-3 rounded-md font-medium hover:bg-gray-100 "
@@ -105,7 +104,6 @@ const OrderSearchAndFilter = ({
         .concat(claimStatus.filter((element) => element.selected))
     );
   }, [fulfillmentStatus, claimStatus]);
-  // console.log(filterItems);
 
   return (
     <>

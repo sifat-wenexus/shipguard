@@ -4,14 +4,38 @@ import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
 import { internalMailer } from '~/modules/internal-mailer.server';
+import { shopifyProductUpdate } from '~/routes/settings.widget-setup/modules/package-protection-listener.server';
+import { getShopifyGQLClient } from '~/modules/shopify.server';
 
 emitter.on(
   'APP_UNINSTALLED',
   async ({ ctx: { session, shop } }: WebhookListenerArgs) => {
     console.log(`App uninstalled for shop ${shop}`);
-
-    // TODO: Move package protection products to Draft status when uninstalled
-  },
+    console.log('session :', session);
+    const gql = getShopifyGQLClient(session!);
+    const existingProduct = await queryProxy.packageProtection.findUnique({
+      where: { storeId: session?.storeId },
+      select: {
+        percentageProductId: true,
+        fixedProductId: true,
+      },
+    });
+    if (existingProduct?.fixedProductId) {
+      const draftFixedProduct = await shopifyProductUpdate({
+        productId: existingProduct?.fixedProductId,
+        status: 'DRAFT',
+        gql,
+      });
+      console.log(`Updated ${draftFixedProduct}`);
+    }
+    if (existingProduct?.percentageProductId) {
+      await shopifyProductUpdate({
+        productId: existingProduct?.percentageProductId,
+        status: 'DRAFT',
+        gql,
+      });
+    }
+  }
 );
 
 emitter.on(
@@ -41,61 +65,73 @@ emitter.on(
       await prisma.store.deleteMany({ where: { domain: shop } });
       await prisma.session.deleteMany({ where: { shop } });
     });
-  },
+  }
 );
 
-emitter.on('CUSTOMERS_DATA_REQUEST', async ({ ctx: { shop, payload, session } }: WebhookListenerArgs) => {
-  const customerId = (payload as any).customer.id;
-  const ordersRequested = (payload as any).orders_requested as string[] | undefined;
+emitter.on(
+  'CUSTOMERS_DATA_REQUEST',
+  async ({ ctx: { shop, payload, session } }: WebhookListenerArgs) => {
+    const customerId = (payload as any).customer.id;
+    const ordersRequested = (payload as any).orders_requested as
+      | string[]
+      | undefined;
 
-  const store = await prisma.store.findUniqueOrThrow({
-    where: { id: session!.storeId },
-    include: {
-      PackageProtectionOrders: {
-        where: {
-          customerId,
-          orderId: ordersRequested?.length ? {
-            in: ordersRequested.map((id) => `gid://shopify/Order/${id}`),
-          } : undefined,
-        },
-        include: {
-          PackageProtectionClaimOrder: true,
+    const store = await prisma.store.findUniqueOrThrow({
+      where: { id: session!.storeId },
+      include: {
+        PackageProtectionOrders: {
+          where: {
+            customerId,
+            orderId: ordersRequested?.length
+              ? {
+                  in: ordersRequested.map((id) => `gid://shopify/Order/${id}`),
+                }
+              : undefined,
+          },
+          include: {
+            PackageProtectionClaimOrder: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  await internalMailer.sendMail({
-    from: `no-reply@${process.env.INTERNAL_MAILER_DOMAIN}`,
-    to: store.email!,
-    text: `Customer data request for ${customerId}`,
-    subject: `Customer data request for ${customerId}`,
-    attachments: [
-      {
-        filename: 'customer-data.json',
-        content: JSON.stringify(store),
-        contentType: 'application/json',
-        contentDisposition: 'attachment',
-      },
-    ],
-  });
-});
-
-emitter.on('CUSTOMERS_REDACT', async ({ ctx: { payload, session } }: WebhookListenerArgs) => {
-  const ordersToRedact = (payload as any)?.orders_to_redact as string[] | undefined;
-  const customerId = (payload as any)?.customer.id;
-
-  if (!ordersToRedact?.length) {
-    return;
+    await internalMailer.sendMail({
+      from: `no-reply@${process.env.INTERNAL_MAILER_DOMAIN}`,
+      to: store.email!,
+      text: `Customer data request for ${customerId}`,
+      subject: `Customer data request for ${customerId}`,
+      attachments: [
+        {
+          filename: 'customer-data.json',
+          content: JSON.stringify(store),
+          contentType: 'application/json',
+          contentDisposition: 'attachment',
+        },
+      ],
+    });
   }
+);
 
-  await prisma.packageProtectionOrder.deleteMany({
-    where: {
-      customerId,
-      storeId: session!.storeId,
-      orderId: {
-        in: ordersToRedact.map((id) => `gid://shopify/Order/${id}`),
+emitter.on(
+  'CUSTOMERS_REDACT',
+  async ({ ctx: { payload, session } }: WebhookListenerArgs) => {
+    const ordersToRedact = (payload as any)?.orders_to_redact as
+      | string[]
+      | undefined;
+    const customerId = (payload as any)?.customer.id;
+
+    if (!ordersToRedact?.length) {
+      return;
+    }
+
+    await prisma.packageProtectionOrder.deleteMany({
+      where: {
+        customerId,
+        storeId: session!.storeId,
+        orderId: {
+          in: ordersToRedact.map((id) => `gid://shopify/Order/${id}`),
+        },
       },
-    },
-  });
-});
+    });
+  }
+);

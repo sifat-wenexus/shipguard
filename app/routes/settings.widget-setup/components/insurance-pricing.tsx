@@ -21,12 +21,27 @@ import { useState } from 'react';
 import { queryProxy } from '~/modules/query/query-proxy';
 
 const InsurancePricing = ({ formState, insurancePriceError }) => {
-  const currencyCode = queryProxy.store.findFirst({ where: {} });
+  // const currencyCode = queryProxy.store.findFirst({ where: {} });
   const { state } = formState;
   const [active, setActive] = useState(false);
+  const initialData = {
+    protectionFees: '',
+    cartMinPrice: '',
+    cartMaxPrice: '',
+  };
+  const [fixedPriceState, setFixedPriceState] = useState<Record<string, any>[]>(
+    [initialData]
+  );
 
-  const handleAddItem = () => {};
-
+  const handleAddItem = () => {
+    setFixedPriceState((prev) => [...prev, initialData]);
+  };
+  const handleRemoveItem = (index: number) => {
+    setFixedPriceState((prev) => prev.filter((_, i) => i !== index));
+  };
+  const handleChange = (index: number, value) => {
+    console.log(index, value);
+  };
   const handleAddPlan = () => {
     setActive(true);
   };
@@ -55,37 +70,47 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
     >
       <Modal.Section>
         <div>
-          <div className="sm:flex gap-2 justify-center items-center">
-            <TextField
-              label="Protection Fees"
-              placeholder="Enter Protection Fees"
-              autoComplete="off"
-              type="number"
-            />
-            <TextField
-              label="Cart Min Price"
-              placeholder="Enter Cart Min Price"
-              autoComplete="off"
-              type="number"
-            />
-            <TextField
-              label="Cart Max Price"
-              placeholder="Enter Cart Max Price"
-              autoComplete="off"
-              type="number"
-            />
-            <div className="mt-4">
-              <Button
-                size="large"
-                icon={
-                  <Icon
-                    accessibilityLabel="delete-plan-item"
-                    source={DeleteIcon}
-                  />
-                }
-              ></Button>
+          {fixedPriceState.map((item, index) => (
+            <div
+              key={index}
+              className="sm:flex gap-2 justify-center items-center my-2"
+            >
+              <TextField
+                label="Protection Fees"
+                placeholder="Enter Protection Fees"
+                autoComplete="off"
+                type="number"
+                onChange={(value) => handleChange(index, value)}
+                value={item.protectionFees}
+              />
+              <TextField
+                label="Cart Min Price"
+                placeholder="Enter Cart Min Price"
+                autoComplete="off"
+                type="number"
+                value={item.cartMinPrice}
+              />
+              <TextField
+                label="Cart Max Price"
+                placeholder="Enter Cart Max Price"
+                autoComplete="off"
+                type="number"
+                value={item.cartMaxPrice}
+              />
+              <div className="mt-4">
+                <Button
+                  onClick={() => handleRemoveItem(index)}
+                  size="large"
+                  icon={
+                    <Icon
+                      accessibilityLabel="delete-plan-item"
+                      source={DeleteIcon}
+                    />
+                  }
+                ></Button>
+              </div>
             </div>
-          </div>
+          ))}
           <div className="flex justify-center my-4">
             <Button variant="primary" onClick={handleAddItem}>
               Add New Plan
@@ -184,15 +209,16 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
           </div>
           {state.insurancePriceType === 'FIXED_PRICE' && (
             <Box paddingBlockStart="100" paddingBlockEnd="100">
-              <div className="flex items-center mb-2">
+              {/* <div className="flex items-center mb-2">
                 <Text variant="headingMd" as="strong">
                   {2} Plan added
                 </Text>
                 <div className="ms-5"></div>
 
                 {modal}
-              </div>
-              {/* <TextField
+              </div> */}
+              {/* TODO: implement for version 2 */}
+              <TextField
                 onChange={(price) => formState.addToStaged({ price })}
                 onBlur={() => formState.commitStaged()}
                 label="Fixed price"
@@ -201,7 +227,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                 inputMode="decimal"
                 autoComplete="yes"
                 suffix={'$'}
-              /> */}
+              />
             </Box>
           )}
           {state.insurancePriceType === 'PERCENTAGE' && (
@@ -233,7 +259,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                   inputMode="decimal"
                   autoComplete="yes"
                   suffix={'$'}
-                  readOnly
+                  // readOnly
                 />
               </Box>
               <Box paddingBlockStart="100" paddingBlockEnd="100">

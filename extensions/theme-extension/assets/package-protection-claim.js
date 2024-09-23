@@ -21386,8 +21386,7 @@ const Xy = ({ setSelectedData: e, setStep: t, item: r }) => {
       g = i.filter((b) => s.includes(b.id));
     d.useEffect(() => {
       e(g);
-    }, [s]),
-      console.log('tableData', i);
+    }, [s]);
     const p =
         (k = r == null ? void 0 : r.fulfillmentLineItems[0]) == null
           ? void 0
@@ -21445,20 +21444,26 @@ const Xy = ({ setSelectedData: e, setStep: t, item: r }) => {
                 }),
                 C.jsxs(ft.Cell, {
                   children: [
-                    C.jsx(X, {
-                      textDecorationLine: 'line-through',
-                      as: 'span',
-                      tone: 'subdued',
-                      children: n.formatCurrency(Number(F)),
-                    }),
-                    '  ',
-                    n.formatCurrency(F - w),
-                    ' x',
+                    w &&
+                      C.jsx(X, {
+                        textDecorationLine: 'line-through',
+                        as: 'span',
+                        tone: 'subdued',
+                        children: n.formatCurrency(Number(F)),
+                      }),
+                    ' ',
                     ' ',
+                    w ? n.formatCurrency(F - w) : n.formatCurrency(F),
+                    ' ',
+                    'x ',
                     P,
                   ],
                 }),
-                C.jsx(ft.Cell, { children: n.formatCurrency((F - w) * P) }),
+                C.jsx(ft.Cell, {
+                  children: w
+                    ? n.formatCurrency((F - w) * P)
+                    : n.formatCurrency(F * P),
+                }),
               ],
             },
             b

@@ -17,27 +17,27 @@ const PublishButton = ({
 
   const toggleEnabled = useCallback(
     (enabled: boolean) => {
-      if (!state.insurancePriceType) {
-        setInsurancePriceError(true);
-        return;
-      } else {
-        setInsurancePriceError(false);
-        setEnabled(enabled);
+      // if (!state.insurancePriceType) {
+      //   setInsurancePriceError(true);
+      //   return;
+      // } else {
+      setInsurancePriceError(false);
+      setEnabled(enabled);
 
-        return fetcher.submit(
-          {
-            loading: true,
-            toast: true,
-          },
-          {
-            action: 'toggle',
-            enabled,
-          },
-          {
-            method: 'post',
-          }
-        );
-      }
+      return fetcher.submit(
+        {
+          loading: true,
+          toast: true,
+        },
+        {
+          action: 'toggle',
+          enabled,
+        },
+        {
+          method: 'post',
+        }
+      );
+      // }
     },
     [fetcher]
   );
