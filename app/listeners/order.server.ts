@@ -6,7 +6,7 @@ import { WebhookListenerArgs } from '~/types/webhook-listener-args';
 
 const makePackageProtectionFulfill = async (
   data: Record<string, any>[],
-  gqlClient: GraphqlClient,
+  gqlClient: GraphqlClient
 ) => {
   const result: { orderId: string; id: string; productTitle: string }[] = [];
   const orders = await data;
@@ -94,8 +94,8 @@ const makePackageProtectionFulfill = async (
 // }
 
 const orderCreateEvent = async ({
-                                  ctx: { shop, payload: _payload, session },
-                                }: WebhookListenerArgs) => {
+  ctx: { shop, payload: _payload, session },
+}: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -103,9 +103,10 @@ const orderCreateEvent = async ({
   const payload = _payload as Record<string, any>;
 
   // TODO: Use product metafield to check if the product is package protection
+  console.log('payload.line_items', JSON.stringify(payload.line_items));
   const existPackageProtection = payload.line_items.find(
     (line) =>
-      line.title === 'Package Protection' || line.vendor === 'OverallInsurance',
+      line.title === 'Package Protection' || line.vendor === 'OverallInsurance'
   );
 
   try {
@@ -122,7 +123,7 @@ const orderCreateEvent = async ({
       const updatedOrder = await gqlClient.query<any>({
         data: `#graphql
         mutation{
-          orderUpdate(input:{id: "${orderId}",tags:["Overall-Package-Protection"]}){
+          orderUpdate(input:{id: "${orderId}",tags:["Overall-Package-Protection","wenexus-shipping-protection"]}){
             order{
               id
               name
@@ -182,8 +183,10 @@ const orderCreateEvent = async ({
           customerId: payload.customer.id.toString(),
           orderName: updatedOrder.body.data.orderUpdate.order.name,
           storeId: session?.storeId,
-          orderAmount: Number(updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
-            .amount),
+          orderAmount: Number(
+            updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
+              .amount
+          ),
           protectionFee: Number(protectionFee),
         },
       });
@@ -194,21 +197,18 @@ const orderCreateEvent = async ({
       ) {
         await makePackageProtectionFulfill(
           updatedOrder.body.data.orderUpdate.order.fulfillmentOrders.nodes,
-          gqlClient,
+          gqlClient
         );
       }
     }
   } catch (err) {
-    console.log(
-      '--------------------------------------ERROR----------------------------------',
-      err,
-    );
+    console.log('------------ERROR-------------', err);
   }
 };
 
 const orderRefundEvent = async ({
-                                  ctx: { shop, payload: _payload, session },
-                                }: WebhookListenerArgs) => {
+  ctx: { shop, payload: _payload, session },
+}: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -238,8 +238,8 @@ const orderFulfilledEvent = async () => {
 };
 
 const orderPartiallyFulfilledEvent = async ({
-                                              ctx: { shop, payload: _payload, session },
-                                            }: WebhookListenerArgs) => {
+  ctx: { shop, payload: _payload, session },
+}: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -256,7 +256,7 @@ const orderPartiallyFulfilledEvent = async ({
 
   const existPackageProtection = payload.line_items.find(
     (line) =>
-      line.title === 'Package Protection' || line.vendor === 'OverallInsurance',
+      line.title === 'Package Protection' || line.vendor === 'OverallInsurance'
   );
   if (existPackageProtection) {
     const orderId = payload.admin_graphql_api_id;
@@ -335,7 +335,7 @@ const orderPartiallyFulfilledEvent = async ({
       const isExistFulfillmentPackageItem = fulfillmentOrder
         .filter((order) => order.status !== 'CLOSED')
         .filter((e) =>
-          fulfillmentLineItems.every((i) => i.productTitle !== e.productTitle),
+          fulfillmentLineItems.every((i) => i.productTitle !== e.productTitle)
         )
         .filter((item) => item.productTitle === 'Package Protection');
 
@@ -343,7 +343,7 @@ const orderPartiallyFulfilledEvent = async ({
         'ache reee',
         isExistFulfillmentPackageItem,
         fulfillmentOrder,
-        fulfillmentLineItems,
+        fulfillmentLineItems
       );
 
       if (isExistFulfillmentPackageItem.length) {
@@ -379,7 +379,7 @@ const orderPartiallyFulfilledEvent = async ({
     ) {
       await makePackageProtectionFulfill(
         getOrder.body.data.order.fulfillmentOrders.nodes,
-        gqlClient,
+        gqlClient
       );
     }
   }
@@ -389,10 +389,10 @@ const orderPartiallyFulfilledEvent = async ({
 };
 
 const orderUpdatedEvent = async ({
-                                   ctx: { shop, payload: _payload, session },
-                                 }: WebhookListenerArgs) => {
+  ctx: { shop, payload: _payload, session },
+}: WebhookListenerArgs) => {
   console.log(
-    '-------------------------orderUpdated-----------------------------',
+    '-------------------------orderUpdated-----------------------------'
   );
   if (!_payload) {
     return;
@@ -402,7 +402,7 @@ const orderUpdatedEvent = async ({
 
   const existPackageProtection = payload.line_items.find(
     (line) =>
-      line.title === 'Package Protection' || line.vendor === 'OverallInsurance',
+      line.title === 'Package Protection' || line.vendor === 'OverallInsurance'
   );
   if (existPackageProtection) {
     const orderId = payload.admin_graphql_api_id;

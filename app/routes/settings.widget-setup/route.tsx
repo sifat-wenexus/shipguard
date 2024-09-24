@@ -27,6 +27,7 @@ import {
   LoaderFunctionArgs,
   json,
 } from '@remix-run/node';
+import { PackageProtection } from '#prisma-client';
 
 export async function action({ request }: ActionFunctionArgs) {
   const ctx = await shopifyRemix.authenticate.admin(request);
@@ -36,16 +37,29 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (action === 'toggle') {
     const enabled = body.get('enabled') === 'true';
+    const state = JSON.parse(body.get('state') as string);
 
+    const {
+      excludeProductVariant,
+      switchColor,
+      price,
+      percentage,
+      defaultPercentage,
+      ...payload
+    } = state;
+    const packageProtectionCreateAndUpdate: Partial<PackageProtection> = {
+      switchColor: hsbaToHexWithAlpha(state.switchColor),
+      defaultPercentage: Number(defaultPercentage),
+      percentage: Number(percentage),
+      price: Number(price),
+      enabled: enabled,
+      ...payload,
+    };
     try {
       await queryProxy.packageProtection.upsert(
         {
-          create: {
-            enabled,
-          },
-          update: {
-            enabled,
-          },
+          create: packageProtectionCreateAndUpdate,
+          update: packageProtectionCreateAndUpdate,
           where: {
             storeId: ctx.session.storeId,
           },
@@ -80,7 +94,7 @@ export async function action({ request }: ActionFunctionArgs) {
       defaultPercentage,
       ...payload
     } = state;
-    const packageProtectionCreateAndUpdate = {
+    const packageProtectionCreateAndUpdate: Partial<PackageProtection> = {
       switchColor: hsbaToHexWithAlpha(state.switchColor),
       defaultPercentage: Number(defaultPercentage),
       percentage: Number(percentage),

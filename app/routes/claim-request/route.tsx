@@ -1,4 +1,4 @@
-import { Box, Layout, Page, Text } from '@shopify/polaris';
+import { Box, Button, Icon, Layout, Page, Text } from '@shopify/polaris';
 import ClaimRequestProcess from './calim-request-process';
 import Tutorial from '../settings.$/components/tutorial';
 import DateRangePicker from '../dashboard/date-range';
@@ -6,12 +6,57 @@ import ClaimOrderList from './claim-order-list';
 import { IActiveDates } from '../order/route';
 import { default30Days } from '../dashboard/dashboard';
 import { useMemo, useState } from 'react';
+import * as XLSX from 'xlsx';
+import { json, LoaderFunction } from '@remix-run/node';
+import { shopify as shopifyRemix } from '../../modules/shopify.server';
+import { prisma } from '~/modules/prisma.server';
+import { useLoaderData } from '@remix-run/react';
+import { ExportIcon } from '@shopify/polaris-icons';
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const ctx = await shopifyRemix.authenticate.admin(request);
+  const data = await prisma.packageProtectionOrder.findMany({
+    where: { orderId: ctx.session.storeId, hasClaimRequest: true },
+    select: {
+      id: true,
+      orderId: true,
+      orderName: true,
+      orderAmount: true,
+      protectionFee: true,
+      claimStatus: true,
+    },
+  });
+
+  if (!data || !data.length) {
+    return json([{ message: 'data not found' }]);
+  }
+
+  return json(data);
+};
 
 const FileClaimRequest = () => {
+  const data = useLoaderData<typeof loader>();
   const defaultActiveDates = useMemo(() => default30Days(), []);
-  const [activeDates, setActiveDates] = useState<IActiveDates>(defaultActiveDates);
+  const [activeDates, setActiveDates] =
+    useState<IActiveDates>(defaultActiveDates);
   const [isProcess, setIsProcess] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<string>('');
+
+  const handleExport = () => {
+    console.log('export', data);
+    // return;
+    const wb = XLSX.utils.book_new();
+
+    // Convert JSON data to a worksheet
+    const ws = XLSX.utils.json_to_sheet(data);
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    // Generate and download the Excel file
+    XLSX.writeFile(wb, 'data.xlsx');
+  };
+
   return (
     <div className="m-4 sm:m-0 mt-10 sm:mt-4">
       <Page>
@@ -28,7 +73,17 @@ const FileClaimRequest = () => {
               </Text>
               <br />
               <Box paddingBlockEnd={'400'}>
-                <DateRangePicker setActiveDates={setActiveDates} />
+                <div className="flex justify-between">
+                  <DateRangePicker setActiveDates={setActiveDates} />
+                  <Button
+                    variant="primary"
+                    tone="success"
+                    onClick={handleExport}
+                    icon={<Icon source={ExportIcon} />}
+                  >
+                    Export
+                  </Button>
+                </div>
               </Box>
               <ClaimOrderList
                 activeDates={activeDates!}

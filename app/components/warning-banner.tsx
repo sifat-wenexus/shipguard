@@ -6,14 +6,17 @@ import { Link } from '@remix-run/react';
 
 const WarningBanner = ({ storeInfo }) => {
   const [active, setActive] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
   const handlePopUp = useCallback(() => {
     setActive(!active);
   }, [active]);
-
   const activator = <Button onClick={handlePopUp}>Check instructions</Button>;
+  useEffect(() => {
+    setShowBanner(storeInfo?.ebbedBlock ? false : true);
+  }, [storeInfo?.ebbedBlock]);
   return (
     <>
-      {storeInfo?.ebbedBlock ? null : (
+      {showBanner && (
         <div className="w-full mb-4">
           <Banner
             title="Package protection isn't showing up on your store yet"

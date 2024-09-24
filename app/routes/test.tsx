@@ -72,19 +72,23 @@ export const loader: LoaderFunction = async ({ request }) => {
   try {
     const gql = getShopifyGQLClient(ctx.session);
 
-    const existingShopifyProduct = await gql.query<any>({
+    const res = await gql.query<any>({
       data: {
         query: `#graphql
        query {
-        products(first:10,query:"sku:overall-package-protection OR tag:overall-insurance") {
-            edges {
-              node {
-                id
-                title
-                tags
-              }
-            }
+        currentAppInstallation{
+          metafields(first:100){
+           nodes{
+            namespace
+            key
+            value
+           }
           }
+
+
+        }
+
+
        }
         `,
       },
@@ -93,7 +97,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     return json({
       message: 'Loading is complete',
       status: 200,
-      res: existingShopifyProduct.body.data.products.edges,
+      res: res.body.data,
+      // res: existingShopifyProduct.body.data.products.edges,
     });
   } catch (error) {
     console.log(error);

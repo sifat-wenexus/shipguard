@@ -309,9 +309,9 @@ model PackageProtection {
   enabled                         Boolean                  @default(false)
   insurancePriceType              InsurancePricingType     @default(PERCENTAGE)
   price                           Float                    @default(0)
-  percentage                      Float                    @default(0.25)
+  percentage                      Float                    @default(0)
   defaultPercentage               Float                    @default(0)
-  icon                            String                   @default("one")
+  icon                            String                   @default("three")
   switchColor                     String                   @default("#000000")
   title                           String?
   enabledDescription              String?

@@ -32,6 +32,7 @@ const PublishButton = ({
         {
           action: 'toggle',
           enabled,
+          state: JSON.stringify(state),
         },
         {
           method: 'post',

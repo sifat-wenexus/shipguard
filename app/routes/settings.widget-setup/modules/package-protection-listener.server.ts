@@ -13,6 +13,38 @@ import productImage from '~/assets/images/Inhouse Shipping Protection.png';
 import _ from 'lodash';
 import { Product } from '#prisma-client';
 
+interface IShopifyBulkProductVariantCreateArgs {
+  defaultPrice: number;
+  productId: string;
+  gql: GraphqlClient;
+}
+
+interface IProductVariant {
+  price: number;
+  options: string;
+  sku: string;
+  requiresShipping: boolean;
+  inventoryItem: { tracked: boolean };
+  taxable: boolean;
+}
+
+interface IShopifyBulkVariantUpdate {
+  sku: string;
+  options: string;
+  requiresShipping: boolean;
+  id: string;
+  price: number;
+  taxable: boolean;
+}
+
+interface IShopifyProductCreateAndUpdateArgs {
+  productId?: string;
+  status: 'ACTIVE' | 'DRAFT';
+  tags?: string[];
+  gql: GraphqlClient;
+  vendor?: string;
+}
+
 const icons: {
   id: string;
   icon: string;
@@ -272,8 +304,6 @@ onDBEvtBuffered(
           };
         }[] = await productResponse.body.data.products.edges;
 
-        console.log('existing product', existingProduct);
-
         if (
           (existingProduct?.fixedProductId &&
             existingProduct?.percentageProductId) ||
@@ -324,9 +354,10 @@ onDBEvtBuffered(
             const variantExists = await queryProxy.productVariant.findFirst({
               where: { productId: fixedProductId },
             });
+
             if (variantExists) {
               const singleVariant = await shopifyBulkVariantUpdate(
-                fixedProductId,
+                fixedProductId!,
                 [
                   {
                     sku: 'wenexus-shipping-protection',
@@ -388,7 +419,7 @@ onDBEvtBuffered(
                 productId: { equals: percentageProductId },
               },
             });
-            const productVariantsUpdate: Record<string, any> = [];
+            const productVariantsUpdate: IShopifyBulkVariantUpdate[] = [];
 
             await prevVariants.firstPage().then(async (variants) => {
               let price = data.defaultPercentage;
@@ -408,7 +439,7 @@ onDBEvtBuffered(
 
             //bulk update
             const result = await shopifyBulkVariantUpdate(
-              percentageProductId,
+              percentageProductId!,
               productVariantsUpdate,
               gql
             );
@@ -517,7 +548,7 @@ onDBEvtBuffered(
                     sku: 'wenexus-shipping-protection',
                     options: data.price.toString(),
                     requiresShipping: false,
-                    id: variantExists?.id,
+                    id: variantExists?.id!,
                     price: data.price,
                     taxable: false,
                   },
@@ -575,7 +606,7 @@ onDBEvtBuffered(
               .product.id;
             if (productId) {
               try {
-                const fixedProduct = {
+                const fixedProduct: Partial<Product> = {
                   title: 'Package Protection',
                   productType: 'Warranty',
                   handle: 'package-protection-fixed',
@@ -585,7 +616,7 @@ onDBEvtBuffered(
                   storeId: data.storeId,
                   id: productGqlDraftId,
                 };
-                const percentageProduct = {
+                const percentageProduct: Partial<Product> = {
                   title: 'Package Protection',
                   productType: 'Warranty',
                   handle: 'package-protection-percentage',
@@ -669,8 +700,11 @@ onDBEvtBuffered(
             },
           },
         });
-
-        if (res.body.data?.userErrors?.length > 0) {
+        if (res.body.data?.metafieldsSet?.userErrors?.length > 0) {
+          console.log(
+            'kono error nai',
+            JSON.stringify(res.body.data.metafieldsSet)
+          );
           throw new Error(
             `Error setting metafields: ${JSON.stringify(
               res.body.data.userErrors
@@ -683,21 +717,6 @@ onDBEvtBuffered(
     }
   }
 );
-
-interface IShopifyBulkProductVariantCreateArgs {
-  defaultPrice: number;
-  productId: string;
-  gql: GraphqlClient;
-}
-
-interface IProductVariant {
-  price: number;
-  options: string;
-  sku: string;
-  requiresShipping: boolean;
-  inventoryItem: { tracked: boolean };
-  taxable: boolean;
-}
 
 async function shopifyBulkProductVariantCreate({
   defaultPrice,
@@ -759,8 +778,8 @@ async function shopifyBulkProductVariantCreate({
 }
 
 async function shopifyBulkVariantUpdate(
-  productId,
-  variants,
+  productId: string,
+  variants: IShopifyBulkVariantUpdate[],
   gql: GraphqlClient
 ) {
   const res = await gql.query<any>({
@@ -788,14 +807,6 @@ async function shopifyBulkVariantUpdate(
     },
   });
   return res.body.data.productVariantsBulkUpdate;
-}
-
-interface IShopifyProductCreateAndUpdateArgs {
-  productId?: string;
-  status: 'ACTIVE' | 'DRAFT';
-  tags?: string[];
-  gql: GraphqlClient;
-  vendor?: string;
 }
 
 export async function shopifyProductUpdate({
@@ -834,9 +845,7 @@ async function shopifyCreateProduct({
   gql,
   vendor,
 }: IShopifyProductCreateAndUpdateArgs): Promise<any> {
-  console.log(
-    '------------------------------------product creating---------------------------------------------'
-  );
+  console.log('----------product creating-----------');
   const res = await gql.query<any>({
     data: {
       query: `#graphql
