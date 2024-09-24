@@ -117,8 +117,10 @@ export class Client {
         delete this.sockets[meta.id];
       });
       tcp.on('close', () => {
-        if (ws.readyState !== WebSocket.CLOSED) {
+        if (ws.readyState === WebSocket.OPEN) {
           ws.close();
+        } else if (ws.readyState !== WebSocket.CLOSED && ws.readyState !== WebSocket.CLOSING) {
+          ws.once('open', () => ws.close());
         }
       });
 
