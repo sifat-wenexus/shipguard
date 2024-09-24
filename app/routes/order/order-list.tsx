@@ -18,7 +18,7 @@ import {
   Text,
 } from '@shopify/polaris';
 
-const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
+const OrderList = ({ activeDates, shop }: { shop: string; activeDates: IActiveDates }) => {
   const [filterItems, setFilterItems] = useState<IFilterOptions[]>([]);
   const [inputText, setInputText] = useState('');
   const [i18n] = useI18n();
@@ -85,7 +85,6 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
       include: { PackageProtectionClaimOrder: true },
     });
   }, [endDate, filterItems, searchTerm, startDate]);
-
   const subscription = useQueryPaginated(query);
 
   const rowMarkup = useMemo(() => subscription.data?.map(
@@ -104,7 +103,6 @@ const OrderList = ({ activeDates }: { activeDates: IActiveDates }) => {
       index,
     ) => {
       const status = PackageProtectionClaimOrder.map((i) => i.claimStatus);
-      const shop = 'shopify';
       const claimStatus: 'Requested' | 'Processing' | 'Canceled' | 'Approved' =
         status.every((i) => i === 'CANCEL')
           ? 'Canceled'

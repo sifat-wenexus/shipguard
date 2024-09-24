@@ -1,16 +1,18 @@
 import { AlertCircleIcon, ChevronRightIcon } from '@shopify/polaris-icons';
+import { useDashboardData } from '~/routes/dashboard/use-dashboard-data';
 import { useLivePageData } from '~/hooks/use-live-page-data';
 import WarningBanner from '~/components/warning-banner';
 import DashboardLoading from './dashboard-loading';
 import '@shopify/polaris-viz/build/esm/styles.css';
+import type { IActiveDates } from '../order/route';
 import LineChartForDashboard from './line-chart';
 import '@shopify/polaris/build/esm/styles.css';
-import { IActiveDates } from '../order/route';
 import { useI18n } from '@shopify/react-i18n';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import DateRangePicker from './date-range';
 import GuideLine from './guideline';
 import PieChart from './pie-chart';
+
 import {
   Box,
   Button,
@@ -22,6 +24,7 @@ import {
   Text,
   Tooltip,
 } from '@shopify/polaris';
+
 
 export const default30Days = () => {
   const till = new Date();
@@ -41,10 +44,9 @@ export const default30Days = () => {
 
 const Dashboard = ({ guidelineVisibility }) => {
   const defaultActiveDates = useMemo(() => default30Days(), []);
-  const [i18n] = useI18n();
+
   const [activeDates, setActiveDates] = useState<IActiveDates>(defaultActiveDates);
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<any>(null);
+  const [i18n] = useI18n();
 
   const { period } = activeDates || {};
   const startDate = period
@@ -52,36 +54,30 @@ const Dashboard = ({ guidelineVisibility }) => {
     : new Date().toISOString(); //.split('T')[0];
   const endDate = period
     ? new Date(
-        new Date(period?.until).setDate(new Date(period.until).getDate() + 1)
-      ).toISOString()
+      new Date(period?.until).setDate(new Date(period.until).getDate() + 1),
+    ).toISOString()
     : //.split('T')[0]
-      new Date().toISOString(); //.split('T')[0];
+    new Date().toISOString(); //.split('T')[0];
   // let startPoint = 0;
 
-  const { storeInfo, loading: apiLoading } = useLivePageData();
-  const getData = async () => {
-    if (startDate === endDate && activeDates?.alias !== 'Today') return;
-    setLoading(true);
-    // const session=findOfflineSession()
-    await fetch(`/get-order-data?startDate=${startDate}&endDate=${endDate}`)
-      .then((response) => response.json())
-      .then((res) => {
-        setData(res.data);
-        setLoading(false);
-      })
-      .catch((err) => setLoading(false));
-  };
-  useEffect(() => {
-    getData();
-  }, [activeDates]);
+  const data = useDashboardData(startDate, endDate);
+  const { storeInfo } = useLivePageData();
 
-  const conversionRate = isNaN((data?.claimed / data?.totals) * 100)
-    ? 0
-    : ((data?.claimed / data?.totals) * 100).toFixed(2);
+  let renderElement: React.ReactNode = null;
 
-  const roi =
-    ((data?.sum.protectionFee - data?.sum.refundAmount) / 12.99) * // need to dynamically calculate 12.99
-      100 || 0;
+  const conversionRate = useMemo(() => {
+    if (data.loading) {
+      return 0;
+    }
+
+    return isNaN((data.claimed! / data.total!._count.id) * 100) ? 0 : ((data.claimed! / data.total!._count.id) * 100).toFixed(2);
+  }, [data.claimed, data.loading, data.total]);
+  const roi = useMemo(() => {
+    if (data.loading) {
+      return 0;
+    }
+
+  }, [data.loading]);
 
   // const totals1 = useMemo(() => {
   //   if (startDate === endDate && activeDates?.alias !== 'Today') return;
@@ -106,8 +102,8 @@ const Dashboard = ({ guidelineVisibility }) => {
   // }, []);
   // console.log({ totals1 });
 
-  let renderElement: React.ReactNode = null;
-  if (loading) {
+
+  if (data.loading) {
     renderElement = <DashboardLoading />;
   } else {
     renderElement = (
@@ -123,7 +119,7 @@ const Dashboard = ({ guidelineVisibility }) => {
                         <Text as="span">Total Insurance Order</Text>
                       </div>
                       <span className="font-semibold text-2xl mt-2">
-                        {data?.totals ?? 0}
+                        {data.total?._count.id ?? 0}
                       </span>
                     </div>
                   </div>
@@ -140,9 +136,9 @@ const Dashboard = ({ guidelineVisibility }) => {
                       </div>
                       <span className="font-semibold text-2xl mt-7">
                         {i18n.formatCurrency(
-                          isNaN(data?.sum.orderAmount - data?.sum.refundAmount)
+                          isNaN(data.total!._sum.orderAmount! - data.total!._sum.refundAmount!)
                             ? 0
-                            : data?.sum.orderAmount - data?.sum.refundAmount
+                            : data.total!._sum.orderAmount! - data.total!._sum.refundAmount!,
                         )}
                       </span>
                     </div>
@@ -157,9 +153,9 @@ const Dashboard = ({ guidelineVisibility }) => {
 
                       <span className="font-semibold text-2xl mt-2">
                         {i18n.formatCurrency(
-                          isNaN(data?.sum.protectionFee)
+                          isNaN(data.total!._sum.protectionFee!)
                             ? 0
-                            : data?.sum.protectionFee
+                            : data.total!._sum.protectionFee!,
                         )}
                       </span>
                     </div>
@@ -173,9 +169,9 @@ const Dashboard = ({ guidelineVisibility }) => {
                       </div>
                       <span className="font-semibold text-2xl mt-2">
                         {i18n.formatCurrency(
-                          isNaN(data?.sum.refundAmount)
+                          isNaN(data.total!._sum.refundAmount!)
                             ? 0
-                            : data?.sum.refundAmount
+                            : data.total!._sum.refundAmount!,
                         )}
                       </span>
                     </div>
@@ -227,7 +223,7 @@ const Dashboard = ({ guidelineVisibility }) => {
                         <Text as="span">Total ROI</Text>{' '}
                       </div>
                       <span className="font-semibold text-2xl mt-7">
-                        {roi.toFixed(2)}%
+                        {roi?.toFixed(2)}%
                       </span>
                     </div>
                   </div>
@@ -239,7 +235,7 @@ const Dashboard = ({ guidelineVisibility }) => {
                 <div className=" flex items-center justify-center h-full">
                   <div className="text-center">
                     <span className="font-bold text-6xl text-center">
-                      {data?.notProcess ?? 0}
+                      {data.notClaimed ?? 0}
                     </span>{' '}
                     <br />
                     <span className="font-semibold text-2xl text-center leading-5 mb-2">
