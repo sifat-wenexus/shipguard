@@ -85,6 +85,7 @@ const SpecialSettings = ({ formState }) => {
                 checked={item.selected}
                 label={item.label}
                 id={index + 'mark'}
+                key={item.label}
                 type="radio"
               />
             ))}
