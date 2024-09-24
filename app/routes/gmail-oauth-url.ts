@@ -25,7 +25,7 @@ export async function loader(args: LoaderFunctionArgs) {
   const client = await getGmailAuthClient();
 
   const url = client!.generateAuthUrl({
-    scope: 'https://www.googleapis.com/auth/gmail.send',
+    scope: ['https://www.googleapis.com/auth/gmail.send', 'openid', 'email', 'profile'],
     redirect_uri: process.env.GMAIL_OAUTH_REDIRECT_URI,
     access_type: 'offline',
     state: `${encodeURIComponent(session.storeId!)}&${encodeURIComponent(randomState)}`,

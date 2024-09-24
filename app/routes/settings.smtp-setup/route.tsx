@@ -1,14 +1,13 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { getGmailUserInfo } from '~/modules/get-gmail-user-info.server';
+import { Link, useLoaderData, useRevalidator } from '@remix-run/react';
 import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { ArrowLeftIcon } from '@shopify/polaris-icons';
-import { useCallback, useMemo, useState } from 'react';
-import { Link, useLoaderData } from '@remix-run/react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import SwitchButton from './components/switch-button';
 import { shopify } from '~/modules/shopify.server';
 import GmailLogo from '~/assets/images/gmail.png';
-import { prisma } from '~/modules/prisma.server';
 import { useQuery } from '~/hooks/use-query';
 import { json } from '@remix-run/node';
 
@@ -27,15 +26,10 @@ import {
 export async function loader({ request }: LoaderFunctionArgs) {
   const { session } = await shopify.authenticate.admin(request);
 
-  const gmailAuth = await prisma.gmailAuthCredential.findFirst({
-    where: {
-      id: session.storeId,
-    },
-  });
+  const gmailUserInfo = await getGmailUserInfo(session.storeId!);
 
   return json({
-    isGmailConnected: !!gmailAuth?.payload,
-    email: 'ibrahim@wenexus.io',
+    gmailUserInfo: gmailUserInfo,
   });
 }
 
@@ -69,47 +63,35 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 const SMTP = () => {
-  const [selected, setSelected] = useState('google');
   const [selectedSmtp, setSelectedSmtp] = useState('smtp');
-  const [TLS, setTLS] = useState(false);
-  const [proxy, setProxy] = useState(false);
+  const [selected, setSelected] = useState('google');
+  const loaderData = useLoaderData<typeof loader>();
   const [TLSVersion, setTLSVersion] = useState('');
   const [button, setButton] = useState(false);
+  const [proxy, setProxy] = useState(false);
+  const [TLS, setTLS] = useState(false);
+  const revalidator = useRevalidator();
   const fetcher = useBetterFetcher();
 
-  const loaderData = useLoaderData<typeof loader>();
-
-  const handleSelectChange = useCallback(
-    (value: string) => setSelected(value),
-    [],
-  );
-  const handleSelectSmtpChange = useCallback(
-    (value: string) => setSelectedSmtp(value),
-    [],
-  );
-  const handleTLSVersionChange = useCallback(
-    (value: string) => setTLSVersion(value),
-    [],
-  );
-  const options = [
-    { label: 'Google', value: 'google' },
-    { label: 'Custom', value: 'custom' },
-  ];
-  const protocolOptions = [
-    { label: 'SMTP', value: 'smtp' },
-    { label: 'SMTPS', value: 'smtps' },
-  ];
   const TLSVersionOptions = [
     { label: 'TLSv1', value: 'TLSv1' },
     { label: 'TLSv1.1', value: 'TLSv1.1' },
     { label: 'TLSv1.2', value: 'TLSv1.2' },
     { label: 'TLSv1.3', value: 'TLSv1.3' },
   ];
+  const protocolOptions = [
+    { label: 'SMTP', value: 'smtp' },
+    { label: 'SMTPS', value: 'smtps' },
+  ];
+  const options = [
+    { label: 'Google', value: 'google' },
+    { label: 'Custom', value: 'custom' },
+  ];
 
   const gmailAuthQuery = useMemo(() => queryProxy.gmailAuthCredential.subscribeFindFirst(), []);
   const gmailAuth = useQuery(gmailAuthQuery);
 
-  const isGmailConnected = useMemo(() => loaderData.isGmailConnected || !!gmailAuth.data?.payload, [gmailAuth.data?.payload, loaderData.isGmailConnected]);
+  const isGmailConnected = useMemo(() => !!(loaderData.gmailUserInfo || gmailAuth.data?.payload), [gmailAuth.data?.payload, loaderData.gmailUserInfo]);
 
   const authorize = useCallback(async () => {
     const url = await fetch('/gmail-oauth-url').then(r => r.text());
@@ -129,6 +111,12 @@ const SMTP = () => {
     });
   }, [fetcher]);
 
+  useEffect(() => {
+    if (isGmailConnected && !loaderData.gmailUserInfo) {
+      revalidator.revalidate();
+    }
+  }, [loaderData.gmailUserInfo, isGmailConnected, revalidator]);
+
   return (
     <>
       <div className="mt-8 sm:mt-4 m-2">
@@ -146,8 +134,8 @@ const SMTP = () => {
                   <Box paddingBlockStart="200" paddingBlockEnd="200">
                     <Select
                       label="SMTP Provider"
+                      onChange={setSelected}
                       options={options}
-                      onChange={handleSelectChange}
                       tone="magic"
                       value={selected}
                       requiredIndicator
@@ -156,19 +144,19 @@ const SMTP = () => {
                   {selected === 'google' ? (
                     <Box paddingBlockStart="200" paddingBlockEnd="200">
                       <AccountConnection
-                        details={!isGmailConnected ? 'Connect with your Google account to send emails using Gmail\'s SMTP server.' : `Your Google account (${loaderData.email}) is connected.`}
+                        details={!isGmailConnected ? 'Connect with your Google account to send emails using Gmail\'s SMTP server.' : `Your Google account is connected.`}
                         termsOfService={
                           isGmailConnected ? null : (
                             <p>
                               By connecting your Google account, you agree to accept our{' '} <Link
-                              to="/gmail-terms-of-service" className="underline">Terms of Service</Link> and{' '} <Link
-                              to="/gmail-privacy-policy" className="underline">Privacy Policy</Link>.
+                              to="/terms-of-service" className="underline">Terms of Service</Link> and{' '} <Link
+                              to="/privacy-policy" className="underline">Privacy Policy</Link>.
                             </p>
                           )
                         }
+                        avatarUrl={loaderData.gmailUserInfo?.picture || GmailLogo}
                         connected={isGmailConnected}
-                        title="Google Account"
-                        avatarUrl={GmailLogo}
+                        title={loaderData.gmailUserInfo?.email || 'Google Account'}
                         accountName="Google"
                         action={{
                           content: isGmailConnected ? 'Disconnect' : 'Connect',
@@ -196,7 +184,7 @@ const SMTP = () => {
                           <Select
                             label="SMTP Protocol"
                             options={protocolOptions}
-                            onChange={handleSelectSmtpChange}
+                            onChange={setSelectedSmtp}
                             value={selectedSmtp}
                             tone="magic"
                           />
@@ -249,7 +237,7 @@ const SMTP = () => {
                             <Select
                               label="TLS Version"
                               options={TLSVersionOptions}
-                              onChange={handleTLSVersionChange}
+                              onChange={setTLSVersion}
                               value={TLSVersion}
                               tone="magic"
                             />
