@@ -2,6 +2,8 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/react';
 import { shopify as shopifyRemix } from '../modules/shopify.server';
 import { prisma } from '../modules/prisma.server';
+import { getConfig } from '~/modules/get-config.server';
+import { makeAlphaNumeric } from '~/modules/utils/alpha-numeric-string';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
@@ -27,6 +29,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       .then((r) => r.data[0])
       .catch((err) => console.error(err));
 
+    const appName = makeAlphaNumeric(getConfig().name);
+
     try {
       const asset = await restAdminApi.Asset.all({
         session: ctx.session,
@@ -44,20 +48,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
       }
 
       const blocks = await JSON.parse(asset.data[0].value).current.blocks;
-
       for (const block in blocks) {
         if (typeof blocks[block] === 'object') {
-          for (const check in blocks[block]) {
-            if (
-              typeof blocks[block][check] === 'string' &&
-              blocks[block][check].includes('package-protection')
-            ) {
-              ebbedBlock = !blocks[block].disabled;
-            }
+          if (
+            blocks[block].type.includes(`${appName}/blocks/package-protection`)
+          ) {
+            ebbedBlock = !blocks[block].disabled;
           }
         }
       }
-
       const template = await restAdminApi.Asset.all({
         session: ctx.session,
         theme_id: theme?.id,

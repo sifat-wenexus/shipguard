@@ -25,7 +25,6 @@ import {
   Tooltip,
 } from '@shopify/polaris';
 
-
 export const default30Days = () => {
   const till = new Date();
   const since = new Date();
@@ -45,7 +44,8 @@ export const default30Days = () => {
 const Dashboard = ({ guidelineVisibility }) => {
   const defaultActiveDates = useMemo(() => default30Days(), []);
 
-  const [activeDates, setActiveDates] = useState<IActiveDates>(defaultActiveDates);
+  const [activeDates, setActiveDates] =
+    useState<IActiveDates>(defaultActiveDates);
   const [i18n] = useI18n();
 
   const { period } = activeDates || {};
@@ -54,10 +54,10 @@ const Dashboard = ({ guidelineVisibility }) => {
     : new Date().toISOString(); //.split('T')[0];
   const endDate = period
     ? new Date(
-      new Date(period?.until).setDate(new Date(period.until).getDate() + 1),
-    ).toISOString()
+        new Date(period?.until).setDate(new Date(period.until).getDate() + 1)
+      ).toISOString()
     : //.split('T')[0]
-    new Date().toISOString(); //.split('T')[0];
+      new Date().toISOString(); //.split('T')[0];
   // let startPoint = 0;
 
   const data = useDashboardData(startDate, endDate);
@@ -70,38 +70,15 @@ const Dashboard = ({ guidelineVisibility }) => {
       return 0;
     }
 
-    return isNaN((data.claimed! / data.total!._count.id) * 100) ? 0 : ((data.claimed! / data.total!._count.id) * 100).toFixed(2);
+    return isNaN((data.claimed! / data.total!._count.id) * 100)
+      ? 0
+      : ((data.claimed! / data.total!._count.id) * 100).toFixed(2);
   }, [data.claimed, data.loading, data.total]);
   const roi = useMemo(() => {
     if (data.loading) {
       return 0;
     }
-
   }, [data.loading]);
-
-  // const totals1 = useMemo(() => {
-  //   if (startDate === endDate && activeDates?.alias !== 'Today') return;
-  //   return queryProxy.packageProtectionOrder.subscribeAggregate({
-  //     _sum: {
-  //       refundAmount: true,
-  //       orderAmount: true,
-  //       protectionFee: true,
-  //     },
-  //     _count: { id: true },
-  //     where: {
-  //       AND: [
-  //         {
-  //           createdAt: {
-  //             gte: startDate,
-  //             lte: endDate,
-  //           },
-  //         },
-  //       ],
-  //     },
-  //   });
-  // }, []);
-  // console.log({ totals1 });
-
 
   if (data.loading) {
     renderElement = <DashboardLoading />;
@@ -136,9 +113,13 @@ const Dashboard = ({ guidelineVisibility }) => {
                       </div>
                       <span className="font-semibold text-2xl mt-7">
                         {i18n.formatCurrency(
-                          isNaN(data.total!._sum.orderAmount! - data.total!._sum.refundAmount!)
+                          isNaN(
+                            data.total!._sum.orderAmount! -
+                              data.total!._sum.refundAmount!
+                          )
                             ? 0
-                            : data.total!._sum.orderAmount! - data.total!._sum.refundAmount!,
+                            : data.total!._sum.orderAmount! -
+                                data.total!._sum.refundAmount!
                         )}
                       </span>
                     </div>
@@ -155,7 +136,7 @@ const Dashboard = ({ guidelineVisibility }) => {
                         {i18n.formatCurrency(
                           isNaN(data.total!._sum.protectionFee!)
                             ? 0
-                            : data.total!._sum.protectionFee!,
+                            : data.total!._sum.protectionFee!
                         )}
                       </span>
                     </div>
@@ -171,7 +152,7 @@ const Dashboard = ({ guidelineVisibility }) => {
                         {i18n.formatCurrency(
                           isNaN(data.total!._sum.refundAmount!)
                             ? 0
-                            : data.total!._sum.refundAmount!,
+                            : data.total!._sum.refundAmount!
                         )}
                       </span>
                     </div>

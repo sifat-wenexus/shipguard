@@ -9,7 +9,6 @@ import { ClaimIssue, ClaimRequested } from '#prisma-client';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  console.log('aice');
   try {
     let url = new URL(request.url);
 

@@ -45,6 +45,8 @@ interface IShopifyProductCreateAndUpdateArgs {
   vendor?: string;
 }
 
+export const PRODUCT_SKU: string = 'wenexus-shipping-protection';
+
 const icons: {
   id: string;
   icon: string;
@@ -283,7 +285,7 @@ onDBEvtBuffered(
           data: {
             query: `#graphql
            query {
-            products(first:10,query:"sku:overall-package-protection OR tag:overall-insurance") {
+            products(first:10,query:"sku:overall-package-protection OR tag:overall-insurance OR sku:wenexus-shipping-protection") {
                 edges {
                   node {
                     id
@@ -360,7 +362,7 @@ onDBEvtBuffered(
                 fixedProductId!,
                 [
                   {
-                    sku: 'wenexus-shipping-protection',
+                    sku: PRODUCT_SKU,
                     options: data.price.toString(),
                     requiresShipping: false,
                     id: variantExists?.id,
@@ -425,7 +427,7 @@ onDBEvtBuffered(
               let price = data.defaultPercentage;
               for (let i = 0; i < variants.length; i++) {
                 productVariantsUpdate.push({
-                  sku: 'wenexus-shipping-protection',
+                  sku: PRODUCT_SKU,
                   options: price.toString(),
                   requiresShipping: false,
                   id: variants[i].id,
@@ -545,7 +547,7 @@ onDBEvtBuffered(
                 productId,
                 [
                   {
-                    sku: 'wenexus-shipping-protection',
+                    sku: PRODUCT_SKU,
                     options: data.price.toString(),
                     requiresShipping: false,
                     id: variantExists?.id!,
@@ -729,7 +731,7 @@ async function shopifyBulkProductVariantCreate({
     productVariants.push({
       price: price,
       options: price.toString(),
-      sku: 'wenexus-shipping-protection',
+      sku: PRODUCT_SKU,
       requiresShipping: false,
       inventoryItem: { tracked: false },
       taxable: false,

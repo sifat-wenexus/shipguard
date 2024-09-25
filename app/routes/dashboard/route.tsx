@@ -16,7 +16,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 const App = () => {
   const { guidelineVisibility } = useLoaderData<typeof loader>();
-  console.log('guidelineVisibility', guidelineVisibility);
   return (
     <Page>
       <Dashboard guidelineVisibility={guidelineVisibility} />
