@@ -12,6 +12,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const restAdminApi = await ctx.admin.rest.resources;
     let ebbedBlock = false;
     let claimPage = false;
+    let appExtensionId: string = '';
     const install = await prisma.packageProtection.findFirst({
       where: { storeId: ctx.session.storeId },
       select: { enabled: true },
@@ -44,6 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           ebbedBlock,
           install: install?.enabled,
           claimPage,
+          appExtensionId,
         });
       }
 
@@ -54,6 +56,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
             blocks[block].type.includes(`${appName}/blocks/package-protection`)
           ) {
             ebbedBlock = !blocks[block].disabled;
+            const splitUrl = blocks[block].type.split('/');
+            appExtensionId = splitUrl[splitUrl.length - 1];
           }
         }
       }
@@ -72,6 +76,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           ebbedBlock,
           install: install?.enabled,
           claimPage,
+          appExtensionId,
         });
       }
 
@@ -81,6 +86,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ebbedBlock,
         install: install?.enabled,
         claimPage,
+        appExtensionId,
       });
     } catch (err) {
       console.error(err);
@@ -90,6 +96,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ebbedBlock,
         install: install?.enabled,
         claimPage,
+        appExtensionId,
       });
     }
   } catch (err) {

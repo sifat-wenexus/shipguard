@@ -250,11 +250,17 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                             <Button
                               variant="primary"
                               tone="success"
-                              url={`https://admin.shopify.com/store/${
-                                storeInfo?.store?.domain.split('.')[0]
-                              }/themes/${
-                                storeInfo?.theme?.id
-                              }/editor?context=apps`}
+                              url={
+                                storeInfo
+                                  ? `https://admin.shopify.com/store/${
+                                      storeInfo?.store?.domain.split('.')[0]
+                                    }/themes/${
+                                      storeInfo?.theme?.id
+                                    }/editor?context=apps&template=index&activateAppId=${
+                                      storeInfo.appExtensionId
+                                    }/package-protection`
+                                  : ''
+                              }
                               target="_blank"
                             >
                               Enable App Embed

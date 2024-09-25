@@ -37,7 +37,11 @@ const WarningBanner = ({ storeInfo }) => {
                   storeInfo
                     ? `https://admin.shopify.com/store/${
                         storeInfo?.store?.domain.split('.')[0]
-                      }/themes/${storeInfo?.theme?.id}/editor?context=apps`
+                      }/themes/${
+                        storeInfo?.theme?.id
+                      }/editor?context=apps&template=index&activateAppId=${
+                        storeInfo.appExtensionId
+                      }/package-protection`
                     : ''
                 }
                 target="_blank"
