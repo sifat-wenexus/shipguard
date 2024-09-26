@@ -165,7 +165,7 @@ const orderCreateEvent = async ({
       }
     }
   } catch (err) {
-    console.log('------------ERROR-------------', err);
+    console.error('Error in OrderCreateEvent', err);
   }
 };
 
@@ -180,8 +180,10 @@ const orderRefundEvent = async ({
   const payload = _payload as Record<string, any>;
 
   const orderId = 'gid://shopify/Order/' + payload.order_id;
-  const result = await gqlClient.query<any>({
-    data: `#graphql
+
+  try {
+    const result = await gqlClient.query<any>({
+      data: `#graphql
     mutation{
       orderUpdate(input:{id: "${orderId}",tags:["Overall-Package-Refund","Wenexus-Shipping-Refund"]}){
         order{
@@ -193,11 +195,19 @@ const orderRefundEvent = async ({
       }
     }
     `,
-  });
+    });
+  } catch (err) {
+    console.error('Error in orderRefundEvent', err);
+  }
 };
 
-const orderFulfilledEvent = async () => {
+const orderFulfilledEvent = async ({
+  ctx: { shop, payload: _payload, session },
+}: WebhookListenerArgs) => {
   console.log('orderFulfilledEvent');
+  if (!_payload) {
+    return;
+  }
 };
 
 const orderPartiallyFulfilledEvent = async ({
@@ -206,145 +216,146 @@ const orderPartiallyFulfilledEvent = async ({
   if (!_payload) {
     return;
   }
-  console.log('hocce kichu');
-  const fulfillmentStatus = await queryProxy.packageProtection.findFirst({
-    where: {
-      storeId: session?.storeId,
-    },
-    select: { insuranceFulfillmentStatus: true },
-  });
 
-  const gqlClient = getShopifyGQLClient(session!);
-  const payload = _payload as Record<string, any>;
+  try {
+    const fulfillmentStatus = await queryProxy.packageProtection.findFirst({
+      where: {
+        storeId: session?.storeId,
+      },
+      select: { insuranceFulfillmentStatus: true },
+    });
 
-  const existPackageProtection = payload.line_items.find(
-    (line) => line.sku === PRODUCT_SKU
-  );
-  if (existPackageProtection) {
-    const orderId = payload.admin_graphql_api_id;
+    const gqlClient = getShopifyGQLClient(session!);
+    const payload = _payload as Record<string, any>;
 
-    const getOrder = await gqlClient.query<any>({
-      data: `#graphql
-      query{
-        order(id:"${orderId}"){
-          displayFulfillmentStatus
-          fulfillmentOrders(first:250){
-            nodes{
-              id
-              status
-              lineItems(first:250){
-                nodes{
-                  id
-                  productTitle
-                  sku
+    const existPackageProtection = payload.line_items.find(
+      (line) => line.sku === PRODUCT_SKU
+    );
+    if (existPackageProtection) {
+      const orderId = payload.admin_graphql_api_id;
+
+      const getOrder = await gqlClient.query<any>({
+        data: `#graphql
+        query{
+          order(id:"${orderId}"){
+            displayFulfillmentStatus
+            fulfillmentOrders(first:250){
+              nodes{
+                id
+                status
+                lineItems(first:250){
+                  nodes{
+                    id
+                    productTitle
+                    sku
+                  }
                 }
               }
             }
-          }
-          fulfillments(first:250){
-            id
-            name
-            displayStatus
-            fulfillmentLineItems(first:250){
-              nodes{
-                lineItem{
-                  title
-                  id
-                  sku
+            fulfillments(first:250){
+              id
+              name
+              displayStatus
+              fulfillmentLineItems(first:250){
+                nodes{
+                  lineItem{
+                    title
+                    id
+                    sku
+                  }
                 }
               }
             }
           }
         }
-      }
-      `,
-    });
-
-    await queryProxy.packageProtectionOrder.update({
-      data: {
-        fulfillmentStatus: getOrder.body.data.order.displayFulfillmentStatus,
-      },
-      where: { orderId: orderId },
-    });
-
-    if (
-      fulfillmentStatus?.insuranceFulfillmentStatus ===
-      'Mark as fulfilled when other items fulfilled'
-    ) {
-      const fulfillmentOrder: Record<string, any>[] = [];
-
-      getOrder.body.data.order.fulfillmentOrders.nodes.forEach((order) => {
-        const id = order.id;
-        order.lineItems.nodes.forEach((item) => {
-          fulfillmentOrder.push({
-            fulfillmentOrderId: id,
-            productId: item.id,
-            status: order.status,
-            productTitle: item.productTitle,
-            sku: item.sku,
-          });
-        });
+        `,
       });
 
-      const fulfillmentLineItems: Record<string, any>[] = [];
-
-      getOrder.body.data.order.fulfillments.forEach((fulfill) => {
-        fulfill.fulfillmentLineItems.nodes.forEach((item) => {
-          fulfillmentLineItems.push({
-            fulfillmentId: fulfill.id,
-            productId: item.lineItem.id,
-            productTitle: item.lineItem.title,
-            sku: item.lineItem.sku,
-          });
-        });
+      await queryProxy.packageProtectionOrder.update({
+        data: {
+          fulfillmentStatus: getOrder.body.data.order.displayFulfillmentStatus,
+        },
+        where: { orderId: orderId },
       });
-      const isExistFulfillmentPackageItem = fulfillmentOrder
-        .filter((order) => order.status !== 'CLOSED')
-        .filter((e) =>
-          fulfillmentLineItems.every((i) => i.productTitle !== e.productTitle)
-        )
-        .filter((item) => item.sku === PRODUCT_SKU);
 
-      if (isExistFulfillmentPackageItem.length) {
-        isExistFulfillmentPackageItem.forEach(async (item) => {
-          await gqlClient.query<any>({
-            data: `#graphql
-            mutation {
-              fulfillmentCreateV2(fulfillment: {
-                lineItemsByFulfillmentOrder:{
-                  fulfillmentOrderId:"${item.fulfillmentOrderId}",
-                  fulfillmentOrderLineItems:{id:"${item.productId}",quantity:1}
-                }
+      if (
+        fulfillmentStatus?.insuranceFulfillmentStatus ===
+        'Mark as fulfilled when other items fulfilled'
+      ) {
+        const fulfillmentOrder: Record<string, any>[] = [];
 
-              }) {
-                fulfillment {
-                  id
-                  status
-                }
-                userErrors {
-                  field
-                  message
-                }
-              }
-            }`,
+        getOrder.body.data.order.fulfillmentOrders.nodes.forEach((order) => {
+          const id = order.id;
+          order.lineItems.nodes.forEach((item) => {
+            fulfillmentOrder.push({
+              fulfillmentOrderId: id,
+              productId: item.id,
+              status: order.status,
+              productTitle: item.productTitle,
+              sku: item.sku,
+            });
           });
         });
+
+        const fulfillmentLineItems: Record<string, any>[] = [];
+
+        getOrder.body.data.order.fulfillments.forEach((fulfill) => {
+          fulfill.fulfillmentLineItems.nodes.forEach((item) => {
+            fulfillmentLineItems.push({
+              fulfillmentId: fulfill.id,
+              productId: item.lineItem.id,
+              productTitle: item.lineItem.title,
+              sku: item.lineItem.sku,
+            });
+          });
+        });
+        const isExistFulfillmentPackageItem = fulfillmentOrder
+          .filter((order) => order.status !== 'CLOSED')
+          .filter((e) =>
+            fulfillmentLineItems.every((i) => i.productTitle !== e.productTitle)
+          )
+          .filter((item) => item.sku === PRODUCT_SKU);
+
+        if (isExistFulfillmentPackageItem.length) {
+          isExistFulfillmentPackageItem.forEach(async (item) => {
+            await gqlClient.query<any>({
+              data: `#graphql
+              mutation {
+                fulfillmentCreateV2(fulfillment: {
+                  lineItemsByFulfillmentOrder:{
+                    fulfillmentOrderId:"${item.fulfillmentOrderId}",
+                    fulfillmentOrderLineItems:{id:"${item.productId}",quantity:1}
+                  }
+
+                }) {
+                  fulfillment {
+                    id
+                    status
+                  }
+                  userErrors {
+                    field
+                    message
+                  }
+                }
+              }`,
+            });
+          });
+        }
+      }
+
+      if (
+        fulfillmentStatus?.insuranceFulfillmentStatus ===
+        'Mark as fulfilled when first item(s) are fulfilled'
+      ) {
+        await makePackageProtectionFulfill(
+          getOrder.body.data.order.fulfillmentOrders.nodes,
+          gqlClient
+        );
       }
     }
-
-    if (
-      fulfillmentStatus?.insuranceFulfillmentStatus ===
-      'Mark as fulfilled when first item(s) are fulfilled'
-    ) {
-      await makePackageProtectionFulfill(
-        getOrder.body.data.order.fulfillmentOrders.nodes,
-        gqlClient
-      );
-    }
+  } catch (error) {
+    console.error('Error in orderPartiallyFulfilledEvent', error);
   }
-  // }else if(fulfillmentStatus?.insuranceFulfillmentStatus==='Mark as fulfilled when other items fulfilled'){
-
-  // }
 };
 
 const orderUpdatedEvent = async ({
@@ -359,14 +370,15 @@ const orderUpdatedEvent = async ({
   const gqlClient = getShopifyGQLClient(session!);
   const payload = _payload as Record<string, any>;
 
-  const existPackageProtection = payload.line_items.find(
-    (line) => line.sku === PRODUCT_SKU
-  );
-  if (existPackageProtection) {
-    const orderId = payload.admin_graphql_api_id;
+  try {
+    const existPackageProtection = payload.line_items.find(
+      (line) => line.sku === PRODUCT_SKU
+    );
+    if (existPackageProtection) {
+      const orderId = payload.admin_graphql_api_id;
 
-    const getOrder = await gqlClient.query<any>({
-      data: `#graphql
+      const getOrder = await gqlClient.query<any>({
+        data: `#graphql
       query{
         order(id:"${orderId}"){
           displayFulfillmentStatus
@@ -398,14 +410,18 @@ const orderUpdatedEvent = async ({
         }
       }
       `,
-    });
+      });
 
-    await queryProxy.packageProtectionOrder.update({
-      data: {
-        fulfillmentStatus: getOrder.body.data.order.displayFulfillmentStatus,
-      },
-      where: { orderId: orderId },
-    });
+      const updateOrder = await queryProxy.packageProtectionOrder.update({
+        data: {
+          fulfillmentStatus: getOrder.body.data.order.displayFulfillmentStatus,
+        },
+        where: { orderId: orderId },
+      });
+      console.log(updateOrder);
+    }
+  } catch (error) {
+    console.error('Error on OrderUpdateEvent', error);
   }
 };
 

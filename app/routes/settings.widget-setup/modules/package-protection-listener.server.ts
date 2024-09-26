@@ -336,17 +336,23 @@ onDBEvtBuffered(
             if (data.enabled) {
               await shopifyProductUpdate({
                 productId: fixedProductId!,
+                tags: ['insurancetype-fixed', 'overall-insurance'],
+                vendor: store.name,
                 status: 'ACTIVE',
                 gql,
               });
               await shopifyProductUpdate({
                 productId: percentageProductId!,
+                tags: ['insurancetype-percentage', 'overall-insurance'],
+                vendor: store.name,
                 status: 'DRAFT',
                 gql,
               });
             } else {
               await shopifyProductUpdate({
                 productId: fixedProductId!,
+                tags: ['insurancetype-fixed', 'overall-insurance'],
+                vendor: store.name,
                 status: 'DRAFT',
                 gql,
               });
@@ -399,17 +405,23 @@ onDBEvtBuffered(
               await shopifyProductUpdate({
                 productId: percentageProductId!,
                 status: 'ACTIVE',
+                tags: ['insurancetype-percentage', 'overall-insurance'],
+                vendor: store.name,
                 gql: gql,
               });
 
               await shopifyProductUpdate({
                 productId: fixedProductId!,
+                tags: ['insurancetype-fixed', 'overall-insurance'],
+                vendor: store.name,
                 status: 'DRAFT',
                 gql,
               });
             } else {
               await shopifyProductUpdate({
                 productId: percentageProductId!,
+                tags: ['insurancetype-percentage', 'overall-insurance'],
+                vendor: store.name,
                 status: 'DRAFT',
                 gql: gql,
               });
@@ -601,8 +613,8 @@ onDBEvtBuffered(
             const createFixedProduct = await shopifyCreateProduct({
               status: 'DRAFT',
               tags: ['insurancetype-fixed', 'overall-insurance'],
-              gql,
               vendor: store.name,
+              gql,
             });
             const productGqlDraftId = await createFixedProduct.productCreate
               .product.id;
@@ -815,6 +827,8 @@ export async function shopifyProductUpdate({
   productId,
   status,
   gql,
+  vendor,
+  tags,
 }: IShopifyProductCreateAndUpdateArgs): Promise<void> {
   await gql.query<any>({
     data: {
@@ -831,6 +845,8 @@ export async function shopifyProductUpdate({
         input: {
           id: productId,
           status: status,
+          vendor,
+          tags,
         },
         // media: {
         //   mediaContentType: 'IMAGE',

@@ -7,8 +7,10 @@ import { getShopifyGQLClient } from '../modules/shopify.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { ClaimIssue, ClaimRequested } from '#prisma-client';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
+import { log } from 'console';
 
 export const loader: LoaderFunction = async ({ request }) => {
+  console.log('loading........');
   try {
     let url = new URL(request.url);
 
@@ -258,7 +260,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       data: finalResult,
     });
   } catch (err) {
-    console.error(err);
+    console.error('error', err);
     return json({
       message: 'request failed!',
       Error: err,
