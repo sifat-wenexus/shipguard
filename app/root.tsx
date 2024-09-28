@@ -54,7 +54,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     !url.pathname.startsWith('/auth') &&
     !url.pathname.startsWith('/webhooks') &&
     !url.pathname.startsWith('/test') &&
-    !url.pathname.startsWith('/gmail-oauth-callback')
+    !url.pathname.startsWith('/google-oauth-callback')
   ) {
     const ctx = await shopify.authenticate.admin(request);
 
@@ -82,7 +82,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   return json({
-    appStatus: url.pathname.startsWith('/gmail-oauth-callback')
+    appStatus: url.pathname.startsWith('/google-oauth-callback')
       ? 'READY'
       : ('INSTALLED' as AppStatus),
     apiKey: process.env.SHOPIFY_API_KEY!,

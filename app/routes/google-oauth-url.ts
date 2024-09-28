@@ -1,4 +1,4 @@
-import { getGmailAuthClient } from '~/modules/get-gmail-auth-client.server';
+import { getGoogleAuthClient } from '~/modules/get-google-auth-client.server';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { shopify } from '~/modules/shopify.server';
 import { prisma } from '~/modules/prisma.server';
@@ -9,7 +9,7 @@ export async function loader(args: LoaderFunctionArgs) {
 
   const randomState = crypto.randomBytes(16).toString('hex');
 
-  await prisma.gmailAuthCredential.upsert({
+  await prisma.googleAuthCredential.upsert({
     create: {
       id: session.storeId!,
       oauthState: randomState,
@@ -22,7 +22,7 @@ export async function loader(args: LoaderFunctionArgs) {
     },
   });
 
-  const client = await getGmailAuthClient();
+  const client = await getGoogleAuthClient();
 
   const url = client!.generateAuthUrl({
     scope: ['https://www.googleapis.com/auth/gmail.send', 'openid', 'email', 'profile'],

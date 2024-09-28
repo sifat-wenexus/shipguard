@@ -328,7 +328,7 @@ export const models = defineModels(() => {
       },
     },
 
-    gmailAuthCredential: {
+    googleAuthCredential: {
       permissions: {
         subscribe: true,
         read: {

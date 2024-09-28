@@ -162,7 +162,7 @@ model Store {
   PackageProtectionOrders     PackageProtectionOrder[]
   PackageProtectionClaimOrder PackageProtectionClaimOrder[]
   EmailTemplates              EmailTemplate[]
-  GmailAuthCredential         GmailAuthCredential?
+  GoogleAuthCredential        GoogleAuthCredential?
   SmtpSetting                 SmtpSetting?
 
   @@index([appInstallationId])
@@ -430,7 +430,7 @@ model EmailTemplate {
   Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-model GmailAuthCredential {
+model GoogleAuthCredential {
   id String @id
 
   oauthState String

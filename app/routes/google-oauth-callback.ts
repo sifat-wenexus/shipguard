@@ -1,4 +1,4 @@
-import { getGmailAuthClient } from '~/modules/get-gmail-auth-client.server';
+import { getGoogleAuthClient } from '~/modules/get-google-auth-client.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { queryProxy } from '~/modules/query/query-proxy';
@@ -29,7 +29,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const [storeId, oauthState] = state.split('&').map(decodeURIComponent);
 
   try {
-    await prisma.gmailAuthCredential.findFirstOrThrow({
+    await prisma.googleAuthCredential.findFirstOrThrow({
       where: {
         id: storeId,
         oauthState,
@@ -52,7 +52,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     });
   }
 
-  const client = await getGmailAuthClient();
+  const client = await getGoogleAuthClient();
   const tokenResponse = await client!.getToken(code);
 
   const store = await prisma.store.findUniqueOrThrow({
@@ -63,7 +63,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const session = await findOfflineSession(store.domain);
 
-  await queryProxy.gmailAuthCredential.update({
+  await queryProxy.googleAuthCredential.update({
     where: {
       id: storeId,
     },

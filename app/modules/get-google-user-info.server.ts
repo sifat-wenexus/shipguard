@@ -1,8 +1,8 @@
-import { getGmailAuthClient } from '~/modules/get-gmail-auth-client.server';
+import { getGoogleAuthClient } from '~/modules/get-google-auth-client.server';
 import { google } from 'googleapis';
 
-export async function getGmailUserInfo(storeId: string) {
-  const oauthClient = await getGmailAuthClient(storeId);
+export async function getGoogleUserInfo(storeId: string) {
+  const oauthClient = await getGoogleAuthClient(storeId);
 
   if (!oauthClient) {
     return null;

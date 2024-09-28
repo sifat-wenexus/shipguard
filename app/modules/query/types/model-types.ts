@@ -73,9 +73,9 @@ export interface ModelTypes {
     model: Base.Migration;
     whereInput: Base.Prisma.MigrationWhereInput;
   };
-  gmailAuthCredential: {
-    model: Base.GmailAuthCredential;
-    whereInput: Base.Prisma.GmailAuthCredentialWhereInput;
+  googleAuthCredential: {
+    model: Base.GoogleAuthCredential;
+    whereInput: Base.Prisma.GoogleAuthCredentialWhereInput;
   }
   smtpSetting: {
     model: Base.SmtpSetting;

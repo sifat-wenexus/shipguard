@@ -1,12 +1,14 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { getGmailUserInfo } from '~/modules/get-gmail-user-info.server';
+import { getGoogleUserInfo } from '~/modules/get-google-user-info.server';
 import { Link, useLoaderData, useRevalidator } from '@remix-run/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import { queryProxy } from '~/modules/query/query-proxy';
+import { getMailer } from '~/modules/get-mailer.server';
 import type { Validator } from '~/hooks/use-form-state';
 import { ArrowLeftIcon } from '@shopify/polaris-icons';
 import SwitchButton from './components/switch-button';
+import { GmailAPI } from '~/modules/gmail-api.server';
 import { useFormState } from '~/hooks/use-form-state';
 import { shopify } from '~/modules/shopify.server';
 import type { SmtpSetting } from '#prisma-client';
@@ -37,7 +39,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const provider = data.get('provider');
 
     if (provider === 'google') {
-      await queryProxy.gmailAuthCredential.delete({
+      await queryProxy.googleAuthCredential.delete({
         where: {
           id: session.storeId,
         },
@@ -76,10 +78,78 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (action === 'test') {
-    const settings = await prisma.smtpSetting.findFirst({
+    const settings = await prisma.smtpSetting.findFirstOrThrow({
       where: {
         id: session.storeId,
       },
+      include: {
+        Store: true,
+      },
+    });
+    const storeEmail = settings.Store.email;
+
+    const emailSubject = 'Test Email';
+    const emailBody = `
+      <html>
+        <head>
+          <title>Test Email</title>
+        </head>
+        <body>
+          <h1>Test Email</h1>
+          <p>This is a test email from your store ${settings.Store.name}.</p>
+        </body>
+      </html>
+    `;
+
+    if (settings.provider === 'google') {
+      const gmailApi = new GmailAPI(session.storeId!);
+
+      if (!gmailApi) {
+        return json({
+          success: false,
+          message: `Google account not connected. Please connect your Google account to send test emails.`,
+        });
+      }
+
+      const userInfo = await getGoogleUserInfo(session.storeId!);
+
+      await gmailApi.sendEmail({
+        to: storeEmail || userInfo!.email!,
+        subject: emailSubject,
+        body: emailBody,
+      });
+    } else {
+      if (!storeEmail) {
+        console.error(`No email found for store ${session.storeId}`);
+
+        return json({
+          success: false,
+          message: 'Something went wrong, please try again. If the problem persists, contact support.',
+        });
+      }
+
+      const mailer = await getMailer(session.storeId!);
+
+      if (!mailer) {
+        console.error(`Mailer not found for store ${session.storeId}`);
+
+        return json({
+          success: false,
+          message: 'Something went wrong, please try again. If the problem persists, contact support.',
+        });
+      }
+
+      await mailer.sendMail({
+        from: settings.from!,
+        to: storeEmail || settings.from!,
+        subject: emailSubject,
+        html: emailBody,
+      });
+    }
+
+    return json({
+      success: true,
+      message: `A test email has been sent to ${storeEmail}.`,
     });
   }
 
@@ -92,7 +162,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export async function loader({ request }: LoaderFunctionArgs) {
   const { session } = await shopify.authenticate.admin(request);
 
-  const gmailUserInfo = await getGmailUserInfo(session.storeId!);
+  const googleUserInfo = await getGoogleUserInfo(session.storeId!);
   const smtpSettings: SmtpSetting | null = await prisma.smtpSetting.findFirst({
     where: {
       id: session.storeId!,
@@ -100,7 +170,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 
   return json({
-    gmailUserInfo: gmailUserInfo,
+    googleUserInfo,
     smtpSettings,
   });
 }
@@ -324,13 +394,13 @@ const SMTP = () => {
     { label: 'Custom', value: 'custom' },
   ];
 
-  const gmailAuthQuery = useMemo(() => queryProxy.gmailAuthCredential.subscribeFindFirst(), []);
-  const gmailAuth = useQuery(gmailAuthQuery);
+  const googleAuthQuery = useMemo(() => queryProxy.googleAuthCredential.subscribeFindFirst(), []);
+  const googleAuth = useQuery(googleAuthQuery);
 
-  const isGmailConnected = useMemo(() => !!(loaderData.gmailUserInfo || gmailAuth.data?.payload), [gmailAuth.data?.payload, loaderData.gmailUserInfo]);
+  const isGmailConnected = useMemo(() => !!(loaderData.googleUserInfo || googleAuth.data?.payload), [googleAuth.data?.payload, loaderData.googleUserInfo]);
 
   const authorize = useCallback(async () => {
-    const url = await fetch('/gmail-oauth-url').then(r => r.text());
+    const url = await fetch('/google-oauth-url').then(r => r.text());
 
     window.open(url, '_blank'/*, `height=800,width=800,toolbar=no,resizable=no,left=${window.screen.width / 2 - 400},top=${window.screen.height / 2 - 400}`*/);
   }, []);
@@ -366,11 +436,22 @@ const SMTP = () => {
 
   }, [fetcher, formState, state]);
 
+  const test = useCallback(async () => {
+    await fetcher.submit({
+      toast: true,
+      loading: true,
+    }, {
+      action: 'test',
+    }, {
+      method: 'POST',
+    });
+  }, [fetcher]);
+
   useEffect(() => {
-    if (isGmailConnected && !loaderData.gmailUserInfo) {
+    if (isGmailConnected && !loaderData.googleUserInfo) {
       reValidator.revalidate();
     }
-  }, [loaderData.gmailUserInfo, isGmailConnected, reValidator]);
+  }, [loaderData.googleUserInfo, isGmailConnected, reValidator]);
 
   return (
     <>
@@ -405,8 +486,8 @@ const SMTP = () => {
                     <Box paddingBlockStart="200" paddingBlockEnd="200">
                       <AccountConnection
                         details={!isGmailConnected ? 'Connect with your Google account to send emails using Gmail\'s SMTP server.' : `Your Google account is connected.`}
-                        avatarUrl={loaderData.gmailUserInfo?.picture || GmailLogo}
-                        title={loaderData.gmailUserInfo?.email || 'Google Account'}
+                        avatarUrl={loaderData.googleUserInfo?.picture || GmailLogo}
+                        title={loaderData.googleUserInfo?.email || 'Google Account'}
                         connected={isGmailConnected}
                         accountName="Google"
                         action={{
@@ -525,6 +606,7 @@ const SMTP = () => {
                               autoComplete="true"
                               requiredIndicator
                               label="Password"
+                              type="password"
                               tone="magic"
                             />
                           </Box>
@@ -778,15 +860,20 @@ const SMTP = () => {
                       <button
                         disabled={Boolean(state.provider === 'google' && !isGmailConnected) || !loaderData.smtpSettings?.id}
                         className="px-4 py-2 bg-white font-bold shadow-md rounded-lg border disabled:opacity-40"
+                        onClick={test}
                       >
                         Send test mail
                       </button>
-                      <button
-                        className="px-4 py-2 bg-[#006558] text-white font-bold shadow-md rounded-md"
-                        onClick={save}
-                      >
-                        Save
-                      </button>
+
+                      {
+                        provider === 'custom' || loaderData.smtpSettings?.provider !== 'google' ? (<button
+                          className="px-4 py-2 bg-[#006558] text-white font-bold shadow-md rounded-md disabled:opacity-40"
+                          disabled={Boolean(state.provider === 'google' && !isGmailConnected)}
+                          onClick={save}
+                        >
+                          Save
+                        </button>) : null
+                      }
                     </div>
                   </Box>
                 </div>

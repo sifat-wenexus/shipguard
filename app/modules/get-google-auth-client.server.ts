@@ -1,9 +1,9 @@
-import type { Credentials} from 'google-auth-library';
+import type { Credentials } from 'google-auth-library';
 import { OAuth2Client } from 'google-auth-library';
 import { prisma } from '~/modules/prisma.server';
 import process from 'node:process';
 
-export async function getGmailAuthClient(storeId?: string) {
+export async function getGoogleAuthClient(storeId?: string) {
   const client = new OAuth2Client(
     process.env.GMAIL_CLIENT_USER_ID,
     process.env.GMAIL_CLIENT_SECRET,
@@ -14,7 +14,7 @@ export async function getGmailAuthClient(storeId?: string) {
     return client;
   }
 
-  const credential = await prisma.gmailAuthCredential.findFirst({
+  const credential = await prisma.googleAuthCredential.findFirst({
     where: {
       id: storeId,
     },
@@ -26,13 +26,22 @@ export async function getGmailAuthClient(storeId?: string) {
 
   client.setCredentials(credential.payload as Credentials);
 
-  client.on('tokens', (tokens) => {
-    prisma.gmailAuthCredential.update({
+  client.on('tokens', async (tokens) => {
+    const oldCredential = await prisma.googleAuthCredential.findFirstOrThrow({
+      where: {
+        id: storeId,
+      },
+    });
+
+    prisma.googleAuthCredential.update({
       where: {
         id: storeId,
       },
       data: {
-        payload: JSON.parse(JSON.stringify(tokens)),
+        payload: JSON.parse(JSON.stringify({
+          ...(oldCredential.payload ?? {}) as Credentials,
+          ...tokens,
+        })),
       },
     });
   });
