@@ -1,6 +1,6 @@
 import type { ComplexAction } from '@shopify/polaris';
 import { Modal } from '@shopify/polaris';
-import { Component } from 'react';
+import React, { Component } from 'react';
 
 export class ConfirmDialog extends Component<
   ConfirmDialogProps,
@@ -84,7 +84,13 @@ export class ConfirmDialog extends Component<
         open={state.visible}
       >
         <Modal.Section>
-          <p>{props.content}</p>
+          {
+            typeof props.content === 'string' ? (
+              <p>{props.content}</p>
+            ) : (
+              props.content
+            )
+          }
         </Modal.Section>
       </Modal>
     );
@@ -93,7 +99,7 @@ export class ConfirmDialog extends Component<
 
 export interface ConfirmDialogProps {
   title: string;
-  content: string;
+  content: React.ReactNode;
   primaryAction: Omit<ComplexAction, 'onAction'>;
   secondaryAction: Omit<ComplexAction, 'onAction'>;
 }

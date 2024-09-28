@@ -1,3 +1,4 @@
+import { SendTestEmail } from '~/routes/settings.smtp-setup/components/send-test-email';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { getGoogleUserInfo } from '~/modules/get-google-user-info.server';
 import { Link, useLoaderData, useRevalidator } from '@remix-run/react';
@@ -6,7 +7,6 @@ import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { getMailer } from '~/modules/get-mailer.server';
 import type { Validator } from '~/hooks/use-form-state';
-import { ArrowLeftIcon } from '@shopify/polaris-icons';
 import SwitchButton from './components/switch-button';
 import { GmailAPI } from '~/modules/gmail-api.server';
 import { useFormState } from '~/hooks/use-form-state';
@@ -14,6 +14,7 @@ import { shopify } from '~/modules/shopify.server';
 import type { SmtpSetting } from '#prisma-client';
 import GmailLogo from '~/assets/images/gmail.png';
 import { prisma } from '~/modules/prisma.server';
+import * as Icons from '@shopify/polaris-icons';
 import { useQuery } from '~/hooks/use-query';
 import { json } from '@remix-run/node';
 
@@ -87,18 +88,53 @@ export async function action({ request }: ActionFunctionArgs) {
       },
     });
     const storeEmail = settings.Store.email;
+    const to = data.get('email') as string;
 
-    const emailSubject = 'Test Email';
-    const emailBody = `
-      <html>
-        <head>
-          <title>Test Email</title>
-        </head>
-        <body>
-          <h1>Test Email</h1>
-          <p>This is a test email from your store ${settings.Store.name}.</p>
-        </body>
-      </html>
+    const subject = data.get('subject') as string || 'Test Email';
+    const body = `
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email Title</title>
+  <style>
+  td{
+padding:0px 10px}
+  </style>
+</head>
+<body>
+  <div style="display:flex; justify-content:center;align-items:center; margin:50px 0px;">
+   <img src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse-Shipping-Protection_4a82e447-3fb5-48d1-b85e-7f46ab866e4a.png?v=1727505148" alt="inhouse-shipping-protection" width="220px" height="auto"></div>
+  <p>Dear Admin,</p>
+<p>A new claim has been requested for the following order:</p>
+<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
+<tbody>
+<tr style="height: 36.1648px;">
+<td>Order ID</td>
+<td><strong>{order_ID}</strong></td>
+</tr>
+<tr style="height: 36.0795px;">
+<td>Customer Name</td>
+<td><strong>{customer_name}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Claim Reason</td>
+<td><strong>{claim_reason}</strong></td>
+</tr>
+<tr style="height: 36.1648px;">
+<td>Claim Date</td>
+<td><strong>{claim_date}</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Please review the claim request and take appropriate action.</p>
+<p>Best regards,<br/> <br/><strong>Inhouse Shipping Protection</strong> <strong>Team</strong></p>
+<p>&nbsp;</p>
+</body>
+</html>
+
     `;
 
     if (settings.provider === 'google') {
@@ -114,9 +150,9 @@ export async function action({ request }: ActionFunctionArgs) {
       const userInfo = await getGoogleUserInfo(session.storeId!);
 
       await gmailApi.sendEmail({
-        to: storeEmail || userInfo!.email!,
-        subject: emailSubject,
-        body: emailBody,
+        to: to || storeEmail || userInfo!.email!,
+        subject: subject,
+        body: body,
       });
     } else {
       if (!storeEmail) {
@@ -141,9 +177,9 @@ export async function action({ request }: ActionFunctionArgs) {
 
       await mailer.sendMail({
         from: settings.from!,
-        to: storeEmail || settings.from!,
-        subject: emailSubject,
-        html: emailBody,
+        to: to || storeEmail || settings.from!,
+        subject: subject,
+        html: body,
       });
     }
 
@@ -178,8 +214,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 const SMTP = () => {
   const loaderData = useLoaderData<typeof loader>();
   const [provider, setProvider] = useState<string>(loaderData.smtpSettings?.provider || 'google');
-  const reValidator = useRevalidator();
   const fetcher = useBetterFetcher();
+  const reValidator = useRevalidator();
+  const [viewPassword, setViewPassword] = useState(false);
 
   const initialState: Omit<SmtpSetting, 'id' | 'createdAt'> = useMemo(() => loaderData.smtpSettings || {
     provider: provider || 'google',
@@ -436,12 +473,14 @@ const SMTP = () => {
 
   }, [fetcher, formState, state]);
 
-  const test = useCallback(async () => {
+  const test = useCallback(async (email: string, subject: string) => {
     await fetcher.submit({
       toast: true,
       loading: true,
     }, {
       action: 'test',
+      email,
+      subject,
     }, {
       method: 'POST',
     });
@@ -460,7 +499,7 @@ const SMTP = () => {
           <Layout>
             <Layout.Section variant="fullWidth">
               <div className="mb-4 flex items-center gap-4">
-                <Button icon={ArrowLeftIcon} url="/settings"></Button>
+                <Button icon={Icons.ArrowLeftIcon} url="/settings"></Button>
                 <Text as="h1" variant="headingLg">
                   SMTP Setup
                 </Text>
@@ -599,14 +638,21 @@ const SMTP = () => {
                           >
                             <TextField
                               onChange={(value) => formState.addToStaged({ password: value })}
-                              error={formState.messages.password?.message}
                               onBlur={() => formState.commitStaged()}
+                              error={formState.messages.password?.message}
+                              suffix={
+                                <Button
+                                  onClick={() => setViewPassword(!viewPassword)}
+                                  pressed={viewPassword}
+                                  icon={Icons.ViewIcon}
+                                />
+                              }
+                              type={viewPassword ? 'text' : 'password'}
                               placeholder="Enter password"
                               value={staged.password!}
                               autoComplete="true"
                               requiredIndicator
                               label="Password"
-                              type="password"
                               tone="magic"
                             />
                           </Box>
@@ -857,22 +903,23 @@ const SMTP = () => {
 
                   <Box paddingBlockStart="200" paddingBlockEnd="200">
                     <div className="flex gap-2 justify-end">
-                      <button
-                        disabled={Boolean(state.provider === 'google' && !isGmailConnected) || !loaderData.smtpSettings?.id}
-                        className="px-4 py-2 bg-white font-bold shadow-md rounded-lg border disabled:opacity-40"
-                        onClick={test}
-                      >
-                        Send test mail
-                      </button>
 
                       {
-                        provider === 'custom' || loaderData.smtpSettings?.provider !== 'google' ? (<button
-                          className="px-4 py-2 bg-[#006558] text-white font-bold shadow-md rounded-md disabled:opacity-40"
-                          disabled={Boolean(state.provider === 'google' && !isGmailConnected)}
-                          onClick={save}
-                        >
-                          Save
-                        </button>) : null
+                        Boolean(state.provider === 'google' && isGmailConnected) || loaderData.smtpSettings?.id ? (
+                          <SendTestEmail onTest={test} />
+                        ) : null
+                      }
+
+                      {
+                        provider === 'custom' || loaderData.smtpSettings?.provider !== 'google' ? (
+                          <button
+                            className="px-4 py-2 bg-[#006558] text-white font-bold shadow-md rounded-md disabled:opacity-40"
+                            disabled={Boolean(state.provider === 'google' && !isGmailConnected)}
+                            onClick={save}
+                          >
+                            Save
+                          </button>
+                        ) : null
                       }
                     </div>
                   </Box>

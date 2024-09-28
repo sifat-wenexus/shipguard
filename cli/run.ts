@@ -34,7 +34,7 @@ async function run() {
         clearInterval(intervalId);
         socket.destroy();
 
-        setTimeout(resolve, 2000);
+        setTimeout(resolve, 3000);
       });
       socket.connect({ host: 'localhost', port: Number(process.env.PORT || 3000) });
     }, 500);
