@@ -70,7 +70,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
     data: {
       payload: JSON.parse(JSON.stringify(tokenResponse.tokens)),
     },
-  }, { session});
+  }, { session });
+
+  const smtpSetting = await queryProxy.smtpSetting.findUnique({
+    where: {
+      id: storeId,
+    },
+  });
+
+  if (!smtpSetting) {
+    await queryProxy.smtpSetting.create({
+      data: {
+        provider: 'google',
+      },
+    }, { session });
+  }
 
   return new Response(`
     <html lang="en">

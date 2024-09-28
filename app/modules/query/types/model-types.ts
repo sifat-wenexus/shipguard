@@ -77,4 +77,8 @@ export interface ModelTypes {
     model: Base.GmailAuthCredential;
     whereInput: Base.Prisma.GmailAuthCredentialWhereInput;
   }
+  smtpSetting: {
+    model: Base.SmtpSetting;
+    whereInput: Base.Prisma.SmtpSettingWhereInput;
+  }
 }

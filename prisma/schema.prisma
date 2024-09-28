@@ -163,6 +163,7 @@ model Store {
   PackageProtectionClaimOrder PackageProtectionClaimOrder[]
   EmailTemplates              EmailTemplate[]
   GmailAuthCredential         GmailAuthCredential?
+  SmtpSetting                 SmtpSetting?
 
   @@index([appInstallationId])
 }
@@ -435,6 +436,31 @@ model GmailAuthCredential {
   oauthState String
   payload    Json?
   email      String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  Store Store @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model SmtpSetting {
+  id String @id
+
+  provider   String // custom, google, etc.
+  from       String?
+  protocol   String?
+  host       String?
+  port       Int?
+  tlsVersion String?
+  timeout    Int     @default(10000)
+
+  useProxy      Boolean @default(false)
+  proxyHost     String?
+  proxyPort     Int?
+  proxyUsername String?
+  proxyPassword String?
+
+  username String?
+  password String?
 
   createdAt DateTime @default(now()) @db.Timestamptz()
 

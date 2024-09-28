@@ -1,11 +1,11 @@
+import { shopifyProductUpdate } from '~/routes/settings.widget-setup/modules/package-protection-listener.server';
 import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
+import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
+import { getMailer } from '~/modules/get-mailer.server';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
-import { internalMailer } from '~/modules/internal-mailer.server';
-import { shopifyProductUpdate } from '~/routes/settings.widget-setup/modules/package-protection-listener.server';
-import { getShopifyGQLClient } from '~/modules/shopify.server';
 
 emitter.on(
   'APP_UNINSTALLED',
@@ -95,7 +95,9 @@ emitter.on(
       },
     });
 
-    await internalMailer.sendMail({
+    const mailer = await getMailer();
+
+    await mailer!.sendMail({
       from: `no-reply@${process.env.INTERNAL_MAILER_DOMAIN}`,
       to: store.email!,
       text: `Customer data request for ${customerId}`,

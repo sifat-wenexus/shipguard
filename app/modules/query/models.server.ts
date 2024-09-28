@@ -1,6 +1,7 @@
 import { defineModels } from '~/modules/query/define-model.server';
 import type { Session } from '~/shopify-api/lib';
 import type Prisma from '#prisma-client';
+import Joi from 'joi';
 
 export const models = defineModels(() => {
   function oneLevelPermission(session: Session) {
@@ -352,6 +353,37 @@ export const models = defineModels(() => {
               id: session.storeId!,
             };
           },
+        },
+      },
+    },
+    smtpSetting: {
+      schema: Joi.object({
+        provider: Joi.string().valid('google', 'custom').required(),
+        from: Joi.string().email().optional().allow(null),
+        host: Joi.string().hostname().optional().allow(null),
+        port: Joi.number().integer().min(1).max(65535).optional().allow(null),
+        proxyHost: Joi.string().hostname().optional().allow(null),
+        proxyPort: Joi.number().integer().min(1).max(65535).optional().allow(null),
+      }).unknown(true),
+      permissions: {
+        subscribe: true,
+        read: {
+          fields: true,
+          permission: oneLevelPermissionWithId,
+        },
+        create: {
+          fields: true,
+          preset: oneLevelPermissionWithId,
+          permission: oneLevelPermissionWithId,
+          validation: oneLevelPermissionWithId,
+        },
+        update: {
+          fields: true,
+          permission: oneLevelPermissionWithId,
+          validation: oneLevelPermissionWithId,
+        },
+        delete: {
+          permission: oneLevelPermissionWithId,
         },
       },
     },
