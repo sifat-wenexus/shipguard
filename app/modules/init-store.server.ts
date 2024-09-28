@@ -53,6 +53,7 @@ export class InitStore {
         id: body.data.shop.id,
         timezoneId: body.data.shop.ianaTimezone,
         domain: this.session.shop,
+        email: body.data.shop.email,
         name: body.data.shop.name,
         description: body.data.shop.description,
         appInstallationId: body.data.currentAppInstallation.id,
