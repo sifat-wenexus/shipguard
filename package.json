@@ -17,6 +17,10 @@
     "prisma": "prisma"
   },
   "dependencies": {
+    "@codemirror/basic-setup": "^0.20.0",
+    "@codemirror/lang-liquid": "^6.2.1",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.34.0",
     "@google-cloud/local-auth": "2.1.0",
     "@google-cloud/storage": "^7.12.1",
     "@iarna/toml": "^2.2.5",
@@ -36,6 +40,8 @@
     "@shopify/ui-extensions": "2024.7.x",
     "@shopify/ui-extensions-react": "^2024.7.0",
     "@tinymce/tinymce-react": "^5.1.1",
+    "@uiw/react-codemirror": "^4.23.3",
+    "codemirror": "^6.0.1",
     "compare-versions": "^6.1.1",
     "cross-env": "^7.0.3",
     "draft-js": "^0.11.7",
@@ -43,6 +49,7 @@
     "googleapis": "105",
     "joi": "^17.13.3",
     "jose": "^5.8.0",
+    "liquidjs": "^10.17.0",
     "lodash": "^4.17.21",
     "node-html-parser": "^6.1.13",
     "nodemailer": "^6.9.15",

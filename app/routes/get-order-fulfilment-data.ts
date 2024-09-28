@@ -7,10 +7,9 @@ import { getShopifyGQLClient } from '../modules/shopify.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { ClaimIssue, ClaimRequested } from '#prisma-client';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
-import { log } from 'console';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  console.log('loading........');
+  console.log('loading..');
   try {
     let url = new URL(request.url);
 
