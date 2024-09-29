@@ -130,7 +130,7 @@ export default function PrivacyPolicy() {
             <p>Email: <a className="underline" href="mailto:hello@wenexus.io">hello@wenexus.io</a></p>
             <br />
             <p><strong>Bangladesh Office:</strong> 7-8 Level 9 Block A, Banasree Main Road, Rampura, Dhaka</p>
-            <p><strong>USA Office:</strong> 9420 Lazy Lane Space E-11, Tampa, Florida 33614</p>
+            <p><strong>USA Office:</strong>WeNexus LLC, 9420 Lazy Lane Space E-11, Tampa, Florida 33614</p>
           </BlockStack>
         </BlockStack>
       </ShadowBevelBox>
