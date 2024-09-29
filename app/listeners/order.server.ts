@@ -55,7 +55,8 @@ const makePackageProtectionFulfill = async (
 
   return result;
 };
-
+// TODO: uninstall to install old order data recover or restore.
+// TODO: if added new column then should fill previous data as per related table
 const orderCreateEvent = async ({
   ctx: { shop, payload: _payload, session },
 }: WebhookListenerArgs) => {

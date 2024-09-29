@@ -10,7 +10,6 @@ import {
   DropZone,
   Icon,
   Layout,
-  LegacyStack,
   Modal,
   Page,
   Text,
@@ -43,6 +42,7 @@ import {
 } from './components/template-variable';
 import _ from 'lodash';
 import style from './styles/route.css';
+import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 
 const reqAdminTemplate = `<!DOCTYPE html>
 <html lang="en">
@@ -279,6 +279,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     });
     return json({ message: 'something is wrong', status: false, data: null });
   }
+
+  // const claimAdminTemplate =
   return json({
     message: 'Successfully fetched templates!',
     data: templates,
@@ -304,13 +306,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const EmailTemplate = () => {
+  const fetcher = useBetterFetcher();
   const { data, message } = useLoaderData<typeof loader>();
   const [templateSubject, setTemplateSubject] = useState<string>('');
   const [editorState, setEditorState] = useState(false);
   const [templatePreview, setTemplatePreview] = useState('');
   const [templateName, setTemplateName] = useState<$Enums.EmailTemplateName>();
   const [active, setActive] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
+  const [file, setFile] = useState<File>();
 
   const handleEditButton = (e: $Enums.EmailTemplateName) => {
     setTemplateName(e);
@@ -321,13 +324,15 @@ const EmailTemplate = () => {
       return;
     }
     if (e === 'CLAIM_REQUEST_EMAIL_FOR_ADMIN') {
-      setTemplateSubject('New Claim Request Submitted: Order {order_ID}');
+      setTemplateSubject('New Claim Request Submitted: Order {{order_ID}}');
       setTemplatePreview(reqAdminTemplate);
     } else if (e === 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER') {
-      setTemplateSubject('Claim Request Received: Order {order_ID}');
+      setTemplateSubject('Claim Request Received: Order {{order_ID}}');
       setTemplatePreview(reqCustomerTemplate);
     } else if (e === 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER') {
-      setTemplateSubject('Claim Approved: Refund Issued for Order {order_ID}');
+      setTemplateSubject(
+        'Claim Approved: Refund Issued for Order {{order_ID}}'
+      );
       setTemplatePreview(refundCustomerTemplate);
     } else if (e === 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER') {
       setTemplateSubject(
@@ -335,7 +340,7 @@ const EmailTemplate = () => {
       );
       setTemplatePreview(reOrderCustomerTemplate);
     } else if (e === 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER') {
-      setTemplateSubject('Claim Request Canceled: Order {order_ID}');
+      setTemplateSubject('Claim Request Canceled: Order {{order_ID}}');
       setTemplatePreview(cancelCustomerTemplate);
     }
   };
@@ -351,41 +356,52 @@ const EmailTemplate = () => {
     { name: 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER' },
     { name: 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER' },
   ];
+
   const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
 
-  const fileUpload = !files.length && (
-    <DropZone.FileUpload actionHint="Accepts .gif, .jpg, and .png" />
-  );
+  const fileUpload = !file && <DropZone.FileUpload />;
+
   const handleDropZoneDrop = useCallback(
     (_dropFiles: File[], acceptedFiles: File[], _rejectedFiles: File[]) =>
-      setFiles((files) => [...files, ...acceptedFiles]),
+      setFile(acceptedFiles[0]),
     []
   );
-  const uploadedFiles = files.length > 0 && (
-    <LegacyStack vertical>
-      {files.map((file, index) => (
-        <LegacyStack alignment="center" key={index}>
-          <Thumbnail
-            size="small"
-            alt={file.name}
-            source={
-              validImageTypes.includes(file.type)
-                ? window.URL.createObjectURL(file)
-                : NoteIcon
-            }
-          />
-          <div>
-            {file.name}{' '}
-            <Text variant="bodySm" as="p">
-              {file.size} bytes
-            </Text>
-          </div>
-        </LegacyStack>
-      ))}
-    </LegacyStack>
+  const uploadedFiles = file && (
+    <>
+      <Thumbnail
+        size="small"
+        alt={file.name}
+        source={
+          validImageTypes.includes(file.type)
+            ? window.URL.createObjectURL(file)
+            : NoteIcon
+        }
+      />
+      <div>
+        {file.name}{' '}
+        <Text variant="bodySm" as="p">
+          {file.size} bytes
+        </Text>
+      </div>
+    </>
   );
-  const handleLogoUpload = useCallback(() => {}, []);
-  console.log({ templatePreview });
+  const handleLogoUpload = useCallback(() => {
+    console.log('uploading logo', file);
+    if (!file) return;
+    const form = new FormData();
+    form.append('file', file);
+    fetch('/api/files', {
+      method: 'POST',
+      body: form,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Upload successful:', data);
+      })
+      .catch((error) => {
+        console.log('Upload failed:', error);
+      });
+  }, [file]);
 
   return (
     <>
@@ -417,7 +433,7 @@ const EmailTemplate = () => {
                       onClose={() => {
                         setActive(false);
                       }}
-                      title="Reach more shoppers with Instagram product tags"
+                      title="Logo"
                       primaryAction={{
                         content: 'Done',
                         onAction: handleLogoUpload,
@@ -430,7 +446,11 @@ const EmailTemplate = () => {
                       ]}
                     >
                       <Modal.Section>
-                        <DropZone onDrop={handleDropZoneDrop} variableHeight>
+                        <DropZone
+                          onDrop={handleDropZoneDrop}
+                          variableHeight
+                          allowMultiple={false}
+                        >
                           {uploadedFiles}
                           {fileUpload}
                         </DropZone>
@@ -526,6 +546,7 @@ const EmailTemplate = () => {
                             value={templateSubject}
                             readOnly
                           />
+
                           <iframe
                             srcDoc={templatePreview}
                             title="HTML Content"

@@ -2,10 +2,12 @@ import { Card } from '@shopify/polaris';
 
 export const ClaimRequestAdminVariable = () => {
   const variables: { name: string; key: string }[] = [
-    { name: 'Order ID', key: '{order_ID}' },
-    { name: 'Customer Name', key: '{customer_name}' },
-    { name: 'Claim Reason', key: '{claim_reason}' },
-    { name: 'Claim Date', key: '{claim_date}' },
+    { name: 'Shop Name', key: '{{shop_name}}' },
+    { name: 'Order ID', key: '{{order_id}}' },
+    { name: 'Customer Name', key: '{{customer_name}}' },
+    { name: 'Claim Reason', key: '{{claim_reason}}' },
+    { name: 'Claim Date', key: '{{claim_date}}' },
+    { name: 'Order url', key: '{{order_url}}' },
   ];
   return (
     <>

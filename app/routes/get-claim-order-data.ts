@@ -6,8 +6,6 @@ import {
   getShopifyGQLClient,
   shopify as shopifyRemix,
 } from '../modules/shopify.server';
-import { findOfflineSession } from '~/modules/find-offline-session.server';
-import { getOfflineSession } from '~/shopify-app-remix/server/unauthenticated/helpers';
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {

@@ -3,6 +3,7 @@ import type { ActionFunctionArgs } from '@remix-run/node';
 import { shopify } from '~/modules/shopify.server';
 import { prisma } from '~/modules/prisma.server';
 import { json } from '@remix-run/node';
+import { File } from '#prisma-client';
 
 const validImageTypes = [
   'image/gif',
@@ -13,11 +14,11 @@ const validImageTypes = [
 
 export async function action({ request }: ActionFunctionArgs) {
   const ctx = await shopify.authenticate.admin(request);
-
+  const response: File[] = [];
   const body = await request.formData();
-
+  console.log('body data:', body);
   const file = body.get('file') as Blob;
-
+  console.log('file:', file);
   if (!validImageTypes.includes(file.type)) {
     return json({
       success: false,
@@ -46,13 +47,16 @@ export async function action({ request }: ActionFunctionArgs) {
           },
         });
 
-        const bucket = gcloudStorage.bucket(process.env.GC_STORAGE_BUCKET_NAME!);
+        const bucket = gcloudStorage.bucket(
+          process.env.GC_STORAGE_BUCKET_NAME!
+        );
 
-        await bucket
+        const fileResponse = await bucket
           .file(fileInDB.id)
           .save(Buffer.from(await file.arrayBuffer()), {
             contentType: fileInDB.mimeType,
           });
+        response.push(fileInDB);
       },
       {
         timeout: 10000,
@@ -67,5 +71,9 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   }
 
-  return json({ success: true, message: 'File uploaded successfully.' });
+  return json({
+    success: true,
+    message: 'File uploaded successfully.',
+    response,
+  });
 }

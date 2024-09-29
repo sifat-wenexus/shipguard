@@ -6,6 +6,7 @@ import {
 } from '../modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { shopifyProductUpdate } from './settings.widget-setup/modules/package-protection-listener.server';
+import { ClaimRequestAdminTemplate } from './settings.email-template/email-template/template';
 // export const loader: LoaderFunction = async ({ request }) => {
 //   let url = new URL(request.url);
 
@@ -68,40 +69,49 @@ import { shopifyProductUpdate } from './settings.widget-setup/modules/package-pr
 // };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const ctx = await shopifyRemix.authenticate.admin(request);
-  try {
-    const gql = getShopifyGQLClient(ctx.session);
+  const claimReqTemplate = new ClaimRequestAdminTemplate();
 
-    const res = await gql.query<any>({
-      data: {
-        query: `#graphql
-       query {
-        currentAppInstallation{
-          metafields(first:100){
-           nodes{
-            namespace
-            key
-            value
-           }
-          }
+  const res = await claimReqTemplate.render({
+    order_id: '#1234',
+    customer_name: 'jahangir',
+    claim_reason: 'testing',
+    claim_date: '10-jan-2024',
+    shop_name: 'nexusapp',
+    order_url: 'www.google.com',
+  });
+  return json({ res, message: 'Response' });
+  // const ctx = await shopifyRemix.authenticate.admin(request);
+  // try {
+  //   const gql = getShopifyGQLClient(ctx.session);
 
+  //   const res = await gql.query<any>({
+  //     data: {
+  //       query: `#graphql
+  //      query {
+  //       currentAppInstallation{
+  //         metafields(first:100){
+  //          nodes{
+  //           namespace
+  //           key
+  //           value
+  //          }
+  //         }
 
-        }
+  //       }
 
+  //      }
+  //       `,
+  //     },
+  //   });
 
-       }
-        `,
-      },
-    });
-
-    return json({
-      message: 'Loading is complete',
-      status: 200,
-      res: res.body.data,
-      // res: existingShopifyProduct.body.data.products.edges,
-    });
-  } catch (error) {
-    console.log(error);
-    return json({ message: 'Error loading', status: 500, error });
-  }
+  //   return json({
+  //     message: 'Loading is complete',
+  //     status: 200,
+  //     res: res.body.data,
+  //     // res: existingShopifyProduct.body.data.products.edges,
+  //   });
+  // } catch (error) {
+  //   console.log(error);
+  //   return json({ message: 'Error loading', status: 500, error });
+  // }
 };
