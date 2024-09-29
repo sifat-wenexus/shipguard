@@ -1,4 +1,3 @@
-import ImgLogo from '~/assets/images/Inhouse Shipping Protection.png';
 import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
 import { I18nContext, I18nManager } from '@shopify/react-i18n';
@@ -6,10 +5,10 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { InitStore } from '~/modules/init-store.server';
 import { AppProvider } from '~/shopify-app-remix/react';
-import { Card, Frame, Spinner } from '@shopify/polaris';
 import { Migration } from '~/modules/migration.server';
 import { shopify } from '~/modules/shopify.server';
 import tailwindStyles from '~/styles/tailwind.css';
+import { Card, Spinner } from '@shopify/polaris';
 import { prisma } from '~/modules/prisma.server';
 import type { AppStatus } from '#prisma-client';
 import { MainNav } from './components/main-nav';
@@ -24,29 +23,34 @@ import {
   useRevalidator,
   useLoaderData,
   useRouteError,
+  useLocation,
   LiveReload,
   Scripts,
   Outlet,
   Links,
   Meta,
-  useLocation,
 } from '@remix-run/react';
 
 export const links = () => [
+  { rel: 'icon', href: '/favicon.png', type: 'image/png' },
   { rel: 'stylesheet', href: tailwindStyles },
   { rel: 'stylesheet', href: polarisStyles },
   { rel: 'stylesheet', href: appCss },
   { rel: 'stylesheet', href: polarisViz },
 ];
 
+const skipAuthPaths = new Set(['/auth/login', '/terms-of-service', '/privacy-policy']);
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
+  const skipAuth = skipAuthPaths.has(url.pathname);
 
-  if (url.pathname.startsWith('/auth/login')) {
+  if (skipAuth) {
     return json({
       appStatus: 'READY' as AppStatus,
       apiKey: process.env.SHOPIFY_API_KEY!,
       currencyCode: 'USD',
+      skipAuth,
     });
   }
 
@@ -78,6 +82,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       appStatus: store.appStatus,
       apiKey: process.env.SHOPIFY_API_KEY!,
       currencyCode: store.currencyCode,
+      skipAuth,
     });
   }
 
@@ -87,6 +92,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       : ('INSTALLED' as AppStatus),
     apiKey: process.env.SHOPIFY_API_KEY!,
     currencyCode: 'USD',
+    skipAuth,
   });
 }
 
@@ -94,6 +100,8 @@ export default function Root() {
   const data = useLoaderData<typeof loader>();
   const validator = useRevalidator();
   const location = useLocation();
+  const skipAuth = useMemo(() => skipAuthPaths.has(location.pathname), [location.pathname]);
+
   useEffect(() => {
     if (data.appStatus === 'READY' || validator.state === 'loading') {
       return;
@@ -130,51 +138,42 @@ export default function Root() {
 
   return (
     <html>
-      <head>
-        <title>Package Protection</title>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <AppProvider isEmbeddedApp apiKey={data.apiKey!}>
-          {/* <PolarisVizProvider> */}
-          <I18nContext.Provider value={i18nManager}>
-            <Frame
-              logo={{
-                contextualSaveBarSource: ImgLogo,
-                topBarSource: ImgLogo,
-                url: ImgLogo,
-                width: 48,
-              }}
-            >
-              {data.appStatus === 'READY' ? (
-                <>
-                  {location.pathname !== '/auth/login' && (
-                    <>
-                      <Nav />
-                      <MainNav />
-                    </>
-                  )}
-                  <Outlet />
-                </>
-              ) : (
-                <div className="flex justify-center items-center w-full h-full">
-                  <Card>
-                    <Spinner />
-                  </Card>
-                </div>
-              )}
-            </Frame>
-          </I18nContext.Provider>
-          {/* </PolarisVizProvider> */}
-        </AppProvider>
+    <head>
+      <title>Shipping Protection</title>
+      <meta charSet="utf-8" />
+      <meta name="viewport" content="width=device-width,initial-scale=1" />
+      <Meta />
+      <Links />
+    </head>
+    <body>
+    <AppProvider isEmbeddedApp apiKey={data.apiKey!}>
+      {/* <PolarisVizProvider> */}
+      <I18nContext.Provider value={i18nManager}>
+        {data.appStatus === 'READY' ? (
+          <>
+            {!skipAuth && (
+              <>
+                <Nav />
+                <MainNav />
+              </>
+            )}
+            <Outlet />
+          </>
+        ) : (
+          <div className="flex justify-center items-center w-full h-full">
+            <Card>
+              <Spinner />
+            </Card>
+          </div>
+        )}
+      </I18nContext.Provider>
+      {/* </PolarisVizProvider> */}
+    </AppProvider>
 
-        <ScrollRestoration />
-        <LiveReload />
-        <Scripts />
-      </body>
+    <ScrollRestoration />
+    <LiveReload />
+    <Scripts />
+    </body>
     </html>
   );
 }
@@ -183,21 +182,21 @@ export function ErrorBoundary() {
   const error = useRouteError();
   return (
     <html>
-      <head>
-        <title>Oops!</title>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <h1>
-          {isRouteErrorResponse(error)
-            ? `${error.status} ${error.statusText}`
-            : error instanceof Error
-            ? error.message
-            : 'Unknown Error'}
-        </h1>
-        <Scripts />
-      </body>
+    <head>
+      <title>Oops!</title>
+      <Meta />
+      <Links />
+    </head>
+    <body>
+    <h1>
+      {isRouteErrorResponse(error)
+        ? `${error.status} ${error.statusText}`
+        : error instanceof Error
+          ? error.message
+          : 'Unknown Error'}
+    </h1>
+    <Scripts />
+    </body>
     </html>
   );
 }

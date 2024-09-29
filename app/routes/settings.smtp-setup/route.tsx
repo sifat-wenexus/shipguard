@@ -93,6 +93,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const subject = data.get('subject') as string || 'Test Email';
     const body = `
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,20 +101,28 @@ export async function action({ request }: ActionFunctionArgs) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Email Title</title>
   <style>
+  *{
+  max-width:600px;
+  margin:10px auto !important;
+}
+p{
+
+    line-height: 25px;
+}
   td{
 padding:0px 10px}
   </style>
 </head>
-<body>
+<body style=''>
   <div style="display:flex; justify-content:center;align-items:center; margin:50px 0px;">
    <img src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse-Shipping-Protection_4a82e447-3fb5-48d1-b85e-7f46ab866e4a.png?v=1727505148" alt="inhouse-shipping-protection" width="220px" height="auto"></div>
   <p>Dear Admin,</p>
-<p>A new claim has been requested for the following order:</p>
+<p>A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:</p>
 <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
 <tbody>
 <tr style="height: 36.1648px;">
-<td>Order ID</td>
-<td><strong>{order_ID}</strong></td>
+<td>Order Id</td>
+<td><strong>{order_id}</strong></td>
 </tr>
 <tr style="height: 36.0795px;">
 <td>Customer Name</td>
@@ -124,13 +133,14 @@ padding:0px 10px}
 <td><strong>{claim_reason}</strong></td>
 </tr>
 <tr style="height: 36.1648px;">
-<td>Claim Date</td>
+<td>Claim Date:</td>
 <td><strong>{claim_date}</strong></td>
 </tr>
 </tbody>
 </table>
 <p>Please review the claim request and take appropriate action.</p>
-<p>Best regards,<br/> <br/><strong>Inhouse Shipping Protection</strong> <strong>Team</strong></p>
+<br/>
+<p>Best regards,<br/> <strong>Inhouse Shipping Protection</strong> <strong>Team</strong></p>
 <p>&nbsp;</p>
 </body>
 </html>
@@ -185,7 +195,7 @@ padding:0px 10px}
 
     return json({
       success: true,
-      message: `A test email has been sent to ${storeEmail}.`,
+      message: `A test email has been sent to ${to}.`,
     });
   }
 
