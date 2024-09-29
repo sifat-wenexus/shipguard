@@ -66,7 +66,7 @@ const orderCreateEvent = async ({
   const payload = _payload as Record<string, any>;
 
   // DONE: Use product metafield to check if the product is package protection
-  console.log('payload.line_items', JSON.stringify(payload.line_items));
+  console.log('payload', JSON.stringify(payload));
   const existPackageProtection = payload.line_items.find(
     (line) => line.sku === PRODUCT_SKU
   );
@@ -144,6 +144,9 @@ const orderCreateEvent = async ({
         data: {
           orderId: orderId,
           customerId: payload.customer.id.toString(),
+          customerEmail: payload.customer.email,
+          customerFirstName: payload.customer.first_name,
+          customerLastName: payload.customer.last_name,
           orderName: updatedOrder.body.data.orderUpdate.order.name,
           storeId: session?.storeId,
           orderAmount: Number(
@@ -412,9 +415,13 @@ const orderUpdatedEvent = async ({
       `,
       });
 
+      console.log(
+        'getOrder.body.data.order.displayFulfillmentStatus',
+        getOrder.body.data.order.displayFulfillmentStatus
+      );
       const updateOrder = await queryProxy.packageProtectionOrder.update({
         data: {
-          fulfillmentStatus: getOrder.body.data.order.displayFulfillmentStatus,
+          fulfillmentStatus: 'FULFILLED',
         },
         where: { orderId: orderId },
       });
