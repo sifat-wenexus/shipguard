@@ -37,6 +37,7 @@ export const ClaimRequestCustomerVariable = () => {
     { name: 'Claim Reason', key: '{{claim_reason}}' },
     { name: 'Claim Date', key: '{{claim_date}}' },
     { name: 'Shop Name', key: '{{shop_name}}' },
+    { name: 'Shop Logo', key: '{{shop_logo}}' },
   ];
   return (
     <>
@@ -65,6 +66,7 @@ export const ClaimRefundCustomerVariable = () => {
     { name: 'Refund Amount', key: '{{refund_amount}}' },
     { name: 'Date', key: '{{date}}' },
     { name: 'Shop Name', key: '{{shop_name}}' },
+    { name: 'Shop Logo', key: '{{shop_logo}}' },
   ];
   return (
     <>
@@ -93,6 +95,7 @@ export const ClaimReOrderCustomerVariable = () => {
     { name: 'Replacement Order Id', key: '{{replacement_order_id}}' },
     { name: 'Shipping Details', key: '{{shipping_details}}' },
     { name: 'Shop Name', key: '{{shop_name}}' },
+    { name: 'Shop Logo', key: '{{shop_logo}}' },
   ];
   return (
     <>
@@ -121,6 +124,7 @@ export const ClaimCancelCustomerVariable = () => {
     { name: 'Customer Name', key: '{{customer_name}}' },
     { name: 'Cancellation Reason', key: '{{cancellation_reason}}' },
     { name: 'Shop Name', key: '{{shop_name}}' },
+    { name: 'Shop Logo', key: '{{shop_logo}}' },
   ];
   return (
     <>

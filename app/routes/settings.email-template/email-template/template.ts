@@ -8,7 +8,7 @@ abstract class Template<C = any> {
 
   async render(context?: C): Promise<string> {
     // const variables = await this.variables(context);
-    console.log('render', this.liquid);
+    // console.log('render', this.liquid);
     // Fetch - Parse - Render
     const engine = new Liquid();
     if (this.liquid) {

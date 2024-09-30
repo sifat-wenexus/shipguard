@@ -39,7 +39,6 @@ const LiquidEditor = ({
       state: state,
       parent: editorRef.current,
     });
-    console.log(editorRef);
 
     //   // Cleanup editor view on component unmount
     return () => {

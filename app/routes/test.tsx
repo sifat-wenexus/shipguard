@@ -1,4 +1,4 @@
-import { json, LoaderFunction } from '@remix-run/node';
+import { ActionFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import {
   getShopifyGQLClient,
@@ -80,38 +80,24 @@ export const loader: LoaderFunction = async ({ request }) => {
     order_url: 'www.google.com',
   });
   return json({ res, message: 'Response' });
-  // const ctx = await shopifyRemix.authenticate.admin(request);
-  // try {
-  //   const gql = getShopifyGQLClient(ctx.session);
-
-  //   const res = await gql.query<any>({
-  //     data: {
-  //       query: `#graphql
-  //      query {
-  //       currentAppInstallation{
-  //         metafields(first:100){
-  //          nodes{
-  //           namespace
-  //           key
-  //           value
-  //          }
-  //         }
-
-  //       }
-
-  //      }
-  //       `,
-  //     },
-  //   });
-
-  //   return json({
-  //     message: 'Loading is complete',
-  //     status: 200,
-  //     res: res.body.data,
-  //     // res: existingShopifyProduct.body.data.products.edges,
-  //   });
-  // } catch (error) {
-  //   console.log(error);
-  //   return json({ message: 'Error loading', status: 500, error });
-  // }
 };
+
+export async function action({ request }: ActionFunctionArgs) {
+  // const ctx = await shopify.authenticate.admin(request);
+  const body = await request.formData();
+  const file = body.get('file');
+  const id = body.get('id');
+  const action = body.get('action');
+  return json({
+    data: {
+      name: 'action',
+      age: 12,
+      address: {
+        street: '123 Main St',
+        city: 'Anytown',
+        state: 'CA',
+        zip: '12345',
+      },
+    },
+  });
+}

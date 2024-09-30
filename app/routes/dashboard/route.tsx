@@ -1,17 +1,11 @@
-import {
-  ActionFunctionArgs,
-  json,
-  LoaderFunctionArgs,
-  redirect,
-} from '@remix-run/node';
-import Dashboard from './dashboard';
-import { Page } from '@shopify/polaris';
+import { json, LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import { Page } from '@shopify/polaris';
+import Dashboard from './dashboard';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const cookieHeader = request.headers.get('cookie');
-  // const cookie = (await guidelineCookie.parse(cookieHeader)) || {};
-  return json({ guidelineVisibility: cookieHeader }); // cookie.guidelineVisibility });
+  return json({ guidelineVisibility: cookieHeader });
 }
 
 const App = () => {

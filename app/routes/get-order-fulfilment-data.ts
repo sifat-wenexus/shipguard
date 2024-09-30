@@ -126,58 +126,58 @@ export const loader: LoaderFunction = async ({ request }) => {
         query: `#graphql
         query{
           order(id:"${getPackageProtectionOrder.orderId}") {
-    name
-    email
-    displayFulfillmentStatus
-    customer {
-      firstName
-      lastName
-    }
-    totalPriceSet {
-      shopMoney {
-        amount
-      }
-    }
-    createdAt
-    id
-    fulfillments(first: 250) {
-      id
-      status
-      name
-      displayStatus
-      createdAt
-      fulfillmentLineItems(first: 250) {
-        nodes {
-        id
-          quantity
-          lineItem {
             name
-            discountAllocations {
-              allocatedAmountSet {
-                shopMoney {
-                  amount
-                  currencyCode
+            email
+            displayFulfillmentStatus
+            customer {
+              firstName
+              lastName
+            }
+            totalPriceSet {
+              shopMoney {
+                amount
+              }
+            }
+            createdAt
+            id
+            fulfillments(first: 250) {
+              id
+              status
+              name
+              displayStatus
+              createdAt
+              fulfillmentLineItems(first: 250) {
+                nodes {
+                id
+                  quantity
+                  lineItem {
+                    name
+                    discountAllocations {
+                      allocatedAmountSet {
+                        shopMoney {
+                          amount
+                          currencyCode
+                        }
+                      }
+                    }
+                    image {
+                      url
+                    }
+                    originalUnitPriceSet{
+                      shopMoney{
+                        amount
+                        currencyCode
+
+                      }
+                    }
+                    sku
+                    title
+
+                  }
                 }
               }
             }
-            image {
-              url
-            }
-            originalUnitPriceSet{
-              shopMoney{
-                amount
-                currencyCode
-
-              }
-            }
-            sku
-            title
-
           }
-        }
-      }
-    }
-  }
         }
 
         `,
@@ -215,7 +215,8 @@ export const loader: LoaderFunction = async ({ request }) => {
               .filter(
                 (item) =>
                   item.lineItem.title !== 'Package Protection' ||
-                  item.lineItem.sku !== 'overall-package-protection'
+                  item.lineItem.sku !== 'overall-package-protection' ||
+                  item.lineItem.sku !== 'wenexus-shipping-protection'
               )
               .map((item) => {
                 return {
