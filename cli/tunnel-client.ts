@@ -18,7 +18,7 @@ interface RequestMeta {
   id: string;
   method: string;
   url: string;
-  headers: string;
+  headers: Record<string, string>;
 }
 
 export class Client {
@@ -47,9 +47,7 @@ export class Client {
 
             setup();
           })
-          .on('message', (data) =>
-            this.setupRequest(JSON.parse(data.toString())),
-          );
+          .on('message', (data) => this.setupRequest(data as Buffer));
 
         intervalId = setInterval(() => {
           if (ws.readyState === WebSocket.OPEN) {
@@ -62,8 +60,42 @@ export class Client {
     });
   }
 
-  private setupRequest(meta: RequestMeta) {
+  private extractRequestMeta(data: Buffer): RequestMeta {
+    const CRLF = '\r\n';
+    const SPACE = ' ';
+    const requestLineEnd = data.indexOf(CRLF);
+
+    const requestLine = data
+      .subarray(0, requestLineEnd)
+      .toString('ascii');
+    const [method, url] = requestLine.split(SPACE);
+
+    const headersEnd = data.indexOf(CRLF + CRLF, requestLineEnd);
+
+    const headers = data
+      .subarray(requestLineEnd + CRLF.length, headersEnd)
+      .toString('ascii')
+      .split(CRLF)
+      .reduce((acc, line) => {
+        const [key, value] = line.split(': ');
+
+        acc[key.toLowerCase()] = value;
+
+        return acc;
+      }, {} as Record<string, string>);
+
+    return {
+      id: headers['x-tunnel-request-id'],
+      headers,
+      method,
+      url,
+    };
+  }
+
+  private setupRequest(data: Buffer) {
     const { target } = this.options;
+
+    const meta = this.extractRequestMeta(data);
 
     const targetURL = new URL(
       typeof target === 'function' ? target(meta) : target,
@@ -96,9 +128,7 @@ export class Client {
     }
 
     tcp.once('ready', () => {
-      tcp.write(
-        `${meta.method} ${meta.url} HTTP/1.1\r\n${meta.headers}\r\n\r\n`,
-      );
+      tcp.write(data);
 
       const tunnelURL = new URL(this.options.tunnelURL);
 
@@ -125,7 +155,7 @@ export class Client {
       });
 
       ws.on('message', (data) => tcp.write(data as Buffer));
-
+      ws.on('error', console.error);
       ws.once('open', () => tcp.on('data', (data) => ws.send(data)));
     });
   }
