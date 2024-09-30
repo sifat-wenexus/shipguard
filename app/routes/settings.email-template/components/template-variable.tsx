@@ -3,7 +3,7 @@ import { Card } from '@shopify/polaris';
 export const ClaimRequestAdminVariable = () => {
   const variables: { name: string; key: string }[] = [
     { name: 'Shop Name', key: '{{shop_name}}' },
-    { name: 'Order ID', key: '{{order_id}}' },
+    { name: 'Order Id', key: '{{order_id}}' },
     { name: 'Customer Name', key: '{{customer_name}}' },
     { name: 'Claim Reason', key: '{{claim_reason}}' },
     { name: 'Claim Date', key: '{{claim_date}}' },
@@ -32,11 +32,11 @@ export const ClaimRequestAdminVariable = () => {
 
 export const ClaimRequestCustomerVariable = () => {
   const variables: { name: string; key: string }[] = [
-    { name: 'Order ID', key: '{order_ID}' },
-    { name: 'Customer Name', key: '{customer_name}' },
-    { name: 'Claim Reason', key: '{claim_reason}' },
-    { name: 'Claim Date', key: '{claim_date}' },
-    { name: 'Shop Name', key: '{shop_name}' },
+    { name: 'Order Id', key: '{{order_id}}' },
+    { name: 'Customer Name', key: '{{customer_name}}' },
+    { name: 'Claim Reason', key: '{{claim_reason}}' },
+    { name: 'Claim Date', key: '{{claim_date}}' },
+    { name: 'Shop Name', key: '{{shop_name}}' },
   ];
   return (
     <>
@@ -61,10 +61,10 @@ export const ClaimRequestCustomerVariable = () => {
 
 export const ClaimRefundCustomerVariable = () => {
   const variables: { name: string; key: string }[] = [
-    { name: 'Order ID', key: '{order_ID}' },
-    { name: 'Refund Amount', key: '{refund_amount}' },
-    { name: 'Date', key: '{date}' },
-    { name: 'Shop Name', key: '{shop_name}' },
+    { name: 'Order Id', key: '{{order_id}}' },
+    { name: 'Refund Amount', key: '{{refund_amount}}' },
+    { name: 'Date', key: '{{date}}' },
+    { name: 'Shop Name', key: '{{shop_name}}' },
   ];
   return (
     <>
@@ -89,10 +89,10 @@ export const ClaimRefundCustomerVariable = () => {
 
 export const ClaimReOrderCustomerVariable = () => {
   const variables: { name: string; key: string }[] = [
-    { name: 'Order ID', key: '{order_ID}' },
-    { name: 'Replacement Order ID', key: '{replacement_order_ID}' },
-    { name: 'Shipping Details', key: '{shipping_details}' },
-    { name: 'Shop Name', key: '{shop_name}' },
+    { name: 'Order Id', key: '{{order_id}}' },
+    { name: 'Replacement Order Id', key: '{{replacement_order_id}}' },
+    { name: 'Shipping Details', key: '{{shipping_details}}' },
+    { name: 'Shop Name', key: '{{shop_name}}' },
   ];
   return (
     <>
@@ -117,10 +117,10 @@ export const ClaimReOrderCustomerVariable = () => {
 
 export const ClaimCancelCustomerVariable = () => {
   const variables: { name: string; key: string }[] = [
-    { name: 'Order ID', key: '{order_ID}' },
-    { name: 'Customer Name', key: '{customer_name}' },
-    { name: 'Cancellation Reason', key: '{cancellation_reason}' },
-    { name: 'Shop Name', key: '{shop_name}' },
+    { name: 'Order Id', key: '{{order_id}}' },
+    { name: 'Customer Name', key: '{{customer_name}}' },
+    { name: 'Cancellation Reason', key: '{{cancellation_reason}}' },
+    { name: 'Shop Name', key: '{{shop_name}}' },
   ];
   return (
     <>

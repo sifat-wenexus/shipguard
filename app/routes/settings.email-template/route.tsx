@@ -22,7 +22,6 @@ import {
   EditIcon,
   NoteIcon,
   PaintBrushFlatIcon,
-  UploadIcon,
   ViewIcon,
 } from '@shopify/polaris-icons';
 import { shopify as shopifyRemix } from '../../modules/shopify.server';
@@ -42,7 +41,7 @@ import {
 } from './components/template-variable';
 import _ from 'lodash';
 import style from './styles/route.css';
-import { useBetterFetcher } from '~/hooks/use-better-fetcher';
+import { ClaimRequestAdminTemplate } from './email-template/template';
 
 const reqAdminTemplate = `<!DOCTYPE html>
 <html lang="en">
@@ -115,7 +114,7 @@ padding:0px 10px}
 <tbody>
 <tr style="height: 36.1648px;">
 <td>Order ID</td>
-<td><strong>{order_ID}</strong></td>
+<td><strong>{order_id}</strong></td>
 </tr>
 <tr style="height: 36.1648px;">
 <td>Claim Reason</td>
@@ -151,7 +150,7 @@ padding:0px 10px}
 <tbody>
 <tr style="height: 36.1648px;">
 <td>Order ID</td>
-<td><strong>{order_ID}</strong></td>
+<td><strong>{order_id}</strong></td>
 </tr>
 <tr style="height: 36.1648px;">
 <td>Refund Amount</td>
@@ -187,7 +186,7 @@ padding:0px 10px}
 <tbody>
 <tr style="height: 36.1648px;">
 <td>Order ID</td>
-<td><strong>{order_ID}</strong></td>
+<td><strong>{order_id}</strong></td>
 </tr>
 <tr style="height: 36.1648px;">
 <td>Replacement Order ID</td>
@@ -223,7 +222,7 @@ padding:0px 10px}
 <tbody>
 <tr style="height: 36.1648px;">
 <td>Order ID</td>
-<td><strong>{order_ID}</strong></td>
+<td><strong>{order_id}</strong></td>
 </tr>
 <tr style="height: 36.1648px;">
 <td>Cancellation Reason</td>
@@ -235,6 +234,7 @@ padding:0px 10px}
 <p>Best regards,<br><strong>{shop_name}</strong></p>
 <p>&nbsp;</p></body>
 </html>`;
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const ctx = await shopify.authenticate.admin(request);
   const templates = await prisma.emailTemplate.findMany({
@@ -246,19 +246,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
       {
         storeId: ctx.session.storeId!,
         body: reqAdminTemplate,
-        subject: 'New Claim Request Submitted: Order {order_ID}',
+        subject: 'New Claim Request Submitted: Order {order_id}',
         name: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
       },
       {
         storeId: ctx.session.storeId!,
         body: reqCustomerTemplate,
-        subject: 'Claim Request Received: Order {order_ID}',
+        subject: 'Claim Request Received: Order {order_id}',
         name: 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER',
       },
       {
         storeId: ctx.session.storeId!,
         body: refundCustomerTemplate,
-        subject: 'Claim Approved: Refund Issued for Order {order_ID}',
+        subject: 'Claim Approved: Refund Issued for Order {order_id}',
         name: 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER',
       },
       {
@@ -270,21 +270,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
       {
         storeId: ctx.session.storeId!,
         body: cancelCustomerTemplate,
-        subject: 'Claim Request Canceled: Order {order_ID}',
+        subject: 'Claim Request Canceled: Order {order_id}',
         name: 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER',
       },
     ];
     await prisma.emailTemplate.createMany({
       data: defaultTemplatesPayload,
     });
-    return json({ message: 'something is wrong', status: false, data: null });
+    return json({ message: 'something is wrong', data: null });
   }
 
-  // const claimAdminTemplate =
   return json({
     message: 'Successfully fetched templates!',
     data: templates,
-    status: true,
   });
 }
 
@@ -306,7 +304,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const EmailTemplate = () => {
-  const fetcher = useBetterFetcher();
   const { data, message } = useLoaderData<typeof loader>();
   const [templateSubject, setTemplateSubject] = useState<string>('');
   const [editorState, setEditorState] = useState(false);
@@ -314,6 +311,72 @@ const EmailTemplate = () => {
   const [templateName, setTemplateName] = useState<$Enums.EmailTemplateName>();
   const [active, setActive] = useState(false);
   const [file, setFile] = useState<File>();
+  const [liquidToHtml, setLiquidToHtml] = useState('');
+  const getTemplate = async (variables) => {
+    const claimAdminTemplate = new ClaimRequestAdminTemplate();
+    claimAdminTemplate.liquid = templatePreview;
+    return await claimAdminTemplate.render(variables);
+  };
+
+  const templateParameters = (name: $Enums.EmailTemplateName) => {
+    switch (name) {
+      case 'CLAIM_REQUEST_EMAIL_FOR_ADMIN':
+        return {
+          order_id: '{{order_id}}',
+          customer_name: '{{customer_name}}',
+          claim_reason: '{{claim_reason}}',
+          claim_date: '{{claim_date}}',
+          shop_name: '{{shop_name}}',
+          order_url: '{{order_url}}',
+        };
+
+      case 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER':
+        return {
+          order_id: '{{order_id}}',
+          customer_name: '{{customer_name}}',
+          shop_name: '{{shop_name}}',
+          order_url: '{{order_url}}',
+          claim_date: '{{claim_date}}',
+          claim_reason: '{{claim_reason}}',
+        };
+      case 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER':
+        return {
+          order_id: '{{order_id}}',
+          shop_name: '{{shop_name}}',
+          refund_amount: '{{refund_amount}}',
+          date: '{{date}}',
+        };
+      case 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER':
+        return {
+          order_id: '{{order_id}}',
+          shop_name: '{{shop_name}}',
+          replacement_order_id: '{{replacement_order_id}}',
+          shipping_details: '{{shipping_details}}',
+        };
+      case 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER':
+        return {
+          order_id: '{{order_id}}',
+          shop_name: '{{shop_name}}',
+          cancellation_reason: '{{cancellation_reason}}',
+          customer_name: '{{customer_name}}',
+        };
+      default:
+        return '';
+    }
+  };
+
+  useEffect(() => {
+    if (templateName) {
+      getTemplate(templateParameters(templateName))
+        .then((res) => {
+          setLiquidToHtml(res);
+        })
+        .catch((err) => {
+          console.error(err);
+          setLiquidToHtml('');
+        });
+    }
+  }, [templatePreview, templateName]);
 
   const handleEditButton = (e: $Enums.EmailTemplateName) => {
     setTemplateName(e);
@@ -324,14 +387,14 @@ const EmailTemplate = () => {
       return;
     }
     if (e === 'CLAIM_REQUEST_EMAIL_FOR_ADMIN') {
-      setTemplateSubject('New Claim Request Submitted: Order {{order_ID}}');
+      setTemplateSubject('New Claim Request Submitted: Order {{order_id}}');
       setTemplatePreview(reqAdminTemplate);
     } else if (e === 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER') {
-      setTemplateSubject('Claim Request Received: Order {{order_ID}}');
+      setTemplateSubject('Claim Request Received: Order {{order_id}}');
       setTemplatePreview(reqCustomerTemplate);
     } else if (e === 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER') {
       setTemplateSubject(
-        'Claim Approved: Refund Issued for Order {{order_ID}}'
+        'Claim Approved: Refund Issued for Order {{order_id}}'
       );
       setTemplatePreview(refundCustomerTemplate);
     } else if (e === 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER') {
@@ -340,7 +403,7 @@ const EmailTemplate = () => {
       );
       setTemplatePreview(reOrderCustomerTemplate);
     } else if (e === 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER') {
-      setTemplateSubject('Claim Request Canceled: Order {{order_ID}}');
+      setTemplateSubject('Claim Request Canceled: Order {{order_id}}');
       setTemplatePreview(cancelCustomerTemplate);
     }
   };
@@ -548,7 +611,7 @@ const EmailTemplate = () => {
                           />
 
                           <iframe
-                            srcDoc={templatePreview}
+                            srcDoc={liquidToHtml}
                             title="HTML Content"
                             className="w-full h-[50vh] mt-2"
                           />
