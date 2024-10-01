@@ -16,9 +16,9 @@ export async function action({ request }: ActionFunctionArgs) {
   const ctx = await shopify.authenticate.admin(request);
   const response: File[] = [];
   const body = await request.formData();
-  console.log('body data:', body);
+
   const file = body.get('file') as Blob;
-  console.log('file:', file);
+  // debugger;
   if (!validImageTypes.includes(file.type)) {
     return json({
       success: false,
@@ -56,8 +56,8 @@ export async function action({ request }: ActionFunctionArgs) {
           .save(Buffer.from(await file.arrayBuffer()), {
             contentType: fileInDB.mimeType,
           });
-        // console.log({ fileResponse });
-        // response.push(fileInDB);
+        console.log({ fileResponse });
+        response.push(fileInDB);
       },
       {
         timeout: 10000,

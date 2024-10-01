@@ -90,6 +90,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const action = body.get('action');
   return json({
     data: {
+      file,
       name: 'action',
       age: 12,
       address: {
