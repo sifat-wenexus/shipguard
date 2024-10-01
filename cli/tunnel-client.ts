@@ -143,7 +143,19 @@ export class Client {
         tunnelURL.searchParams.append('id', meta.id);
         tunnelURL.searchParams.set('channel', 'data');
 
+        let retryCount = 0;
+
         const setupWs = () => {
+          if (retryCount++ > 10) {
+            console.error(`Failed to establish request channel with tunnel, max retries exceeded. \nHost: ${targetURL.hostname}:${port} \n Path: ${meta.url}\nMethod: ${meta.method}`);
+
+            if (tcp.readyState !== 'closed') {
+              tcp.end();
+            }
+
+            return;
+          }
+
           const ws = new WebSocket(tunnelURL);
 
           ws.on('message', (data) => tcp.write(data as Buffer));
