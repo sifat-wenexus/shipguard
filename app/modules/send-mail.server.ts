@@ -118,16 +118,3 @@ export async function sendMail<T extends EmailTemplateName>(options: SendOptions
     to: options.to,
   });
 }
-
-sendMail({
-  template: 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER',
-  storeId: 'STORE_ID',
-  to: 'customer@gmail.com',
-  variables: {
-    order_id: '',
-    replacement_order_id: '',
-    shipping_details: '',
-    shop_name: '',
-    shop_logo: '',
-  },
-});
