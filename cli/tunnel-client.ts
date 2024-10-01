@@ -101,8 +101,6 @@ export class Client {
       typeof target === 'function' ? target(meta) : target,
     );
 
-    let tcp: net.Socket | tls.TLSSocket;
-
     const isSecure =
       targetURL.protocol === 'https:' ||
       targetURL.protocol === 'wss:' ||
@@ -114,49 +112,76 @@ export class Client {
         ? 443
         : 80;
 
-    if (!isSecure) {
-      tcp = net.connect({
-        host: targetURL.hostname,
-        port,
-      });
-    } else {
-      tcp = tls.connect({
-        host: targetURL.hostname,
-        rejectUnauthorized: false,
-        port,
-      });
-    }
+    let retryCount = 0;
 
-    tcp.once('ready', () => {
-      tcp.write(data);
+    const setupSocket = () => {
+      if (retryCount++ > 10) {
+        console.error(`Failed to connect, max retries exceeded. \nHost: ${targetURL.hostname}:${port} \n Path: ${meta.url}\nMethod: ${meta.method}`);
 
-      const tunnelURL = new URL(this.options.tunnelURL);
+        return;
+      }
 
-      tunnelURL.searchParams.append('id', meta.id);
-      tunnelURL.searchParams.set('channel', 'data');
+      let tcp: net.Socket | tls.TLSSocket;
 
-      const ws = new WebSocket(tunnelURL);
+      if (!isSecure) {
+        tcp = new net.Socket();
+      } else {
+        tcp = new tls.TLSSocket(new net.Socket());
+      }
 
-      this.sockets[meta.id] = { ws, tcp: tcp };
+      tcp.once('error', () => {
+        console.error(`Failed to transfer request to local server, retrying in 1s. \nHost: ${targetURL.hostname}:${port} \n Path: ${meta.url}\nMethod: ${meta.method}`);
 
-      ws.on('close', () => {
-        if (tcp.readyState !== 'closed') {
-          tcp.end();
-        }
-
-        delete this.sockets[meta.id];
-      });
-      tcp.on('close', () => {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.close();
-        } else if (ws.readyState !== WebSocket.CLOSED && ws.readyState !== WebSocket.CLOSING) {
-          ws.once('open', () => ws.close());
-        }
+        setTimeout(setupSocket, 1000);
       });
 
-      ws.on('message', (data) => tcp.write(data as Buffer));
-      ws.on('error', console.error);
-      ws.once('open', () => tcp.on('data', (data) => ws.send(data)));
-    });
+      tcp.once('ready', () => {
+        tcp.write(data);
+
+        const tunnelURL = new URL(this.options.tunnelURL);
+
+        tunnelURL.searchParams.append('id', meta.id);
+        tunnelURL.searchParams.set('channel', 'data');
+
+        const setupWs = () => {
+          const ws = new WebSocket(tunnelURL);
+
+          ws.on('message', (data) => tcp.write(data as Buffer));
+
+          ws.once('error', () => {
+            console.error(`Failed to establish request channel with tunnel, retrying in 1s. \nHost: ${targetURL.hostname}:${port} \n Path: ${meta.url}\nMethod: ${meta.method}`);
+
+            setTimeout(setupWs, 1000);
+          });
+
+          ws.once('open', () => {
+            this.sockets[meta.id] = { ws, tcp: tcp };
+
+            ws.once('close', () => {
+              if (tcp.readyState !== 'closed') {
+                tcp.end();
+              }
+
+              delete this.sockets[meta.id];
+            });
+
+            tcp.once('close', () => {
+              if (ws.readyState === WebSocket.OPEN) {
+                ws.close();
+              } else if (ws.readyState !== WebSocket.CLOSED && ws.readyState !== WebSocket.CLOSING) {
+                ws.once('open', () => ws.close());
+              }
+            });
+            tcp.on('data', (data) => ws.send(data));
+          });
+        };
+
+        setupWs();
+      });
+
+      tcp.connect(port, targetURL.hostname);
+    };
+
+    setupSocket();
   }
 }
