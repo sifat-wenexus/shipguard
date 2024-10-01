@@ -10,6 +10,7 @@ import './modules/job/job-runner.server';
 import './listeners/index.server';
 import './routes/settings.widget-setup/modules/package-protection-listener.server';
 import './modules/query/query.server';
+import '~/modules/query/token-store.server';
 
 const ABORT_DELAY = 5000;
 
