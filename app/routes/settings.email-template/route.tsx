@@ -48,6 +48,7 @@ import {
 } from './components/default-template-code';
 import LogoUpload from './components/logo-upload';
 import { templateParameters } from './email-template/template-variable-params';
+import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const ctx = await shopify.authenticate.admin(request);
@@ -108,7 +109,7 @@ export async function action({ request }: ActionFunctionArgs) {
   if (action === 'update') {
     const state = JSON.parse(body.get('state') as string);
     const response = await prisma.emailTemplate.update({
-      where: { name: state.name },
+      where: { name: state.name, storeId: ctx.session.storeId },
       data: { body: state.body, subject: state.subject },
     });
     return json({ message: 'Email Template updated', status: true, response });
@@ -118,6 +119,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const EmailTemplate = () => {
+  const fetcher = useBetterFetcher();
   const { data, message } = useLoaderData<typeof loader>();
   const [templateSubject, setTemplateSubject] = useState<string>('');
   const [editorState, setEditorState] = useState(false);
@@ -192,14 +194,13 @@ const EmailTemplate = () => {
     if (!file) return;
     const form = new FormData();
     form.append('file', file);
-    fetch('/api/files', {
-      headers: {
-        'Content-Type': 'multipart/form-data;',
-      },
-      method: 'POST',
-      body: form,
-    })
-      .then((response) => response.json())
+    fetcher
+      .submit({}, form, {
+        action: '/api/files',
+        method: 'POST',
+        encType: 'multipart/form-data',
+      })
+      .then((response) => response)
       .then((data) => {
         console.log('Upload successful:', data);
       })

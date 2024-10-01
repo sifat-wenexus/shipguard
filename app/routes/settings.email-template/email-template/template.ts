@@ -6,10 +6,9 @@ abstract class Template<C = any> {
   // abstract variables(context?: C): Promise<Record<string, any>>;
   abstract name: $Enums.EmailTemplateName;
   abstract liquid: string;
+  abstract storeId: string;
 
   async render(context?: C): Promise<string> {
-    // const variables = await this.variables(context);
-    // console.log('render', this.liquid);
     // Fetch - Parse - Render
     const engine = new Liquid();
     if (this.liquid) {
@@ -18,7 +17,7 @@ abstract class Template<C = any> {
       return await res;
     }
     const liquidFromDb = await prisma.emailTemplate.findFirst({
-      where: { name: this.name },
+      where: { name: this.name, storeId: this.storeId },
     });
     if (liquidFromDb && context) {
       const parse = engine.parse(`${liquidFromDb.body}`);
@@ -74,24 +73,29 @@ export interface ClaimCancelCustomerTemplateVariables {
 export class ClaimRequestAdminTemplate extends Template<ClaimRequestAdminTemplateVariables> {
   name: $Enums.EmailTemplateName = 'CLAIM_REQUEST_EMAIL_FOR_ADMIN';
   liquid = '';
+  storeId: string = '';
 }
 
 export class ClaimRequestCustomerTemplate extends Template<ClaimRequestCustomerTemplateVariables> {
   name: $Enums.EmailTemplateName = 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER';
   liquid = '';
+  storeId: string = '';
 }
 
 export class ClaimRefundCustomerTemplate extends Template<ClaimRefundCustomerTemplateVariables> {
   name: $Enums.EmailTemplateName = 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER';
   liquid = '';
+  storeId: string = '';
 }
 
 export class ClaimReOrderCustomerTemplate extends Template<ClaimReOrderCustomerTemplateVariables> {
   name: $Enums.EmailTemplateName = 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER';
   liquid = '';
+  storeId: string = '';
 }
 
 export class ClaimCancelCustomerTemplate extends Template<ClaimCancelCustomerTemplateVariables> {
   name: $Enums.EmailTemplateName = 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER';
   liquid = '';
+  storeId: string = '';
 }

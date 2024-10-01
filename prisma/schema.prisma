@@ -432,14 +432,14 @@ model PackageProtectionClaimOrder {
 }
 
 model EmailTemplate {
-  id      Int    @id @default(autoincrement())
   storeId String
 
   name    EmailTemplateName @unique
   subject String
   body    String
+  Store   Store             @relation(fields: [storeId], references: [id])
 
-  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  @@id([storeId, name])
 }
 
 model GoogleAuthCredential {

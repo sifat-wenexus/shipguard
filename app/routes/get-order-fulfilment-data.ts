@@ -9,7 +9,7 @@ import { ClaimIssue, ClaimRequested } from '#prisma-client';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  console.log('loading..');
+  console.log('loading...');
   try {
     let url = new URL(request.url);
 
@@ -254,9 +254,9 @@ export const loader: LoaderFunction = async ({ request }) => {
         .filter((item) => item.fulfillmentLineItems.length > 0),
     };
     // ----------------------------------------------------------------
-
+    console.log(finalResult);
     return json({
-      message: 'request successful',
+      message: 'request successful.',
       data: finalResult,
     });
   } catch (err) {
