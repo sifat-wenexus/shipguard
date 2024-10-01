@@ -9,8 +9,12 @@ interface Result {
 
 export class ImportProducts extends Job<Result> {
   async execute() {
+    if (!this.job.storeId) {
+      throw new Error('Missing storeId');
+    }
+
     const store = await prisma.store.findUniqueOrThrow({
-      where: { id: this.row.storeId },
+      where: { id: this.job.storeId },
       select: {
         domain: true,
         id: true,
