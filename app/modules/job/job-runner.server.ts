@@ -137,9 +137,9 @@ class Queue {
 export class JobRunner {
   constructor() {
     this.initialize().then(() => {
-      setInterval(this.queue.loadJobs.bind(this.queue), 1000);
-      setInterval(this.runJobs.bind(this), 1000);
-      setImmediate(this.runJobs.bind(this));
+      // setInterval(this.queue.loadJobs.bind(this.queue), 1000);
+      // setInterval(this.runJobs.bind(this), 1000);
+      // setImmediate(this.runJobs.bind(this));
     });
   }
 
