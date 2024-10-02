@@ -108,7 +108,6 @@ export abstract class Job<R = any, P = any> {
       emitter.emitAsync(`${job.storeId}.job.${job.name}.failed`, job);
     } else {
       emitter.emitAsync(`job.${job.name}.completed`, job);
-      // emitter.emitAsync(`${job.storeId}.job.${job.name}.completed`, job);
       emitter.emit(`${job.storeId}.job.${job.name}.completed`, job);
     }
   }

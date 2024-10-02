@@ -146,12 +146,6 @@ export class Migration {
       emitter.once(`${store.id}.job.import-products.completed`, resolve);
 
       await jobRunner.run({ name: 'import-products', storeId: store.id });
-      // await prisma.job.create({
-      //   data: {
-      //     storeId: store.id,
-      //     name: 'import-products',
-      //   },
-      // });
     });
   }
 
@@ -160,12 +154,6 @@ export class Migration {
       emitter.once(`${store.id}.job.import-collections.completed`, resolve);
 
       await jobRunner.run({ name: 'import-collections', storeId: store.id });
-      // await prisma.job.create({
-      //   data: {
-      //     storeId: store.id,
-      //     name: 'import-collections',
-      //   },
-      // });
     });
   }
 
