@@ -6,6 +6,7 @@ import type { QueryType } from '~/modules/query/schema/query-schema';
 import type { ModelNames } from '~/modules/query/types/model-names';
 import { LiveQueryClient } from '~/modules/query/live-query.client';
 import { queryServer } from '~/modules/query/query.server';
+import { prisma } from '~/modules/prisma.server';
 import _ from 'lodash';
 
 const proxies: Record<string, any> = {};
@@ -107,6 +108,25 @@ function getQueryProxy(trxId?: string) {
         {},
         {
           get(__, method: string): any {
+            if (method === 'fields') {
+              if (isServer) {
+                return prisma[model].fields;
+              } else {
+                return new Proxy(
+                  {},
+                  {
+                    get(__, field: string): any {
+                      return {
+                        type: 'field-ref',
+                        model,
+                        field,
+                      };
+                    },
+                  }
+                );
+              }
+            }
+
             if (!queryMethods.has(method) && !mutationMethods.has(method)) {
               throw new Error(`Unsupported method: ${method}`);
             }
@@ -126,7 +146,7 @@ function getQueryProxy(trxId?: string) {
                             method.replace('subscribe', '')
                           )) as QueryType,
                       model: model as ModelNames,
-                      query: JSON.parse(JSON.stringify(args[0] ?? {})),
+                      query: args[0] ?? {},
                       subscribe: isSubscription,
                     },
                     args[1],
@@ -138,7 +158,7 @@ function getQueryProxy(trxId?: string) {
                   {
                     type: method as MutationType,
                     model: model as ModelNames,
-                    query: JSON.parse(JSON.stringify(args[0] ?? {})),
+                    query: args[0] ?? {},
                   },
                   args[1]?.session,
                   args[1]?.emitEvents,

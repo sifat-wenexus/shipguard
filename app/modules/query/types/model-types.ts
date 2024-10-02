@@ -21,6 +21,10 @@ export interface ModelTypes {
     model: Base.Job;
     whereInput: Base.Prisma.JobWhereInput;
   };
+  jobExecution: {
+    model: Base.JobExecution;
+    whereInput: Base.Prisma.JobExecutionWhereInput;
+  };
   file: {
     model: Base.File;
     whereInput: Base.Prisma.FileWhereInput;
@@ -76,9 +80,9 @@ export interface ModelTypes {
   googleAuthCredential: {
     model: Base.GoogleAuthCredential;
     whereInput: Base.Prisma.GoogleAuthCredentialWhereInput;
-  }
+  };
   smtpSetting: {
     model: Base.SmtpSetting;
     whereInput: Base.Prisma.SmtpSettingWhereInput;
-  }
+  };
 }

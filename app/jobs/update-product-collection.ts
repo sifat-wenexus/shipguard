@@ -10,7 +10,7 @@ interface Result {
 export class UpdateProductCollection extends Job<Result> {
   async execute() {
     const store = await prisma.store.findUniqueOrThrow({
-      where: { id: this.row.storeId },
+      where: { id: this.job.storeId! },
       select: {
         domain: true,
         id: true,
@@ -21,7 +21,7 @@ export class UpdateProductCollection extends Job<Result> {
 
     await this.updateProgress(8);
 
-    const { collectionId } = this.row.payload as Record<string, any>;
+    const { collectionId } = this.job.payload as Record<string, any>;
 
     const { data: products } = await performBulkOperation(
       session,

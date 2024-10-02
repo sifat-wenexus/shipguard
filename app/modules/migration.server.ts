@@ -5,6 +5,7 @@ import { getConfig } from './get-config.server';
 import type { Store } from '#prisma-client';
 import { prisma } from './prisma.server';
 import _ from 'lodash';
+import { jobRunner } from './job/job-runner.server';
 
 export class Migration {
   constructor(private readonly session: Session) {}
@@ -144,12 +145,13 @@ export class Migration {
     return new Promise<void>(async (resolve) => {
       emitter.once(`${store.id}.job.import-products.completed`, resolve);
 
-      await prisma.job.create({
-        data: {
-          storeId: store.id,
-          name: 'import-products',
-        },
-      });
+      await jobRunner.run({ name: 'import-products', storeId: store.id });
+      // await prisma.job.create({
+      //   data: {
+      //     storeId: store.id,
+      //     name: 'import-products',
+      //   },
+      // });
     });
   }
 
@@ -157,12 +159,13 @@ export class Migration {
     return new Promise<void>(async (resolve) => {
       emitter.once(`${store.id}.job.import-collections.completed`, resolve);
 
-      await prisma.job.create({
-        data: {
-          storeId: store.id,
-          name: 'import-collections',
-        },
-      });
+      await jobRunner.run({ name: 'import-collections', storeId: store.id });
+      // await prisma.job.create({
+      //   data: {
+      //     storeId: store.id,
+      //     name: 'import-collections',
+      //   },
+      // });
     });
   }
 

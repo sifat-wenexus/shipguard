@@ -133,6 +133,29 @@ export const models = defineModels(() => {
         },
       },
     },
+
+    jobExecution: {
+      permissions: {
+        subscribe: true,
+        read: {
+          fields: true,
+          permission: oneLevelPermission,
+        },
+
+        create: {
+          fields: true,
+          permission: oneLevelPermission,
+        },
+        update: {
+          fields: true,
+          permission: oneLevelPermission,
+        },
+        delete: {
+          permission: oneLevelPermission,
+        },
+      },
+    },
+
     file: {
       permissions: {
         subscribe: true,
@@ -363,7 +386,12 @@ export const models = defineModels(() => {
         host: Joi.string().hostname().optional().allow(null),
         port: Joi.number().integer().min(1).max(65535).optional().allow(null),
         proxyHost: Joi.string().hostname().optional().allow(null),
-        proxyPort: Joi.number().integer().min(1).max(65535).optional().allow(null),
+        proxyPort: Joi.number()
+          .integer()
+          .min(1)
+          .max(65535)
+          .optional()
+          .allow(null),
       }).unknown(true),
       permissions: {
         subscribe: true,

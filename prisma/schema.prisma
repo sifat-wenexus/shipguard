@@ -36,11 +36,19 @@ enum InsurancePricingType {
 }
 
 enum JobStatus {
-  CREATED
-  RUNNING
-  COMPLETED
+  SCHEDULED
+  FINISHED
   FAILED
+  PENDING
+  RUNNING
+  PAUSED
+}
+
+enum JobExecutionStatus {
+  SUCCEEDED
   CANCELLED
+  RUNNING
+  FAILED
 }
 
 enum ElementPlacementPosition {
@@ -177,21 +185,45 @@ model Store {
 }
 
 model Job {
-  id      Int    @id @default(autoincrement())
-  storeId String
+  id      Int     @id @default(autoincrement())
+  storeId String?
 
-  status   JobStatus @default(CREATED)
-  name     String
-  payload  Json?
+  status JobStatus
+  name   String
+
+  node        String
+  scheduledAt DateTime? @db.Timestamptz()
+  maxRetries  Int? // null means infinite
+  tries       Int       @default(0)
+  interval    Int? // in seconds
+  payload     Json?
+
+  executedAt DateTime? @db.Timestamptz()
+  createdAt  DateTime  @default(now()) @db.Timestamptz()
+  updatedAt  DateTime  @updatedAt @db.Timestamptz()
+
+  Store      Store?         @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Executions JobExecution[]
+
+  @@index([status, storeId, name])
+  @@index([executedAt], type: Brin)
+}
+
+model JobExecution {
+  id    Int @id @default(autoincrement())
+  jobId Int
+
+  status   JobExecutionStatus
   result   Json?
-  progress Int       @default(0)
+  progress Int                @default(0)
 
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @updatedAt @db.Timestamptz()
 
-  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Job Job @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@index([status, storeId, name])
+  @@index([jobId])
+  @@index([status])
 }
 
 model File {

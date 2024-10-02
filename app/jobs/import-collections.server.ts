@@ -10,7 +10,7 @@ interface Result {
 export class ImportCollections extends Job<Result> {
   async execute() {
     const store = await prisma.store.findUniqueOrThrow({
-      where: { id: this.row.storeId },
+      where: { id: this.job.storeId! },
       select: {
         domain: true,
         id: true,
