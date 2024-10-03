@@ -1,15 +1,15 @@
-import { json } from '@remix-run/node';
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { prisma } from '~/modules/prisma.server';
-// access token from shopify app
-// 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
-import { getShopifyGQLClient } from '../modules/shopify.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
-import { ClaimIssue, ClaimRequested } from '#prisma-client';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ClaimIssue, ClaimRequested } from '#prisma-client';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
+import { getShopifyGQLClient } from '~/modules/shopify.server';
+import { prisma } from '~/modules/prisma.server';
+import { json } from '@remix-run/node';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  console.log('loading...');
+
+
+
   try {
     let url = new URL(request.url);
 
@@ -23,18 +23,21 @@ export const loader: LoaderFunction = async ({ request }) => {
         include: { PackageProtectionClaimOrder: true },
       });
 
-    // if (getPackageProtectionOrder?.hasClaimRequest) {
-    //   return json({
-    //     error: 'This order already claimed!',
-    //     status: 404,
-    //   });
-    // }
     if (!getPackageProtectionOrder) {
+
       return json({
         error: 'No order found with the email and orderId!',
         status: 404,
       });
     }
+
+    // if (getPackageProtectionOrder.hasClaimRequest) {
+    //   return json({
+    //     error: 'This order already claimed!',
+    //     status: 404,
+    //   });
+    // }
+
     if (getPackageProtectionOrder.fulfillmentStatus !== 'FULFILLED') {
       return json({ error: 'This order is not fulfilled yet!', status: 404 });
     }
@@ -226,7 +229,7 @@ export const loader: LoaderFunction = async ({ request }) => {
                   currencyCode:
                     item.lineItem.discountAllocations[0]?.allocatedAmountSet
                       ?.shopMoney?.currencyCode,
-                  image: item.lineItem.image.url,
+                  image: item.lineItem.image?.url,
                   name: item.lineItem.name,
                   originalPrice:
                     item.lineItem.originalUnitPriceSet.shopMoney.amount,
