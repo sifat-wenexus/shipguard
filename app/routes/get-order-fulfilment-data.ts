@@ -3,6 +3,7 @@ import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import type { ClaimIssue, ClaimRequested } from '#prisma-client';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
+import { queryProxy } from '~/modules/query/query-proxy';
 import { prisma } from '~/modules/prisma.server';
 import { json } from '@remix-run/node';
 
@@ -352,11 +353,11 @@ export const action: ActionFunction = async ({ request }) => {
     fulfillmentId: e.fulfillmentId,
   }));
 
-  const result = await prisma.packageProtectionClaimOrder.createMany({
+  const result = await queryProxy.packageProtectionClaimOrder.createMany({
     data: payload,
   });
 
-  await prisma.packageProtectionOrder.update({
+  await queryProxy.packageProtectionOrder.update({
     where: { orderId: jsonData[0].orderId },
     data: {
       claimDate: new Date(),
