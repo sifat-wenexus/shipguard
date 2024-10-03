@@ -292,12 +292,14 @@ export const action: ActionFunction = async ({ request }) => {
   const selectedData = formData.get('selectedData') as string;
   const jsonData = JSON.parse(selectedData);
   const files = formData.getAll('files') as Blob[];
+
   if (!selectedData) {
     return json({
       success: false,
       message: 'No data selected!',
     });
   }
+
   const images: string[] = [];
 
   try {
@@ -342,6 +344,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const payload = jsonData?.map((e) => ({
+    storeId: session.storeId,
     orderId: e.orderId,
     fulfillmentLineItemId: e.lineItemId,
     claimStatus: 'REQUESTED',
@@ -355,16 +358,16 @@ export const action: ActionFunction = async ({ request }) => {
 
   const result = await queryProxy.packageProtectionClaimOrder.createMany({
     data: payload,
-  });
+  }, { session });
 
   await queryProxy.packageProtectionOrder.update({
-    where: { orderId: jsonData[0].orderId },
+    where: { orderId: jsonData[0].orderId, storeId: session.storeId },
     data: {
       claimDate: new Date(),
       hasClaimRequest: true,
       claimStatus: 'REQUESTED',
     },
-  });
+  }, { session });
 
   return json({
     success: true,
