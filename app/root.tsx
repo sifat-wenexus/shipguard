@@ -1,3 +1,4 @@
+import ImgLogo from '~/assets/images/Inhouse Shipping Protection.png';
 import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
 import { I18nContext, I18nManager } from '@shopify/react-i18n';
@@ -9,7 +10,6 @@ import { Card, Frame, Spinner } from '@shopify/polaris';
 import { Migration } from '~/modules/migration.server';
 import { shopify } from '~/modules/shopify.server';
 import tailwindStyles from '~/styles/tailwind.css';
-import ImgLogo from '~/assets/images/logo.png';
 import { prisma } from '~/modules/prisma.server';
 import type { AppStatus } from '#prisma-client';
 import { MainNav } from './components/main-nav';
