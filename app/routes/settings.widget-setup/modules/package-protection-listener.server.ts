@@ -2,6 +2,7 @@ import type { GraphqlClient } from '~/shopify-api/lib/clients/graphql/graphql_cl
 import packageYellow from '~/assets/icons/svg/Package_Protection yellow.svg';
 import packageGreen from '~/assets/icons/svg/Package_Protection-green.svg';
 import packageBlack from '~/assets/icons/svg/Package_Protection-black.svg';
+import productImage from '~/assets/images/inhouse-shipping-protection.png';
 import packageFour from '~/assets/icons/svg/Package_Protection.svg';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { onDBEvtBuffered } from '~/modules/emitter.server';
@@ -9,9 +10,8 @@ import { queryProxy } from '~/modules/query/query-proxy';
 import { getConfig } from '~/modules/get-config.server';
 import { prisma } from '~/modules/prisma.server';
 import { sleep } from '~/modules/utils/sleep';
-import productImage from '~/assets/images/Inhouse-shipping-protection.png';
-import _ from 'lodash';
 import { Product } from '#prisma-client';
+import _ from 'lodash';
 
 interface IShopifyBulkProductVariantCreateArgs {
   defaultPrice: number;

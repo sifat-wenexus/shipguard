@@ -1,4 +1,4 @@
-import ImgLogo from '~/assets/images/Inhouse Shipping Protection.png';
+import ImgLogo from '~/assets/images/inhouse-shipping-protection.png';
 import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
 import { I18nContext, I18nManager } from '@shopify/react-i18n';
@@ -58,7 +58,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (
     !url.pathname.startsWith('/auth') &&
     !url.pathname.startsWith('/webhooks') &&
-    !url.pathname.startsWith('/test') &&
+    // !url.pathname.startsWith('/test') &&
     !url.pathname.startsWith('/google-oauth-callback')
   ) {
     const ctx = await shopify.authenticate.admin(request);

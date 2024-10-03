@@ -3,7 +3,7 @@ import { useActionData, useLoaderData, useSubmit } from '@remix-run/react';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
 import { shopify } from '~/modules/shopify.server';
 import * as Icons from '@shopify/polaris-icons';
-import LogoImg from '~/assets/images/Inhouse Shipping Protection.png';
+import LogoImg from '~/assets/images/inhouse-shipping-protection.png';
 import { useCallback, useState } from 'react';
 import { json } from '@remix-run/node';
 
