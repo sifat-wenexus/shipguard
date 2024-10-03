@@ -9,7 +9,7 @@ import { queryProxy } from '~/modules/query/query-proxy';
 import { getConfig } from '~/modules/get-config.server';
 import { prisma } from '~/modules/prisma.server';
 import { sleep } from '~/modules/utils/sleep';
-import productImage from '~/assets/images/Inhouse Shipping Protection.png';
+import productImage from '~/assets/images/Inhouse-shipping-protection.png';
 import _ from 'lodash';
 import { Product } from '#prisma-client';
 
@@ -600,7 +600,8 @@ onDBEvtBuffered(
                 gql,
                 vendor: store.name,
               });
-              productId = await createPercentProduct.productCreate.product.id;
+
+              productId = await createPercentProduct.productCreate.product?.id;
             } else {
               const createPercentProduct = await shopifyCreateProduct({
                 status: 'DRAFT',
@@ -901,11 +902,13 @@ async function shopifyCreateProduct({
             },
           ],
         },
-        media: {
-          alt: 'package-protection',
-          mediaContentType: 'IMAGE',
-          originalSource: productImage,
-        },
+        media: [
+          {
+            alt: 'package-protection',
+            mediaContentType: 'IMAGE',
+            originalSource: `https://app1.tunnel.wenexus.io/build/_assets/Inhouse-shipping-protection-WMVOTACT.png`,
+          },
+        ],
       },
     },
   });
