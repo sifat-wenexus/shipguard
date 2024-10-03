@@ -83,6 +83,8 @@ export const models = defineModels(() => {
   >([
     'images',
     'orderId',
+    'storeId',
+    'issue',
     'comments',
     'claimStatus',
     'fulfillClaim',
