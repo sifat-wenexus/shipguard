@@ -5,10 +5,11 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { InitStore } from '~/modules/init-store.server';
 import { AppProvider } from '~/shopify-app-remix/react';
+import { Card, Frame, Spinner } from '@shopify/polaris';
 import { Migration } from '~/modules/migration.server';
 import { shopify } from '~/modules/shopify.server';
 import tailwindStyles from '~/styles/tailwind.css';
-import { Card, Spinner } from '@shopify/polaris';
+import ImgLogo from '~/assets/images/logo.png';
 import { prisma } from '~/modules/prisma.server';
 import type { AppStatus } from '#prisma-client';
 import { MainNav } from './components/main-nav';
@@ -149,23 +150,32 @@ export default function Root() {
     <AppProvider isEmbeddedApp apiKey={data.apiKey!}>
       {/* <PolarisVizProvider> */}
       <I18nContext.Provider value={i18nManager}>
-        {data.appStatus === 'READY' ? (
-          <>
-            {!skipAuth && (
-              <>
-                <Nav />
-                <MainNav />
-              </>
-            )}
-            <Outlet />
-          </>
-        ) : (
-          <div className="flex justify-center items-center w-full h-full">
-            <Card>
-              <Spinner />
-            </Card>
-          </div>
-        )}
+        <Frame
+          logo={{
+            contextualSaveBarSource: ImgLogo,
+            topBarSource: ImgLogo,
+            url: ImgLogo,
+            width: 48,
+          }}
+        >
+          {data.appStatus === 'READY' ? (
+            <>
+              {!skipAuth && (
+                <>
+                  <Nav />
+                  <MainNav />
+                </>
+              )}
+              <Outlet />
+            </>
+          ) : (
+            <div className="flex justify-center items-center w-full h-full">
+              <Card>
+                <Spinner />
+              </Card>
+            </div>
+          )}
+        </Frame>
       </I18nContext.Provider>
       {/* </PolarisVizProvider> */}
     </AppProvider>
