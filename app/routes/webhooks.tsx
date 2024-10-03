@@ -1,9 +1,25 @@
-import { emitter } from '~/modules/emitter.server';
+import { findOfflineSession } from '~/modules/find-offline-session.server';
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { shopify } from '~/modules/shopify.server';
+import { emitter } from '~/modules/emitter.server';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const ctx = await shopify.authenticate.webhook(request);
+  let ctx: Awaited<ReturnType<typeof shopify.authenticate.webhook>>;
+
+  if (process.env.NODE_ENV === 'development') {
+    const req = request.clone();
+
+    ctx = {
+      apiVersion: req.headers.get('x-shopify-api-version')!,
+      shop: req.headers.get('x-shopify-shop-domain')!,
+      webhookId: req.headers.get('x-shopify-webhook-id'),
+      topic: req.headers.get('x-shopify-topic'),
+      payload: await req.json(),
+      session: await findOfflineSession(req.headers.get('x-shopify-shop-domain')!),
+    };
+  } else {
+    ctx = await shopify.authenticate.webhook(request);
+  }
 
   console.log(`Webhook: ${ctx.topic}`);
   console.log(`Shop: ${ctx.session?.shop}`);
