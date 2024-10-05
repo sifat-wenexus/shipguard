@@ -14,7 +14,7 @@ const validImageTypes = [
 
 export async function action({ request }: ActionFunctionArgs) {
   const ctx = await shopify.authenticate.admin(request);
-  const response: File[] = [];
+  let response: File | null = null;
   const body = await request.formData();
 
   const file = body.get('file') as Blob;
@@ -36,7 +36,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   try {
-    await prisma.$transaction(
+    const res = await prisma.$transaction(
       async (prisma) => {
         const fileInDB = await prisma.file.create({
           data: {
@@ -56,8 +56,7 @@ export async function action({ request }: ActionFunctionArgs) {
           .save(Buffer.from(await file.arrayBuffer()), {
             contentType: fileInDB.mimeType,
           });
-        console.log({ fileResponse });
-        response.push(fileInDB);
+        response = fileInDB;
       },
       {
         timeout: 10000,

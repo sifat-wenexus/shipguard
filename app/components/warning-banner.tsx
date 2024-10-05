@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from '@remix-run/react';
 
 const WarningBanner = ({ storeInfo }) => {
+  if (storeInfo.embedBlock) return null;
   const [active, setActive] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const handlePopUp = useCallback(() => {
@@ -34,7 +35,7 @@ const WarningBanner = ({ storeInfo }) => {
                 tone="success"
                 variant="primary"
                 url={
-                  storeInfo
+                  storeInfo.store
                     ? `https://admin.shopify.com/store/${
                         storeInfo?.store?.domain.split('.')[0]
                       }/themes/${
@@ -57,7 +58,7 @@ const WarningBanner = ({ storeInfo }) => {
                   content: 'Goto Theme Editor',
                   onAction: () => {
                     window.open(
-                      storeInfo
+                      storeInfo?.store
                         ? `https://admin.shopify.com/store/${storeInfo?.store?.name}/themes/${storeInfo?.theme?.id}/editor?context=apps`
                         : ''
                     );

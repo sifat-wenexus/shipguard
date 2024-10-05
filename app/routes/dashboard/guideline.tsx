@@ -251,7 +251,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                               variant="primary"
                               tone="success"
                               url={
-                                storeInfo
+                                storeInfo.store
                                   ? `https://admin.shopify.com/store/${
                                       storeInfo?.store?.domain.split('.')[0]
                                     }/themes/${

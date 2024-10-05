@@ -47,6 +47,8 @@ interface IShopifyProductCreateAndUpdateArgs {
 
 export const PRODUCT_SKU: string = 'wenexus-shipping-protection';
 
+const appLogo = getConfig().appUrl + productImage;
+
 const icons: {
   id: string;
   icon: string;
@@ -851,7 +853,7 @@ export async function shopifyProductUpdate({
         },
         // media: {
         //   mediaContentType: 'IMAGE',
-        //   originalSource: imageUrl,
+        //   originalSource: appLogo,
         // },
       },
     },
@@ -906,7 +908,7 @@ async function shopifyCreateProduct({
           {
             alt: 'package-protection',
             mediaContentType: 'IMAGE',
-            originalSource: `https://app1.tunnel.wenexus.io/build/_assets/Inhouse-shipping-protection-WMVOTACT.png`,
+            originalSource: `${appLogo}`,
           },
         ],
       },

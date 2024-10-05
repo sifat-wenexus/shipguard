@@ -103,12 +103,14 @@ export abstract class Job<R = any, P = any> {
       this.runner.scheduleJob(job, true, this.execution);
     }
 
+    const eventBase = `job.${job.name}`;
     if (error) {
-      emitter.emitAsync(`job.${job.name}.failed`, job);
-      emitter.emitAsync(`${job.storeId}.job.${job.name}.failed`, job);
+      emitter.emitAsync(`${eventBase}.failed`, job);
+      emitter.emitAsync(`${job.storeId}.${eventBase}.failed`, job);
     } else {
-      emitter.emitAsync(`job.${job.name}.completed`, job);
-      emitter.emit(`${job.storeId}.job.${job.name}.completed`, job);
+      emitter.emitAsync(`${eventBase}.completed`, job);
+      // emitter.emitAsync(`${job.storeId}.${eventBase}.completed`, job);
+      emitter.emitAsync(`${job.storeId}.job.${job.name}.completed`, job);
     }
   }
 

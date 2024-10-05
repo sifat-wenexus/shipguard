@@ -48,7 +48,7 @@ import {
 } from './components/default-template-code';
 import LogoUpload from './components/logo-upload';
 import { templateParameters } from './email-template/template-variable-params';
-import { useBetterFetcher } from '~/hooks/use-better-fetcher';
+import { queryProxy } from '~/modules/query/query-proxy';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const ctx = await shopify.authenticate.admin(request);
@@ -92,12 +92,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
     await prisma.emailTemplate.createMany({
       data: defaultTemplatesPayload,
     });
-    return json({ message: 'something is wrong', data: null });
+    return json({
+      message: 'something is wrong',
+      data: null,
+      storeId: ctx.session.storeId,
+    });
   }
 
   return json({
     message: 'Successfully fetched templates!',
     data: templates,
+    storeId: ctx.session.storeId,
   });
 }
 
@@ -119,8 +124,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const EmailTemplate = () => {
-  const fetcher = useBetterFetcher();
-  const { data, message } = useLoaderData<typeof loader>();
+  const { data, message, storeId } = useLoaderData<typeof loader>();
   const [templateSubject, setTemplateSubject] = useState<string>('');
   const [editorState, setEditorState] = useState(false);
   const [templatePreview, setTemplatePreview] = useState('');
@@ -128,6 +132,8 @@ const EmailTemplate = () => {
   const [active, setActive] = useState(false);
   const [file, setFile] = useState<File>();
   const [liquidToHtml, setLiquidToHtml] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const getTemplate = async (variables) => {
     const claimAdminTemplate = new ClaimRequestAdminTemplate();
     claimAdminTemplate.liquid = templatePreview;
@@ -194,18 +200,25 @@ const EmailTemplate = () => {
     if (!file) return;
     const form = new FormData();
     form.append('file', file);
-    fetcher
-      .submit({}, form, {
-        action: '/api/files',
-        method: 'POST',
-        encType: 'multipart/form-data',
-      })
-      .then((response) => response)
-      .then((data) => {
-        console.log('Upload successful:', data);
+    setLoading(true);
+    fetch('/api/files', {
+      method: 'POST',
+      body: form,
+      redirect: 'follow',
+    })
+      .then((response) => response.json())
+      .then(async (result) => {
+        console.log(' result.response.id ', result.response.id, storeId);
+        setLoading(false);
+        setActive(false);
+        await queryProxy.packageProtection.update({
+          where: { storeId: storeId },
+          data: { emailTemplateLogo: result.response.id },
+        });
       })
       .catch((error) => {
-        console.log('Upload failed:', error);
+        console.error(error);
+        setLoading(false);
       });
   }, [file]);
 
@@ -243,6 +256,7 @@ const EmailTemplate = () => {
                       primaryAction={{
                         content: 'Done',
                         onAction: handleLogoUpload,
+                        loading: loading,
                       }}
                       secondaryActions={[
                         {
