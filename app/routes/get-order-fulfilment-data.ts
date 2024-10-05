@@ -360,7 +360,7 @@ export const action: ActionFunction = async ({ request }) => {
     data: payload,
   }, { session });
 
-  await queryProxy.packageProtectionOrder.update({
+  await queryProxy.packageProtectionOrder.updateMany({
     where: { orderId: jsonData[0].orderId, storeId: session.storeId },
     data: {
       claimDate: new Date(),

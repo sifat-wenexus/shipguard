@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 export function useDashboardData(startDate: string, endDate: string) {
   const pieDataQuery = useMemo(
     () =>
-      queryProxy.packageProtectionClaimOrder.subscribeFindMany({
+      queryProxy.packageProtectionClaimOrder.groupBy({
         where: {
           AND: [
             {
@@ -16,6 +16,11 @@ export function useDashboardData(startDate: string, endDate: string) {
               },
             },
           ],
+        },
+        by: 'issue',
+        _count: { id: true },
+        orderBy: {
+          issue: 'asc',
         },
       }),
     [endDate, startDate]

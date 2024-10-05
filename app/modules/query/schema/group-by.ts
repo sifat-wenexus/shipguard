@@ -3,7 +3,7 @@ import Joi from 'joi';
 export const groupBy = Joi.object({
   where: Joi.object().optional(),
   cursor: Joi.object().optional(),
-  by: Joi.array().items(Joi.string()).optional(),
+  by: Joi.alternatives().try(Joi.string(), Joi.array().items(Joi.string())).optional(),
   orderBy: Joi.object().required(),
   page: Joi.number().optional(),
   pageSize: Joi.number().optional(),

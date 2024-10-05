@@ -29,14 +29,14 @@ export const loader: LoaderFunction = async ({ request }) => {
     const res = await gql.query<any>({
       data: {
         query: `#graphql
-          query{
-            order(id:"${packageProtectionOrder?.orderId}") {
-              email
-              createdAt
-              name
-              id
-            }
+        query{
+          order(id:"${packageProtectionOrder?.orderId}") {
+            email
+            createdAt
+            name
+            id
           }
+        }
 
         `,
         // variables: { orderId: orderId },
@@ -52,67 +52,66 @@ export const loader: LoaderFunction = async ({ request }) => {
           claimStatus: order.claimStatus,
           fulfillClaim: order.fulfillClaim,
           claimStatusMessage: order.claimStatusMessage,
-        })
+        }),
       )) || [];
 
     const fulfillmentData: any[] = await Promise.all(
       [...new Map(fulfillmentIds.map((item) => [item.id, item])).values()].map(
         async ({
-          id,
-          images,
-          comments,
-          claimStatus,
-          fulfillClaim,
-          claimStatusMessage,
-        }) => {
+                 id,
+                 images,
+                 comments,
+                 claimStatus,
+                 fulfillClaim,
+                 claimStatusMessage,
+               }) => {
           const body = await gql.query<any>({
             data: {
               query: `#graphql
-                query Fulfillment($id: ID!) {
-                  fulfillment(id: $id) {
+              query Fulfillment($id: ID!) {
+                fulfillment(id: $id) {
+                  id
+                  name
+                  location {
                     id
-                    name
-                    location{
-    id
-
-  }
-                    fulfillmentLineItems(first: 250) {
-                      nodes {
+                  }
+                  fulfillmentLineItems(first: 250) {
+                    nodes {
+                      id
+                      quantity
+                      lineItem {
                         id
-                        quantity
-                        lineItem {
-                          id
-                          name
-                          taxable
-                          taxLines{
-                            rate
-                            ratePercentage
-                            title
-                          }
-                          discountAllocations {
-                            allocatedAmountSet {
-                              shopMoney {
-                                amount
-                                currencyCode
-                              }
-                            }
-                          }
-                          image {
-                            url
-                          }
-                          originalUnitPriceSet {
+                        name
+                        taxable
+                        taxLines{
+                          rate
+                          ratePercentage
+                          title
+                        }
+                        discountAllocations {
+                          allocatedAmountSet {
                             shopMoney {
                               amount
                               currencyCode
                             }
                           }
-                          sku
-                          title
                         }
+                        image {
+                          url
+                        }
+                        originalUnitPriceSet {
+                          shopMoney {
+                            amount
+                            currencyCode
+                          }
+                        }
+                        sku
+                        title
                       }
                     }
                   }
                 }
+              }
               `,
               variables: { id },
             },
@@ -127,19 +126,21 @@ export const loader: LoaderFunction = async ({ request }) => {
             fulfillClaim,
             claimStatusMessage,
           };
-        }
-      )
+        },
+      ),
     );
+
     const convertedData = fulfillmentData.map((f) => {
       const imageUrls = f.images.split(',').map((id) => {
         return `https://${url.hostname}/api/files/${id}`;
       });
+
       return {
         name: f.name,
         id: f.id,
         hasClaim:
-          packageProtectionOrder?.PackageProtectionClaimOrder[0]
-            .hasClaimRequest,
+        packageProtectionOrder?.PackageProtectionClaimOrder[0]
+          .hasClaimRequest,
 
         claimStatus: f.claimStatus,
         comments: f.comments,
@@ -155,8 +156,8 @@ export const loader: LoaderFunction = async ({ request }) => {
             name: node.lineItem.name,
             originalPrice: node.lineItem.originalUnitPriceSet.shopMoney.amount,
             discountPrice:
-              node.lineItem.discountAllocations[0].allocatedAmountSet.shopMoney
-                .amount,
+              node.lineItem.discountAllocations[0]?.allocatedAmountSet.shopMoney
+                .amount || 0,
             image: node.lineItem.image.url,
             title: node.lineItem.title,
             sku: node.lineItem.sku,
@@ -279,7 +280,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
       // -------------------------------------------------------------------------------------
       const filterData = await orderList.filter(
-        (order) => order.PackageProtectionClaimOrder.length > 0 && order
+        (order) => order.PackageProtectionClaimOrder.length > 0 && order,
       );
       return json({
         message: 'Order fetched Successfully!',
@@ -352,38 +353,38 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const res = await gql.query<any>({
             data: {
               query: `#graphql
-                query{
-                  order(id:"${orderId}") {
-                   id
-                   name
-                    lineItems(first: 200) {
-                      nodes {
-                        id
-                        variant {
-                          id
-                          price
-                          title
-                          sku
-                        }
-                        quantity
-                      }
-
-                    }
-                    customer{
+              query{
+                order(id:"${orderId}") {
+                  id
+                  name
+                  lineItems(first: 200) {
+                    nodes {
                       id
-                      email
+                      variant {
+                        id
+                        price
+                        title
+                        sku
+                      }
+                      quantity
                     }
-                    shippingAddress {
-                      firstName
-                      lastName
-                      address1
-                      city
-                      province
-                      country
-                      zip
-                    }
+
+                  }
+                  customer{
+                    id
+                    email
+                  }
+                  shippingAddress {
+                    firstName
+                    lastName
+                    address1
+                    city
+                    province
+                    country
+                    zip
                   }
                 }
+              }
 
               `,
             },
@@ -391,11 +392,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const existingOrder = await res.body.data.order;
           const itemToReorder = reorderItems.map((item) => item.itemId);
           const lineItems = existingOrder.lineItems.nodes.filter((item) =>
-            itemToReorder.includes(item.id)
+            itemToReorder.includes(item.id),
           );
 
           const lineItemIds = reorderItems.map(
-            (lineItem) => lineItem.lineItemId
+            (lineItem) => lineItem.lineItemId,
           );
 
           // return null;
@@ -422,7 +423,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             quantity: item.quantity,
             variant_id: +item.variant.id.replace(
               'gid://shopify/ProductVariant/',
-              ''
+              '',
             ),
             //  price: item.variant.price,
           }));
@@ -452,7 +453,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const data = await trx.packageProtectionClaimOrder.findFirst({
             where: {
               fulfillmentLineItemId:
-                bodyData.fulfillmentLineItems[0].lineItemId,
+              bodyData.fulfillmentLineItems[0].lineItemId,
             },
             select: { orderId: true },
           });
@@ -471,7 +472,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             },
           });
           const lineItemIds = bodyData.fulfillmentLineItems.map(
-            (lineItem) => lineItem.lineItemId
+            (lineItem) => lineItem.lineItemId,
           );
           await trx.packageProtectionClaimOrder.updateMany({
             where: { fulfillmentLineItemId: { in: lineItemIds } },
@@ -482,13 +483,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const orderTransaction = await gql.query<any>({
             data: {
               query: `#graphql
-                query($orderId: ID!) {
-                  order(id: $orderId) {
-                    transactions{
-                      id
-                    }
+              query($orderId: ID!) {
+                order(id: $orderId) {
+                  transactions{
+                    id
                   }
                 }
+              }
               `,
               variables: { orderId: data.orderId },
             },
@@ -503,23 +504,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               lineItemId: e.itemId,
               quantity: e.refundQuantity,
               locationId: e.locationId,
-            })
+            }),
           );
 
           const response = await gql.query<any>({
             data: {
               query: `#graphql
-                mutation M($input: RefundInput!) {
-                  refundCreate(input: $input) {
-                    order {
-                     id
-                    }
-                    userErrors {
-                      field
-                      message
-                    }
+              mutation M($input: RefundInput!) {
+                refundCreate(input: $input) {
+                  order {
+                    id
+                  }
+                  userErrors {
+                    field
+                    message
                   }
                 }
+              }
               `,
               variables: {
                 input: {
@@ -581,7 +582,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           });
 
           const lineItemIds = bodyData.refundItems.map(
-            (lineItem) => lineItem.lineItemId
+            (lineItem) => lineItem.lineItemId,
           );
           await trx.packageProtectionClaimOrder.updateMany({
             where: { fulfillmentLineItemId: { in: lineItemIds } },
@@ -591,13 +592,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const orderTransaction = await gql.query<any>({
             data: {
               query: `#graphql
-                query($orderId: ID!) {
-                  order(id: $orderId) {
-                    transactions{
-                      id
-                    }
+              query($orderId: ID!) {
+                order(id: $orderId) {
+                  transactions{
+                    id
                   }
                 }
+              }
               `,
               variables: { orderId: data.orderId },
             },
@@ -618,17 +619,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const response = await gql.query<any>({
             data: {
               query: `#graphql
-                mutation M($input: RefundInput!) {
-                  refundCreate(input: $input) {
-                    order {
-                     id
-                    }
-                    userErrors {
-                      field
-                      message
-                    }
+              mutation M($input: RefundInput!) {
+                refundCreate(input: $input) {
+                  order {
+                    id
+                  }
+                  userErrors {
+                    field
+                    message
                   }
                 }
+              }
               `,
               variables: {
                 input: {
