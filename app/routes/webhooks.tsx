@@ -12,11 +12,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     ctx = {
       apiVersion: req.headers.get('x-shopify-api-version')!,
       shop: req.headers.get('x-shopify-shop-domain')!,
-      webhookId: req.headers.get('x-shopify-webhook-id'),
-      topic: req.headers.get('x-shopify-topic'),
+      webhookId: req.headers.get('x-shopify-webhook-id')!,
+      topic: (req.headers.get('x-shopify-topic') as any).replaceAll('/', '_').toUpperCase(),
       payload: await req.json(),
       session: await findOfflineSession(req.headers.get('x-shopify-shop-domain')!),
-    };
+    } as any;
   } else {
     ctx = await shopify.authenticate.webhook(request);
   }

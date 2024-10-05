@@ -48,7 +48,7 @@ async function run() {
 
   await new Client({
     tunnelURL: new URL(`wss://tunnel.wenexus.io?channel=meta&domain=${url.hostname.split('.')[0]}`),
-    target: new URL(`http://localhost:${process.env.PORT || 3000}`),
+    routerOrTarget: new URL(`http://localhost:${process.env.PORT || 3000}`),
   }).ready;
 
 }
