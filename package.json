@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "NODE_ENV=production remix build --sourcemap",
-    "dev": "cli/run.ts",
+    "dev": "shopify app dev",
     "config:link": "shopify app config link",
     "config:push": "shopify app config push",
     "generate": "shopify app generate",

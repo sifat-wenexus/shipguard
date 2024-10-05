@@ -63,6 +63,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   ) {
     const ctx = await shopify.authenticate.admin(request);
 
+    if (process.env.NODE_ENV === 'development') {
+      await shopify.registerWebhooks({ session: ctx.session });
+    }
+
     try {
       await Migration.attempt(ctx.session);
     } catch (e) {
