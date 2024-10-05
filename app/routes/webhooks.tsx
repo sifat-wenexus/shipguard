@@ -7,16 +7,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let ctx: Awaited<ReturnType<typeof shopify.authenticate.webhook>>;
 
   if (process.env.NODE_ENV === 'development') {
-    const req = request.clone();
+    try {
+      const req = request.clone();
+      const session = await findOfflineSession(req.headers.get('x-shopify-shop-domain')!);
 
-    ctx = {
-      apiVersion: req.headers.get('x-shopify-api-version')!,
-      shop: req.headers.get('x-shopify-shop-domain')!,
-      webhookId: req.headers.get('x-shopify-webhook-id')!,
-      topic: (req.headers.get('x-shopify-topic') as any).replaceAll('/', '_').toUpperCase(),
-      payload: await req.json(),
-      session: await findOfflineSession(req.headers.get('x-shopify-shop-domain')!),
-    } as any;
+      ctx = {
+        apiVersion: req.headers.get('x-shopify-api-version')!,
+        shop: req.headers.get('x-shopify-shop-domain')!,
+        webhookId: req.headers.get('x-shopify-webhook-id')!,
+        topic: (req.headers.get('x-shopify-topic') as any).replaceAll('/', '_').toUpperCase(),
+        payload: await req.json(),
+        session,
+      } as any;
+    } catch (e) {
+      console.error(e);
+      throw new Response('Failed to authenticate webhook', { status: 401 });
+    }
+
   } else {
     ctx = await shopify.authenticate.webhook(request);
   }

@@ -146,7 +146,13 @@ export class Client {
       }
     }
 
-    targetURL.pathname = (targetURL.pathname === '/' ? '' : targetURL.pathname) + url;
+    const _url = new URL(url, 'http://localhost');
+
+    targetURL.pathname = targetURL.pathname.replace(/\/$/, '') + _url.pathname;
+
+    for (const [key, value] of _url.searchParams) {
+      targetURL.searchParams.append(key, value);
+    }
 
     const isSecure =
       targetURL.protocol === 'https:' ||
