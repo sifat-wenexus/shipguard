@@ -19545,7 +19545,6 @@ const ri = ({
               { value: 'DAMAGED', label: 'Damaged' },
               { value: 'STOLLEN', label: 'Stollen' },
               { value: 'LOST', label: 'Lost' },
-              { value: 'OTHER_ISSUE', label: 'Other Issue' },
             ],
             value: m,
             onChange: g,
@@ -19557,8 +19556,7 @@ const ri = ({
             options: [
               { value: '', label: 'Select' },
               { value: 'RESHIP', label: 'Reship' },
-              { value: 'REFUND', label: 'Refound' },
-              { value: 'OTHERS', label: 'Other' },
+              { value: 'REFUND', label: 'Refund' },
             ],
             value: p,
             onChange: v,
@@ -21717,38 +21715,98 @@ const Xy = ({ setSelectedData: e, setStep: t, item: r }) => {
     d.useEffect(() => {
       r === 0 ? u(25) : r === 1 ? u(50) : r === 2 ? u(75) : r === 3 && u(100);
     }, [r]);
-    let m = null;
+    const m = {
+      createdAt: '2024-07-29T09:56:06Z',
+      customerName: 'name',
+      email: 'sifatfahimul@gmail.com',
+      displayStatus: 'FULFILLED',
+      name: '#1076',
+      totalPrice: '83.3',
+      id: 'gid://shopify/Order/5506086305839',
+      claimStatus: 'REQUESTED',
+      fulfillments: [
+        {
+          name: '#1076-F4',
+          status: 'SUCCESS',
+          displayStatus: 'FULFILLED',
+          createdAt: '2024-08-07T05:07:07Z',
+          fulfillmentLineItems: [
+            {
+              discountPrice: '5.0',
+              currencyCode: 'USD',
+              image:
+                'https://cdn.shopify.com/s/files/1/0550/7982/9551/files/habib-success_1500x_8f92a3e2-6508-46ce-baed-92a1ad83d4ac.png?v=1696414584',
+              name: 'Three',
+              originalPrice: '50.0',
+              sku: 'QB21',
+              title: 'Three',
+              quantity: 1,
+              orderId: 'gid://shopify/Order/5506086305839',
+              hasClaim: !0,
+              claimStatus: 'REQUESTED',
+            },
+          ],
+        },
+        {
+          name: '#1076-F3',
+          status: 'SUCCESS',
+          displayStatus: 'FULFILLED',
+          createdAt: '2024-08-07T04:46:08Z',
+          fulfillmentLineItems: [
+            {
+              discountPrice: '3.0',
+              currencyCode: 'USD',
+              image:
+                'https://cdn.shopify.com/s/files/1/0550/7982/9551/products/habib-success_fbd18096-0f29-4e37-ba12-bcbb13b76804.png?v=1635846815',
+              name: 'Two',
+              originalPrice: '30.0',
+              sku: null,
+              title: 'Two',
+              quantity: 1,
+              orderId: 'gid://shopify/Order/5506086305839',
+              hasClaim: !1,
+              claimStatus: null,
+            },
+          ],
+        },
+      ],
+    };
+    let g = null;
     switch (r) {
       case 0:
-        m = C.jsx(Uv, { setStep: n, setData: l });
+        g = C.jsx(Uv, { setStep: n, setData: l });
         break;
       case 1:
-        m = C.jsx(Qy, {
+        g = C.jsx(Qy, {
           setIsSubmit: t,
           setSelectedData: i,
           setStep: n,
-          data: o,
+          data: m,
         });
         break;
       case 2:
-        m = C.jsx(Gv, { selectedData: a, setStep: n });
+        g = C.jsx(Gv, { selectedData: a, setStep: n });
         break;
       case 3:
-        m = C.jsx(qy, { onclose: () => n(0) });
+        g = C.jsx(qy, { onclose: () => n(0) });
         break;
       default:
-        m = null;
+        g = null;
         break;
     }
     return C.jsxs(C.Fragment, {
       children: [
+        C.jsx('span', {
+          onClick: () => n((p) => (p < 3 ? p + 1 : 0)),
+          children: 'dd',
+        }),
         C.jsx('progress', {
           value: s,
           max: '100',
           style: { '--value': s, '--max': 100 },
         }),
         C.jsx('br', {}),
-        m,
+        g,
       ],
     });
   };
