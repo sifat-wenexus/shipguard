@@ -1,6 +1,10 @@
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import type { ClaimIssue, ClaimRequested } from '#prisma-client';
+import type {
+  ClaimIssue,
+  ClaimRequested,
+  PackageProtectionClaimOrder,
+} from '#prisma-client';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
@@ -348,7 +352,7 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  const payload = jsonData?.map((e) => ({
+  const payload: PackageProtectionClaimOrder = jsonData?.map((e) => ({
     storeId: session.storeId,
     orderId: e.orderId,
     fulfillmentLineItemId: e.lineItemId,

@@ -75,8 +75,6 @@ export const models = defineModels(() => {
     'orderAmount',
     'refundAmount',
     'protectionFee',
-    'billingAddress',
-    'customerAddress',
     'hasClaimRequest',
     'fulfillmentStatus',
   ]);

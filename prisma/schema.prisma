@@ -425,8 +425,6 @@ model PackageProtectionOrder {
   customerFirstName String?
   customerLastName  String?
   customerEmail     String?
-  customerAddress   Json?
-  billingAddress    Json?
   protectionFee     Float              @default(0.00)
   orderAmount       Float              @default(0.00)
   hasClaimRequest   Boolean            @default(false)
