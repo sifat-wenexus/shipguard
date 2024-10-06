@@ -68,7 +68,7 @@ export function useDashboardData(startDate: string, endDate: string) {
             {
               AND: [
                 { hasClaimRequest: true },
-                { NOT: { fulfillmentStatus: 'FULFILLED' } },
+                { claimStatus: { in: ['REQUESTED', 'INPROGRESS'] } },
               ],
             },
             {
