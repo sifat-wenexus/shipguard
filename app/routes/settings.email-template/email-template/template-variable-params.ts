@@ -14,7 +14,7 @@ export const templateParameters = (
         claim_reason: '{{claim_reason}}',
         claim_date: '{{claim_date}}',
         shop_name: '{{shop_name}}',
-        order_url: 'https://www.google.com/',
+        order_url: '{{order_url}}',
       };
 
     case 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER':

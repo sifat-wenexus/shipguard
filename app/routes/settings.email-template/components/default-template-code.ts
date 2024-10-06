@@ -55,7 +55,7 @@ export const reqAdminTemplate = `<!DOCTYPE html>
       <tbody>
         <tr style="height: 36.1648px">
           <td>Order Id</td>
-          <td><strong>{{order_id}}</strong></td>
+          <td><strong><a href="{{order_url}}" targget="_blank">{{order_id}}</a></strong></td>
         </tr>
         <tr style="height: 36.0795px">
           <td>Customer Name</td>
@@ -124,7 +124,7 @@ padding:0px 10px}
 <tbody>
 <tr style="height: 36.1648px;">
 <td>Order ID</td>
-<td><strong>{{order_id}}</strong></td>
+<td><strong><a href="{{order_url}}" targget="_blank">{{order_id}}</a></strong></td>
 </tr>
 <tr style="height: 36.1648px;">
 <td>Claim Reason</td>
@@ -176,7 +176,7 @@ export const refundCustomerTemplate = `<!DOCTYPE html>
 <tbody>
 <tr style="height: 36.1648px;">
 <td>Order Id</td>
-<td><strong>{{order_id}}</strong></td>
+<td><strong><a href="{{order_url}}" targget="_blank">{{order_id}}</a></strong></td>
 </tr>
 <tr style="height: 36.1648px;">
 <td>Refund Amount</td>
@@ -227,7 +227,7 @@ export const reOrderCustomerTemplate = `<!DOCTYPE html>
 <tbody>
 <tr style="height: 36.1648px;">
 <td>Order Id</td>
-<td><strong>{{order_id}}</strong></td>
+<td><strong><a href="{{order_url}}" targget="_blank">{{order_id}}</a></strong></td>
 </tr>
 <tr style="height: 36.1648px;">
 <td>Replacement Order ID</td>
@@ -277,7 +277,7 @@ export const cancelCustomerTemplate = `<!DOCTYPE html>
 <tbody>
 <tr style="height: 36.1648px;">
 <td>Order Id</td>
-<td><strong>{{order_id}}</strong></td>
+<td><strong><a href="{{order_url}}" targget="_blank">{{order_id}}</a></strong></td>
 </tr>
 <tr style="height: 36.1648px;">
 <td>Cancellation Reason</td>
