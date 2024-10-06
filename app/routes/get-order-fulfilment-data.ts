@@ -1,20 +1,19 @@
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import type {
-  ClaimIssue,
-  ClaimRequested,
-  PackageProtectionClaimOrder,
-} from '#prisma-client';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
+import { sendMail } from '~/modules/send-mail.server';
 import { prisma } from '~/modules/prisma.server';
 import { json } from '@remix-run/node';
-import { ClaimRequestAdminTemplate } from './settings.email-template/email-template/template';
-import { sendMail } from '~/modules/send-mail.server';
+
+import type {
+  PackageProtectionClaimOrder,
+  ClaimRequested,
+  ClaimIssue,
+} from '#prisma-client';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  console.log('first');
   try {
     let url = new URL(request.url);
 
@@ -214,7 +213,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       totalPrice: orderData.totalPriceSet.shopMoney.amount,
       id: orderData.id,
       claimStatus:
-        getPackageProtectionOrder?.PackageProtectionClaimOrder[0]?.claimStatus,
+      getPackageProtectionOrder?.PackageProtectionClaimOrder[0]?.claimStatus,
       fulfillments: orderData.fulfillments
         .filter((f) => f.status === 'SUCCESS')
         .map((f) => {
@@ -231,32 +230,32 @@ export const loader: LoaderFunction = async ({ request }) => {
                     item.lineItem.sku === 'overall-package-protection' ||
                     item.lineItem.sku === 'wenexus-shipping-protection' ||
                     item.lineItem.product.tags.includes('overall-insurance')
-                  )
+                  ),
               )
               .map((item) => {
                 return {
                   discountPrice:
-                    item.lineItem.discountAllocations[0]?.allocatedAmountSet
-                      ?.shopMoney?.amount,
+                  item.lineItem.discountAllocations[0]?.allocatedAmountSet
+                    ?.shopMoney?.amount,
                   currencyCode:
-                    item.lineItem.discountAllocations[0]?.allocatedAmountSet
-                      ?.shopMoney?.currencyCode,
+                  item.lineItem.discountAllocations[0]?.allocatedAmountSet
+                    ?.shopMoney?.currencyCode,
                   image: item.lineItem.image?.url,
                   name: item.lineItem.name,
                   originalPrice:
-                    item.lineItem.originalUnitPriceSet.shopMoney.amount,
+                  item.lineItem.originalUnitPriceSet.shopMoney.amount,
                   sku: item.lineItem.sku,
                   title: item.lineItem.title,
                   quantity: item.quantity,
                   orderId: orderData.id,
                   hasClaim: getClaimData.find(
-                    (e) => e.fulfillmentLineItemId === item.id
+                    (e) => e.fulfillmentLineItemId === item.id,
                   )
                     ? true
                     : false,
                   claimStatus:
                     getClaimData.find(
-                      (e) => e.fulfillmentLineItemId === item.id
+                      (e) => e.fulfillmentLineItemId === item.id,
                     )?.claimStatus ?? null,
                   // getPackageProtectionOrder?.PackageProtectionClaimOrder[0]
                   //   ?.hasClaimRequest || false,
@@ -334,7 +333,7 @@ export const action: ActionFunction = async ({ request }) => {
           });
 
           const bucket = gcloudStorage.bucket(
-            process.env.GC_STORAGE_BUCKET_NAME!
+            process.env.GC_STORAGE_BUCKET_NAME!,
           );
           await bucket
             .file(fileInDB.id)
@@ -343,10 +342,11 @@ export const action: ActionFunction = async ({ request }) => {
             });
 
           images.push(fileInDB.id);
-        })
+        }),
       );
-    });
+    }, { timeout: 20000 });
   } catch (err) {
+    console.error(err);
     return json({
       success: false,
       message:
@@ -371,7 +371,7 @@ export const action: ActionFunction = async ({ request }) => {
     {
       data: payload,
     },
-    { session }
+    { session },
   );
 
   await queryProxy.packageProtectionOrder.updateMany(
@@ -383,10 +383,10 @@ export const action: ActionFunction = async ({ request }) => {
         claimStatus: 'REQUESTED',
       },
     },
-    { session }
+    { session },
   );
 
-  if (result.count > 0) {
+  if ((result as any).length > 0) {
     const data = await prisma.packageProtectionOrder.findFirst({
       where: { orderId: jsonData[0].orderId },
       include: {
@@ -397,33 +397,26 @@ export const action: ActionFunction = async ({ request }) => {
     const packageProtection = await prisma.packageProtection.findFirst({
       where: { storeId: session.storeId },
     });
+
     if (data) {
-      //gid://shopify/Order/5596027453487
+      const store = await prisma.store.findFirstOrThrow({
+        where: { id: session.storeId },
+      });
       const orderId = data.orderId.replace('gid://shopify/Order/', '');
-      // const adminRequest = new ClaimRequestAdminTemplate();
-      // adminRequest.render({
-      //   claim_date: `${data?.claimDate}`,
-      //   claim_reason: data?.PackageProtectionClaimOrder[0].comments!,
-      //   order_id: data?.orderName,
-      //   customer_name: `${data?.customerFirstName}  ${data?.customerLastName}`,
-      //   shop_name: data?.Store.name,
-      //   order_url: `https://admin.shopify.com/store/${data.Store.name}/orders/${orderId}`,
-      // });
 
       await sendMail({
         template: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
         storeId: data.storeId,
-        to: 'jahangir@wenexus.io',
+        to: store.email!,
         internal: true,
         variables: {
           claim_date: `${data?.claimDate}`,
-          claim_reason: data?.PackageProtectionClaimOrder[0].comments!,
+          claim_reason: data.PackageProtectionClaimOrder[0].comments!,
           order_id: data?.orderName,
           customer_name: `${data?.customerFirstName}  ${data?.customerLastName}`,
           shop_name: data?.Store.name,
           order_url: `https://admin.shopify.com/store/${data.Store.name}/orders/${orderId}`,
         },
-        from: 'sifat@gmail.com',
       });
 
       await sendMail({
@@ -432,11 +425,11 @@ export const action: ActionFunction = async ({ request }) => {
         to: data.customerEmail!,
         variables: {
           claim_date: `${data?.claimDate}`,
-          claim_reason: data?.PackageProtectionClaimOrder[0].comments!,
+          claim_reason: data.PackageProtectionClaimOrder[0].comments!,
           order_id: data?.orderName,
           customer_name: `${data?.customerFirstName}  ${data?.customerLastName}`,
           shop_name: data?.Store.name,
-          shop_logo: packageProtection?.emailTemplateLogo!,
+          shop_logo: (packageProtection as any).emailTemplateLogo!,
           order_url: `https://admin.shopify.com/store/${data.Store.name}/orders/${orderId}`,
         },
       });
