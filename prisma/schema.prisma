@@ -83,13 +83,11 @@ enum ClaimIssue {
   DAMAGED
   STOLLEN
   LOST
-  OTHER_ISSUE
 }
 
 enum ClaimRequested {
   RESHIP
   REFUND
-  OTHERS
 }
 
 enum EmailTemplateName {
