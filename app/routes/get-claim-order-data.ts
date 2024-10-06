@@ -1,7 +1,9 @@
-import { ActionFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { IClaimType } from './claim-request/claim-fulfill-modal';
+import type { ActionFunctionArgs, LoaderFunction } from '@remix-run/node';
+import type { IClaimType } from './claim-request/claim-fulfill-modal';
 import { prisma } from '~/modules/prisma.server';
-import { ClaimStatus } from '#prisma-client';
+import type { ClaimStatus } from '#prisma-client';
+import { json } from '@remix-run/node';
+
 import {
   getShopifyGQLClient,
   shopify as shopifyRemix,
@@ -196,102 +198,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const ctx = await shopifyRemix.authenticate.admin(request);
   const gql = await getShopifyGQLClient(ctx.session);
-  const store = await prisma.session.findFirst({
-    where: { storeId: ctx.session.storeId },
-    select: { shop: true },
-  });
+
   const body = await request.formData();
   const action = body.get('action') as IClaimType &
     'filterOption' &
     'changeClaimStatus';
   const bodyData = JSON.parse(body.get('state') as string);
   try {
-    if (action === 'filterOption') {
-      const filterOption = JSON.parse(body.get('state') as string);
-      const { searchTerm, filterItems, page, pageSize, startDate, endDate } =
-        filterOption;
-      const ClaimStatus: ClaimStatus[] = [
-        'REQUESTED',
-        'INPROGRESS',
-        'CANCEL',
-        'APPROVE',
-        'PARTIALLYAPPROVE',
-      ];
-
-      const filterOp = filterItems.map((item) => item.value.toUpperCase());
-      const filterFields = filterOp.map((field) => {
-        if (ClaimStatus.includes(field)) {
-          return { claimStatus: { equals: field } };
-        }
-      });
-      const orderList = await prisma.packageProtectionOrder.findMany({
-        where: {
-          AND: [
-            // {
-            //   OR: filterFields || [],
-            // },
-            {
-              OR: [{ orderName: { contains: searchTerm } }],
-            },
-            {
-              createdAt: {
-                gte: startDate,
-                lte: endDate,
-              },
-            },
-            { storeId: { equals: ctx.session.storeId } },
-            { hasClaimRequest: { equals: true } },
-          ],
-        },
-        include: {
-          PackageProtectionClaimOrder: {
-            where: {
-              OR: filterFields.length
-                ? filterFields
-                : [{ claimStatus: { not: 'PARTIALLYAPPROVE' } }],
-            },
-          },
-        },
-        orderBy: { createdAt: 'desc' },
-
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-      });
-      const totalOrder = await prisma.packageProtectionOrder.count({
-        where: {
-          hasClaimRequest: { equals: true },
-          AND: [
-            // {
-            //   OR: filterFields || [],
-            // },
-            {
-              OR: [{ orderName: { contains: searchTerm } }],
-            },
-            {
-              createdAt: {
-                gte: startDate,
-                lte: endDate,
-              },
-            },
-            { storeId: { equals: ctx.session.storeId } },
-          ],
-        },
-      });
-
-      // -------------------------------------------------------------------------------------
-      const filterData = await orderList.filter(
-        (order) => order.PackageProtectionClaimOrder.length > 0 && order,
-      );
-      return json({
-        message: 'Order fetched Successfully!',
-        status: true,
-        data: {
-          orderList: filterData,
-          totalOrder: filterData.length > 0 ? totalOrder : 0,
-          shop: store?.shop,
-        },
-      });
-    } else if (action === 'changeClaimStatus') {
+    if (action === 'changeClaimStatus') {
       const {
         cancelText,
         approveText,
@@ -319,7 +233,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         select: { orderId: true },
       });
 
-      const r = await prisma.packageProtectionOrder.update({
+      await prisma.packageProtectionOrder.update({
         where: { orderId: orderId?.orderId },
         data: { claimStatus: selectedStatus.toString() as ClaimStatus },
       });
@@ -507,7 +421,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             }),
           );
 
-          const response = await gql.query<any>({
+          await gql.query<any>({
             data: {
               query: `#graphql
               mutation M($input: RefundInput!) {

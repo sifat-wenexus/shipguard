@@ -1,74 +1,106 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { ClaimStatus, FullfillmentStatus } from '#prisma-client';
-import { useBetterFetcher } from '~/hooks/use-better-fetcher';
+import ClaimOrderSearchAndFilter from './claim-order-search-and-filter';
+import type { IFilterOptions } from './claim-order-search-and-filter';
+import { useQueryPaginated } from '~/hooks/use-query-paginated';
+import { queryProxy } from '~/modules/query/query-proxy';
+import { useCallback, useMemo, useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+import type { IActiveDates } from '../order/route';
+import type { ClaimStatus } from '#prisma-client';
 import { BlogIcon } from '@shopify/polaris-icons';
 import useDebounce from '~/hooks/use-debounce';
-import { useLocation } from '@remix-run/react';
 import { useI18n } from '@shopify/react-i18n';
-import { IActiveDates } from '../order/route';
+
 import {
-  Badge,
-  Button,
   EmptySearchResult,
   IndexTable,
-  Link,
   Spinner,
+  Button,
+  Badge,
+  Link,
   Text,
 } from '@shopify/polaris';
-import ClaimOrderSearchAndFilter, {
-  IFilterOptions,
-} from './claim-order-search-and-filter';
-import { queryProxy } from '~/modules/query/query-proxy';
 
-const ClaimOrderList = ({
-  activeDates,
-  setIsProcess,
-  setOrderId,
-}: {
+const claimStatuses: ClaimStatus[] = [
+  'REQUESTED',
+  'INPROGRESS',
+  'CANCEL',
+  'APPROVE',
+  'PARTIALLYAPPROVE',
+];
+
+interface Props {
   activeDates: IActiveDates;
   setIsProcess: Dispatch<SetStateAction<boolean>>;
   setOrderId: Dispatch<SetStateAction<string>>;
-}) => {
-  const [i18n] = useI18n();
-  const fetcher = useBetterFetcher();
-  const [inputText, setInputText] = useState('');
+  shop: string;
+}
+
+const ClaimOrderList = ({ activeDates, setIsProcess, setOrderId, shop }: Props) => {
   const [filterItems, setFilterItems] = useState<IFilterOptions[]>([]);
-  const [orderCount, setOrderCount] = useState<number>(0);
-  const [orderList, setOrderList] = useState<Record<string, any>[]>([]);
-  const [page, setPage] = useState<number>(1);
-  const [loading, setLoading] = useState(false);
-  const [shop, setShop] = useState('');
-
-  const pageSize = 20;
-
+  const [inputText, setInputText] = useState('');
   const searchTerm = useDebounce(inputText, 500);
+  const [i18n] = useI18n();
 
   const { period } = activeDates || {};
-  const startDate = period
-    ? new Date(period?.since).toISOString() //.split('T')[0]
-    : new Date().toISOString(); //.split('T')[0];
-  const endDate = period
+  const startDate = useMemo(() => period
+    ? new Date(period?.since).toISOString()
+    : new Date().toISOString(), [period]);
+
+  const endDate = useMemo(() => period
     ? new Date(
-        new Date(period?.until).setDate(new Date(period.until).getDate() + 1)
-      ).toISOString()
-    : //.split('T')[0]
-      new Date().toISOString(); //.split('T')[0];
-  // console.log(period, startDate, endDate);
-  // let startPoint = 0;
+      new Date(period?.until).setDate(new Date(period.until).getDate() + 1),
+    ).toISOString()
+    : new Date().toISOString(), [period]);
 
-  const handleNext = () => {
-    setPage((prev) => prev + 1);
-  };
-  const handlePrevious = () => {
-    setPage((prev) => prev - 1);
-  };
+  const filterOp = useMemo(() => filterItems.map((item) => item.value.toUpperCase()), [filterItems]);
+  const filterFields = useMemo(() => filterOp.map((field) => {
+    if (claimStatuses.includes(field as any)) {
+      return { claimStatus: field as ClaimStatus };
+    }
 
-  const handleProcess = (orderId: string) => {
+    return {};
+  }), [filterOp]);
+
+  const query = useMemo(() => queryProxy.packageProtectionOrder.subscribeFindMany({
+    where: {
+      AND: [
+        {
+          OR: [{ orderName: { contains: searchTerm } }],
+        },
+        {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+        { hasClaimRequest: { equals: true } },
+        filterFields.length ? {
+          PackageProtectionClaimOrder: {
+            some: {
+              OR: filterFields,
+            }
+          }
+        } : {},
+      ],
+    },
+    include: {
+      PackageProtectionClaimOrder: {
+        where: filterFields.length
+          ? { OR: filterFields }
+          : { claimStatus: { not: 'PARTIALLYAPPROVE' } },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  }), [endDate, filterFields, searchTerm, startDate]);
+
+  const subscription = useQueryPaginated(query);
+
+  const handleProcess = useCallback((orderId: string) => {
     setIsProcess(true);
     setOrderId(orderId);
-  };
+  }, [setIsProcess, setOrderId]);
 
-  const rowMarkup = orderList?.map(
+  const rowMarkup = useMemo(() => subscription.data?.map(
     (
       {
         id,
@@ -81,20 +113,20 @@ const ClaimOrderList = ({
         PackageProtectionClaimOrder,
         refundAmount,
       },
-      index
+      index,
     ) => {
       const status = PackageProtectionClaimOrder.map((i) => i.claimStatus);
       const claimStatus: 'Requested' | 'Processing' | 'Canceled' | 'Approved' =
         status.every((i) => i === 'CANCEL')
           ? 'Canceled'
           : status.every((i) => i === 'REQUESTED')
-          ? 'Requested'
-          : status.every((i) => i === 'APPROVE')
-          ? 'Approved'
-          : 'Processing';
+            ? 'Requested'
+            : status.every((i) => i === 'APPROVE')
+              ? 'Approved'
+              : 'Processing';
 
       return (
-        <IndexTable.Row id={id} key={id} position={index}>
+        <IndexTable.Row id={id.toString()} key={id} position={index}>
           <IndexTable.Cell>
             <Text variant="bodyMd" fontWeight="bold" as="span">
               <Link
@@ -103,9 +135,9 @@ const ClaimOrderList = ({
                 url={
                   shop
                     ? `https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
-                        'gid://shopify/Order/',
-                        ''
-                      )}`
+                      'gid://shopify/Order/',
+                      '',
+                    )}`
                     : ''
                 }
               >
@@ -129,17 +161,17 @@ const ClaimOrderList = ({
                     claimStatus === 'Requested'
                       ? 'incomplete'
                       : claimStatus === 'Approved'
-                      ? 'complete'
-                      : 'partiallyComplete'
+                        ? 'complete'
+                        : 'partiallyComplete'
                   }
                   tone={
                     claimStatus === 'Approved'
                       ? 'success'
                       : claimStatus === 'Canceled'
-                      ? 'critical'
-                      : claimStatus === 'Requested'
-                      ? 'warning'
-                      : 'info'
+                        ? 'critical'
+                        : claimStatus === 'Requested'
+                          ? 'warning'
+                          : 'info'
                   }
                 >
                   {claimStatus}
@@ -149,13 +181,13 @@ const ClaimOrderList = ({
                     claimStatus === 'Approved'
                       ? 'success'
                       : claimStatus === 'Canceled'
-                      ? 'critical'
-                      : claimStatus === 'Requested'
-                      ? 'warning'
-                      : 'info'
+                        ? 'critical'
+                        : claimStatus === 'Requested'
+                          ? 'warning'
+                          : 'info'
                   }
                 >
-                  {PackageProtectionClaimOrder.length}
+                  {PackageProtectionClaimOrder.length.toString()}
                 </Badge>
               </>
             ) : (
@@ -187,57 +219,8 @@ const ClaimOrderList = ({
           </IndexTable.Cell>
         </IndexTable.Row>
       );
-    }
-  );
-
-  const getData = async () => {
-    setLoading(true);
-    const data = (await fetcher.submit(
-      { loading: false, toast: false },
-      {
-        action: 'filterOption',
-        state: JSON.stringify({
-          searchTerm: searchTerm,
-          filterItems: filterItems,
-          startDate: startDate, //+ 'T00:00:01.000Z',
-          endDate: endDate, //+ 'T23:59:59.000Z',
-          page: page,
-          pageSize: pageSize,
-        }),
-      },
-      {
-        action: '/get-claim-order-data',
-        method: 'POST',
-      }
-    )) as {
-      orderList: {
-        id: number;
-        storeId: string;
-        protectionFee: string;
-        orderAmount: string;
-        claimStatus: ClaimStatus;
-        fulfillmentStatus: FullfillmentStatus;
-        orderId: string;
-        orderName: string;
-        createdAt: Date;
-        updatedAt: Date;
-      }[];
-      totalOrder: number;
-      shop: string;
-    };
-    if (data) {
-      setLoading(false);
-      setOrderList(data.orderList);
-      setOrderCount(data.totalOrder);
-      setShop(data.shop.split('.')[0]);
-    } else {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  }, [filterItems, searchTerm, activeDates, page]);
+    },
+  ), [handleProcess, i18n, shop, subscription.data]);
 
   const emptyStateMarkup = (
     <EmptySearchResult
@@ -258,9 +241,11 @@ const ClaimOrderList = ({
         }}
       />
       <IndexTable
-        condensed={false} //useBreakpoints().smDown}
+        itemCount={subscription.loading ? Infinity : subscription.count as number}
         resourceName={{ singular: 'order', plural: 'orders' }}
-        itemCount={orderCount}
+        condensed={false} //useBreakpoints().smDown}
+        emptyState={emptyStateMarkup}
+        selectable={false}
         headings={[
           { title: 'Order' },
           { title: 'Protection Fees' },
@@ -271,16 +256,14 @@ const ClaimOrderList = ({
           { title: 'Claim Date' },
           { title: 'Action', alignment: 'center' },
         ]}
-        selectable={false}
-        emptyState={emptyStateMarkup}
         pagination={{
-          hasNext: page < orderCount / pageSize,
-          hasPrevious: page > 1,
-          onNext: handleNext,
-          onPrevious: handlePrevious,
+          hasNext: Boolean(subscription.page && subscription.pages !== subscription.page),
+          hasPrevious: Boolean(subscription.page && subscription.page > 1),
+          onNext: subscription.next,
+          onPrevious: subscription.previous,
         }}
       >
-        {loading ? (
+        {subscription.loading ? (
           <IndexTable.Cell colSpan={6}>
             <div className="flex justify-center">
               <Spinner accessibilityLabel="Loading..." size="large" />

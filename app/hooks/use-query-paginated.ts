@@ -38,6 +38,10 @@ export function useQueryPaginated<D>(
   }, [query]);
 
   useEffect(() => {
+    if (!loading) {
+      setLoading(true);
+    }
+
     const listener = (data: D) =>
       query.then((s) => {
         chunks[s.page] = data;

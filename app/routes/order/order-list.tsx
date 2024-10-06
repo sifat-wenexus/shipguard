@@ -156,9 +156,9 @@ const OrderList = ({ activeDates, shop }: { shop: string; activeDates: IActiveDa
             </span>
           </IndexTable.Cell>
 
-          <IndexTable.Cell>
+          <IndexTable.Cell className="text-center">
             {hasClaimRequest ? (
-              <>
+              <div className="flex justify-center">
                 <Badge
                   progress={
                     claimStatus === 'Requested'
@@ -192,7 +192,7 @@ const OrderList = ({ activeDates, shop }: { shop: string; activeDates: IActiveDa
                 >
                   {PackageProtectionClaimOrder.length.toString()}
                 </Badge>
-              </>
+              </div>
             ) : (
               <Text as="span" alignment="center">
                 -
@@ -203,7 +203,7 @@ const OrderList = ({ activeDates, shop }: { shop: string; activeDates: IActiveDa
         </IndexTable.Row>
       );
     },
-  ), [i18n, subscription.data]);
+  ), [i18n, shop, subscription.data]);
 
   const emptyStateMarkup = (
     <EmptySearchResult
