@@ -8,6 +8,7 @@ import {
   getShopifyGQLClient,
   shopify as shopifyRemix,
 } from '../modules/shopify.server';
+import { sendMail } from '~/modules/send-mail.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -54,19 +55,19 @@ export const loader: LoaderFunction = async ({ request }) => {
           claimStatus: order.claimStatus,
           fulfillClaim: order.fulfillClaim,
           claimStatusMessage: order.claimStatusMessage,
-        }),
+        })
       )) || [];
 
     const fulfillmentData: any[] = await Promise.all(
       [...new Map(fulfillmentIds.map((item) => [item.id, item])).values()].map(
         async ({
-                 id,
-                 images,
-                 comments,
-                 claimStatus,
-                 fulfillClaim,
-                 claimStatusMessage,
-               }) => {
+          id,
+          images,
+          comments,
+          claimStatus,
+          fulfillClaim,
+          claimStatusMessage,
+        }) => {
           const body = await gql.query<any>({
             data: {
               query: `#graphql
@@ -128,8 +129,8 @@ export const loader: LoaderFunction = async ({ request }) => {
             fulfillClaim,
             claimStatusMessage,
           };
-        },
-      ),
+        }
+      )
     );
 
     const convertedData = fulfillmentData.map((f) => {
@@ -141,8 +142,8 @@ export const loader: LoaderFunction = async ({ request }) => {
         name: f.name,
         id: f.id,
         hasClaim:
-        packageProtectionOrder?.PackageProtectionClaimOrder[0]
-          .hasClaimRequest,
+          packageProtectionOrder?.PackageProtectionClaimOrder[0]
+            .hasClaimRequest,
 
         claimStatus: f.claimStatus,
         comments: f.comments,
@@ -306,11 +307,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const existingOrder = await res.body.data.order;
           const itemToReorder = reorderItems.map((item) => item.itemId);
           const lineItems = existingOrder.lineItems.nodes.filter((item) =>
-            itemToReorder.includes(item.id),
+            itemToReorder.includes(item.id)
           );
 
           const lineItemIds = reorderItems.map(
-            (lineItem) => lineItem.lineItemId,
+            (lineItem) => lineItem.lineItemId
           );
 
           // return null;
@@ -337,7 +338,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             quantity: item.quantity,
             variant_id: +item.variant.id.replace(
               'gid://shopify/ProductVariant/',
-              '',
+              ''
             ),
             //  price: item.variant.price,
           }));
@@ -363,11 +364,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
     } else if (action === 'REFOUND_BY_AMOUNT') {
       try {
+        let orderID: string | null = null;
         await prisma.$transaction(async (trx) => {
           const data = await trx.packageProtectionClaimOrder.findFirst({
             where: {
               fulfillmentLineItemId:
-              bodyData.fulfillmentLineItems[0].lineItemId,
+                bodyData.fulfillmentLineItems[0].lineItemId,
             },
             select: { orderId: true },
           });
@@ -378,7 +380,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               data: null,
             });
           }
-
+          orderID = data.orderId;
           await trx.packageProtectionOrder.update({
             where: { orderId: data.orderId },
             data: {
@@ -386,7 +388,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             },
           });
           const lineItemIds = bodyData.fulfillmentLineItems.map(
-            (lineItem) => lineItem.lineItemId,
+            (lineItem) => lineItem.lineItemId
           );
           await trx.packageProtectionClaimOrder.updateMany({
             where: { fulfillmentLineItemId: { in: lineItemIds } },
@@ -418,7 +420,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               lineItemId: e.itemId,
               quantity: e.refundQuantity,
               locationId: e.locationId,
-            }),
+            })
           );
 
           await gql.query<any>({
@@ -457,6 +459,36 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             },
           });
         });
+        if (orderID) {
+          const data = await prisma.packageProtectionOrder.findFirst({
+            where: { orderId: orderID },
+            include: {
+              PackageProtectionClaimOrder: { select: { comments: true } },
+              Store: { select: { name: true, domain: true, email: true } },
+            },
+          });
+          const packageProtection = await prisma.packageProtection.findFirst({
+            where: { storeId: ctx.session.storeId },
+          });
+          if (data) {
+            const orderId = data.orderId.replace('gid://shopify/Order/', '');
+            await sendMail({
+              template: 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER',
+              storeId: ctx.session.storeId!,
+              to: data.customerEmail!,
+              variables: {
+                date: data.updatedAt.toString(),
+                order_id: data?.orderName,
+                order_url: `https://admin.shopify.com/store/${
+                  data.Store.domain.split('.')[0]
+                }/orders/${orderId}`,
+                refund_amount: data.refundAmount.toString(),
+                shop_name: data.Store.name,
+                shop_logo: packageProtection?.emailTemplateLogo!,
+              },
+            });
+          }
+        }
 
         return json({
           message: 'Refund request sent successfully',
@@ -473,6 +505,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
     } else if (action === 'REFOUND_BY_AMOUNT_LINE_ITEM') {
       try {
+        let orderID: string | null = 'gid://shopify/Order/5596940140591';
         await prisma.$transaction(async (trx) => {
           const data = await trx.packageProtectionClaimOrder.findFirst({
             where: {
@@ -487,6 +520,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               data: null,
             });
           }
+          orderID = data.orderId;
           // const re=await trx.packageProtectionOrder
           await trx.packageProtectionOrder.update({
             where: { orderId: data.orderId },
@@ -496,7 +530,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           });
 
           const lineItemIds = bodyData.refundItems.map(
-            (lineItem) => lineItem.lineItemId,
+            (lineItem) => lineItem.lineItemId
           );
           await trx.packageProtectionClaimOrder.updateMany({
             where: { fulfillmentLineItemId: { in: lineItemIds } },
@@ -571,6 +605,38 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             throw Error('can not refund this item');
           }
         });
+        console.log(orderID);
+        if (orderID) {
+          const data = await prisma.packageProtectionOrder.findFirst({
+            where: { orderId: orderID },
+            include: {
+              PackageProtectionClaimOrder: { select: { comments: true } },
+              Store: { select: { name: true, domain: true, email: true } },
+            },
+          });
+          const packageProtection = await prisma.packageProtection.findFirst({
+            where: { storeId: ctx.session.storeId },
+          });
+          if (data) {
+            const orderId = data.orderId.replace('gid://shopify/Order/', '');
+            await sendMail({
+              template: 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER',
+              storeId: ctx.session.storeId!,
+              to: data.customerEmail!,
+              variables: {
+                date: data.updatedAt.toString(),
+                order_id: data?.orderName,
+                order_url: `https://admin.shopify.com/store/${
+                  data.Store.domain.split('.')[0]
+                }/orders/${orderId}`,
+                refund_amount: data.refundAmount.toString(),
+                shop_name: data.Store.name,
+                shop_logo: packageProtection?.emailTemplateLogo!,
+              },
+            });
+          }
+        }
+
         return json({
           message: 'Refund request sent successfully',
           success: true,

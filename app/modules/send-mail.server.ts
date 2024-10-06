@@ -109,9 +109,10 @@ export async function sendMail<T extends EmailTemplateName>(
     },
   });
 
+  template.name = templateInDB.name;
+  template.storeId = templateInDB.storeId;
   if (settings.provider === 'google') {
     const gmail = new GmailAPI(options.storeId);
-
     await gmail.sendEmail({
       to: options.to,
       subject: templateInDB.subject,
