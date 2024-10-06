@@ -1,6 +1,11 @@
 import { $Enums } from '#prisma-client';
+import { getConfig } from '~/modules/get-config.server';
+import { prisma } from '~/modules/prisma.server';
 
-export const templateParameters = (name: $Enums.EmailTemplateName) => {
+export const templateParameters = (
+  name: $Enums.EmailTemplateName,
+  logo: string
+) => {
   switch (name) {
     case 'CLAIM_REQUEST_EMAIL_FOR_ADMIN':
       return {
@@ -17,6 +22,7 @@ export const templateParameters = (name: $Enums.EmailTemplateName) => {
         order_id: '{{order_id}}',
         customer_name: '{{customer_name}}',
         shop_name: '{{shop_name}}',
+        shop_logo: logo,
         order_url: '{{order_url}}',
         claim_date: '{{claim_date}}',
         claim_reason: '{{claim_reason}}',
@@ -25,28 +31,25 @@ export const templateParameters = (name: $Enums.EmailTemplateName) => {
       return {
         order_id: '{{order_id}}',
         shop_name: '{{shop_name}}',
+        shop_logo: logo,
         refund_amount: '{{refund_amount}}',
         date: '{{date}}',
-        shop_logo:
-          'https://res.cloudinary.com/daily-now/image/upload/f_auto,q_auto/v1/posts/0aba50357c0466ec11ccba803cc0ccad?_a=AQAEuiZ',
       };
     case 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER':
       return {
         order_id: '{{order_id}}',
         shop_name: '{{shop_name}}',
+        shop_logo: logo,
         replacement_order_id: '{{replacement_order_id}}',
         shipping_details: '{{shipping_details}}',
-        shop_logo:
-          'https://res.cloudinary.com/daily-now/image/upload/f_auto,q_auto/v1/posts/0aba50357c0466ec11ccba803cc0ccad?_a=AQAEuiZ',
       };
     case 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER':
       return {
         order_id: '{{order_id}}',
         shop_name: '{{shop_name}}',
+        shop_logo: logo,
         cancellation_reason: '{{cancellation_reason}}',
         customer_name: '{{customer_name}}',
-        shop_logo:
-          'https://res.cloudinary.com/daily-now/image/upload/f_auto,q_auto/v1/posts/0aba50357c0466ec11ccba803cc0ccad?_a=AQAEuiZ',
       };
     default:
       return '';

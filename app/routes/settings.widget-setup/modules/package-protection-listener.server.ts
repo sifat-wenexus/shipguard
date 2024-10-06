@@ -851,10 +851,10 @@ export async function shopifyProductUpdate({
           vendor,
           tags,
         },
-        // media: {
-        //   mediaContentType: 'IMAGE',
-        //   originalSource: appLogo,
-        // },
+        media: {
+          mediaContentType: 'IMAGE',
+          originalSource: appLogo,
+        },
       },
     },
   });

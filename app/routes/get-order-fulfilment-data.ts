@@ -10,6 +10,8 @@ import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { prisma } from '~/modules/prisma.server';
 import { json } from '@remix-run/node';
+import { ClaimRequestAdminTemplate } from './settings.email-template/email-template/template';
+import { sendMail } from '~/modules/send-mail.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   console.log('first');
@@ -383,17 +385,63 @@ export const action: ActionFunction = async ({ request }) => {
     },
     { session }
   );
-  await queryProxy.packageProtectionOrder.update(
-    {
-      where: { orderId: jsonData[0].orderId, storeId: session.storeId },
-      data: {
-        claimDate: new Date(),
-        hasClaimRequest: true,
-        claimStatus: 'REQUESTED',
+
+  if (result.count > 0) {
+    const data = await prisma.packageProtectionOrder.findFirst({
+      where: { orderId: jsonData[0].orderId },
+      include: {
+        PackageProtectionClaimOrder: { select: { comments: true } },
+        Store: { select: { name: true } },
       },
-    },
-    { session }
-  );
+    });
+    const packageProtection = await prisma.packageProtection.findFirst({
+      where: { storeId: session.storeId },
+    });
+    if (data) {
+      //gid://shopify/Order/5596027453487
+      const orderId = data.orderId.replace('gid://shopify/Order/', '');
+      // const adminRequest = new ClaimRequestAdminTemplate();
+      // adminRequest.render({
+      //   claim_date: `${data?.claimDate}`,
+      //   claim_reason: data?.PackageProtectionClaimOrder[0].comments!,
+      //   order_id: data?.orderName,
+      //   customer_name: `${data?.customerFirstName}  ${data?.customerLastName}`,
+      //   shop_name: data?.Store.name,
+      //   order_url: `https://admin.shopify.com/store/${data.Store.name}/orders/${orderId}`,
+      // });
+
+      await sendMail({
+        template: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
+        storeId: data.storeId,
+        to: 'jahangir@wenexus.io',
+        internal: true,
+        variables: {
+          claim_date: `${data?.claimDate}`,
+          claim_reason: data?.PackageProtectionClaimOrder[0].comments!,
+          order_id: data?.orderName,
+          customer_name: `${data?.customerFirstName}  ${data?.customerLastName}`,
+          shop_name: data?.Store.name,
+          order_url: `https://admin.shopify.com/store/${data.Store.name}/orders/${orderId}`,
+        },
+        from: 'sifat@gmail.com',
+      });
+
+      await sendMail({
+        template: 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER',
+        storeId: session.storeId!,
+        to: data.customerEmail!,
+        variables: {
+          claim_date: `${data?.claimDate}`,
+          claim_reason: data?.PackageProtectionClaimOrder[0].comments!,
+          order_id: data?.orderName,
+          customer_name: `${data?.customerFirstName}  ${data?.customerLastName}`,
+          shop_name: data?.Store.name,
+          shop_logo: packageProtection?.emailTemplateLogo!,
+          order_url: `https://admin.shopify.com/store/${data.Store.name}/orders/${orderId}`,
+        },
+      });
+    }
+  }
 
   return json({
     success: true,
