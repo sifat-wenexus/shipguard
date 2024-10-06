@@ -97,7 +97,7 @@ emitter.on('PRODUCTS_DELETE', async ({ ctx: { payload } }) => {
   if (!payload) {
     return;
   }
-
+  console.log('-----deleting product------');
   await prisma.product.delete({
     where: {
       id: `gid://shopify/Product/${payload.id}`,

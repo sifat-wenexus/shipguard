@@ -269,7 +269,6 @@ const Dashboard = ({ guidelineVisibility }) => {
       </>
     );
   }
-
   return (
     <div className="m-2 sm:m-0 dashboard">
       <Layout.Section>

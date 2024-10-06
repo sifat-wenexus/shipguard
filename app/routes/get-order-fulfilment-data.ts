@@ -8,6 +8,7 @@ import { prisma } from '~/modules/prisma.server';
 import { json } from '@remix-run/node';
 
 export const loader: LoaderFunction = async ({ request }) => {
+  console.log('first');
   try {
     let url = new URL(request.url);
 
@@ -22,14 +23,16 @@ export const loader: LoaderFunction = async ({ request }) => {
       });
 
     if (!getPackageProtectionOrder) {
-
       return json({
         error: 'No order found with the email and orderId!',
         status: 404,
       });
     }
 
-    if (getPackageProtectionOrder.hasClaimRequest && process.env.NODE_ENV === 'production') {
+    if (
+      getPackageProtectionOrder.hasClaimRequest &&
+      process.env.NODE_ENV === 'production'
+    ) {
       return json({
         error: 'This order already claimed!',
         status: 404,
@@ -205,7 +208,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       totalPrice: orderData.totalPriceSet.shopMoney.amount,
       id: orderData.id,
       claimStatus:
-      getPackageProtectionOrder?.PackageProtectionClaimOrder[0]?.claimStatus,
+        getPackageProtectionOrder?.PackageProtectionClaimOrder[0]?.claimStatus,
       fulfillments: orderData.fulfillments
         .filter((f) => f.status === 'SUCCESS')
         .map((f) => {
@@ -218,34 +221,36 @@ export const loader: LoaderFunction = async ({ request }) => {
             fulfillmentLineItems: f.fulfillmentLineItems.nodes
               .filter(
                 (item) =>
-                  !(item.lineItem.sku === 'overall-package-protection' ||
+                  !(
+                    item.lineItem.sku === 'overall-package-protection' ||
                     item.lineItem.sku === 'wenexus-shipping-protection' ||
-                    item.lineItem.product.tags.includes('overall-insurance')),
+                    item.lineItem.product.tags.includes('overall-insurance')
+                  )
               )
               .map((item) => {
                 return {
                   discountPrice:
-                  item.lineItem.discountAllocations[0]?.allocatedAmountSet
-                    ?.shopMoney?.amount,
+                    item.lineItem.discountAllocations[0]?.allocatedAmountSet
+                      ?.shopMoney?.amount,
                   currencyCode:
-                  item.lineItem.discountAllocations[0]?.allocatedAmountSet
-                    ?.shopMoney?.currencyCode,
+                    item.lineItem.discountAllocations[0]?.allocatedAmountSet
+                      ?.shopMoney?.currencyCode,
                   image: item.lineItem.image?.url,
                   name: item.lineItem.name,
                   originalPrice:
-                  item.lineItem.originalUnitPriceSet.shopMoney.amount,
+                    item.lineItem.originalUnitPriceSet.shopMoney.amount,
                   sku: item.lineItem.sku,
                   title: item.lineItem.title,
                   quantity: item.quantity,
                   orderId: orderData.id,
                   hasClaim: getClaimData.find(
-                    (e) => e.fulfillmentLineItemId === item.id,
+                    (e) => e.fulfillmentLineItemId === item.id
                   )
                     ? true
                     : false,
                   claimStatus:
                     getClaimData.find(
-                      (e) => e.fulfillmentLineItemId === item.id,
+                      (e) => e.fulfillmentLineItemId === item.id
                     )?.claimStatus ?? null,
                   // getPackageProtectionOrder?.PackageProtectionClaimOrder[0]
                   //   ?.hasClaimRequest || false,
@@ -323,7 +328,7 @@ export const action: ActionFunction = async ({ request }) => {
           });
 
           const bucket = gcloudStorage.bucket(
-            process.env.GC_STORAGE_BUCKET_NAME!,
+            process.env.GC_STORAGE_BUCKET_NAME!
           );
           await bucket
             .file(fileInDB.id)
@@ -332,7 +337,7 @@ export const action: ActionFunction = async ({ request }) => {
             });
 
           images.push(fileInDB.id);
-        }),
+        })
       );
     });
   } catch (err) {
@@ -356,18 +361,35 @@ export const action: ActionFunction = async ({ request }) => {
     fulfillmentId: e.fulfillmentId,
   }));
 
-  const result = await queryProxy.packageProtectionClaimOrder.createMany({
-    data: payload,
-  }, { session });
-
-  await queryProxy.packageProtectionOrder.updateMany({
-    where: { orderId: jsonData[0].orderId, storeId: session.storeId },
-    data: {
-      claimDate: new Date(),
-      hasClaimRequest: true,
-      claimStatus: 'REQUESTED',
+  const result = await queryProxy.packageProtectionClaimOrder.createMany(
+    {
+      data: payload,
     },
-  }, { session });
+    { session }
+  );
+
+  await queryProxy.packageProtectionOrder.updateMany(
+    {
+      where: { orderId: jsonData[0].orderId, storeId: session.storeId },
+      data: {
+        claimDate: new Date(),
+        hasClaimRequest: true,
+        claimStatus: 'REQUESTED',
+      },
+    },
+    { session }
+  );
+  await queryProxy.packageProtectionOrder.update(
+    {
+      where: { orderId: jsonData[0].orderId, storeId: session.storeId },
+      data: {
+        claimDate: new Date(),
+        hasClaimRequest: true,
+        claimStatus: 'REQUESTED',
+      },
+    },
+    { session }
+  );
 
   return json({
     success: true,

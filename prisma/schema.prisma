@@ -367,6 +367,7 @@ model PackageProtection {
   showOnCartPage                  Boolean                  @default(true)
   showOnMiniCart                  Boolean                  @default(false)
   packageProtectionDefaultSetting Boolean                  @default(true)
+  emailTemplateLogo               String?
 
   // ExcludedVariants ExcludedPackageProtectionVariant[]
   excludedPackageProtectionProducts ExcludedPackageProtectionProduct[]
@@ -424,6 +425,8 @@ model PackageProtectionOrder {
   customerFirstName String?
   customerLastName  String?
   customerEmail     String?
+  customerAddress   Json?
+  billingAddress    Json?
   protectionFee     Float              @default(0.00)
   orderAmount       Float              @default(0.00)
   hasClaimRequest   Boolean            @default(false)

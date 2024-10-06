@@ -30,6 +30,7 @@ export const models = defineModels(() => {
     'disabledDescription',
     'enabledDescription',
     'insurancePriceType',
+    'emailTemplateLogo',
     'defaultPercentage',
     'defaultSetting',
     'fixedProductId',
@@ -74,6 +75,8 @@ export const models = defineModels(() => {
     'orderAmount',
     'refundAmount',
     'protectionFee',
+    'billingAddress',
+    'customerAddress',
     'hasClaimRequest',
     'fulfillmentStatus',
   ]);
