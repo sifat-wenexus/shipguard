@@ -1,17 +1,33 @@
 import { ActionFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { ClaimRequestAdminTemplate } from './settings.email-template/email-template/template';
+import { sendMail } from '~/modules/send-mail.server';
+import { prisma } from '~/modules/prisma.server';
 export const loader: LoaderFunction = async ({ request }) => {
   const claimReqTemplate = new ClaimRequestAdminTemplate();
-
-  const res = await claimReqTemplate.render({
-    order_id: '#1234',
-    customer_name: 'jahangir',
-    claim_reason: 'testing',
-    claim_date: '10-jan-2024',
-    shop_name: 'nexusapp',
-    order_url: 'www.google.com',
+  const res = await prisma.emailTemplate.findFirstOrThrow({
+    where: {
+      name: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
+      storeId: 'gid://shopify/Shop/55079829551',
+    },
   });
-  return json({ res, message: 'Response' });
+  const email = await sendMail({
+    template: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
+    storeId: 'gid://shopify/Shop/55079829551',
+    to: 'jahangir@wenexus.io',
+    internal: true,
+    variables: {
+      claim_date: `'{data?.claimDate}'`,
+      claim_reason: `data?.PackageProtectionClaimOrder[0].comments!`,
+      order_id: `data?.orderName`,
+      customer_name: `{data?.customerFirstName}  {data?.customerLastName}`,
+      shop_name: `data?.Store.name`,
+      order_url: `https://admin.shopify.com/store/{data.Store.name}/orders/{orderId}`,
+    },
+    // from: 'sifat@gmail.com',
+  });
+  console.log('first', email);
+
+  return json({ message: 'Response', email, res });
 };
 
 export async function action({ request }: ActionFunctionArgs) {

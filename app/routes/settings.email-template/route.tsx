@@ -49,6 +49,7 @@ import {
 import LogoUpload from './components/logo-upload';
 import { templateParameters } from './email-template/template-variable-params';
 import { queryProxy } from '~/modules/query/query-proxy';
+import { getConfig } from '~/modules/get-config.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const ctx = await shopify.authenticate.admin(request);
@@ -56,6 +57,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
     where: { storeId: ctx.session.storeId },
   });
 
+  const packageProtection = await prisma.packageProtection.findFirst({
+    where: { storeId: ctx.session.storeId },
+  });
+
+  const logo = `${getConfig().appUrl}api/files/${
+    packageProtection?.emailTemplateLogo
+  }`;
   if (!templates.length) {
     const defaultTemplatesPayload: Prisma.EmailTemplateCreateManyInput[] = [
       {
@@ -96,6 +104,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       message: 'something is wrong',
       data: null,
       storeId: ctx.session.storeId,
+      logo,
     });
   }
 
@@ -103,6 +112,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     message: 'Successfully fetched templates!',
     data: templates,
     storeId: ctx.session.storeId,
+    logo,
   });
 }
 
@@ -124,7 +134,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const EmailTemplate = () => {
-  const { data, message, storeId } = useLoaderData<typeof loader>();
+  const { data, message, storeId, logo } = useLoaderData<typeof loader>();
   const [templateSubject, setTemplateSubject] = useState<string>('');
   const [editorState, setEditorState] = useState(false);
   const [templatePreview, setTemplatePreview] = useState('');
@@ -142,7 +152,7 @@ const EmailTemplate = () => {
 
   useEffect(() => {
     if (templateName) {
-      getTemplate(templateParameters(templateName))
+      getTemplate(templateParameters(templateName, logo))
         .then((res) => {
           setLiquidToHtml(res);
         })

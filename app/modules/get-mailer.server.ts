@@ -13,7 +13,7 @@ export async function getMailer(storeId?: string) {
     return nodemailer.createTransport({
       host: process.env.INTERNAL_MAILER_HOST,
       port: Number(process.env.INTERNAL_MAILER_PORT),
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       auth: {
         user: process.env.INTERNAL_MAILER_USER,
         pass: process.env.INTERNAL_MAILER_PASS,
@@ -48,11 +48,7 @@ export async function getMailer(storeId?: string) {
     password,
   } = SmtpSetting;
 
-  if (
-    !host ||
-    !port ||
-    !from
-  ) {
+  if (!host || !port || !from) {
     return null;
   }
 

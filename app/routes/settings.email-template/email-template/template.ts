@@ -44,6 +44,7 @@ export interface ClaimRequestCustomerTemplateVariables {
   claim_date: string;
   shop_name: string;
   shop_logo: string;
+  order_url: string;
 }
 
 export interface ClaimRefundCustomerTemplateVariables {
@@ -52,6 +53,7 @@ export interface ClaimRefundCustomerTemplateVariables {
   date: string;
   shop_name: string;
   shop_logo: string;
+  order_url: string;
 }
 
 export interface ClaimReOrderCustomerTemplateVariables {
@@ -60,6 +62,7 @@ export interface ClaimReOrderCustomerTemplateVariables {
   shipping_details: string;
   shop_name: string;
   shop_logo: string;
+  order_url: string;
 }
 
 export interface ClaimCancelCustomerTemplateVariables {
@@ -68,6 +71,7 @@ export interface ClaimCancelCustomerTemplateVariables {
   cancellation_reason: string;
   shop_name: string;
   shop_logo: string;
+  order_url: string;
 }
 
 export class ClaimRequestAdminTemplate extends Template<ClaimRequestAdminTemplateVariables> {

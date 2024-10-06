@@ -20,26 +20,35 @@ import {
 } from '~/routes/settings.email-template/email-template/template';
 import { Liquid } from 'liquidjs';
 
-type Variables<T extends EmailTemplateName> = T extends 'CLAIM_REQUEST_EMAIL_FOR_ADMIN'
-  ? ClaimRequestAdminTemplateVariables : T extends 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER'
-    ? ClaimRequestCustomerTemplateVariables : T extends 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER'
-      ? ClaimRefundCustomerTemplateVariables : T extends 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER'
-        ? ClaimReOrderCustomerTemplateVariables : T extends 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER'
-          ? ClaimCancelCustomerTemplateVariables : never;
+type Variables<T extends EmailTemplateName> =
+  T extends 'CLAIM_REQUEST_EMAIL_FOR_ADMIN'
+    ? ClaimRequestAdminTemplateVariables
+    : T extends 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER'
+    ? ClaimRequestCustomerTemplateVariables
+    : T extends 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER'
+    ? ClaimRefundCustomerTemplateVariables
+    : T extends 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER'
+    ? ClaimReOrderCustomerTemplateVariables
+    : T extends 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER'
+    ? ClaimCancelCustomerTemplateVariables
+    : never;
 
-type SendOptions<T extends EmailTemplateName> = T extends 'CLAIM_REQUEST_EMAIL_FOR_ADMIN' ? {
-  storeId: string;
-  template: T;
-  to: string;
-  variables: Variables<'CLAIM_REQUEST_EMAIL_FOR_ADMIN'>;
-  from?: string;
-} : {
-  storeId: string;
-  template: T;
-  to: string;
-  variables: Variables<T>;
-}
-
+type SendOptions<T extends EmailTemplateName> =
+  T extends 'CLAIM_REQUEST_EMAIL_FOR_ADMIN'
+    ? {
+        storeId: string;
+        template: T;
+        to: string;
+        variables: Variables<'CLAIM_REQUEST_EMAIL_FOR_ADMIN'>;
+        from?: string;
+        internal?: boolean;
+      }
+    : {
+        storeId: string;
+        template: T;
+        to: string;
+        variables: Variables<T>;
+      };
 
 const templates = {
   CLAIM_REQUEST_EMAIL_FOR_ADMIN: ClaimRequestAdminTemplate,
@@ -49,7 +58,9 @@ const templates = {
   CLAIM_CANCEL_EMAIL_FOR_CUSTOMER: ClaimCancelCustomerTemplate,
 };
 
-export async function sendMail<T extends EmailTemplateName>(options: SendOptions<T>) {
+export async function sendMail<T extends EmailTemplateName>(
+  options: SendOptions<T>
+) {
   if ((options as any).internal) {
     const mailer = await getMailer();
 
@@ -65,9 +76,14 @@ export async function sendMail<T extends EmailTemplateName>(options: SendOptions
       },
     });
 
+    template.name = templateInDB.name;
+    template.storeId = templateInDB.storeId;
     await mailer.sendMail({
       from: (options as any).from ?? process.env.INTERNAL_MAILER_FROM,
-      subject: await new Liquid().parseAndRender(templateInDB.subject, options.variables as any),
+      subject: await new Liquid().parseAndRender(
+        templateInDB.subject,
+        options.variables as any
+      ),
       html: await template.render(options.variables as any),
       to: options.to,
     });
@@ -113,7 +129,10 @@ export async function sendMail<T extends EmailTemplateName>(options: SendOptions
 
   await mailer.sendMail({
     from: settings.from!,
-    subject: await new Liquid().parseAndRender(templateInDB.subject, options.variables as any),
+    subject: await new Liquid().parseAndRender(
+      templateInDB.subject,
+      options.variables as any
+    ),
     html: await template.render(options.variables as any),
     to: options.to,
   });
