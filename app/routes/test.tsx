@@ -1,28 +1,33 @@
-import { jobRunner } from '~/modules/job/job-runner.server';
-import type { ActionFunctionArgs} from '@remix-run/node';
-import { shopify } from '~/modules/shopify.server';
-import { Button } from '@shopify/polaris';
-import { Form } from '@remix-run/react';
-import { json } from '@remix-run/node';
+import { ActionFunctionArgs, json, LoaderFunction } from '@remix-run/node';
+export const loader: LoaderFunction = async ({ request }) => {
+  return json({ message: 'Response' });
+};
 
-export async function action({ request }: ActionFunctionArgs) {
-  const ctx = await shopify.authenticate.admin(request);
+// import { Tag, Thumbnail, Tooltip } from '@shopify/polaris';
 
-  jobRunner.run({
-    name: 'import-products',
-    storeId: ctx.session.storeId,
-  });
+// const Test = () => {
+//   return (
+//     <div style={{ width: '200px' }}>
+//       <Tooltip content="dfae">
+//         <Tag onRemove={() => {}}>
+//           <div style={{ display: 'flex', gap: '10px', padding: '5px' }}>
+//             {' '}
+//             <Thumbnail
+//               size="small"
+//               alt={'file.name'}
+//               source={'https://nodemailer.com/nm_logo_200x136.png'}
+//             />
+//             <div>
+//               <p style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+//                 hello world dfgfg sdfgr sdfgrg sfgrtg
+//               </p>
+//               <span>129-kb</span>
+//             </div>
+//           </div>
+//         </Tag>
+//       </Tooltip>
+//     </div>
+//   );
+// };
 
-  return json({ message: 'Job started' });
-}
-
-
-function Test() {
-  return (
-    <Form method='POST'>
-      <Button submit>Submit</Button>
-    </Form>
-  );
-}
-
-export default Test;
+// export default Test;

@@ -213,7 +213,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       totalPrice: orderData.totalPriceSet.shopMoney.amount,
       id: orderData.id,
       claimStatus:
-      getPackageProtectionOrder?.PackageProtectionClaimOrder[0]?.claimStatus,
+        getPackageProtectionOrder?.PackageProtectionClaimOrder[0]?.claimStatus,
       fulfillments: orderData.fulfillments
         .filter((f) => f.status === 'SUCCESS')
         .map((f) => {
@@ -230,32 +230,32 @@ export const loader: LoaderFunction = async ({ request }) => {
                     item.lineItem.sku === 'overall-package-protection' ||
                     item.lineItem.sku === 'wenexus-shipping-protection' ||
                     item.lineItem.product.tags.includes('overall-insurance')
-                  ),
+                  )
               )
               .map((item) => {
                 return {
                   discountPrice:
-                  item.lineItem.discountAllocations[0]?.allocatedAmountSet
-                    ?.shopMoney?.amount,
+                    item.lineItem.discountAllocations[0]?.allocatedAmountSet
+                      ?.shopMoney?.amount,
                   currencyCode:
-                  item.lineItem.discountAllocations[0]?.allocatedAmountSet
-                    ?.shopMoney?.currencyCode,
+                    item.lineItem.discountAllocations[0]?.allocatedAmountSet
+                      ?.shopMoney?.currencyCode,
                   image: item.lineItem.image?.url,
                   name: item.lineItem.name,
                   originalPrice:
-                  item.lineItem.originalUnitPriceSet.shopMoney.amount,
+                    item.lineItem.originalUnitPriceSet.shopMoney.amount,
                   sku: item.lineItem.sku,
                   title: item.lineItem.title,
                   quantity: item.quantity,
                   orderId: orderData.id,
                   hasClaim: getClaimData.find(
-                    (e) => e.fulfillmentLineItemId === item.id,
+                    (e) => e.fulfillmentLineItemId === item.id
                   )
                     ? true
                     : false,
                   claimStatus:
                     getClaimData.find(
-                      (e) => e.fulfillmentLineItemId === item.id,
+                      (e) => e.fulfillmentLineItemId === item.id
                     )?.claimStatus ?? null,
                   // getPackageProtectionOrder?.PackageProtectionClaimOrder[0]
                   //   ?.hasClaimRequest || false,
@@ -313,38 +313,41 @@ export const action: ActionFunction = async ({ request }) => {
   const images: string[] = [];
 
   try {
-    await prisma.$transaction(async (trx) => {
-      await Promise.all(
-        files.map(async (file) => {
-          if (!validImageTypes.includes(file.type)) {
-            throw new Error(`Invalid file type: ${file.type}`);
-          }
-          if (file.size > 20_000_000 /* 20Mb */) {
-            throw new Error(`File too large: ${file.size} bytes`);
-          }
+    await prisma.$transaction(
+      async (trx) => {
+        await Promise.all(
+          files.map(async (file) => {
+            if (!validImageTypes.includes(file.type)) {
+              throw new Error(`Invalid file type: ${file.type}`);
+            }
+            if (file.size > 20_000_000 /* 20Mb */) {
+              throw new Error(`File too large: ${file.size} bytes`);
+            }
 
-          const fileInDB = await trx.file.create({
-            data: {
-              storeId: session.storeId,
-              name: (file as any).name,
-              size: file.size,
-              mimeType: file.type,
-            },
-          });
-
-          const bucket = gcloudStorage.bucket(
-            process.env.GC_STORAGE_BUCKET_NAME!,
-          );
-          await bucket
-            .file(fileInDB.id)
-            .save(Buffer.from(await file.arrayBuffer()), {
-              contentType: fileInDB.mimeType,
+            const fileInDB = await trx.file.create({
+              data: {
+                storeId: session.storeId,
+                name: (file as any).name,
+                size: file.size,
+                mimeType: file.type,
+              },
             });
 
-          images.push(fileInDB.id);
-        }),
-      );
-    }, { timeout: 20000 });
+            const bucket = gcloudStorage.bucket(
+              process.env.GC_STORAGE_BUCKET_NAME!
+            );
+            await bucket
+              .file(fileInDB.id)
+              .save(Buffer.from(await file.arrayBuffer()), {
+                contentType: fileInDB.mimeType,
+              });
+
+            images.push(fileInDB.id);
+          })
+        );
+      },
+      { timeout: 20000 }
+    );
   } catch (err) {
     console.error(err);
     return json({
@@ -371,7 +374,7 @@ export const action: ActionFunction = async ({ request }) => {
     {
       data: payload,
     },
-    { session },
+    { session }
   );
 
   await queryProxy.packageProtectionOrder.updateMany(
@@ -383,7 +386,7 @@ export const action: ActionFunction = async ({ request }) => {
         claimStatus: 'REQUESTED',
       },
     },
-    { session },
+    { session }
   );
 
   if ((result as any).length > 0) {
@@ -391,7 +394,7 @@ export const action: ActionFunction = async ({ request }) => {
       where: { orderId: jsonData[0].orderId },
       include: {
         PackageProtectionClaimOrder: { select: { comments: true } },
-        Store: { select: { name: true } },
+        Store: { select: { name: true, domain: true, email: true } },
       },
     });
     const packageProtection = await prisma.packageProtection.findFirst({
@@ -399,15 +402,12 @@ export const action: ActionFunction = async ({ request }) => {
     });
 
     if (data) {
-      const store = await prisma.store.findFirstOrThrow({
-        where: { id: session.storeId },
-      });
       const orderId = data.orderId.replace('gid://shopify/Order/', '');
 
       await sendMail({
         template: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
         storeId: data.storeId,
-        to: store.email!,
+        to: data.Store.email!,
         internal: true,
         variables: {
           claim_date: `${data?.claimDate}`,
@@ -415,7 +415,9 @@ export const action: ActionFunction = async ({ request }) => {
           order_id: data?.orderName,
           customer_name: `${data?.customerFirstName}  ${data?.customerLastName}`,
           shop_name: data?.Store.name,
-          order_url: `https://admin.shopify.com/store/${data.Store.name}/orders/${orderId}`,
+          order_url: `https://admin.shopify.com/store/${
+            data.Store.domain.split('.')[0]
+          }/orders/${orderId}`,
         },
       });
 
@@ -429,8 +431,10 @@ export const action: ActionFunction = async ({ request }) => {
           order_id: data?.orderName,
           customer_name: `${data?.customerFirstName}  ${data?.customerLastName}`,
           shop_name: data?.Store.name,
-          shop_logo: (packageProtection as any).emailTemplateLogo!,
-          order_url: `https://admin.shopify.com/store/${data.Store.name}/orders/${orderId}`,
+          shop_logo: packageProtection?.emailTemplateLogo!,
+          order_url: `https://admin.shopify.com/store/${
+            data.Store.domain.split('.')[0]
+          }/orders/${orderId}`,
         },
       });
     }
