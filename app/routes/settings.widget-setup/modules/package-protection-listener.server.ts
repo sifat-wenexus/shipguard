@@ -2,7 +2,7 @@ import type { GraphqlClient } from '~/shopify-api/lib/clients/graphql/graphql_cl
 import packageYellow from '~/assets/icons/svg/Package_Protection yellow.svg';
 import packageGreen from '~/assets/icons/svg/Package_Protection-green.svg';
 import packageBlack from '~/assets/icons/svg/Package_Protection-black.svg';
-import productImage from '~/assets/images/inhouse-shipping-protection.png';
+import appLogo from '~/assets/images/inhouse-shipping-protection.png';
 import packageFour from '~/assets/icons/svg/Package_Protection.svg';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { onDBEvtBuffered } from '~/modules/emitter.server';
@@ -47,7 +47,7 @@ interface IShopifyProductCreateAndUpdateArgs {
 
 export const PRODUCT_SKU: string = 'wenexus-shipping-protection';
 
-const appLogo = getConfig().appUrl + productImage;
+const productImage = getConfig().appUrl + appLogo;
 
 const icons: {
   id: string;
@@ -851,10 +851,13 @@ export async function shopifyProductUpdate({
           vendor,
           tags,
         },
-        media: {
-          mediaContentType: 'IMAGE',
-          originalSource: appLogo,
-        },
+        media: [
+          {
+            alt: 'package-protection',
+            mediaContentType: 'IMAGE',
+            originalSource: `${productImage}`,
+          },
+        ],
       },
     },
   });
@@ -908,7 +911,7 @@ async function shopifyCreateProduct({
           {
             alt: 'package-protection',
             mediaContentType: 'IMAGE',
-            originalSource: `${appLogo}`,
+            originalSource: `${productImage}`,
           },
         ],
       },

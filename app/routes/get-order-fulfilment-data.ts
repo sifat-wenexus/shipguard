@@ -12,6 +12,7 @@ import type {
   ClaimRequested,
   ClaimIssue,
 } from '#prisma-client';
+import { getConfig } from '~/modules/get-config.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -403,17 +404,23 @@ export const action: ActionFunction = async ({ request }) => {
 
     if (data) {
       const orderId = data.orderId.replace('gid://shopify/Order/', '');
-
+      const logo = `${getConfig().appUrl}api/files/${
+        packageProtection?.emailTemplateLogo
+      }`;
+      const claimPage = `${getConfig().appUrl}/claim-request`;
       await sendMail({
         template: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
         storeId: data.storeId,
         to: data.Store.email!,
         internal: true,
         variables: {
+          go_to_claim: claimPage,
           claim_date: `${data?.claimDate}`,
           claim_reason: data.PackageProtectionClaimOrder[0].comments!,
           order_id: data?.orderName,
-          customer_name: `${data?.customerFirstName}  ${data?.customerLastName}`,
+          customer_name: `${data?.customerFirstName ?? ''}  ${
+            data?.customerLastName
+          }`,
           shop_name: data?.Store.name,
           order_url: `https://admin.shopify.com/store/${
             data.Store.domain.split('.')[0]
@@ -429,9 +436,11 @@ export const action: ActionFunction = async ({ request }) => {
           claim_date: `${data?.claimDate}`,
           claim_reason: data.PackageProtectionClaimOrder[0].comments!,
           order_id: data?.orderName,
-          customer_name: `${data?.customerFirstName}  ${data?.customerLastName}`,
+          customer_name: `${data?.customerFirstName ?? ''}  ${
+            data?.customerLastName
+          }`,
           shop_name: data?.Store.name,
-          shop_logo: packageProtection?.emailTemplateLogo!,
+          shop_logo: logo,
           order_url: `https://admin.shopify.com/store/${
             data.Store.domain.split('.')[0]
           }/orders/${orderId}`,

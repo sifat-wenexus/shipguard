@@ -41,7 +41,7 @@ export const templateParameters = (
         shop_name: '{{shop_name}}',
         shop_logo: logo,
         replacement_order_id: '{{replacement_order_id}}',
-        shipping_details: '{{shipping_details}}',
+        status: '{{status}}',
       };
     case 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER':
       return {

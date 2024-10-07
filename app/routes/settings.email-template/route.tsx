@@ -22,7 +22,7 @@ import {
   ViewIcon,
 } from '@shopify/polaris-icons';
 import { shopify as shopifyRemix } from '../../modules/shopify.server';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { shopify } from '~/modules/shopify.server';
 import { prisma } from '~/modules/prisma.server';
 import { useLoaderData } from '@remix-run/react';
@@ -50,20 +50,14 @@ import LogoUpload from './components/logo-upload';
 import { templateParameters } from './email-template/template-variable-params';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { getConfig } from '~/modules/get-config.server';
+import { useQuery } from '~/hooks/use-query';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const ctx = await shopify.authenticate.admin(request);
   const templates = await prisma.emailTemplate.findMany({
     where: { storeId: ctx.session.storeId },
   });
-
-  const packageProtection = await prisma.packageProtection.findFirst({
-    where: { storeId: ctx.session.storeId },
-  });
-
-  const logo = `${getConfig().appUrl}api/files/${
-    packageProtection?.emailTemplateLogo
-  }`;
+  const appUrl = getConfig().appUrl;
   if (!templates.length) {
     const defaultTemplatesPayload: Prisma.EmailTemplateCreateManyInput[] = [
       {
@@ -104,7 +98,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       message: 'something is wrong',
       data: null,
       storeId: ctx.session.storeId,
-      logo,
+      appUrl,
+      // logo,
     });
   }
 
@@ -112,7 +107,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     message: 'Successfully fetched templates!',
     data: templates,
     storeId: ctx.session.storeId,
-    logo,
+    appUrl,
+    // logo,
   });
 }
 
@@ -134,7 +130,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const EmailTemplate = () => {
-  const { data, message, storeId, logo } = useLoaderData<typeof loader>();
+  const { data, message, storeId, appUrl } = useLoaderData<typeof loader>();
   const [templateSubject, setTemplateSubject] = useState<string>('');
   const [editorState, setEditorState] = useState(false);
   const [templatePreview, setTemplatePreview] = useState('');
@@ -150,6 +146,12 @@ const EmailTemplate = () => {
     return await claimAdminTemplate.render(variables);
   };
 
+  const dataQuery = useMemo(
+    () => queryProxy.packageProtection.subscribeFindFirst(),
+    []
+  );
+  const packageProtection = useQuery(dataQuery);
+  const logo = `${appUrl}api/files/${packageProtection.data?.emailTemplateLogo}`;
   useEffect(() => {
     if (templateName) {
       getTemplate(templateParameters(templateName, logo))
@@ -262,7 +264,7 @@ const EmailTemplate = () => {
                       onClose={() => {
                         setActive(false);
                       }}
-                      title="Logo"
+                      title="Upload Your Company Logo"
                       primaryAction={{
                         content: 'Done',
                         onAction: handleLogoUpload,

@@ -18,6 +18,7 @@ import {
   Icon,
   InlineGrid,
   Layout,
+  Link,
   Text,
 } from '@shopify/polaris';
 
@@ -28,7 +29,7 @@ type IPackageProtectionOrder =
     })
   | null;
 
-const ClaimRequestProcess = ({ setIsProcess, orderId }) => {
+const ClaimRequestProcess = ({ setIsProcess, orderId, shop }) => {
   const [i18n] = useI18n();
   const [packageProtectionInformation, setPackageProtectionInformation] =
     useState<PackageProtection | null>(null);
@@ -98,13 +99,31 @@ const ClaimRequestProcess = ({ setIsProcess, orderId }) => {
                       Customer Detail
                     </Text>
                   </InlineGrid>
+                  <Text as="p" variant="bodyMd">
+                    <span className="font-bold">Name: </span>
+                    {packageProtectionOrder?.customerFirstName ??
+                      '' + ' ' + packageProtectionOrder?.customerLastName}
+                  </Text>
                   <Text as="p" variant="bodyMd" tone="base">
                     {packageProtectionOrder?.email}
                   </Text>
                   <Divider borderColor="border-hover" />
                   <Text as="p" variant="bodyMd">
                     <span className="font-bold">Order Number: </span>
-                    {packageProtectionOrder?.orderName}
+                    <Link
+                      url={
+                        shop
+                          ? `https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
+                              'gid://shopify/Order/',
+                              ''
+                            )}`
+                          : ''
+                      }
+                      target="_blank"
+                      removeUnderline
+                    >
+                      {packageProtectionOrder?.orderName}
+                    </Link>
                   </Text>
                   <Divider borderColor="border-hover" />
                   <Text as="p" variant="bodyMd">

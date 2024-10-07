@@ -35,6 +35,7 @@ export interface ClaimRequestAdminTemplateVariables {
   claim_reason: string;
   claim_date: string;
   order_url: string;
+  go_to_claim: string;
 }
 
 export interface ClaimRequestCustomerTemplateVariables {
@@ -59,7 +60,7 @@ export interface ClaimRefundCustomerTemplateVariables {
 export interface ClaimReOrderCustomerTemplateVariables {
   order_id: string;
   replacement_order_id: string;
-  shipping_details: string;
+  status: string;
   shop_name: string;
   shop_logo: string;
   order_url: string;

@@ -10,6 +10,7 @@ const validImageTypes = [
   'image/jpeg',
   'image/png',
   'image/svg+xml',
+  'image/webp',
 ];
 
 export async function action({ request }: ActionFunctionArgs) {

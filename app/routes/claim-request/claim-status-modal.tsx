@@ -22,8 +22,6 @@ const ClaimStatusModal = ({ data, setRefetch }) => {
     handleSelectedStatus([]);
   };
 
-  console.log(data);
-
   const handleSubmit = async () => {
     setLoading(true);
     await fetcher

@@ -16,7 +16,7 @@ import { ExportIcon } from '@shopify/polaris-icons';
 export const loader: LoaderFunction = async ({ request }) => {
   const ctx = await shopifyRemix.authenticate.admin(request);
   const data = await prisma.packageProtectionOrder.findMany({
-    where: { orderId: ctx.session.storeId, hasClaimRequest: true },
+    where: { storeId: ctx.session.storeId, hasClaimRequest: { equals: true } },
     select: {
       id: true,
       orderId: true,
@@ -28,17 +28,22 @@ export const loader: LoaderFunction = async ({ request }) => {
   });
 
   if (!data || !data.length) {
-    return json([{ message: 'data not found', shop: ctx.session.shop.replace('.myshopify.com', '') }]);
+    return json({
+      data: null,
+      message: 'data not found',
+      shop: ctx.session.shop.replace('.myshopify.com', ''),
+    });
   }
 
   return json({
     data,
+    message: 'data found',
     shop: ctx.session.shop.replace('.myshopify.com', ''),
   });
 };
 
 const FileClaimRequest = () => {
-  const loaderData = useLoaderData<typeof loader>();
+  const { data, message, shop } = useLoaderData<typeof loader>();
   const defaultActiveDates = useMemo(() => default30Days(), []);
   const [activeDates, setActiveDates] =
     useState<IActiveDates>(defaultActiveDates);
@@ -46,12 +51,11 @@ const FileClaimRequest = () => {
   const [orderId, setOrderId] = useState<string>('');
 
   const handleExport = () => {
-    console.log('export', loaderData);
     // return;
     const wb = XLSX.utils.book_new();
 
     // Convert JSON data to a worksheet
-    const ws = XLSX.utils.json_to_sheet(loaderData.data);
+    const ws = XLSX.utils.json_to_sheet(data);
 
     // Append the worksheet to the workbook
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
@@ -68,6 +72,7 @@ const FileClaimRequest = () => {
             <ClaimRequestProcess
               setIsProcess={setIsProcess}
               orderId={orderId}
+              shop={shop}
             />
           ) : (
             <div className="w-full ms-4">
@@ -92,7 +97,7 @@ const FileClaimRequest = () => {
                 setIsProcess={setIsProcess}
                 activeDates={activeDates!}
                 setOrderId={setOrderId}
-                shop={loaderData.shop}
+                shop={shop}
               />
             </div>
           )}

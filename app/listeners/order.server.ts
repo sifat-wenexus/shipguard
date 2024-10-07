@@ -8,6 +8,7 @@ import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
 import _ from 'lodash';
+import { Console } from '~/utils/log';
 
 const makePackageProtectionFulfill = async (
   data: Record<string, any>[],
@@ -71,7 +72,7 @@ const orderCreateEvent = async ({
   const gqlClient = getShopifyGQLClient(session!);
   const restClient = getShopifyRestClient(session!);
   const payload = _payload as Record<string, any>;
-
+  Console.file('payload.json', JSON.stringify(payload));
   const products = await restClient.get<any>({
     path: '/products.json',
     query: {
@@ -181,12 +182,9 @@ const orderCreateEvent = async ({
           customerEmail: payload.customer.email,
           customerFirstName: payload.customer.first_name,
           customerLastName: payload.customer.last_name,
-          orderName: updatedOrder.body.data.orderUpdate.order.name,
+          orderName: payload.name,
           storeId: session?.storeId,
-          orderAmount: Number(
-            updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
-              .amount
-          ),
+          orderAmount: Number(payload.total_price),
           protectionFee: Number(protectionFee),
           customerAddress: JSON.stringify(payload.shipping_address),
           billingAddress: JSON.stringify(payload.billing_address),

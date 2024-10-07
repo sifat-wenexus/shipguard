@@ -93,7 +93,7 @@ export const ClaimReOrderCustomerVariable = () => {
   const variables: { name: string; key: string }[] = [
     { name: 'Order Id', key: '{{order_id}}' },
     { name: 'Replacement Order Id', key: '{{replacement_order_id}}' },
-    { name: 'Shipping Details', key: '{{shipping_details}}' },
+    { name: 'Status', key: '{{status}}' },
     { name: 'Shop Name', key: '{{shop_name}}' },
     { name: 'Shop Logo', key: '{{shop_logo}}' },
   ];

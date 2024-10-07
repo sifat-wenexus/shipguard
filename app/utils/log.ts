@@ -3,7 +3,7 @@ import path from 'path';
 
 const file = (name: string, message: string) => {
   const logDirectory = path.join(process.cwd(), 'logs');
-  const logFile = path.join(logDirectory, `${name}.js`);
+  const logFile = path.join(logDirectory, `${name}.json`);
 
   // Create the log directory if it doesn't exist
   if (!fs.existsSync(logDirectory)) {

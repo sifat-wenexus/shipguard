@@ -79,7 +79,7 @@ export const reqAdminTemplate = `<!DOCTYPE html>
         margin: 20px 0px;
       "
     >
-      <a class="claim-button" href="{{order_url}}">View Claim</a>
+      <a class="claim-button" href="{{go_to_claim}}">View Claim</a>
     </div>
     <p>Please review the claim request and take appropriate action.</p>
     <br />
@@ -234,8 +234,8 @@ export const reOrderCustomerTemplate = `<!DOCTYPE html>
 <td><strong>{{replacement_order_id}}</strong></td>
 </tr>
 <tr style="height: 36.1648px;">
-<td>Shipping Details</td>
-<td><strong>{{shipping_details}}</strong></td>
+<td>Status</td>
+<td><strong>{{status}}</strong></td>
 </tr>
 </tbody>
 </table>

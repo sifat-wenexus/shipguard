@@ -9,6 +9,7 @@ import {
   shopify as shopifyRemix,
 } from '../modules/shopify.server';
 import { sendMail } from '~/modules/send-mail.server';
+import { getConfig } from '~/modules/get-config.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -238,6 +239,40 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         where: { orderId: orderId?.orderId },
         data: { claimStatus: selectedStatus.toString() as ClaimStatus },
       });
+      const data = await prisma.packageProtectionOrder.findFirst({
+        where: { orderId: orderId?.orderId },
+        include: {
+          PackageProtectionClaimOrder: { select: { comments: true } },
+          Store: { select: { name: true, domain: true, email: true } },
+        },
+      });
+      const packageProtection = await prisma.packageProtection.findFirst({
+        where: { storeId: ctx.session.storeId },
+      });
+      if (data && selectedStatus[0] === 'CANCEL') {
+        const customerName = `${data.customerFirstName ?? ''}  ${
+          data.customerLastName
+        }`;
+        const orderId = data.orderId.replace('gid://shopify/Order/', '');
+        const logo = `${getConfig().appUrl}api/files/${
+          packageProtection?.emailTemplateLogo
+        }`;
+        await sendMail({
+          template: 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER',
+          storeId: ctx.session.storeId!,
+          to: data.customerEmail!,
+          variables: {
+            cancellation_reason: cancelText,
+            customer_name: customerName,
+            order_id: data.orderName!,
+            order_url: `https://admin.shopify.com/store/${
+              data.Store.domain.split('.')[0]
+            }/orders/${orderId}`,
+            shop_name: data.Store.name,
+            shop_logo: logo,
+          },
+        });
+      }
 
       return json({
         message: 'claim status updated successfully',
@@ -250,6 +285,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     } else if (action === 'REORDER') {
       const { reorderItems } = bodyData;
       try {
+        let orderID: string | null = null;
         await prisma.$transaction(async (trx) => {
           const data = await trx.packageProtectionClaimOrder.findFirst({
             where: {
@@ -350,6 +386,39 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           });
           console.log('newOrder', newOrder, 'order', order);
         });
+        if (orderID) {
+          const data = await prisma.packageProtectionOrder.findFirst({
+            where: { orderId: orderID },
+            include: {
+              PackageProtectionClaimOrder: { select: { comments: true } },
+              Store: { select: { name: true, domain: true, email: true } },
+            },
+          });
+          const packageProtection = await prisma.packageProtection.findFirst({
+            where: { storeId: ctx.session.storeId },
+          });
+          if (data) {
+            const orderId = data.orderId.replace('gid://shopify/Order/', '');
+            const logo = `${getConfig().appUrl}api/files/${
+              packageProtection?.emailTemplateLogo
+            }`;
+            await sendMail({
+              template: 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER',
+              storeId: ctx.session.storeId!,
+              to: data.customerEmail!,
+              variables: {
+                order_id: data?.orderName,
+                order_url: `https://admin.shopify.com/store/${
+                  data.Store.domain.split('.')[0]
+                }/orders/${orderId}`,
+                replacement_order_id: `R-${data?.orderName}`,
+                shop_name: data.Store.name,
+                status: data.claimStatus!,
+                shop_logo: logo,
+              },
+            });
+          }
+        }
         return json({
           message: 'Reorder successfully',
           success: true,
@@ -472,6 +541,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           });
           if (data) {
             const orderId = data.orderId.replace('gid://shopify/Order/', '');
+            const logo = `${getConfig().appUrl}api/files/${
+              packageProtection?.emailTemplateLogo
+            }`;
             await sendMail({
               template: 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER',
               storeId: ctx.session.storeId!,
@@ -484,7 +556,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 }/orders/${orderId}`,
                 refund_amount: data.refundAmount.toString(),
                 shop_name: data.Store.name,
-                shop_logo: packageProtection?.emailTemplateLogo!,
+                shop_logo: logo,
               },
             });
           }
@@ -505,7 +577,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
     } else if (action === 'REFOUND_BY_AMOUNT_LINE_ITEM') {
       try {
-        let orderID: string | null = 'gid://shopify/Order/5596940140591';
+        let orderID: string | null = null;
         await prisma.$transaction(async (trx) => {
           const data = await trx.packageProtectionClaimOrder.findFirst({
             where: {
@@ -605,7 +677,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             throw Error('can not refund this item');
           }
         });
-        console.log(orderID);
         if (orderID) {
           const data = await prisma.packageProtectionOrder.findFirst({
             where: { orderId: orderID },
@@ -619,6 +690,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           });
           if (data) {
             const orderId = data.orderId.replace('gid://shopify/Order/', '');
+            const logo = `${getConfig().appUrl}api/files/${
+              packageProtection?.emailTemplateLogo
+            }`;
             await sendMail({
               template: 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER',
               storeId: ctx.session.storeId!,
@@ -631,7 +705,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 }/orders/${orderId}`,
                 refund_amount: data.refundAmount.toString(),
                 shop_name: data.Store.name,
-                shop_logo: packageProtection?.emailTemplateLogo!,
+                shop_logo: logo,
               },
             });
           }
