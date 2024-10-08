@@ -287,7 +287,7 @@ onDBEvtBuffered(
           data: {
             query: `#graphql
            query {
-            products(first:10,query:"sku:overall-package-protection OR tag:overall-insurance OR sku:wenexus-shipping-protection") {
+            products(query:"sku:overall-package-protection OR tag:overall-insurance OR sku:wenexus-shipping-protection") {
                 edges {
                   node {
                     id

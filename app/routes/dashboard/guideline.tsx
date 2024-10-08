@@ -293,8 +293,6 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                         />
                       )}
                     </div>
-                    {/* https://admin.shopify.com/store/nexusapp/themes/current/editor?context=apps&template=index&activateAppId=2e94b962-8172-4839-8ad9-7837eb8b017a/app-embed
-                    https://admin.shopify.com/store/nexusapp/themes/136195440687/editor?context=apps&appEmbed=2e94b962-8172-4839-8ad9-7837eb8b017a%2Fapp-embed */}
                   </div>
                 </div>
               </div>

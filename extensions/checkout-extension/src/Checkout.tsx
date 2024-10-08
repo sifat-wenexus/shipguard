@@ -14,20 +14,41 @@ import {
   useCartLines,
   ToggleButton,
   ToggleButtonGroup,
+  InlineStack,
+  Button,
+  Image,
+  Switch,
+  InlineLayout,
+  View,
+  ProductThumbnail,
+  useAppMetafields,
+  useMetafields,
+  useShop,
 } from '@shopify/ui-extensions-react/checkout';
+import { useState } from 'react';
 
 // 1. Choose an extension target
-export default reactExtension(
-  'purchase.checkout.reductions.render-after',
-  () => <Extension />
-);
+export default reactExtension('purchase.checkout.block.render', () => (
+  <Extension />
+));
 
-const variantId = 'gid://shopify/ProductVariant/43099286011951';
+const variantId = 'gid://shopify/ProductVariant/42769606967389';
 const Extension = () => {
   const applyCartLineChange = useApplyCartLinesChange();
   const cartLine = useCartLines();
+  const shop = useShop();
+  const totalAmount = cartLine
+    .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection')
+    .reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
+  console.log('first', totalAmount, shop);
+  fetch(
+    `https://existed-ext-magnet-tahoe.trycloudflare.com/test?total=${totalAmount}&shopUrl=${shop.myshopifyDomain}`
+  )
+    .then((response) => response.json())
+    .then((res) => console.log({ res }))
+    .catch((err) => console.log({ err }));
+
   const onCheckboxChange = (isChecked) => {
-    console.log('onCheckboxChange', isChecked);
     if (isChecked) {
       applyCartLineChange({
         type: 'addCartLine',
@@ -47,20 +68,22 @@ const Extension = () => {
       }
     }
   };
-  // return (
-  //   <>
-  //     hello
-  //     <ToggleButtonGroup
 
-  //       value="one"
-  //       onChange={(value) => {
-  //         console.log(`onChange event with value: ${value}`);
-  //       }}
-  //     >
-  //       <ToggleButton id="none">None</ToggleButton>
-  //     </ToggleButtonGroup>
-  //   </>
-  // );
-  // return <p>hello </p>;
-  return <Checkbox onChange={onCheckboxChange}>Package Protection</Checkbox>;
+  return (
+    <InlineLayout columns={['fill', '20%']}>
+      <InlineStack blockAlignment={'center'}>
+        <ProductThumbnail source="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse_Shipping_Protection.png?v=1728361462" />
+        <BlockStack>
+          <Text size="large">Package Protection</Text>
+          <Text size="small">Description</Text>
+        </BlockStack>
+      </InlineStack>
+      <View padding={'loose'}>
+        <Switch
+          onChange={onCheckboxChange}
+          accessibilityLabel="package-protection-switch"
+        />
+      </View>
+    </InlineLayout>
+  );
 };
