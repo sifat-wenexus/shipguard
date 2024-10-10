@@ -1,6 +1,7 @@
 import { getShopifyGQLClient } from './shopify.server';
 import type { Session } from '~/shopify-api/lib';
 import { prisma } from './prisma.server';
+import { jobRunner } from '~/modules/job/job-runner.server';
 
 export class InitStore {
   constructor(private readonly session: Session) {}
@@ -83,6 +84,13 @@ export class InitStore {
       data: {
         appStatus: 'READY',
       },
+    });
+
+    await jobRunner.run({
+      name: 'import-orders',
+      storeId: store.id,
+      interval: 60 * 60 * 3,
+      maxRetries: 2,
     });
 
     console.log(`Initialized store ${this.session.shop}`);
