@@ -44,7 +44,7 @@ export async function loader({ request }) {
       id: 'settings/email-template',
       name: 'Email Template Setup',
       description: 'Steps to enable .',
-      installed: false,
+      installed: true,
       illustration: emailIcon,
       available: true,
     },
@@ -88,14 +88,14 @@ export async function loader({ request }) {
         illustration: pageIcon,
         available: true,
       },
-      // {
-      //   id: 'settings/checkout-extension',
-      //   name: 'Checkout Extension Setup',
-      //   description: 'Steps to enable checkout extension in your theme.',
-      //   installed: false,
-      //   illustration: checkoutIcon,
-      //   available: true,
-      // },
+      {
+        id: 'settings/checkout-extension',
+        name: 'Checkout Extension Setup',
+        description: 'Steps to enable checkout extension in your theme.',
+        installed: false,
+        illustration: checkoutIcon,
+        available: true,
+      },
     ];
 
     return json({ settingsCart, settingsCartSecond });

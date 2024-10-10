@@ -35,14 +35,13 @@ const Extension = () => {
 
   useEffect(() => {
     fetch(
-      `https://solaris-demand-sim-provides.trycloudflare.com/checkout-extension?total=${totalAmount}&shopUrl=${shop.myshopifyDomain}`
+      `https://shipping-protection.wenexus.io/checkout-extension?total=${totalAmount}&shopUrl=${shop.myshopifyDomain}`
     )
       .then((response) => response.json())
       .then((res) => {
         setVariantId(res.variantId);
         setVariantPrice(res.variantPrice);
         setData(res.data);
-        console.log({ res });
       })
       .catch((err) => console.log({ err }));
   }, []);
