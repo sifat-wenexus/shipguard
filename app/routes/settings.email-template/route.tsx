@@ -120,7 +120,9 @@ export async function action({ request }: ActionFunctionArgs) {
   if (action === 'update') {
     const state = JSON.parse(body.get('state') as string);
     const response = await prisma.emailTemplate.update({
-      where: { name: state.name, storeId: ctx.session.storeId },
+      where: {
+        storeId_name: { storeId: ctx.session.storeId!, name: state.name },
+      },
       data: { body: state.body, subject: state.subject },
     });
     return json({ message: 'Email Template updated', status: true, response });
@@ -139,7 +141,7 @@ const EmailTemplate = () => {
   const [file, setFile] = useState<File>();
   const [liquidToHtml, setLiquidToHtml] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const [prevFile, setPreviousFile] = useState<any>();
   const getTemplate = async (variables) => {
     const claimAdminTemplate = new ClaimRequestAdminTemplate();
     claimAdminTemplate.liquid = templatePreview;
@@ -152,6 +154,16 @@ const EmailTemplate = () => {
   );
   const packageProtection = useQuery(dataQuery);
   const logo = `${appUrl}api/files/${packageProtection.data?.emailTemplateLogo}`;
+
+  useEffect(() => {
+    queryProxy.file
+      .findFirst({
+        where: { id: packageProtection.data?.emailTemplateLogo },
+      })
+      .then((res) => setPreviousFile(res))
+      .catch((err) => setPreviousFile(null));
+  }, []);
+
   useEffect(() => {
     if (templateName) {
       getTemplate(templateParameters(templateName, logo))
@@ -163,7 +175,7 @@ const EmailTemplate = () => {
           setLiquidToHtml('');
         });
     }
-  }, [templatePreview, templateName]);
+  }, [templatePreview, templateName, logo]);
 
   const handleEditButton = (e: $Enums.EmailTemplateName) => {
     setTemplateName(e);
@@ -278,7 +290,12 @@ const EmailTemplate = () => {
                       ]}
                     >
                       <Modal.Section>
-                        <LogoUpload file={file} setFile={setFile} />
+                        <LogoUpload
+                          file={file}
+                          setFile={setFile}
+                          logo={logo}
+                          prevFile={prevFile}
+                        />
                       </Modal.Section>
                     </Modal>
                   </div>

@@ -465,7 +465,7 @@ model PackageProtectionClaimOrder {
 model EmailTemplate {
   storeId String
 
-  name    EmailTemplateName @unique
+  name    EmailTemplateName
   subject String
   body    String
   Store   Store             @relation(fields: [storeId], references: [id])

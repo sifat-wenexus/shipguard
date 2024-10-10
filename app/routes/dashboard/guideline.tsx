@@ -17,11 +17,21 @@ import {
 } from '@shopify/polaris-icons';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import InstructionModal from './instruction-modal';
-
+// TODO: change collapsible and cookie for user interaction
 const GuideLine = ({ storeInfo, guidelineVisibility }) => {
   const [actionActive, toggleAction] = useState(false);
   const [dismiss, setDismiss] = useState(guidelineVisibility ? true : false);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const value = JSON.parse(
+        window.localStorage.getItem(
+          'shipping-insurance-guide-line-collops'
+        ) as string
+      );
+      return value ?? true;
+    }
+    return true;
+  });
   const [active, setActive] = useState(false);
 
   const [toggleLine, setToggleLine] = useState({
@@ -30,13 +40,13 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
     enable: false,
     claim: false,
   });
-  useEffect(() => {
-    if (storeInfo?.claimPage && storeInfo?.ebbedBlock && storeInfo?.install) {
-      setOpen(false);
-    } else {
-      setOpen(true);
-    }
-  }, [storeInfo]);
+  // useEffect(() => {
+  //   if (storeInfo?.claimPage && storeInfo?.ebbedBlock && storeInfo?.install) {
+  //     setOpen(false);
+  //   } else {
+  //     setOpen(true);
+  //   }
+  // }, [storeInfo]);
 
   const handleClick = (name: string) => {
     setToggleLine((prevState) => ({
@@ -75,7 +85,15 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
   const handleToggleAction = () => {
     toggleAction(!actionActive);
   };
-  const handleToggle = useCallback(() => setOpen((open) => !open), []);
+  const handleToggle = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(
+        'shipping-insurance-guide-line-collops',
+        JSON.stringify(!open)
+      );
+    }
+    setOpen((open) => !open);
+  }, []);
 
   const disclosureButton = (
     <Popover
@@ -159,7 +177,9 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                   </span>
                   <div>
                     <span className="font-light text-xs">
-                      INITIAL 30 DAYS OF TRIAL
+                      You have successfully installed the 'Early Bird' version!
+                      Enjoy exploring the features at no cost during this
+                      period.
                     </span>
                     <h2 className="font-semibold text-base">
                       Installed Package Protection

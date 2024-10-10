@@ -2,7 +2,7 @@ import { Button, DropZone, Text } from '@shopify/polaris';
 import { useCallback, useEffect, useState } from 'react';
 import { resizeImage } from '~/modules/utils/image-process';
 
-const LogoUpload = ({ file, setFile }) => {
+const LogoUpload = ({ file, setFile, logo, prevFile }) => {
   const validImageTypes = [
     'image/gif',
     'image/jpeg',
@@ -11,23 +11,19 @@ const LogoUpload = ({ file, setFile }) => {
   ];
   const [imagePreviewUrl, setImagePreviewUrl] = useState<any>(null);
   const handleImageChange = (file) => {
-    // Get the selected file
-
     if (file) {
-      const reader = new FileReader(); // Create a FileReader to read the file
-
-      // When the file is loaded, set the preview URL to the file content
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreviewUrl(reader.result); // Set the preview URL in state
+        setImagePreviewUrl(reader.result);
       };
 
-      reader.readAsDataURL(file); // Read the file as a data URL
+      reader.readAsDataURL(file);
     } else {
-      setImagePreviewUrl(null); // Reset if no file is selected
+      setImagePreviewUrl(null);
     }
   };
 
-  const fileUpload = !file && (
+  const fileUpload = !file && !logo && (
     <DropZone.FileUpload actionHint="Accepts .jpg, .gif .png and .webp" />
   );
 
@@ -46,7 +42,7 @@ const LogoUpload = ({ file, setFile }) => {
     },
     []
   );
-  const uploadedFiles = file && (
+  const uploadedFiles = file ? (
     <div className="p-3 flex justify-center items-center my-3">
       <div className="text-center">
         <div className="w-[220px] m-auto">
@@ -56,6 +52,25 @@ const LogoUpload = ({ file, setFile }) => {
           {file.name}{' '}
           <Text variant="bodySm" as="p">
             {file.size} bytes
+          </Text>
+        </div>
+        <div className="my-2">
+          <Button variant="primary" tone="success" onClick={() => setFile()}>
+            Change
+          </Button>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div className="p-3 flex justify-center items-center my-3">
+      <div className="text-center">
+        <div className="w-[220px] m-auto">
+          <img width={'100%'} src={logo} alt="logo image" />
+        </div>
+        <div className="overflow-hidden overflow-ellipsis my-2">
+          {prevFile.name}{' '}
+          <Text variant="bodySm" as="p">
+            {prevFile.size} bytes
           </Text>
         </div>
         <div className="my-2">

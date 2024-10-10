@@ -64,12 +64,12 @@ export async function loader({ request }) {
     const template = await restAdminApi.Asset.all({
       session: ctx.session,
       theme_id: theme?.id,
-      asset: { key: 'templates/page.claim-request.json' },
+      // asset: { key: 'templates/page.claim-request.json' },
     });
-    if (template) {
-      claimPage = JSON.stringify(template?.data[0]?.value).includes(
-        'package-protection-claim'
-      );
+    if (
+      template.data.find((t) => t.key === 'templates/page.claim-request.json')
+    ) {
+      claimPage = true;
     }
     const settingsCart = [
       {
