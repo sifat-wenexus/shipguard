@@ -13,6 +13,10 @@ export async function performBulkOperation(session: Session, query: string) {
           bulkOperation {
             id
           }
+          userErrors {
+            field
+            message
+          }
         }
       }
       `,
@@ -21,6 +25,11 @@ export async function performBulkOperation(session: Session, query: string) {
       },
     },
   });
+
+  if (createBulkOperation.body.data.bulkOperationRunQuery.userErrors?.length) {
+    throw createBulkOperation.body.data.bulkOperationRunQuery.userErrors;
+  }
+
   const operationId =
     createBulkOperation.body.data.bulkOperationRunQuery.bulkOperation.id;
 

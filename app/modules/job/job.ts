@@ -2,6 +2,7 @@ import type { Job as BaseJobDetails, JobExecution } from '#prisma-client';
 import type { JobRunner } from '~/modules/job/job-runner.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
+import { prisma } from '~/modules/prisma.server';
 import _ from 'lodash';
 
 export interface JobDetails<P = any> extends Omit<BaseJobDetails, 'payload'> {
@@ -11,8 +12,9 @@ export interface JobDetails<P = any> extends Omit<BaseJobDetails, 'payload'> {
 export abstract class Job<R = any, P = any> {
   constructor(
     private readonly runner: JobRunner,
-    public readonly job: JobDetails<P>
-  ) {}
+    public readonly job: JobDetails<P>,
+  ) {
+  }
 
   private execution: JobExecution | null = null;
 
@@ -33,6 +35,9 @@ export abstract class Job<R = any, P = any> {
 
   async run() {
     let job = await queryProxy.job.update({
+      where: {
+        id: this.job.id,
+      },
       data: {
         status: 'RUNNING',
         tries: {
@@ -73,6 +78,7 @@ export abstract class Job<R = any, P = any> {
       result = await this.execute();
     } catch (e) {
       error = e;
+      console.error(e);
     }
 
     job = (await queryProxy.job.update({
@@ -92,7 +98,9 @@ export abstract class Job<R = any, P = any> {
       },
       data: {
         status: error ? 'FAILED' : 'SUCCEEDED',
-        result: error ?? result,
+        result: _.isEmpty(JSON.parse(JSON.stringify(error)))
+          ? { message: error?.message, stack: error?.stack }
+          : (error ?? result),
         executedAt: new Date(),
         progress: 100,
       },
@@ -104,19 +112,55 @@ export abstract class Job<R = any, P = any> {
     }
 
     const eventBase = `job.${job.name}`;
+
     if (error) {
       emitter.emitAsync(`${eventBase}.failed`, job);
       emitter.emitAsync(`${job.storeId}.${eventBase}.failed`, job);
     } else {
       emitter.emitAsync(`${eventBase}.completed`, job);
-      // emitter.emitAsync(`${job.storeId}.${eventBase}.completed`, job);
-      emitter.emitAsync(`${job.storeId}.job.${job.name}.completed`, job);
+      emitter.emitAsync(`${job.storeId}.${eventBase}.completed`, job);
     }
+  }
+
+  async getPreviousExecution() {
+    if (this.execution) {
+      return prisma.jobExecution.findFirst({
+        where: {
+          jobId: this.job.id,
+          id: {
+            not: this.execution.id,
+          },
+        },
+        orderBy: {
+          id: 'desc',
+        },
+      });
+    }
+
+    return prisma.jobExecution.findFirst({
+      where: {
+        jobId: this.job.id,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+
+  async updatePayload(payload: P) {
+    return queryProxy.job.update({
+      where: {
+        id: this.job.id,
+      },
+      data: {
+        payload,
+      },
+    });
   }
 
   abstract execute(payload?: P): Promise<R>;
 }
 
 export interface JobConstructor {
-  new (job: JobDetails): Job;
+  new(job: JobDetails): Job;
 }
