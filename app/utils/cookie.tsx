@@ -8,5 +8,6 @@ export function createDynamicCookie(name, value, maxAge) {
     sameSite: 'none',
     path: '/',
   });
+  cookie.parse(name);
   return cookie.serialize(value);
 }

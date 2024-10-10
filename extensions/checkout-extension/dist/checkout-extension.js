@@ -1133,7 +1133,7 @@
             }
             return dispatcher.useContext(Context);
           }
-          function useState2(initialState) {
+          function useState3(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1145,7 +1145,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect2(create, deps) {
+          function useEffect3(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1928,7 +1928,7 @@
           exports.useContext = useContext3;
           exports.useDebugValue = useDebugValue;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect2;
+          exports.useEffect = useEffect3;
           exports.useId = useId;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
@@ -1936,7 +1936,7 @@
           exports.useMemo = useMemo2;
           exports.useReducer = useReducer;
           exports.useRef = useRef2;
-          exports.useState = useState2;
+          exports.useState = useState3;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
@@ -2496,7 +2496,7 @@
           var HostPortal = 4;
           var HostComponent = 5;
           var HostText = 6;
-          var Fragment = 7;
+          var Fragment2 = 7;
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
@@ -2636,7 +2636,7 @@
                 return "DehydratedFragment";
               case ForwardRef:
                 return getWrappedName$1(type, type.render, "ForwardRef");
-              case Fragment:
+              case Fragment2:
                 return "Fragment";
               case HostComponent:
                 return type;
@@ -5771,7 +5771,7 @@
               }
             }
             function updateFragment2(returnFiber, current2, fragment, lanes, key) {
-              if (current2 === null || current2.tag !== Fragment) {
+              if (current2 === null || current2.tag !== Fragment2) {
                 var created = createFiberFromFragment(fragment, returnFiber.mode, lanes, key);
                 created.return = returnFiber;
                 return created;
@@ -6174,7 +6174,7 @@
                 if (child.key === key) {
                   var elementType = element.type;
                   if (elementType === REACT_FRAGMENT_TYPE) {
-                    if (child.tag === Fragment) {
+                    if (child.tag === Fragment2) {
                       deleteRemainingChildren(returnFiber, child.sibling);
                       var existing = useFiber(child, element.props.children);
                       existing.return = returnFiber;
@@ -11666,7 +11666,7 @@
                 var _resolvedProps2 = workInProgress2.elementType === type ? _unresolvedProps2 : resolveDefaultProps(type, _unresolvedProps2);
                 return updateForwardRef(current2, workInProgress2, type, _resolvedProps2, renderLanes2);
               }
-              case Fragment:
+              case Fragment2:
                 return updateFragment(current2, workInProgress2, renderLanes2);
               case Mode:
                 return updateMode(current2, workInProgress2, renderLanes2);
@@ -12107,7 +12107,7 @@
               case SimpleMemoComponent:
               case FunctionComponent:
               case ForwardRef:
-              case Fragment:
+              case Fragment2:
               case Mode:
               case Profiler:
               case ContextConsumer:
@@ -16873,7 +16873,7 @@
             return fiber;
           }
           function createFiberFromFragment(elements, mode, lanes, key) {
-            var fiber = createFiber(Fragment, elements, key, mode);
+            var fiber = createFiber(Fragment2, elements, key, mode);
             fiber.lanes = lanes;
             return fiber;
           }
@@ -19169,9 +19169,6 @@
   // node_modules/.pnpm/@shopify+ui-extensions@2024.7.0/node_modules/@shopify/ui-extensions/build/esm/surfaces/checkout/extension.mjs
   var extension = createExtensionRegistrationFunction();
 
-  // node_modules/.pnpm/@shopify+ui-extensions@2024.7.0/node_modules/@shopify/ui-extensions/build/esm/surfaces/checkout/components/BlockStack/BlockStack.mjs
-  var BlockStack = createRemoteComponent("BlockStack");
-
   // node_modules/.pnpm/@shopify+ui-extensions@2024.7.0/node_modules/@shopify/ui-extensions/build/esm/surfaces/checkout/components/InlineLayout/InlineLayout.mjs
   var InlineLayout = createRemoteComponent("InlineLayout");
 
@@ -19518,9 +19515,6 @@ ${errorInfo.componentStack}`);
     }
   };
 
-  // node_modules/.pnpm/@shopify+ui-extensions-react@2024.7.0_@shopify+ui-extensions@2024.7.0_react-reconciler@0.29.2_react@18.3.1__react@18.3.1/node_modules/@shopify/ui-extensions-react/build/esm/surfaces/checkout/components/BlockStack/BlockStack.mjs
-  var BlockStack2 = createRemoteReactComponent(BlockStack);
-
   // node_modules/.pnpm/@shopify+ui-extensions-react@2024.7.0_@shopify+ui-extensions@2024.7.0_react-reconciler@0.29.2_react@18.3.1__react@18.3.1/node_modules/@shopify/ui-extensions-react/build/esm/surfaces/checkout/components/InlineLayout/InlineLayout.mjs
   var InlineLayout2 = createRemoteReactComponent(InlineLayout);
 
@@ -19540,7 +19534,7 @@ ${errorInfo.componentStack}`);
   var View2 = createRemoteReactComponent(View);
 
   // node_modules/.pnpm/@shopify+ui-extensions-react@2024.7.0_@shopify+ui-extensions@2024.7.0_react-reconciler@0.29.2_react@18.3.1__react@18.3.1/node_modules/@shopify/ui-extensions-react/build/esm/surfaces/checkout/hooks/api.mjs
-  var import_react15 = __toESM(require_react(), 1);
+  var import_react14 = __toESM(require_react(), 1);
 
   // node_modules/.pnpm/@shopify+ui-extensions-react@2024.7.0_@shopify+ui-extensions@2024.7.0_react-reconciler@0.29.2_react@18.3.1__react@18.3.1/node_modules/@shopify/ui-extensions-react/build/esm/surfaces/checkout/errors.mjs
   var CheckoutUIExtensionError = class extends Error {
@@ -19558,7 +19552,7 @@ ${errorInfo.componentStack}`);
 
   // node_modules/.pnpm/@shopify+ui-extensions-react@2024.7.0_@shopify+ui-extensions@2024.7.0_react-reconciler@0.29.2_react@18.3.1__react@18.3.1/node_modules/@shopify/ui-extensions-react/build/esm/surfaces/checkout/hooks/api.mjs
   function useApi(_target) {
-    const api = (0, import_react15.useContext)(ExtensionApiContext);
+    const api = (0, import_react14.useContext)(ExtensionApiContext);
     if (api == null) {
       throw new CheckoutUIExtensionError("You can only call this hook when running as a checkout UI extension.");
     }
@@ -19566,10 +19560,10 @@ ${errorInfo.componentStack}`);
   }
 
   // node_modules/.pnpm/@shopify+ui-extensions-react@2024.7.0_@shopify+ui-extensions@2024.7.0_react-reconciler@0.29.2_react@18.3.1__react@18.3.1/node_modules/@shopify/ui-extensions-react/build/esm/surfaces/checkout/hooks/subscription.mjs
-  var import_react16 = __toESM(require_react(), 1);
+  var import_react15 = __toESM(require_react(), 1);
   function useSubscription(subscription) {
-    const [, setValue] = (0, import_react16.useState)(subscription.current);
-    (0, import_react16.useEffect)(() => {
+    const [, setValue] = (0, import_react15.useState)(subscription.current);
+    (0, import_react15.useEffect)(() => {
       let didUnsubscribe = false;
       const checkForUpdates = (newValue) => {
         if (didUnsubscribe) {
@@ -19608,54 +19602,96 @@ ${errorInfo.componentStack}`);
   }
 
   // extensions/checkout-extension/src/Checkout.tsx
+  var import_react16 = __toESM(require_react());
   var import_jsx_runtime4 = __toESM(require_jsx_runtime());
   var Checkout_default = reactExtension("purchase.checkout.block.render", () => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Extension, {}));
-  var variantId = "gid://shopify/ProductVariant/42769606967389";
   var Extension = () => {
     const applyCartLineChange = useApplyCartLinesChange();
     const cartLine = useCartLines();
     const shop = useShop();
+    const { i18n } = useApi();
+    const [variantId, setVariantId] = (0, import_react16.useState)("");
+    const [variantPrice, setVariantPrice] = (0, import_react16.useState)();
+    const [data, setData] = (0, import_react16.useState)({});
+    const [enabled, setEnabled] = (0, import_react16.useState)(false);
+    const [loading, setLoading] = (0, import_react16.useState)(false);
     const totalAmount = cartLine.filter((item) => item.merchandise.sku !== "wenexus-shipping-protection").reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
-    console.log("first", totalAmount, shop);
-    fetch(
-      `https://existed-ext-magnet-tahoe.trycloudflare.com/test?total=${totalAmount}&shopUrl=${shop.myshopifyDomain}`
-    ).then((response) => response.json()).then((res) => console.log({ res })).catch((err) => console.log({ err }));
-    const onCheckboxChange = (isChecked) => {
+    (0, import_react16.useEffect)(() => {
+      fetch(
+        `https://solaris-demand-sim-provides.trycloudflare.com/checkout-extension?total=${totalAmount}&shopUrl=${shop.myshopifyDomain}`
+      ).then((response) => response.json()).then((res) => {
+        setVariantId(res.variantId);
+        setVariantPrice(res.variantPrice);
+        setData(res.data);
+        console.log({ res });
+      }).catch((err) => console.log({ err }));
+    }, []);
+    const onCheckboxChange = (isChecked) => __async(void 0, null, function* () {
+      setLoading(true);
       if (isChecked) {
-        applyCartLineChange({
+        setEnabled(true);
+        yield applyCartLineChange({
           type: "addCartLine",
           quantity: 1,
           merchandiseId: variantId
         });
+        setLoading(false);
       } else {
+        setEnabled(false);
         const cartLineId = cartLine.find(
           (e) => e.merchandise.id === variantId
         ).id;
         if (cartLineId) {
-          applyCartLineChange({
+          yield applyCartLineChange({
             type: "removeCartLine",
             id: cartLineId,
-            quantity: 1
+            quantity: 10
           });
+          setLoading(false);
         }
       }
-    };
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(InlineLayout2, { columns: ["fill", "20%"], children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(InlineStack2, { blockAlignment: "center", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ProductThumbnail2, { source: "https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse_Shipping_Protection.png?v=1728361462" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(BlockStack2, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text2, { size: "large", children: "Package Protection" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text2, { size: "small", children: "Description" })
-        ] })
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(View2, { padding: "loose", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-        Switch2,
+    });
+    (0, import_react16.useEffect)(() => {
+      const lineItem = cartLine.find((line) => line.merchandise.id === variantId);
+      if (lineItem) {
+        setEnabled(true);
+      }
+    }, [cartLine]);
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_jsx_runtime4.Fragment, { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(View2, { border: "base", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(InlineLayout2, { columns: ["20%", "65%", "15%"], children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+        View2,
         {
-          onChange: onCheckboxChange,
-          accessibilityLabel: "package-protection-switch"
+          padding: "tight",
+          blockAlignment: "center",
+          inlineAlignment: "center",
+          children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ProductThumbnail2, { source: "https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse_Shipping_Protection.png?v=1728361462" })
         }
-      ) })
-    ] });
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(View2, { padding: "base", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(InlineStack2, { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text2, { size: "large", children: "Package Protection" }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text2, { size: "small", appearance: "subdued", children: enabled ? data == null ? void 0 : data.enabledDescription : data == null ? void 0 : data.disabledDescription })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+        View2,
+        {
+          padding: "base",
+          blockAlignment: "center",
+          inlineAlignment: "center",
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+              Switch2,
+              {
+                disabled: loading,
+                onChange: onCheckboxChange,
+                value: enabled,
+                accessibilityLabel: "package-protection-switch"
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text2, { emphasis: "bold", children: i18n.formatCurrency(variantPrice != null ? variantPrice : 0) })
+          ]
+        }
+      )
+    ] }) }) });
   };
 })();
 //# sourceMappingURL=checkout-extension.js.map
