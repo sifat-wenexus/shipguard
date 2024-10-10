@@ -10,7 +10,7 @@ import { jobRunner } from './job/job-runner.server';
 export class Migration {
   constructor(private readonly session: Session) {}
 
-  public static instance: Migration | null = null;
+  public static instances: Record<string, Migration> = {};
   private readonly GQLClient = getShopifyGQLClient(this.session);
   private readonly RESTClient = getShopifyRestClient(this.session);
 
@@ -26,19 +26,19 @@ export class Migration {
   ];
 
   static attempt(session: Session) {
-    if (!Migration.instance) {
-      Migration.instance = new Migration(session);
+    if (!Migration.instances.hasOwnProperty(session.shop)) {
+      Migration.instances[session.shop] = new Migration(session);
     }
 
-    return Migration.instance.run();
+    return Migration.instances[session.shop].run();
   }
 
   static updateAppUrl(session: Session) {
-    if (!Migration.instance) {
-      Migration.instance = new Migration(session);
+    if (!Migration.instances.hasOwnProperty(session.shop)) {
+      Migration.instances[session.shop] = new Migration(session);
     }
 
-    return Migration.instance.updateAppUrl();
+    return Migration.instances[session.shop].updateAppUrl();
   }
 
   async run() {
