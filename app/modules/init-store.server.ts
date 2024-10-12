@@ -1,7 +1,7 @@
+import { jobRunner } from '~/modules/job/job-runner.server';
 import { getShopifyGQLClient } from './shopify.server';
 import type { Session } from '~/shopify-api/lib';
 import { prisma } from './prisma.server';
-import { jobRunner } from '~/modules/job/job-runner.server';
 
 export class InitStore {
   constructor(private readonly session: Session) {}

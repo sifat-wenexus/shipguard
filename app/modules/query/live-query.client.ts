@@ -12,7 +12,7 @@ export class LiveQueryClient<D, R = D> implements SubscriptionIface<R> {
     this.ready = this.setupEventSource();
   }
 
-  private authResult: Record<'token' | 'shop' | 'sessionId', string> | null =
+  static authResult: Record<'token' | 'shop' | 'sessionId', string> | null =
     null;
   private listeners = new Set<(data: R) => void>();
   private eventSource: EventSource | null = null;
@@ -23,16 +23,16 @@ export class LiveQueryClient<D, R = D> implements SubscriptionIface<R> {
     return new Promise<R>(async (resolve) => {
       this.eventSource?.close();
 
-      if (!this.authResult) {
-        this.authResult = await fetch('/api/sse-auth', {
+      if (!LiveQueryClient.authResult) {
+        LiveQueryClient.authResult = await fetch('/api/sse-auth', {
           method: 'POST',
         }).then((r) => r.json());
       }
 
       const searchParams = new URLSearchParams({
-        sessionId: this.authResult!.sessionId,
-        token: this.authResult!.token,
-        shop: this.authResult!.shop,
+        sessionId: LiveQueryClient.authResult!.sessionId,
+        token: LiveQueryClient.authResult!.token,
+        shop: LiveQueryClient.authResult!.shop,
         query: JSON.stringify({
           type: this.type,
           model: this.model,

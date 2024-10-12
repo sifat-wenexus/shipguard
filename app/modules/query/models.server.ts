@@ -125,6 +125,10 @@ export const models = defineModels(() => {
           fields: true,
           permission: oneLevelPermissionWithId,
         },
+        update: {
+          fields: new Set(['appStatus', 'lastMigrationId']),
+          permission: oneLevelPermissionWithId,
+        },
       },
     },
     job: {

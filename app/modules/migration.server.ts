@@ -1,20 +1,19 @@
 import { getShopifyGQLClient, getShopifyRestClient } from './shopify.server';
-import { emitter } from '~/modules/emitter.server';
+import { queryProxy } from '~/modules/query/query-proxy';
+import { jobRunner } from './job/job-runner.server';
 import type { Session } from '~/shopify-api/lib';
 import { getConfig } from './get-config.server';
-import type { Store } from '#prisma-client';
 import { prisma } from './prisma.server';
 import _ from 'lodash';
-import { jobRunner } from './job/job-runner.server';
 
 export class Migration {
-  constructor(private readonly session: Session) {}
+  constructor(private readonly session: Session) {
+  }
 
-  public static instances: Record<string, Migration> = {};
   private readonly GQLClient = getShopifyGQLClient(this.session);
   private readonly RESTClient = getShopifyRestClient(this.session);
 
-  private readonly order: { id: string; method: () => any }[] = [
+  public readonly order: { id: string; method: () => any }[] = [
     {
       id: 'initialization',
       method: this.initialization.bind(this),
@@ -26,19 +25,11 @@ export class Migration {
   ];
 
   static attempt(session: Session) {
-    if (!Migration.instances.hasOwnProperty(session.shop)) {
-      Migration.instances[session.shop] = new Migration(session);
-    }
-
-    return Migration.instances[session.shop].run();
+    return new Migration(session).run();
   }
 
   static updateAppUrl(session: Session) {
-    if (!Migration.instances.hasOwnProperty(session.shop)) {
-      Migration.instances[session.shop] = new Migration(session);
-    }
-
-    return Migration.instances[session.shop].updateAppUrl();
+    return new Migration(session).updateAppUrl();
   }
 
   async run() {
@@ -66,14 +57,14 @@ export class Migration {
       return console.log(`No migrations to run for ${this.session.shop}`);
     }
 
-    await prisma.store.update({
+    await queryProxy.store.update({
       where: {
         domain: this.session.shop,
       },
       data: {
         appStatus: 'UPDATING',
       },
-    });
+    }, { session: this.session });
 
     // If lastMigrationId is null, start from the beginning, otherwise start after the last migration that was run
     const lastIndex = lastMigrationId
@@ -88,41 +79,36 @@ export class Migration {
 
           for (const migration of this.order.slice(lastIndex + 1)) {
             console.log(
-              `Running migration ${migration.id} for ${this.session.shop}`
+              `Running migration ${migration.id} for ${this.session.shop}`,
             );
 
             await migration.method();
 
-            await prisma.store.update({
+            await queryProxy.store.update({
               where: {
                 domain: this.session.shop,
               },
               data: {
                 lastMigrationId: migration.id,
-                Migrations: {
-                  create: {
-                    id: migration.id,
-                  },
-                },
               },
-            });
+            }, { session: this.session });
           }
         },
         {
           timeout: 1000 * 60 * 5, // 5 minutes
-        }
+        },
       );
     } catch (e) {
       console.error(e);
     } finally {
-      await prisma.store.update({
+      await queryProxy.store.update({
         where: {
           domain: this.session.shop,
         },
         data: {
           appStatus: 'READY',
         },
-      });
+      }, { session: this.session });
 
       console.log(`Finished migrations for ${this.session.shop}`);
     }
@@ -140,24 +126,6 @@ export class Migration {
 
     return store.appInstallationId;
   }
-
-  importProducts(store: Store) {
-    return new Promise<void>(async (resolve) => {
-      emitter.once(`${store.id}.job.import-products.completed`, resolve);
-
-      await jobRunner.run({ name: 'import-products', storeId: store.id });
-    });
-  }
-
-  importCollections(store: Store) {
-    return new Promise<void>(async (resolve) => {
-      emitter.once(`${store.id}.job.import-collections.completed`, resolve);
-
-      await jobRunner.run({ name: 'import-collections', storeId: store.id });
-    });
-  }
-
-  //----------------------- Migration methods ------------------------------
 
   async updateAppUrl() {
     const config = getConfig();
@@ -211,6 +179,7 @@ export class Migration {
           appUrl: config.appUrl,
         },
       },
+      tries: 10,
     });
 
     if (result.body.userErrors) {
@@ -220,7 +189,10 @@ export class Migration {
     return true;
   }
 
+  //----------------------- Migration methods ------------------------------
+
   async initialization() {
+
     return this.updateAppUrl();
   }
 
@@ -231,7 +203,16 @@ export class Migration {
       },
     });
 
-    await this.importCollections(store);
-    await this.importProducts(store);
+    const job = await jobRunner.run({
+      name: 'import-products',
+      storeId: store.id,
+      paused: true,
+    });
+
+    await jobRunner.run({
+      name: 'import-collections',
+      storeId: store.id,
+      payload: { productJobId: job.id },
+    });
   }
 }

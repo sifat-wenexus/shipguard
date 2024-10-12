@@ -1,14 +1,14 @@
 import '~/shopify-app-remix/server/adapters/node';
 import '~/shopify-api/adapters/web-api';
 
+import { ApiVersion, AppDistribution, DeliveryMethod, shopifyApp } from '~/shopify-app-remix/server';
 import { PrismaSessionStorage } from './prisma-session-storage.server';
 import { restResources } from '~/shopify-api/rest/admin/2024-01';
 import type { Session, WebhookHandler } from '~/shopify-api/lib';
 import { InitStore } from '~/modules/init-store.server';
+import { Migration } from '~/modules/migration.server';
 import { getConfig } from './get-config.server';
 import { prisma } from './prisma.server';
-
-import { ApiVersion, AppDistribution, DeliveryMethod, shopifyApp } from '~/shopify-app-remix/server';
 
 const _config = getConfig();
 const webhookHandler: WebhookHandler = {
@@ -57,6 +57,7 @@ export const shopify = shopifyApp({
       }
 
       await new InitStore(session).run();
+      await Migration.attempt(session);
     },
   },
   future: {

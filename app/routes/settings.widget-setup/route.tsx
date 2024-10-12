@@ -1,7 +1,9 @@
+import type { ActionFunctionArgs, LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
 import CustomizedInsuranceStyle from './components/customized-insurance-style';
 import { hexToHsba, hsbaToHexWithAlpha } from '~/modules/utils/color-utils';
 import { shopify as shopifyRemix } from '../../modules/shopify.server';
 import { Box, Button, Layout, Page, Text } from '@shopify/polaris';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import InsurancePricing from './components/insurance-pricing';
 import { useLivePageData } from '~/hooks/use-live-page-data';
@@ -9,25 +11,20 @@ import SpecialSettings from './components/special-settings';
 import { queryProxy } from '~/modules/query/query-proxy';
 import Tutorial from '../settings.$/components/tutorial';
 import PublishButton from './components/publish-button';
+import type { PackageProtection } from '#prisma-client';
 import PlacementCard from './components/placement-cart';
 import WarningBanner from '~/components/warning-banner';
 import { ArrowLeftIcon } from '@shopify/polaris-icons';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useFormState } from '~/hooks/use-form-state';
+import { PageShell } from '~/components/page-shell';
 import { prisma } from '~/modules/prisma.server';
 import { useLoaderData } from '@remix-run/react';
 import { SaveBar } from '~/components/save-bar';
 import Preview from './components/preview';
 import Content from './components/content';
 import style from './styles/route.css';
+import { json } from '@remix-run/node';
 import Css from './components/css';
-import {
-  ActionFunctionArgs,
-  LinksFunction,
-  LoaderFunctionArgs,
-  json,
-} from '@remix-run/node';
-import { PackageProtection } from '#prisma-client';
 
 export async function action({ request }: ActionFunctionArgs) {
   const ctx = await shopifyRemix.authenticate.admin(request);
@@ -66,7 +63,7 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         {
           session: ctx.session,
-        }
+        },
       );
     } catch (e) {
       console.error(e);
@@ -113,7 +110,7 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         {
           session: ctx.session,
-        }
+        },
       );
       if (excludeProductVariant.length === 0) {
         await prisma.excludedPackageProtectionProduct.deleteMany();
@@ -160,7 +157,7 @@ export async function action({ request }: ActionFunctionArgs) {
               create: payload,
               update: payload,
               where: { id: item.id },
-            })
+            }),
           );
 
           item.variants.forEach((variant) => {
@@ -213,8 +210,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
     where: { storeId: ctx.session.storeId },
   });
+
+  const { currencyCode } = await prisma.store.findFirstOrThrow({
+    where: { id: ctx.session.storeId },
+    select: { currencyCode: true },
+  });
+
   return json({
     enabled: settingsData?.enabled ?? false,
+    currencyCode: currencyCode,
     data: {
       insurancePriceType: settingsData?.insurancePriceType ?? 'PERCENTAGE',
       insuranceDisplayButton: settingsData?.insuranceDisplayButton ?? false,
@@ -252,13 +256,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   });
 }
+
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const Settings = () => {
   const fetcher = useBetterFetcher();
   const data = useLoaderData<typeof loader>();
   const initialState = useMemo(() => data.data, [data.data]);
   const formState = useFormState(initialState);
-  const [enabled, setEnabled] = useState(data.enabled);
+  const [enabled] = useState(data.enabled);
   const [insurancePriceError, setInsurancePriceError] = useState(false);
   const { state } = formState;
   const { storeInfo } = useLivePageData();
@@ -276,7 +281,7 @@ const Settings = () => {
         },
         {
           method: 'POST',
-        }
+        },
       );
     } catch (e) {
       console.error(e);
@@ -289,51 +294,53 @@ const Settings = () => {
     }
   }, [state.insurancePriceType]);
   return (
-    <div className="m-2 sm:m-0">
-      <SaveBar formState={formState} onSave={save} />
-      <Page>
-        <Layout>
-          <Layout.Section variant="fullWidth">
-            {<WarningBanner storeInfo={storeInfo} />}
-          </Layout.Section>
-          <Layout.Section variant="oneHalf">
-            <Box paddingBlockEnd={'500'}>
-              <div className="flex items-center gap-4">
-                <Button icon={ArrowLeftIcon} url="/settings"></Button>
-                <Text as="h1" variant="headingLg">
-                  Widget Setup
-                </Text>
+    <PageShell currencyCode={data.currencyCode}>
+      <div className="m-2 sm:m-0">
+        <SaveBar formState={formState} onSave={save} />
+        <Page>
+          <Layout>
+            <Layout.Section variant="fullWidth">
+              {<WarningBanner storeInfo={storeInfo} />}
+            </Layout.Section>
+            <Layout.Section variant="oneHalf">
+              <Box paddingBlockEnd={'500'}>
+                <div className="flex items-center gap-4">
+                  <Button icon={ArrowLeftIcon} url="/settings"></Button>
+                  <Text as="h1" variant="headingLg">
+                    Widget Setup
+                  </Text>
+                </div>
+              </Box>
+              <div className="sm:hidden block">
+                <Preview formState={formState} />
               </div>
-            </Box>
-            <div className="sm:hidden block">
-              <Preview formState={formState} />
-            </div>
-            <PublishButton
-              enabled={enabled}
-              formState={formState}
-              setInsurancePriceError={setInsurancePriceError}
-            />
-            <PlacementCard formState={formState} />
-            <InsurancePricing
-              formState={formState}
-              insurancePriceError={insurancePriceError}
-            />
-            <CustomizedInsuranceStyle formState={formState} />
-            <Content formState={formState} />
-            <SpecialSettings formState={formState} />
-            <Css formState={formState} />
-            {/* <Box paddingBlockEnd={'1200'}></Box> */}
-          </Layout.Section>
-          {/* preview card */}
-          <Layout.Section variant="oneHalf">
-            <div className="hidden sm:block">
-              <Preview formState={formState} />
-            </div>
-          </Layout.Section>
-        </Layout>
-        <Tutorial />
-      </Page>
-    </div>
+              <PublishButton
+                enabled={enabled}
+                formState={formState}
+                setInsurancePriceError={setInsurancePriceError}
+              />
+              <PlacementCard formState={formState} />
+              <InsurancePricing
+                formState={formState}
+                insurancePriceError={insurancePriceError}
+              />
+              <CustomizedInsuranceStyle formState={formState} />
+              <Content formState={formState} />
+              <SpecialSettings formState={formState} />
+              <Css formState={formState} />
+              {/* <Box paddingBlockEnd={'1200'}></Box> */}
+            </Layout.Section>
+            {/* preview card */}
+            <Layout.Section variant="oneHalf">
+              <div className="hidden sm:block">
+                <Preview formState={formState} />
+              </div>
+            </Layout.Section>
+          </Layout>
+          <Tutorial />
+        </Page>
+      </div>
+    </PageShell>
   );
 };
 

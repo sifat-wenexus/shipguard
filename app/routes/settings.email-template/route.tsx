@@ -1,44 +1,48 @@
+import type { ActionFunctionArgs, LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
+import { shopify as shopifyRemix, shopify } from '../../modules/shopify.server';
+import { templateParameters } from './email-template/template-variable-params';
+import { ClaimRequestAdminTemplate } from './email-template/template';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ShadowBevelBox } from '~/components/shadow-bevel-box';
+import { queryProxy } from '~/modules/query/query-proxy';
+import { getConfig } from '~/modules/get-config.server';
+import type { $Enums, Prisma } from '#prisma-client';
+import LiquidEditor from './components/text-editor';
+import LogoUpload from './components/logo-upload';
+import { prisma } from '~/modules/prisma.server';
+import { useLoaderData } from '@remix-run/react';
+import { useQuery } from '~/hooks/use-query';
+import { json } from '@remix-run/node';
+import style from './styles/route.css';
+import _ from 'lodash';
+
 import {
-  ActionFunctionArgs,
-  json,
-  LinksFunction,
-  LoaderFunctionArgs,
-} from '@remix-run/node';
-import {
+  TextField,
   Button,
-  Card,
-  Icon,
   Layout,
   Modal,
+  Card,
+  Icon,
   Page,
   Text,
-  TextField,
 } from '@shopify/polaris';
 
 import {
+  PaintBrushFlatIcon,
   ArrowLeftIcon,
   EditIcon,
-  PaintBrushFlatIcon,
   ViewIcon,
 } from '@shopify/polaris-icons';
-import { shopify as shopifyRemix } from '../../modules/shopify.server';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { shopify } from '~/modules/shopify.server';
-import { prisma } from '~/modules/prisma.server';
-import { useLoaderData } from '@remix-run/react';
-import LiquidEditor from './components/text-editor';
-import { $Enums, Prisma } from '#prisma-client';
-import { ShadowBevelBox } from '~/components/shadow-bevel-box';
+
+
 import {
+  ClaimRequestCustomerVariable,
+  ClaimReOrderCustomerVariable,
   ClaimCancelCustomerVariable,
   ClaimRefundCustomerVariable,
-  ClaimReOrderCustomerVariable,
   ClaimRequestAdminVariable,
-  ClaimRequestCustomerVariable,
 } from './components/template-variable';
-import _ from 'lodash';
-import style from './styles/route.css';
-import { ClaimRequestAdminTemplate } from './email-template/template';
+
 import {
   cancelCustomerTemplate,
   refundCustomerTemplate,
@@ -46,11 +50,7 @@ import {
   reqAdminTemplate,
   reqCustomerTemplate,
 } from './components/default-template-code';
-import LogoUpload from './components/logo-upload';
-import { templateParameters } from './email-template/template-variable-params';
-import { queryProxy } from '~/modules/query/query-proxy';
-import { getConfig } from '~/modules/get-config.server';
-import { useQuery } from '~/hooks/use-query';
+import { PageShell } from '~/components/page-shell';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const ctx = await shopify.authenticate.admin(request);
@@ -58,6 +58,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
     where: { storeId: ctx.session.storeId },
   });
   const appUrl = getConfig().appUrl;
+
+  const { currencyCode } = await prisma.store.findFirstOrThrow({
+    where: { id: ctx.session.storeId },
+    select: { currencyCode: true },
+  });
+
   if (!templates.length) {
     const defaultTemplatesPayload: Prisma.EmailTemplateCreateManyInput[] = [
       {
@@ -96,7 +102,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     });
     return json({
       message: 'something is wrong',
-      data: null,
+      data: {
+        templates: null,
+        currencyCode,
+      },
       storeId: ctx.session.storeId,
       appUrl,
       // logo,
@@ -105,7 +114,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return json({
     message: 'Successfully fetched templates!',
-    data: templates,
+    data: {
+      templates,
+      currencyCode,
+    },
     storeId: ctx.session.storeId,
     appUrl,
     // logo,
@@ -132,7 +144,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const EmailTemplate = () => {
-  const { data, message, storeId, appUrl } = useLoaderData<typeof loader>();
+  const { data: { templates: data, currencyCode }, storeId, appUrl } = useLoaderData<typeof loader>();
   const [templateSubject, setTemplateSubject] = useState<string>('');
   const [editorState, setEditorState] = useState(false);
   const [templatePreview, setTemplatePreview] = useState('');
@@ -150,7 +162,7 @@ const EmailTemplate = () => {
 
   const dataQuery = useMemo(
     () => queryProxy.packageProtection.subscribeFindFirst(),
-    []
+    [],
   );
   const packageProtection = useQuery(dataQuery);
   const logo = `${appUrl}api/files/${packageProtection.data?.emailTemplateLogo}`;
@@ -193,12 +205,12 @@ const EmailTemplate = () => {
       setTemplatePreview(reqCustomerTemplate);
     } else if (e === 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER') {
       setTemplateSubject(
-        'Claim Approved: Refund Issued for Order {{order_id}}'
+        'Claim Approved: Refund Issued for Order {{order_id}}',
       );
       setTemplatePreview(refundCustomerTemplate);
     } else if (e === 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER') {
       setTemplateSubject(
-        'Claim Approved: Replacement Order Confirmed for Order'
+        'Claim Approved: Replacement Order Confirmed for Order',
       );
       setTemplatePreview(reOrderCustomerTemplate);
     } else if (e === 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER') {
@@ -247,7 +259,7 @@ const EmailTemplate = () => {
   }, [file]);
 
   return (
-    <>
+    <PageShell currencyCode={currencyCode}>
       <div className="mt-8 sm:mt-4 m-2">
         <Page>
           <Layout>
@@ -400,16 +412,16 @@ const EmailTemplate = () => {
                         {templateName === 'CLAIM_REQUEST_EMAIL_FOR_ADMIN' ? (
                           <ClaimRequestAdminVariable />
                         ) : templateName ===
-                          'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER' ? (
+                        'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER' ? (
                           <ClaimRequestCustomerVariable />
                         ) : templateName ===
-                          'CLAIM_REFUND_EMAIL_FOR_CUSTOMER' ? (
+                        'CLAIM_REFUND_EMAIL_FOR_CUSTOMER' ? (
                           <ClaimRefundCustomerVariable />
                         ) : templateName ===
-                          'CLAIM_REORDER_EMAIL_FOR_CUSTOMER' ? (
+                        'CLAIM_REORDER_EMAIL_FOR_CUSTOMER' ? (
                           <ClaimReOrderCustomerVariable />
                         ) : templateName ===
-                          'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER' ? (
+                        'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER' ? (
                           <ClaimCancelCustomerVariable />
                         ) : null}
                       </Layout.Section>
@@ -421,7 +433,7 @@ const EmailTemplate = () => {
           </Layout>
         </Page>
       </div>
-    </>
+    </PageShell>
   );
 };
 

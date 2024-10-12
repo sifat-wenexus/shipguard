@@ -1,5 +1,6 @@
 import { performBulkOperation } from '~/modules/perform-bulk-operation.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
+import { jobRunner } from '~/modules/job/job-runner.server';
 import { prisma } from '~/modules/prisma.server';
 import { Job } from '~/modules/job/job';
 
@@ -7,7 +8,11 @@ interface Result {
   imported: number;
 }
 
-export class ImportCollections extends Job<Result> {
+interface Payload {
+  productJobId: number;
+}
+
+export class ImportCollections extends Job<Result, Payload> {
   async execute() {
     const store = await prisma.store.findUniqueOrThrow({
       where: { id: this.job.storeId! },
@@ -56,6 +61,8 @@ export class ImportCollections extends Job<Result> {
         storeId: store.id,
       })),
     });
+
+    await jobRunner.resume(this.job.payload.productJobId);
 
     return {
       imported: collections.length,

@@ -6,6 +6,7 @@ import { RemixServer } from '@remix-run/react';
 import { isbot } from '~/modules/isbot.server';
 import { PassThrough } from 'stream';
 
+import './modules/init.server';
 import './modules/job/job-runner.server';
 import './listeners/index.server';
 import './routes/settings.widget-setup/modules/package-protection-listener.server';

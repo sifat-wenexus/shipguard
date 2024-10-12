@@ -10,6 +10,7 @@ import type { Validator } from '~/hooks/use-form-state';
 import SwitchButton from './components/switch-button';
 import { GmailAPI } from '~/modules/gmail-api.server';
 import { useFormState } from '~/hooks/use-form-state';
+import { PageShell } from '~/components/page-shell';
 import { shopify } from '~/modules/shopify.server';
 import type { SmtpSetting } from '#prisma-client';
 import GmailLogo from '~/assets/images/gmail.png';
@@ -214,10 +215,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
       id: session.storeId!,
     },
   });
+  const { currencyCode } = await prisma.store.findFirstOrThrow({
+    where: { id: session.storeId },
+    select: { currencyCode: true },
+  });
 
   return json({
     googleUserInfo,
     smtpSettings,
+    currencyCode,
   });
 }
 
@@ -503,7 +509,7 @@ const SMTP = () => {
   }, [loaderData.googleUserInfo, isGmailConnected, reValidator]);
 
   return (
-    <>
+    <PageShell currencyCode={loaderData.currencyCode}>
       <div className="mt-8 sm:mt-4 m-2">
         <Page>
           <Layout>
@@ -939,7 +945,7 @@ const SMTP = () => {
           </Layout>
         </Page>
       </div>
-    </>
+    </PageShell>
   );
 };
 

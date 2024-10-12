@@ -1,19 +1,13 @@
 import ImgLogo from '~/assets/images/inhouse-shipping-protection.png';
 import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
-import { I18nContext, I18nManager } from '@shopify/react-i18n';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { queryProxy } from '~/modules/query/query-proxy';
-import { InitStore } from '~/modules/init-store.server';
 import { AppProvider } from '~/shopify-app-remix/react';
-import { Card, Frame, Spinner } from '@shopify/polaris';
-import { Migration } from '~/modules/migration.server';
-import { shopify } from '~/modules/shopify.server';
 import tailwindStyles from '~/styles/tailwind.css';
-import { prisma } from '~/modules/prisma.server';
-import type { AppStatus } from '#prisma-client';
 import { MainNav } from './components/main-nav';
 import { useEffect, useMemo } from 'react';
+import { Frame } from '@shopify/polaris';
 import { json } from '@remix-run/node';
 import { Nav } from './components/nav';
 import appCss from '~/styles/app.css';
@@ -21,7 +15,6 @@ import appCss from '~/styles/app.css';
 import {
   isRouteErrorResponse,
   ScrollRestoration,
-  useRevalidator,
   useLoaderData,
   useRouteError,
   useLocation,
@@ -42,98 +35,14 @@ export const links = () => [
 
 const skipAuthPaths = new Set(['/auth/login', '/terms-of-service', '/privacy-policy']);
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const skipAuth = skipAuthPaths.has(url.pathname);
-
-  if (skipAuth) {
-    return json({
-      appStatus: 'READY' as AppStatus,
-      apiKey: process.env.SHOPIFY_API_KEY!,
-      currencyCode: 'USD',
-      skipAuth,
-    });
-  }
-
-  if (
-    !url.pathname.startsWith('/auth') &&
-    !url.pathname.startsWith('/webhooks') &&
-    // !url.pathname.startsWith('/test') &&
-    !url.pathname.startsWith('/google-oauth-callback')
-  ) {
-    const ctx = await shopify.authenticate.admin(request);
-
-    if (process.env.NODE_ENV === 'development') {
-      await shopify.registerWebhooks({ session: ctx.session });
-    }
-
-    try {
-      await Migration.attempt(ctx.session);
-    } catch (e) {
-      await new InitStore(ctx.session).run();
-    }
-
-    const store = await prisma.store.findFirstOrThrow({
-      where: {
-        domain: ctx.session.shop,
-      },
-      select: {
-        appStatus: true,
-        currencyCode: true,
-      },
-    });
-
-    return json({
-      appStatus: store.appStatus,
-      apiKey: process.env.SHOPIFY_API_KEY!,
-      currencyCode: store.currencyCode,
-      skipAuth,
-    });
-  }
-
-  return json({
-    appStatus: url.pathname.startsWith('/google-oauth-callback')
-      ? 'READY'
-      : ('INSTALLED' as AppStatus),
-    apiKey: process.env.SHOPIFY_API_KEY!,
-    currencyCode: 'USD',
-    skipAuth,
-  });
+export async function loader() {
+  return json({ apiKey: process.env.SHOPIFY_API_KEY });
 }
 
 export default function Root() {
   const data = useLoaderData<typeof loader>();
-  const validator = useRevalidator();
   const location = useLocation();
   const skipAuth = useMemo(() => skipAuthPaths.has(location.pathname), [location.pathname]);
-
-  useEffect(() => {
-    if (data.appStatus === 'READY' || validator.state === 'loading') {
-      return;
-    }
-
-    const interval = setInterval(() => {
-      if (data.appStatus === 'READY') {
-        return clearInterval(interval);
-      }
-
-      validator.revalidate();
-    }, 5000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [validator, data.appStatus]);
-
-  const i18nManager = useMemo(() => {
-    return new I18nManager({
-      locale: 'en',
-      currency: data.currencyCode,
-      onError(error) {
-        console.error(error);
-      },
-    });
-  }, [data.currencyCode]);
 
   useEffect(() => {
     if (window !== undefined) {
@@ -152,36 +61,22 @@ export default function Root() {
     </head>
     <body>
     <AppProvider isEmbeddedApp apiKey={data.apiKey!}>
-      {/* <PolarisVizProvider> */}
-      <I18nContext.Provider value={i18nManager}>
-        <Frame
-          logo={{
-            contextualSaveBarSource: ImgLogo,
-            topBarSource: ImgLogo,
-            url: ImgLogo,
-            width: 48,
-          }}
-        >
-          {data.appStatus === 'READY' ? (
-            <>
-              {!skipAuth && (
-                <>
-                  <Nav />
-                  <MainNav />
-                </>
-              )}
-              <Outlet />
-            </>
-          ) : (
-            <div className="flex justify-center items-center w-full h-full">
-              <Card>
-                <Spinner />
-              </Card>
-            </div>
-          )}
-        </Frame>
-      </I18nContext.Provider>
-      {/* </PolarisVizProvider> */}
+      <Frame
+        logo={{
+          contextualSaveBarSource: ImgLogo,
+          topBarSource: ImgLogo,
+          url: ImgLogo,
+          width: 48,
+        }}
+      >
+        {!skipAuth && (
+          <>
+            <Nav />
+            <MainNav />
+          </>
+        )}
+        <Outlet />
+      </Frame>
     </AppProvider>
 
     <ScrollRestoration />

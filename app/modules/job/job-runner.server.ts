@@ -10,11 +10,13 @@ export interface JobRunnerOptions {
   timeout?: number;
   maxRetries?: number;
   scheduleAt?: Date;
+  paused?: boolean;
   payload?: (typeof jobExecutors)[JobName]['prototype']['job']['payload'];
 }
 
 class Queue {
-  constructor(private readonly batchSize = 50) {}
+  constructor(private readonly batchSize = 50) {
+  }
 
   public readonly items = new Set<Job>();
   public readonly ids = new Set<number>();
@@ -109,7 +111,7 @@ class Queue {
         },
       });
 
-      return setTimeout(async () => {
+      setTimeout(async () => {
         this.items.add(job);
         this.ids.add(job.id);
 
@@ -122,6 +124,8 @@ class Queue {
           },
         });
       }, delay);
+
+      return;
     }
 
     this.items.add(job);
@@ -163,7 +167,7 @@ export class JobRunner {
         } catch (e) {
           console.error(e);
         }
-      })
+      }),
     );
 
     this.running = false;
@@ -208,7 +212,7 @@ export class JobRunner {
                 resolve(null);
               }
             });
-          })
+          }),
       );
 
     // Load scheduled jobs
@@ -257,14 +261,14 @@ export class JobRunner {
             } else {
               resolve(null);
             }
-          })
+          }),
       );
   }
 
   async scheduleJob(
     job: Job,
     ignoreScheduledAt?: boolean,
-    lastExecution?: JobExecution
+    lastExecution?: JobExecution,
   ) {
     const { scheduledAt, interval } = job;
 
@@ -323,7 +327,7 @@ export class JobRunner {
 
     const job = await queryProxy.job.create({
       data: {
-        status: scheduleAt || interval ? 'SCHEDULED' : 'PENDING',
+        status: options.paused ? 'PAUSED' : (scheduleAt || interval) ? 'SCHEDULED' : 'PENDING',
         node: process.env.NODE_ID!,
         storeId: options.storeId,
         scheduledAt: scheduleAt,
@@ -335,10 +339,33 @@ export class JobRunner {
       },
     });
 
-    return this.queue.add(
+    if (options.paused) {
+      return job;
+    }
+
+    await this.queue.add(
       job,
-      scheduleAt ? scheduleAt.getTime() - Date.now() : undefined
+      scheduleAt ? scheduleAt.getTime() - Date.now() : undefined,
     );
+
+    return job;
+  }
+
+  async resume(id: number) {
+    const job = await queryProxy.job.findUnique({
+      where: { id },
+    });
+
+    if (job?.status !== 'PAUSED') {
+      return job;
+    }
+
+    await queryProxy.job.update({
+      where: { id },
+      data: { status: job.scheduledAt || job.interval ? 'SCHEDULED' : 'PENDING' },
+    });
+
+    return job;
   }
 }
 

@@ -1,7 +1,8 @@
-import { ActionFunctionArgs, json, LoaderFunction } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunction } from '@remix-run/node';
+import type { ClaimStatus, FullfillmentStatus } from '#prisma-client';
 import { shopify as shopifyRemix } from '../modules/shopify.server';
 import { prisma } from '~/modules/prisma.server';
-import { ClaimStatus, FullfillmentStatus } from '#prisma-client';
+import { json } from '@remix-run/node';
 
 //loader fn for dashboard api
 export const loader: LoaderFunction = async ({ request }) => {

@@ -2,7 +2,6 @@ import type { Job as BaseJobDetails, JobExecution } from '#prisma-client';
 import type { JobRunner } from '~/modules/job/job-runner.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
-import { prisma } from '~/modules/prisma.server';
 import _ from 'lodash';
 
 export interface JobDetails<P = any> extends Omit<BaseJobDetails, 'payload'> {
@@ -120,31 +119,6 @@ export abstract class Job<R = any, P = any> {
       emitter.emitAsync(`${eventBase}.completed`, job);
       emitter.emitAsync(`${job.storeId}.${eventBase}.completed`, job);
     }
-  }
-
-  async getPreviousExecution() {
-    if (this.execution) {
-      return prisma.jobExecution.findFirst({
-        where: {
-          jobId: this.job.id,
-          id: {
-            not: this.execution.id,
-          },
-        },
-        orderBy: {
-          id: 'desc',
-        },
-      });
-    }
-
-    return prisma.jobExecution.findFirst({
-      where: {
-        jobId: this.job.id,
-      },
-      orderBy: {
-        id: 'desc',
-      },
-    });
   }
 
   async updatePayload(payload: P) {
