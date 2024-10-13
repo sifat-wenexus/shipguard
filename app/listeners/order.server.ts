@@ -58,8 +58,8 @@ const makePackageProtectionFulfill = async (
 // TODO: uninstall to install old order data recover or restore.
 // TODO: if added new column then should fill previous data as per related table
 export const orderCreateEvent = async ({
-                                  ctx: { shop, payload: _payload, session },
-                                }: WebhookListenerArgs) => {
+                                         ctx: { shop, payload: _payload, session },
+                                       }: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -157,6 +157,9 @@ export const orderCreateEvent = async ({
               .amount,
           ),
           protectionFee: Number(protectionFee),
+          fulfillmentStatus: payload.fulfillment_status === 'partial'
+            ? 'PARTIALLY_FULFILLED' : payload.fulfillment_status === 'fulfilled'
+              ? 'FULFILLED' : 'UNFULFILLED',
         },
       });
 
@@ -364,7 +367,7 @@ const orderPartiallyFulfilledEvent = async ({
   }
 };
 
-const orderUpdatedEvent = async ({
+export const orderUpdatedEvent = async ({
                                    ctx: { shop, payload: _payload, session },
                                  }: WebhookListenerArgs) => {
   console.log(

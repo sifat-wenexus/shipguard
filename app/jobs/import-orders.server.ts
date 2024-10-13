@@ -1,14 +1,15 @@
 import { performBulkOperation } from '~/modules/perform-bulk-operation.server';
+import { orderCreateEvent, orderUpdatedEvent } from '~/listeners/order.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { stitchBulkResult } from '~/modules/stitch-bulk-result';
 import { getShopifyRestClient } from '~/modules/shopify.server';
-import { orderCreateEvent } from '~/listeners/order.server';
 import { prisma } from '~/modules/prisma.server';
 import { Job } from '~/modules/job/job';
 import _ from 'lodash';
 
 interface Result {
-  orders: any[] | null;
+  importedOrders: any[] | null;
+  updatedOrders: any[] | null;
 }
 
 interface Payload {
@@ -33,7 +34,7 @@ export class ImportOrders extends Job<Result, Payload> {
       session,
         `#graphql
       {
-        orders(query: "created_at:>${since}", sortKey: ORDER_NUMBER) {
+        orders(query: "created_at:>${since} OR updated_at:>${since}", sortKey: ORDER_NUMBER) {
           edges {
             node {
               id
@@ -103,7 +104,8 @@ export class ImportOrders extends Job<Result, Payload> {
 
     if (data.length === 0) {
       return {
-        orders: null,
+        importedOrders: null,
+        updatedOrders: null,
       };
     }
 
@@ -118,6 +120,7 @@ export class ImportOrders extends Job<Result, Payload> {
       },
       select: {
         orderId: true,
+        fulfillmentStatus: true,
       },
     });
     const availableOrderIds = new Set(ordersAvailable.map((order) => order.orderId));
@@ -127,9 +130,17 @@ export class ImportOrders extends Job<Result, Payload> {
         .map((order) => order.id.split('/').pop()!),
       50,
     );
+
+    const orderIdsToUpdate = _.chunk(
+      orders.filter((order) => availableOrderIds.has(order.id))
+        .map((order) => order.id.split('/').pop()!),
+      50,
+    );
+
     const restClient = getShopifyRestClient(session);
 
     const importedOrders: any[] = [];
+    const updatedOrders: any[] = [];
 
     for (const orderIds of orderIdsToImport) {
       const orders = await restClient.get<{ orders: any[] }>({
@@ -152,8 +163,39 @@ export class ImportOrders extends Job<Result, Payload> {
       }
     }
 
+    for (const orderIds of orderIdsToUpdate) {
+      const orders = await restClient.get<{ orders: any[] }>({
+        path: '/orders.json',
+        query: {
+          ids: orderIds.join(','),
+        },
+      });
+
+      for (const order of orders.body.orders) {
+        const fulfillmentStatus = order.fulfillment_status === 'partial'
+          ? 'PARTIALLY_FULFILLED' : order.fulfillment_status === 'fulfilled'
+            ? 'FULFILLED' : 'UNFULFILLED';
+        const orderInDb = ordersAvailable.find((o) => o.orderId === order.id);
+
+        if (orderInDb?.fulfillmentStatus === fulfillmentStatus) {
+          continue;
+        }
+
+        await orderUpdatedEvent({
+          ctx: {
+            shop: store.domain,
+            payload: order,
+            session,
+          },
+        } as any);
+
+        updatedOrders.push(order);
+      }
+    }
+
     return {
-      orders: importedOrders,
+      importedOrders,
+      updatedOrders,
     };
   }
 }
