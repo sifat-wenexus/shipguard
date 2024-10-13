@@ -1,7 +1,5 @@
-import { shopifyProductUpdate } from '~/routes/settings.widget-setup/modules/package-protection-listener.server';
 import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
-import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { getMailer } from '~/modules/get-mailer.server';
 import { emitter } from '~/modules/emitter.server';
@@ -10,30 +8,14 @@ import { prisma } from '~/modules/prisma.server';
 emitter.on(
   'APP_UNINSTALLED',
   async ({ ctx: { session, shop } }: WebhookListenerArgs) => {
-    console.log(`App uninstalled for shop ${shop}`);
-    console.log('session :', session);
-    const gql = getShopifyGQLClient(session!);
-    const existingProduct = await queryProxy.packageProtection.findUnique({
-      where: { storeId: session?.storeId },
-      select: {
-        percentageProductId: true,
-        fixedProductId: true,
-      },
-    });
-    if (existingProduct?.fixedProductId) {
-      const draftFixedProduct = await shopifyProductUpdate({
-        productId: existingProduct?.fixedProductId,
-        status: 'DRAFT',
-        gql,
+    console.log(`App uninstalled for shop: ${shop}`);
+    // console.log('session :', session);
+    try {
+      await prisma.session.deleteMany({
+        where: { storeId: session?.storeId },
       });
-      console.log(`Updated ${draftFixedProduct}`);
-    }
-    if (existingProduct?.percentageProductId) {
-      await shopifyProductUpdate({
-        productId: existingProduct?.percentageProductId,
-        status: 'DRAFT',
-        gql,
-      });
+    } catch (err) {
+      console.error('Error while deleting session', err);
     }
   }
 );

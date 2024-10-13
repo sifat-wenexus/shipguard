@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "014656fd1817c91322f981a3ad07bb4b"
-name = "Inhouse Package Protection"
+name = "Inhouse Shipping Protection"
 application_url = "https://shipping-protection.wenexus.io"
 embedded = true
 
@@ -10,9 +10,7 @@ embedded = true
 scopes = "read_assigned_fulfillment_orders,read_content,read_custom_fulfillment_services,read_customers,read_fulfillment_constraint_rules,read_fulfillments,read_locations,read_merchant_managed_fulfillment_orders,read_metaobject_definitions,read_metaobjects,read_order_edits,read_orders,read_products,read_publications,read_themes,read_third_party_fulfillment_orders,unauthenticated_read_content,write_assigned_fulfillment_orders,write_content,write_custom_fulfillment_services,write_fulfillment_constraint_rules,write_fulfillments,write_merchant_managed_fulfillment_orders,write_metaobject_definitions,write_metaobjects,write_order_edits,write_orders,write_products,write_publications,write_themes,write_third_party_fulfillment_orders"
 
 [auth]
-redirect_urls = [
-  "https://shipping-protection.wenexus.io/auth/callback",
-]
+redirect_urls = ["https://shipping-protection.wenexus.io/auth/callback"]
 
 [webhooks]
 api_version = "2024-01"

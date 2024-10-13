@@ -13,7 +13,7 @@ interface CalloutCardProps {
   title: string;
   description: string;
   image: string;
-  badge?: React.ReactElement;
+  badge?: React.ReactElement | null;
   button?: React.ReactElement;
 }
 

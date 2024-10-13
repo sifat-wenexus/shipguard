@@ -47,7 +47,7 @@ export async function loader({ request }) {
       id: 'settings/email-template',
       name: 'Email Template Setup',
       description: 'Steps to enable .',
-      installed: true,
+      installed: false,
       illustration: emailIcon,
       available: true,
     },
@@ -136,7 +136,8 @@ export async function loader({ request }) {
 }
 
 const Settings = () => {
-  const { settingsCart, settingsCartSecond, currencyCode } = useLoaderData<typeof loader>();
+  const { settingsCart, settingsCartSecond, currencyCode } =
+    useLoaderData<typeof loader>();
   const columns = useMemo<InlineGridProps['columns']>(
     () => ({
       xl: 2,
@@ -145,7 +146,7 @@ const Settings = () => {
       sm: 1,
       xs: 1,
     }),
-    [],
+    []
   );
   return (
     <PageShell currencyCode={currencyCode}>
@@ -153,7 +154,9 @@ const Settings = () => {
         <Page>
           <Layout>
             <div className="w-full  my-3 m-2 ml-6 sm:ml-0 mt-8">
-              <h1 className="font-bold text-lg text-center">Store Code Setup</h1>{' '}
+              <h1 className="font-bold text-lg text-center">
+                Store Code Setup
+              </h1>{' '}
               <p className="text-center">
                 Code setup for in-house shipping protection
               </p>
@@ -262,7 +265,8 @@ const Settings = () => {
                       title={app.name}
                       key={app.id}
                       badge={
-                        app.installed ? (
+                        app.name ===
+                        'Email Template Setup' ? null : app.installed ? (
                           <Badge tone="success" size="large" icon={CheckIcon}>
                             Active
                           </Badge>

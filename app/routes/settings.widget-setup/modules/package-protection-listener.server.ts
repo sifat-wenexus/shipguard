@@ -287,7 +287,7 @@ onDBEvtBuffered(
           data: {
             query: `#graphql
            query {
-            products(query:"sku:${PRODUCT_SKU}") {
+            products(first:10,query:"sku:${PRODUCT_SKU}") {
                 edges {
                   node {
                     id
@@ -527,13 +527,11 @@ onDBEvtBuffered(
                   update: fixedProduct,
                   where: { id: productId },
                 });
-                await queryProxy.product.upsert(
-                  {
-                    create: percentageProduct,
-                    update: percentageProduct,
-                    where: { id: productGqlDraftId },
-                  }
-                );
+                await queryProxy.product.upsert({
+                  create: percentageProduct,
+                  update: percentageProduct,
+                  where: { id: productGqlDraftId },
+                });
 
                 await queryProxy.packageProtection.update({
                   where: { storeId: data.storeId },
@@ -648,13 +646,11 @@ onDBEvtBuffered(
                   update: fixedProduct,
                   where: { id: productGqlDraftId },
                 });
-                await queryProxy.product.upsert(
-                  {
-                    create: percentageProduct,
-                    update: percentageProduct,
-                    where: { id: productId },
-                  }
-                );
+                await queryProxy.product.upsert({
+                  create: percentageProduct,
+                  update: percentageProduct,
+                  where: { id: productId },
+                });
                 await queryProxy.packageProtection.update({
                   where: { storeId: data.storeId },
                   data: {
@@ -724,7 +720,7 @@ onDBEvtBuffered(
           );
           throw new Error(
             `Error setting metafields: ${JSON.stringify(
-              res.body.data.userErrors
+              res.body.data.metafieldsSet.userErrors
             )}`
           );
         }
@@ -832,14 +828,91 @@ export async function shopifyProductUpdate({
   gql,
   vendor,
   tags,
-}: IShopifyProductCreateAndUpdateArgs): Promise<void> {
-  await gql.query<any>({
+}: IShopifyProductCreateAndUpdateArgs): Promise<any> {
+  const getOldImage = await gql.query<any>({
     data: {
       query: `#graphql
-      mutation  productUpdate($input:ProductInput!,$media:[CreateMediaInput!]) {
-        productUpdate(input:$input,media:$media){
+    query product($id: ID!) {
+      product(id: $id) {
+        media(first:20) {
+        nodes{
+          id
+        }
+        }
+      }
+    }
+    `,
+      variables: {
+        id: productId,
+      },
+    },
+  });
+
+  const deleteProductImage = await gql.query<any>({
+    data: {
+      query: `#graphql
+    mutation productDeleteMedia($mediaIds: [ID!]!, $productId: ID!) {
+      productDeleteMedia(mediaIds: $mediaIds, productId: $productId) {
+        deletedProductImageIds
+        mediaUserErrors {
+          field
+          message
+        }
+
+      }
+    }`,
+      variables: {
+        mediaIds: getOldImage.body.data.product.media.nodes.map(
+          (media) => media.id
+        ),
+        productId: productId,
+      },
+    },
+  });
+
+  const createProductImage = await gql.query<any>({
+    data: {
+      query: `#graphql
+  mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
+    productCreateMedia(media: $media, productId: $productId) {
+
+      mediaUserErrors {
+        field
+        message
+      }
+
+    }
+  }`,
+      variables: {
+        media: [
+          {
+            alt: 'package-protection',
+            mediaContentType: 'IMAGE',
+            originalSource: productImage,
+          },
+        ],
+        productId: productId,
+      },
+    },
+  });
+  const res = await gql.query<any>({
+    data: {
+      query: `#graphql
+      mutation  productUpdate($input:ProductInput!) {
+        productUpdate(input:$input){
           product {
             id
+            media(first:20){
+              nodes{
+                id
+                mediaContentType
+              }
+            }
+          }
+
+          userErrors{
+            field
+            message
           }
         }
       }
@@ -851,16 +924,10 @@ export async function shopifyProductUpdate({
           vendor,
           tags,
         },
-        media: [
-          {
-            alt: 'package-protection',
-            mediaContentType: 'IMAGE',
-            originalSource: `${productImage}`,
-          },
-        ],
       },
     },
   });
+  return res;
 }
 
 async function shopifyCreateProduct({

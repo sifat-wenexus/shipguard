@@ -11,9 +11,8 @@ export interface JobDetails<P = any> extends Omit<BaseJobDetails, 'payload'> {
 export abstract class Job<R = any, P = any> {
   constructor(
     private readonly runner: JobRunner,
-    public readonly job: JobDetails<P>,
-  ) {
-  }
+    public readonly job: JobDetails<P>
+  ) {}
 
   private execution: JobExecution | null = null;
 
@@ -99,7 +98,7 @@ export abstract class Job<R = any, P = any> {
         status: error ? 'FAILED' : 'SUCCEEDED',
         result: _.isEmpty(JSON.parse(JSON.stringify(error)))
           ? { message: error?.message, stack: error?.stack }
-          : (error ?? result),
+          : error ?? result,
         executedAt: new Date(),
         progress: 100,
       },
@@ -136,5 +135,5 @@ export abstract class Job<R = any, P = any> {
 }
 
 export interface JobConstructor {
-  new(job: JobDetails): Job;
+  new (job: JobDetails): Job;
 }
