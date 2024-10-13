@@ -10,7 +10,7 @@ import { queryProxy } from '~/modules/query/query-proxy';
 import { getConfig } from '~/modules/get-config.server';
 import { prisma } from '~/modules/prisma.server';
 import { sleep } from '~/modules/utils/sleep';
-import { Product } from '#prisma-client';
+import type { Product } from '#prisma-client';
 import _ from 'lodash';
 
 interface IShopifyBulkProductVariantCreateArgs {
@@ -287,7 +287,7 @@ onDBEvtBuffered(
           data: {
             query: `#graphql
            query {
-            products(query:"sku:overall-package-protection OR tag:overall-insurance OR sku:wenexus-shipping-protection") {
+            products(query:"sku:${PRODUCT_SKU}") {
                 edges {
                   node {
                     id
@@ -338,14 +338,14 @@ onDBEvtBuffered(
             if (data.enabled) {
               await shopifyProductUpdate({
                 productId: fixedProductId!,
-                tags: ['insurancetype-fixed', 'overall-insurance'],
+                tags: ['insurancetype-fixed', 'wenexus-insurance'],
                 vendor: store.name,
                 status: 'ACTIVE',
                 gql,
               });
               await shopifyProductUpdate({
                 productId: percentageProductId!,
-                tags: ['insurancetype-percentage', 'overall-insurance'],
+                tags: ['insurancetype-percentage', 'wenexus-insurance'],
                 vendor: store.name,
                 status: 'DRAFT',
                 gql,
@@ -353,7 +353,7 @@ onDBEvtBuffered(
             } else {
               await shopifyProductUpdate({
                 productId: fixedProductId!,
-                tags: ['insurancetype-fixed', 'overall-insurance'],
+                tags: ['insurancetype-fixed', 'wenexus-insurance'],
                 vendor: store.name,
                 status: 'DRAFT',
                 gql,
@@ -407,14 +407,14 @@ onDBEvtBuffered(
               await shopifyProductUpdate({
                 productId: percentageProductId!,
                 status: 'ACTIVE',
-                tags: ['insurancetype-percentage', 'overall-insurance'],
+                tags: ['insurancetype-percentage', 'wenexus-insurance'],
                 vendor: store.name,
                 gql: gql,
               });
 
               await shopifyProductUpdate({
                 productId: fixedProductId!,
-                tags: ['insurancetype-fixed', 'overall-insurance'],
+                tags: ['insurancetype-fixed', 'wenexus-insurance'],
                 vendor: store.name,
                 status: 'DRAFT',
                 gql,
@@ -422,7 +422,7 @@ onDBEvtBuffered(
             } else {
               await shopifyProductUpdate({
                 productId: percentageProductId!,
-                tags: ['insurancetype-percentage', 'overall-insurance'],
+                tags: ['insurancetype-percentage', 'wenexus-insurance'],
                 vendor: store.name,
                 status: 'DRAFT',
                 gql: gql,
@@ -477,7 +477,7 @@ onDBEvtBuffered(
             if (data.enabled) {
               const createFixedProduct = await shopifyCreateProduct({
                 status: 'ACTIVE',
-                tags: ['insurancetype-fixed', 'overall-insurance'],
+                tags: ['insurancetype-fixed', 'wenexus-insurance'],
                 gql,
                 vendor: store.name,
               });
@@ -486,7 +486,7 @@ onDBEvtBuffered(
             } else {
               const createFixedProduct = await shopifyCreateProduct({
                 status: 'DRAFT',
-                tags: ['insurancetype-fixed', 'overall-insurance'],
+                tags: ['insurancetype-fixed', 'wenexus-insurance'],
                 gql,
                 vendor: store.name,
               });
@@ -494,7 +494,7 @@ onDBEvtBuffered(
             }
             const createPercentProduct = await shopifyCreateProduct({
               status: 'DRAFT',
-              tags: ['insurancetype-percentage', 'overall-insurance'],
+              tags: ['insurancetype-percentage', 'wenexus-insurance'],
               gql,
               vendor: store.name,
             });
@@ -505,7 +505,7 @@ onDBEvtBuffered(
                 const fixedProduct: Partial<Product> = {
                   title: 'Package Protection',
                   productType: 'Warranty',
-                  tags: ['insurancetype-fixed', 'overall-insurance'],
+                  tags: ['insurancetype-fixed', 'wenexus-insurance'],
                   handle: 'package-protection-fixed',
                   vendor: store.name,
                   status: 'PUBLISHED',
@@ -516,18 +516,18 @@ onDBEvtBuffered(
                   title: 'Package Protection',
                   productType: 'Warranty',
                   handle: 'package-protection-percentage',
-                  tags: ['insurancetype-percentage', 'overall-insurance'],
+                  tags: ['insurancetype-percentage', 'wenexus-insurance'],
                   vendor: store.name,
                   status: 'DRAFT',
                   storeId: data.storeId,
                   id: productGqlDraftId,
                 };
-                const fixedProductResult = await queryProxy.product.upsert({
+                await queryProxy.product.upsert({
                   create: fixedProduct,
                   update: fixedProduct,
                   where: { id: productId },
                 });
-                const percentageProductResult = await queryProxy.product.upsert(
+                await queryProxy.product.upsert(
                   {
                     create: percentageProduct,
                     update: percentageProduct,
@@ -564,7 +564,7 @@ onDBEvtBuffered(
                     sku: PRODUCT_SKU,
                     options: data.price.toString(),
                     requiresShipping: false,
-                    id: variantExists?.id!,
+                    id: variantExists?.id as string,
                     price: data.price,
                     taxable: false,
                   },
@@ -598,7 +598,7 @@ onDBEvtBuffered(
             if (data.enabled) {
               const createPercentProduct = await shopifyCreateProduct({
                 status: 'ACTIVE',
-                tags: ['insurancetype-percentage', 'overall-insurance'],
+                tags: ['insurancetype-percentage', 'wenexus-insurance'],
                 gql,
                 vendor: store.name,
               });
@@ -607,7 +607,7 @@ onDBEvtBuffered(
             } else {
               const createPercentProduct = await shopifyCreateProduct({
                 status: 'DRAFT',
-                tags: ['insurancetype-percentage', 'overall-insurance'],
+                tags: ['insurancetype-percentage', 'wenexus-insurance'],
                 gql,
                 vendor: store.name,
               });
@@ -615,7 +615,7 @@ onDBEvtBuffered(
             }
             const createFixedProduct = await shopifyCreateProduct({
               status: 'DRAFT',
-              tags: ['insurancetype-fixed', 'overall-insurance'],
+              tags: ['insurancetype-fixed', 'wenexus-insurance'],
               vendor: store.name,
               gql,
             });
@@ -627,7 +627,7 @@ onDBEvtBuffered(
                   title: 'Package Protection',
                   productType: 'Warranty',
                   handle: 'package-protection-fixed',
-                  tags: ['insurancetype-fixed', 'overall-insurance'],
+                  tags: ['insurancetype-fixed', 'wenexus-insurance'],
                   vendor: store.name,
                   status: 'PUBLISHED',
                   storeId: data.storeId,
@@ -637,18 +637,18 @@ onDBEvtBuffered(
                   title: 'Package Protection',
                   productType: 'Warranty',
                   handle: 'package-protection-percentage',
-                  tags: ['insurancetype-percentage', 'overall-insurance'],
+                  tags: ['insurancetype-percentage', 'wenexus-insurance'],
                   vendor: store.name,
                   status: 'DRAFT',
                   storeId: data.storeId,
                   id: productId,
                 };
-                const fixedProductResult = await queryProxy.product.upsert({
+                await queryProxy.product.upsert({
                   create: fixedProduct,
                   update: fixedProduct,
                   where: { id: productGqlDraftId },
                 });
-                const percentageProductResult = await queryProxy.product.upsert(
+                await queryProxy.product.upsert(
                   {
                     create: percentageProduct,
                     update: percentageProduct,
@@ -940,7 +940,7 @@ const productPublish = async (productId: string, gql: GraphqlClient) => {
     (e) => e.node.id
   );
   // published
-  const published = await gql.query<any>({
+  await gql.query<any>({
     data: {
       query: `#graphql
       mutation publishablePublish($id: ID!, $input: [PublicationInput!]!) {

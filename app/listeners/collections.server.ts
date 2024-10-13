@@ -1,4 +1,5 @@
 import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
+import { jobRunner } from '~/modules/job/job-runner.server';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
 
@@ -49,15 +50,13 @@ emitter.on('COLLECTIONS_UPDATE', async (args: WebhookListenerArgs) => {
     },
   });
 
-  await prisma.job.create({
-    data: {
-      storeId: store.id,
-      name: 'update-product-collection',
-      payload: {
-        collectionId: payload.admin_graphql_api_id,
-      },
-    },
-  });
+  await jobRunner.run({
+    name: 'update-product-collection',
+    storeId: store.id,
+    payload: {
+      collectionId: payload.admin_graphql_api_id,
+    }
+  })
 });
 
 emitter.on('COLLECTIONS_CREATE', upsert);

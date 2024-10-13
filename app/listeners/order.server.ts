@@ -1,10 +1,9 @@
 import { PRODUCT_SKU } from '~/routes/settings.widget-setup/modules/package-protection-listener.server';
-import { getShopifyGQLClient, getShopifyRestClient } from '~/modules/shopify.server';
 import type { GraphqlClient } from '~/shopify-api/lib/clients/graphql/graphql_client';
 import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
+import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
-import _ from 'lodash';
 
 const makePackageProtectionFulfill = async (
   data: Record<string, any>[],
@@ -66,26 +65,10 @@ export const orderCreateEvent = async ({
   }
 
   const gqlClient = getShopifyGQLClient(session!);
-  const restClient = getShopifyRestClient(session!);
   const payload = _payload as Record<string, any>;
 
-  const products = await restClient.get<any>({
-    path: '/products.json',
-    query: {
-      ids: payload.line_items.map((item) => item.product_id).join(','),
-    },
-  });
-
-  const productsByIDs = _.keyBy(products.body.products.map(p => ({
-    id: p.id,
-    tags: p.tags.split(',').map((tag: string) => tag.trim()),
-  })), 'id');
-
   const existPackageProtection = payload.line_items.find(
-    (lineItem) => !(lineItem.sku === 'overall-package-protection' ||
-      lineItem.sku === 'wenexus-shipping-protection' ||
-      productsByIDs[lineItem.product_id].tags.includes('overall-insurance')
-    ),
+    (lineItem) => lineItem.sku === PRODUCT_SKU,
   );
 
   try {
@@ -101,7 +84,7 @@ export const orderCreateEvent = async ({
 
       const updatedOrder = await gqlClient.query<any>({
         data: `#graphql
-        mutation{
+        mutation {
           orderUpdate(input:{id: "${orderId}",tags:["Wenexus-Shipping-Protection"]}){
             order{
               id
@@ -152,9 +135,7 @@ export const orderCreateEvent = async ({
       const protectionFee =
         await updatedOrder.body.data.orderUpdate.order.lineItems.nodes
           .map((e) => {
-            if (e.sku === 'overall-package-protection' ||
-              e.sku === 'wenexus-shipping-protection' ||
-              productsByIDs[_.last(e.product.id.split('/')) as string].tags.includes('overall-insurance')) {
+            if (e.sku === PRODUCT_SKU) {
               return e.originalTotalSet.shopMoney.amount;
             } else {
               return 0;
@@ -210,7 +191,7 @@ const orderRefundEvent = async ({
     await gqlClient.query<any>({
       data: `#graphql
       mutation{
-        orderUpdate(input:{id: "${orderId}",tags:["Overall-Package-Refund","Wenexus-Shipping-Refund"]}){
+        orderUpdate(input:{id: "${orderId}",tags:["Wenexus-Shipping-Refund"]}){
           order{
             id
           }userErrors{

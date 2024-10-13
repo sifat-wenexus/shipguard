@@ -1,8 +1,10 @@
+import { PRODUCT_SKU } from '~/routes/settings.widget-setup/modules/package-protection-listener.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
+import { getConfig } from '~/modules/get-config.server';
 import { sendMail } from '~/modules/send-mail.server';
 import { prisma } from '~/modules/prisma.server';
 import { json } from '@remix-run/node';
@@ -12,7 +14,6 @@ import type {
   ClaimRequested,
   ClaimIssue,
 } from '#prisma-client';
-import { getConfig } from '~/modules/get-config.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -214,7 +215,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       totalPrice: orderData.totalPriceSet.shopMoney.amount,
       id: orderData.id,
       claimStatus:
-        getPackageProtectionOrder?.PackageProtectionClaimOrder[0]?.claimStatus,
+      getPackageProtectionOrder?.PackageProtectionClaimOrder[0]?.claimStatus,
       fulfillments: orderData.fulfillments
         .filter((f) => f.status === 'SUCCESS')
         .map((f) => {
@@ -226,37 +227,29 @@ export const loader: LoaderFunction = async ({ request }) => {
             createdAt: f.createdAt,
             fulfillmentLineItems: f.fulfillmentLineItems.nodes
               .filter(
-                (item) =>
-                  !(
-                    item.lineItem.sku === 'overall-package-protection' ||
-                    item.lineItem.sku === 'wenexus-shipping-protection' ||
-                    item.lineItem.product.tags.includes('overall-insurance')
-                  )
-              )
+                (item) => item.lineItem.sku === PRODUCT_SKU)
               .map((item) => {
                 return {
                   discountPrice:
-                    item.lineItem.discountAllocations[0]?.allocatedAmountSet
-                      ?.shopMoney?.amount,
+                  item.lineItem.discountAllocations[0]?.allocatedAmountSet
+                    ?.shopMoney?.amount,
                   currencyCode:
-                    item.lineItem.discountAllocations[0]?.allocatedAmountSet
-                      ?.shopMoney?.currencyCode,
+                  item.lineItem.discountAllocations[0]?.allocatedAmountSet
+                    ?.shopMoney?.currencyCode,
                   image: item.lineItem.image?.url,
                   name: item.lineItem.name,
                   originalPrice:
-                    item.lineItem.originalUnitPriceSet.shopMoney.amount,
+                  item.lineItem.originalUnitPriceSet.shopMoney.amount,
                   sku: item.lineItem.sku,
                   title: item.lineItem.title,
                   quantity: item.quantity,
                   orderId: orderData.id,
-                  hasClaim: getClaimData.find(
-                    (e) => e.fulfillmentLineItemId === item.id
-                  )
-                    ? true
-                    : false,
+                  hasClaim: !!getClaimData.find(
+                    (e) => e.fulfillmentLineItemId === item.id,
+                  ),
                   claimStatus:
                     getClaimData.find(
-                      (e) => e.fulfillmentLineItemId === item.id
+                      (e) => e.fulfillmentLineItemId === item.id,
                     )?.claimStatus ?? null,
                   // getPackageProtectionOrder?.PackageProtectionClaimOrder[0]
                   //   ?.hasClaimRequest || false,
@@ -335,7 +328,7 @@ export const action: ActionFunction = async ({ request }) => {
             });
 
             const bucket = gcloudStorage.bucket(
-              process.env.GC_STORAGE_BUCKET_NAME!
+              process.env.GC_STORAGE_BUCKET_NAME!,
             );
             await bucket
               .file(fileInDB.id)
@@ -344,10 +337,10 @@ export const action: ActionFunction = async ({ request }) => {
               });
 
             images.push(fileInDB.id);
-          })
+          }),
         );
       },
-      { timeout: 20000 }
+      { timeout: 20000 },
     );
   } catch (err) {
     console.error(err);
@@ -375,7 +368,7 @@ export const action: ActionFunction = async ({ request }) => {
     {
       data: payload,
     },
-    { session }
+    { session },
   );
 
   await queryProxy.packageProtectionOrder.updateMany(
@@ -387,7 +380,7 @@ export const action: ActionFunction = async ({ request }) => {
         claimStatus: 'REQUESTED',
       },
     },
-    { session }
+    { session },
   );
 
   if ((result as any).length > 0) {

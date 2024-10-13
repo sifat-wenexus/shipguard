@@ -132,7 +132,7 @@ export abstract class Job<R = any, P = any> {
     });
   }
 
-  abstract execute(payload?: P): Promise<R>;
+  abstract execute(payload?: P): Promise<R> | R;
 }
 
 export interface JobConstructor {
