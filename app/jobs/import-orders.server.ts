@@ -33,7 +33,7 @@ export class ImportOrders extends Job<Result, Payload> {
       session,
         `#graphql
       {
-        orders(query: "created_at:>${since}", sortKey: ORDER_NUMBER, reverse: true) {
+        orders(query: "created_at:>${since}", sortKey: ORDER_NUMBER) {
           edges {
             node {
               id
