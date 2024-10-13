@@ -1,10 +1,11 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { useActionData, useLoaderData, useSubmit } from '@remix-run/react';
+import LogoImg from '~/assets/images/inhouse-shipping-protection.png';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
+import { LoginErrorType } from '~/shopify-app-remix/server';
+import React, { useCallback, useState } from 'react';
 import { shopify } from '~/modules/shopify.server';
 import * as Icons from '@shopify/polaris-icons';
-import LogoImg from '~/assets/images/inhouse-shipping-protection.png';
-import { useCallback, useState } from 'react';
 import { json } from '@remix-run/node';
 
 import {
@@ -15,11 +16,10 @@ import {
   Divider,
   FormLayout,
   Image,
-  InlineStack,
+  InlineStack, Link,
   Text,
   TextField,
 } from '@shopify/polaris';
-import { LoginErrorType } from '~/shopify-app-remix/server';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const errors = await shopify.login(request);
@@ -123,8 +123,6 @@ export default function AuthLogin() {
                 name="shop"
               />
 
-              <br />
-
               <Button
                 icon={Icons.WrenchIcon}
                 onClick={handleSubmit}
@@ -135,6 +133,11 @@ export default function AuthLogin() {
               >
                 Install
               </Button>
+
+              <Text as="p" variant="bodySm" alignment="center">
+                By installing this app, you agree to our <Link url="/terms-of-service" target="_blank">Terms of
+                Service</Link> and <Link url="/privacy-policy" target="_blank">Privacy Policy</Link>
+              </Text>
             </FormLayout>
           </Card>
         </div>
