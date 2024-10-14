@@ -50,6 +50,7 @@ const makePackageProtectionFulfill = async (
         }
 
       }`,
+      tries: 20,
     });
   }
 
@@ -127,6 +128,7 @@ export const orderCreateEvent = async ({ payload: _payload, session }: WebhookLi
           }
         }
         `,
+        tries: 20,
       });
       // create local db row for order
 
@@ -200,6 +202,7 @@ const orderRefundEvent = async ({ payload: _payload, session }: WebhookListenerA
         }
       }
       `,
+      tries: 20,
     });
   } catch (err) {
     console.error('Error in orderRefundEvent', err);
@@ -270,6 +273,7 @@ const orderPartiallyFulfilledEvent = async ({ payload: _payload, session }: Webh
           }
         }
         `,
+        tries: 20,
       });
 
       await queryProxy.packageProtectionOrder.update({
@@ -339,6 +343,7 @@ const orderPartiallyFulfilledEvent = async ({ payload: _payload, session }: Webh
                   }
                 }
               }`,
+              tries: 20,
             });
           });
         }
@@ -409,6 +414,7 @@ export const orderUpdatedEvent = async ({ payload: _payload, session }: WebhookL
           }
         }
         `,
+        tries: 20,
       });
 
       console.log(

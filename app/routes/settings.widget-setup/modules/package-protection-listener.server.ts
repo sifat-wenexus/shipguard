@@ -299,6 +299,7 @@ onDBEvtBuffered(
            }
             `,
           },
+          tries: 20,
         });
         const existingShopifyProduct: {
           node: {
@@ -712,6 +713,7 @@ onDBEvtBuffered(
               metafields,
             },
           },
+          tries: 20,
         });
         if (res.body.data?.metafieldsSet?.userErrors?.length > 0) {
           console.log(
@@ -771,6 +773,7 @@ async function shopifyBulkProductVariantCreate({
         variants: productVariants,
       },
     },
+    tries: 20,
   });
 
   const productVariantsCreatedList =
@@ -818,6 +821,7 @@ async function shopifyBulkVariantUpdate(
         variants: variants,
       },
     },
+    tries: 20,
   });
   return res.body.data.productVariantsBulkUpdate;
 }
@@ -846,9 +850,10 @@ export async function shopifyProductUpdate({
         id: productId,
       },
     },
+    tries: 20,
   });
 
-  const deleteProductImage = await gql.query<any>({
+  await gql.query<any>({
     data: {
       query: `#graphql
     mutation productDeleteMedia($mediaIds: [ID!]!, $productId: ID!) {
@@ -868,9 +873,10 @@ export async function shopifyProductUpdate({
         productId: productId,
       },
     },
+    tries: 20,
   });
 
-  const createProductImage = await gql.query<any>({
+  await gql.query<any>({
     data: {
       query: `#graphql
   mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
@@ -894,6 +900,7 @@ export async function shopifyProductUpdate({
         productId: productId,
       },
     },
+    tries: 20,
   });
   const res = await gql.query<any>({
     data: {
@@ -926,6 +933,7 @@ export async function shopifyProductUpdate({
         },
       },
     },
+    tries: 20,
   });
   return res;
 }
@@ -983,6 +991,7 @@ async function shopifyCreateProduct({
         ],
       },
     },
+    tries: 20,
   });
   await productPublish(res.body.data.productCreate.product.id, gql);
   return await res.body.data;
@@ -1002,6 +1011,7 @@ const productPublish = async (productId: string, gql: GraphqlClient) => {
         }
       }`,
     },
+    tries: 20,
   });
   const publicationsIds = getPublications.body.data.publications.edges.map(
     (e) => e.node.id
@@ -1031,5 +1041,6 @@ const productPublish = async (productId: string, gql: GraphqlClient) => {
         },
       },
     },
+    tries: 20,
   });
 };

@@ -47,6 +47,7 @@ export class InitStore {
         }
       }
       `,
+      tries: 20,
     });
 
     const store = await prisma.store.create({

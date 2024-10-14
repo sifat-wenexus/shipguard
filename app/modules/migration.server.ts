@@ -142,6 +142,7 @@ export class Migration {
         }
         `,
       },
+      tries: 20,
     });
 
     if (
@@ -179,7 +180,7 @@ export class Migration {
           appUrl: config.appUrl,
         },
       },
-      tries: 10,
+      tries: 20,
     });
 
     if (result.body.userErrors) {

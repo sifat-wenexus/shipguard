@@ -45,6 +45,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         `,
         // variables: { orderId: orderId },
       },
+      tries: 20,
     });
 
     const fulfillmentIds =
@@ -56,19 +57,19 @@ export const loader: LoaderFunction = async ({ request }) => {
           claimStatus: order.claimStatus,
           fulfillClaim: order.fulfillClaim,
           claimStatusMessage: order.claimStatusMessage,
-        })
+        }),
       )) || [];
 
     const fulfillmentData: any[] = await Promise.all(
       [...new Map(fulfillmentIds.map((item) => [item.id, item])).values()].map(
         async ({
-          id,
-          images,
-          comments,
-          claimStatus,
-          fulfillClaim,
-          claimStatusMessage,
-        }) => {
+                 id,
+                 images,
+                 comments,
+                 claimStatus,
+                 fulfillClaim,
+                 claimStatusMessage,
+               }) => {
           const body = await gql.query<any>({
             data: {
               query: `#graphql
@@ -119,6 +120,7 @@ export const loader: LoaderFunction = async ({ request }) => {
               `,
               variables: { id },
             },
+            tries: 20,
           });
 
           return {
@@ -130,8 +132,8 @@ export const loader: LoaderFunction = async ({ request }) => {
             fulfillClaim,
             claimStatusMessage,
           };
-        }
-      )
+        },
+      ),
     );
 
     const convertedData = fulfillmentData.map((f) => {
@@ -143,8 +145,8 @@ export const loader: LoaderFunction = async ({ request }) => {
         name: f.name,
         id: f.id,
         hasClaim:
-          packageProtectionOrder?.PackageProtectionClaimOrder[0]
-            .hasClaimRequest,
+        packageProtectionOrder?.PackageProtectionClaimOrder[0]
+          .hasClaimRequest,
 
         claimStatus: f.claimStatus,
         comments: f.comments,
@@ -340,15 +342,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
               `,
             },
+            tries: 20,
           });
           const existingOrder = await res.body.data.order;
           const itemToReorder = reorderItems.map((item) => item.itemId);
           const lineItems = existingOrder.lineItems.nodes.filter((item) =>
-            itemToReorder.includes(item.id)
+            itemToReorder.includes(item.id),
           );
 
           const lineItemIds = reorderItems.map(
-            (lineItem) => lineItem.lineItemId
+            (lineItem) => lineItem.lineItemId,
           );
 
           // return null;
@@ -375,7 +378,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             quantity: item.quantity,
             variant_id: +item.variant.id.replace(
               'gid://shopify/ProductVariant/',
-              ''
+              '',
             ),
             //  price: item.variant.price,
           }));
@@ -439,7 +442,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const data = await trx.packageProtectionClaimOrder.findFirst({
             where: {
               fulfillmentLineItemId:
-                bodyData.fulfillmentLineItems[0].lineItemId,
+              bodyData.fulfillmentLineItems[0].lineItemId,
             },
             select: { orderId: true },
           });
@@ -458,7 +461,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             },
           });
           const lineItemIds = bodyData.fulfillmentLineItems.map(
-            (lineItem) => lineItem.lineItemId
+            (lineItem) => lineItem.lineItemId,
           );
           await trx.packageProtectionClaimOrder.updateMany({
             where: { fulfillmentLineItemId: { in: lineItemIds } },
@@ -479,6 +482,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               `,
               variables: { orderId: data.orderId },
             },
+            tries: 20,
           });
 
           const parentId = await orderTransaction.body.data.order
@@ -490,7 +494,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               lineItemId: e.itemId,
               quantity: e.refundQuantity,
               locationId: e.locationId,
-            })
+            }),
           );
 
           await gql.query<any>({
@@ -526,6 +530,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 },
               },
             },
+            tries: 20,
           });
         });
         if (orderID) {
@@ -602,7 +607,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           });
 
           const lineItemIds = bodyData.refundItems.map(
-            (lineItem) => lineItem.lineItemId
+            (lineItem) => lineItem.lineItemId,
           );
           await trx.packageProtectionClaimOrder.updateMany({
             where: { fulfillmentLineItemId: { in: lineItemIds } },
@@ -622,6 +627,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               `,
               variables: { orderId: data.orderId },
             },
+            tries: 20,
           });
 
           const parentId = await orderTransaction.body.data.order
@@ -669,6 +675,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 },
               },
             },
+            tries: 20,
           });
 
           console.log('response--:  ', JSON.stringify(response.body.data));

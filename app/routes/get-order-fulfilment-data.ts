@@ -124,6 +124,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         `,
         // variables: { orderId: orderId },
       },
+      tries: 20,
     });
 
     if (params.email !== res.body.data.order.email) {
@@ -199,6 +200,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
         `,
       },
+      tries: 20,
     });
     const orderData = await response.body.data.order;
 

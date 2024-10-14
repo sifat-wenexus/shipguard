@@ -166,11 +166,9 @@ export class ImportOrders extends Job<Payload> {
 
       for (const order of orders.body.orders) {
         await orderCreateEvent({
-          ctx: {
-            shop: store.domain,
-            payload: order,
-            session,
-          },
+          shop: store.domain,
+          payload: order,
+          session,
         } as any);
 
         importedOrders.push(order);
@@ -205,11 +203,9 @@ export class ImportOrders extends Job<Payload> {
         }
 
         await orderUpdatedEvent({
-          ctx: {
-            shop: store.domain,
-            payload: order,
-            session,
-          },
+          shop: store.domain,
+          payload: order,
+          session,
         } as any);
 
         updatedOrders.push(order);
@@ -222,3 +218,4 @@ export class ImportOrders extends Job<Payload> {
     };
   }
 }
+

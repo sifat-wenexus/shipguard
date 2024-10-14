@@ -36,6 +36,7 @@ export async function performBulkQuery<
         query,
       },
     },
+    tries: 20,
   });
 
   if (createBulkOperation.body.data.bulkOperationRunQuery.userErrors?.length) {
@@ -74,6 +75,7 @@ export async function fetchBulkOperationData<D = any>(operationId: string, sessi
       }
     }
     `,
+    tries: 20,
   });
 
   const dataUrl = bulkOperation.body.data.node.url;
