@@ -671,7 +671,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           });
 
           console.log('response--:  ', JSON.stringify(response.body.data));
-          if (response.body.data.userErrors.length > 0) {
+          if (response.body.data.refundCreate.userErrors.length > 0) {
             throw Error('can not refund this item');
           }
         });

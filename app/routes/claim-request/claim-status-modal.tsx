@@ -72,7 +72,7 @@ const ClaimStatusModal = ({ data, setRefetch }) => {
         onClose={handleClose}
         title="Change Claim Status"
         primaryAction={{
-          content: 'submit',
+          content: 'Submit',
           onAction: handleSubmit,
           loading,
         }}
