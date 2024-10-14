@@ -42,6 +42,11 @@ async function init() {
   }
 
   const aSession = await findOfflineSession(aStore.domain);
+
+  if (!aSession) {
+    return;
+  }
+
   const lastMigrationId = _.last(new Migration(aSession).order)?.id;
 
   const query = await queryProxy.store.findMany({
