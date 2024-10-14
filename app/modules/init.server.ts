@@ -19,6 +19,10 @@ async function init() {
         try {
           const session = await findOfflineSession(domain);
 
+          if (!session) {
+            continue;
+          }
+
           await shopify.registerWebhooks({ session });
           await Migration.updateAppUrl(session);
         } catch (e) {
@@ -73,6 +77,11 @@ async function init() {
     for (const { domain } of data) {
       try {
         const session = await findOfflineSession(domain);
+
+        if (!session) {
+          continue;
+        }
+
         await Migration.attempt(session);
       } catch (e) {
         console.error(e);
