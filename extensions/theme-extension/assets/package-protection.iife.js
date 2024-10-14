@@ -556,11 +556,10 @@ var __publicField = (obj, key, value) => {
       return result;
     };
     const variants = checkExcludeVariants();
-    console.log({ variants });
     const enabledByDefault = settings.insuranceDisplayButton ?? true;
     const enabled = () => {
       const value = localStorage.getItem("package-protection-enabled");
-      if (value === null || value === "false") {
+      if (value === "false") {
         return false;
       }
       if (value === null) {
@@ -585,7 +584,6 @@ var __publicField = (obj, key, value) => {
     }
     async function refresh(force = false) {
       const item = await packageProtectionApi.refresh();
-      console.log(item);
       const oldItemId = localStorage.getItem("package-protection-item") || null;
       const newItemId = (item == null ? void 0 : item.variant_id.toString()) || null;
       localStorage.setItem(
@@ -644,6 +642,8 @@ var __publicField = (obj, key, value) => {
             await packageProtectionApi.remove();
             (_a2 = document.getElementsByTagName("cart-items")[0]) == null ? void 0 : _a2.onCartUpdate();
             continue;
+          } else {
+            console.log("Please", settings);
           }
           switch (selector.insertPosition) {
             case "before":

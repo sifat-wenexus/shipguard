@@ -510,7 +510,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               variables: {
                 input: {
                   orderId: data.orderId,
-                  currency: 'USD',
                   note: '',
                   notify: true,
                   refundLineItems: refundLineItem,
@@ -654,7 +653,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               variables: {
                 input: {
                   orderId: data.orderId,
-                  currency: 'USD',
                   note: '',
                   notify: true,
                   refundLineItems: refundLineItem,

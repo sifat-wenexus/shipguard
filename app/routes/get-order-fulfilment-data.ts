@@ -36,15 +36,15 @@ export const loader: LoaderFunction = async ({ request }) => {
       });
     }
 
-    if (
-      getPackageProtectionOrder.hasClaimRequest &&
-      process.env.NODE_ENV === 'production'
-    ) {
-      return json({
-        error: 'This order already claimed!',
-        status: 404,
-      });
-    }
+    // if (
+    //   getPackageProtectionOrder.hasClaimRequest &&
+    //   process.env.NODE_ENV === 'production'
+    // ) {
+    //   return json({
+    //     error: 'This order already claimed!',
+    //     status: 404,
+    //   });
+    // }
 
     if (getPackageProtectionOrder.fulfillmentStatus !== 'FULFILLED') {
       return json({ error: 'This order is not fulfilled yet!', status: 404 });
