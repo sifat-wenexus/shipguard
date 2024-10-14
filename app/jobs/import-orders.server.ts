@@ -94,6 +94,8 @@ export class ImportOrders extends Job<Payload> {
       `,
     );
     await this.updateProgress(10);
+
+    this.pause();
   }
 
   async importOrders() {
