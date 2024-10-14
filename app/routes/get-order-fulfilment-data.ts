@@ -22,6 +22,9 @@ export const loader: LoaderFunction = async ({ request }) => {
     let searchParams = url.searchParams;
     const params = Object.fromEntries(searchParams.entries());
     const session = await findOfflineSession(params.url);
+    if (!session) {
+      throw new Error(`Session not found!`);
+    }
     const orderId = `#${params.orderId}`;
     const getPackageProtectionOrder =
       await prisma.packageProtectionOrder.findFirst({
@@ -287,7 +290,9 @@ export const action: ActionFunction = async ({ request }) => {
   let searchParams = url.searchParams;
   const params = Object.fromEntries(searchParams.entries());
   const session = await findOfflineSession(params.url);
-
+  if (!session) {
+    throw new Error(`Session not found!`);
+  }
   const formData = await request.formData();
   const comment = formData.get('comment') || '';
   const issue = formData.get('selectedIssue') as ClaimIssue;

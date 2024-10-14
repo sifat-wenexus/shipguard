@@ -5,6 +5,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   const params = new URL(request.url);
   const queryParams = Object.fromEntries(params.searchParams.entries());
   const session = await findOfflineSession(queryParams.shopUrl);
+  if (!session) {
+    throw new Error(`Session not found!`);
+  }
   const data = await prisma.packageProtection.findFirst({
     where: { storeId: session.storeId },
   });
