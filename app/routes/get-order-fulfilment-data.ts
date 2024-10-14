@@ -36,15 +36,15 @@ export const loader: LoaderFunction = async ({ request }) => {
       });
     }
 
-    if (
-      getPackageProtectionOrder.hasClaimRequest &&
-      process.env.NODE_ENV === 'production'
-    ) {
-      return json({
-        error: 'This order already claimed!',
-        status: 404,
-      });
-    }
+    // if (
+    //   getPackageProtectionOrder.hasClaimRequest &&
+    //   process.env.NODE_ENV === 'production'
+    // ) {
+    //   return json({
+    //     error: 'This order already claimed!',
+    //     status: 404,
+    //   });
+    // }
 
     if (getPackageProtectionOrder.fulfillmentStatus !== 'FULFILLED') {
       return json({ error: 'This order is not fulfilled yet!', status: 404 });
@@ -215,7 +215,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       totalPrice: orderData.totalPriceSet.shopMoney.amount,
       id: orderData.id,
       claimStatus:
-      getPackageProtectionOrder?.PackageProtectionClaimOrder[0]?.claimStatus,
+        getPackageProtectionOrder?.PackageProtectionClaimOrder[0]?.claimStatus,
       fulfillments: orderData.fulfillments
         .filter((f) => f.status === 'SUCCESS')
         .map((f) => {
@@ -226,30 +226,29 @@ export const loader: LoaderFunction = async ({ request }) => {
             displayStatus: f.displayStatus,
             createdAt: f.createdAt,
             fulfillmentLineItems: f.fulfillmentLineItems.nodes
-              .filter(
-                (item) => item.lineItem.sku === PRODUCT_SKU)
+              .filter((item) => item.lineItem.sku !== PRODUCT_SKU)
               .map((item) => {
                 return {
                   discountPrice:
-                  item.lineItem.discountAllocations[0]?.allocatedAmountSet
-                    ?.shopMoney?.amount,
+                    item.lineItem.discountAllocations[0]?.allocatedAmountSet
+                      ?.shopMoney?.amount,
                   currencyCode:
-                  item.lineItem.discountAllocations[0]?.allocatedAmountSet
-                    ?.shopMoney?.currencyCode,
+                    item.lineItem.discountAllocations[0]?.allocatedAmountSet
+                      ?.shopMoney?.currencyCode,
                   image: item.lineItem.image?.url,
                   name: item.lineItem.name,
                   originalPrice:
-                  item.lineItem.originalUnitPriceSet.shopMoney.amount,
+                    item.lineItem.originalUnitPriceSet.shopMoney.amount,
                   sku: item.lineItem.sku,
                   title: item.lineItem.title,
                   quantity: item.quantity,
                   orderId: orderData.id,
                   hasClaim: !!getClaimData.find(
-                    (e) => e.fulfillmentLineItemId === item.id,
+                    (e) => e.fulfillmentLineItemId === item.id
                   ),
                   claimStatus:
                     getClaimData.find(
-                      (e) => e.fulfillmentLineItemId === item.id,
+                      (e) => e.fulfillmentLineItemId === item.id
                     )?.claimStatus ?? null,
                   // getPackageProtectionOrder?.PackageProtectionClaimOrder[0]
                   //   ?.hasClaimRequest || false,
@@ -328,7 +327,7 @@ export const action: ActionFunction = async ({ request }) => {
             });
 
             const bucket = gcloudStorage.bucket(
-              process.env.GC_STORAGE_BUCKET_NAME!,
+              process.env.GC_STORAGE_BUCKET_NAME!
             );
             await bucket
               .file(fileInDB.id)
@@ -337,10 +336,10 @@ export const action: ActionFunction = async ({ request }) => {
               });
 
             images.push(fileInDB.id);
-          }),
+          })
         );
       },
-      { timeout: 20000 },
+      { timeout: 20000 }
     );
   } catch (err) {
     console.error(err);
@@ -368,7 +367,7 @@ export const action: ActionFunction = async ({ request }) => {
     {
       data: payload,
     },
-    { session },
+    { session }
   );
 
   await queryProxy.packageProtectionOrder.updateMany(
@@ -380,7 +379,7 @@ export const action: ActionFunction = async ({ request }) => {
         claimStatus: 'REQUESTED',
       },
     },
-    { session },
+    { session }
   );
 
   if ((result as any).length > 0) {

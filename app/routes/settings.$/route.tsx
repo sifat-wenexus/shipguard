@@ -34,12 +34,16 @@ import {
 export async function loader({ request }) {
   const ctx = await shopify.authenticate.admin(request);
   const restAdminApi = await ctx.admin.rest.resources;
+
+  const smtp = await prisma.smtpSetting.findFirst({
+    where: { id: ctx.session.storeId },
+  });
   const settingsCartSecond = [
     {
       id: 'settings/smtp-setup',
       name: 'SMTP Setup',
       description: 'Steps to enable Outgoing Mail Server.',
-      installed: false,
+      installed: smtp?.provider ?? false,
       illustration: serverIcon,
       available: true,
     },

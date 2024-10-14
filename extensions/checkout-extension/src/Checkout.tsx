@@ -35,7 +35,7 @@ const Extension = () => {
 
   useEffect(() => {
     fetch(
-      `https://shipping-protection.wenexus.io/checkout-extension?total=${totalAmount}&shopUrl=${shop.myshopifyDomain}`
+      `https://shipping-protection.wenexus.io/checkout-extension?total=${totalAmount}&shopUrl=${shop?.myshopifyDomain}`
     )
       .then((response) => response.json())
       .then((res) => {

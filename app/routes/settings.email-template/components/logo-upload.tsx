@@ -49,9 +49,9 @@ const LogoUpload = ({ file, setFile, logo, prevFile }) => {
           <img width={'100%'} src={imagePreviewUrl} alt="logo image" />
         </div>
         <div className="overflow-hidden overflow-ellipsis my-2">
-          {file.name}{' '}
+          {file?.name}{' '}
           <Text variant="bodySm" as="p">
-            {file.size} bytes
+            {file?.size} bytes
           </Text>
         </div>
         <div className="my-2">
@@ -68,9 +68,9 @@ const LogoUpload = ({ file, setFile, logo, prevFile }) => {
           <img width={'100%'} src={logo} alt="logo image" />
         </div>
         <div className="overflow-hidden overflow-ellipsis my-2">
-          {prevFile.name}{' '}
+          {prevFile?.name}{' '}
           <Text variant="bodySm" as="p">
-            {prevFile.size} bytes
+            {prevFile?.size} bytes
           </Text>
         </div>
         <div className="my-2">

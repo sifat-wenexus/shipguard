@@ -9,7 +9,10 @@ async function init() {
   const app = await prisma.app.findFirst();
 
   if (app?.url !== process.env.APP_URL) {
-    const query = await queryProxy.store.findMany({ select: { domain: true }, orderBy: [{ id: 'asc' }] });
+    const query = await queryProxy.store.findMany({
+      select: { domain: true },
+      orderBy: [{ id: 'asc' }],
+    });
 
     query.addListener(async (data) => {
       for (const { domain } of data) {

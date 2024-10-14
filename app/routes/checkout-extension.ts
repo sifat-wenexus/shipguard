@@ -43,7 +43,12 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   return json(
-    { message: 'Response', data, variantId, variantPrice },
+    {
+      message: 'Response',
+      data,
+      variantId: variantId,
+      variantPrice: variantPrice,
+    },
     {
       headers: {
         'Access-Control-Allow-Origin': '*',
