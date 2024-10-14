@@ -300,7 +300,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               data: null,
             });
           }
-          const orderId = data?.orderId;
+          const orderId = data.orderId;
+          orderID = data.orderId;
           const res = await gql.query<any>({
             data: {
               query: `#graphql
@@ -411,7 +412,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 order_url: `https://admin.shopify.com/store/${
                   data.Store.domain.split('.')[0]
                 }/orders/${orderId}`,
-                replacement_order_id: `R-${data?.orderName}`,
+                replacement_order_id: `${data?.orderName}-R`,
                 shop_name: data.Store.name,
                 status: data.claimStatus!,
                 shop_logo: logo,
