@@ -1,11 +1,27 @@
+import { fetchBulkOperationData } from '~/modules/perform-bulk-operation.server';
 import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
+import { jobRunner } from '~/modules/job/job-runner.server';
 import { emitter } from '~/modules/emitter.server';
+import { prisma } from '~/modules/prisma.server';
 
-emitter.on('BULK_OPERATIONS_FINISH', async (args: WebhookListenerArgs) => {
+emitter.on('BULK_OPERATIONS_FINISH', async (ctx: WebhookListenerArgs) => {
   emitter.emit(
     `bulk-operation.${
-      (args.ctx.payload as any)?.admin_graphql_api_id
+      (ctx.payload as any)?.admin_graphql_api_id
     }.finished`,
-    args
+    ctx
   );
+
+  const operationId = (ctx.payload as any)?.admin_graphql_api_id;
+  const jobBulkOperation = await prisma.jobBulkOperation.findUnique({
+    where: {
+      id: operationId,
+    },
+  });
+
+  if (jobBulkOperation) {
+    const data = await fetchBulkOperationData(operationId, ctx.session!);
+
+    jobRunner.resume(jobBulkOperation.jobId, data);
+  }
 });

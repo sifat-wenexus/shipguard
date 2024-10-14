@@ -73,10 +73,6 @@ export interface ModelTypes {
     model: Base.PackageProtectionClaimOrder;
     whereInput: Base.Prisma.PackageProtectionClaimOrderWhereInput;
   };
-  migration: {
-    model: Base.Migration;
-    whereInput: Base.Prisma.MigrationWhereInput;
-  };
   googleAuthCredential: {
     model: Base.GoogleAuthCredential;
     whereInput: Base.Prisma.GoogleAuthCredentialWhereInput;

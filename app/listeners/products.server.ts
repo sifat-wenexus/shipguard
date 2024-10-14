@@ -2,9 +2,7 @@ import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
 
-async function handleWebhook({
-  ctx: { shop, payload: _payload },
-}: WebhookListenerArgs) {
+async function handleWebhook({ shop, payload: _payload }: WebhookListenerArgs) {
   if (!_payload) {
     return;
   }

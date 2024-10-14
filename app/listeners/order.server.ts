@@ -57,9 +57,7 @@ const makePackageProtectionFulfill = async (
 };
 // TODO: uninstall to install old order data recover or restore.
 // TODO: if added new column then should fill previous data as per related table
-export const orderCreateEvent = async ({
-                                         ctx: { shop, payload: _payload, session },
-                                       }: WebhookListenerArgs) => {
+export const orderCreateEvent = async ({ payload: _payload, session }: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -178,9 +176,7 @@ export const orderCreateEvent = async ({
   }
 };
 
-const orderRefundEvent = async ({
-                                  ctx: { shop, payload: _payload, session },
-                                }: WebhookListenerArgs) => {
+const orderRefundEvent = async ({ payload: _payload, session }: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -210,18 +206,14 @@ const orderRefundEvent = async ({
   }
 };
 
-const orderFulfilledEvent = async ({
-                                     ctx: { shop, payload: _payload, session },
-                                   }: WebhookListenerArgs) => {
+const orderFulfilledEvent = async ({ payload: _payload }: WebhookListenerArgs) => {
   console.log('orderFulfilledEvent');
   if (!_payload) {
     return;
   }
 };
 
-const orderPartiallyFulfilledEvent = async ({
-                                              ctx: { shop, payload: _payload, session },
-                                            }: WebhookListenerArgs) => {
+const orderPartiallyFulfilledEvent = async ({ payload: _payload, session }: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -367,9 +359,7 @@ const orderPartiallyFulfilledEvent = async ({
   }
 };
 
-export const orderUpdatedEvent = async ({
-                                   ctx: { shop, payload: _payload, session },
-                                 }: WebhookListenerArgs) => {
+export const orderUpdatedEvent = async ({ payload: _payload, session }: WebhookListenerArgs) => {
   console.log(
     '-------------------------orderUpdated-----------------------------',
   );

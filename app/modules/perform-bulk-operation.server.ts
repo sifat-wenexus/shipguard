@@ -2,7 +2,19 @@ import { waitForBulkOperation } from '~/modules/wait-for-bulk-operation.server';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import type { Session } from '~/shopify-api/lib';
 
-export async function performBulkOperation(session: Session, query: string) {
+interface BulkOperationResult {
+  operationId: string;
+}
+
+interface BulkOperationResultWait {
+  operationId: string;
+  data: any[];
+}
+
+export async function performBulkQuery<
+  W extends boolean,
+  R = W extends true ? BulkOperationResultWait : BulkOperationResult
+>(session: Session, query: string, wait: W): Promise<R> {
   const client = getShopifyGQLClient(session);
 
   const createBulkOperation = await client.query<Record<string, any>>({
@@ -33,7 +45,24 @@ export async function performBulkOperation(session: Session, query: string) {
   const operationId =
     createBulkOperation.body.data.bulkOperationRunQuery.bulkOperation.id;
 
+  if (!wait) {
+    return {
+      operationId,
+    } as R;
+  }
+
   await waitForBulkOperation(operationId);
+
+  const data = await fetchBulkOperationData(operationId, session);
+
+  return {
+    operationId,
+    data,
+  } as R;
+}
+
+export async function fetchBulkOperationData<D = any>(operationId: string, session: Session): Promise<D[]> {
+  const client = getShopifyGQLClient(session);
 
   const bulkOperation = await client.query<Record<string, any>>({
     data: `#graphql
@@ -50,22 +79,13 @@ export async function performBulkOperation(session: Session, query: string) {
   const dataUrl = bulkOperation.body.data.node.url;
 
   if (!dataUrl) {
-    return {
-      operationId,
-      dataUrl,
-      data: [],
-    };
+    return [];
   }
 
   const jsonl = await fetch(dataUrl).then((res) => res.text());
   const lines = jsonl.split('\n');
-  const data = lines
+
+  return lines
     .filter((line) => line !== '')
     .map((line) => JSON.parse(line));
-
-  return {
-    operationId,
-    dataUrl,
-    data,
-  };
 }

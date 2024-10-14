@@ -3,9 +3,7 @@ import { jobRunner } from '~/modules/job/job-runner.server';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
 
-async function upsert({
-  ctx: { shop, payload: _payload },
-}: WebhookListenerArgs) {
+async function upsert({ shop, payload: _payload }: WebhookListenerArgs) {
   if (!_payload) {
     return;
   }
@@ -35,18 +33,18 @@ async function upsert({
   });
 }
 
-emitter.on('COLLECTIONS_UPDATE', async (args: WebhookListenerArgs) => {
-  await upsert(args);
+emitter.on('COLLECTIONS_UPDATE', async (ctx: WebhookListenerArgs) => {
+  await upsert(ctx);
 
-  const payload = args.ctx.payload as Record<string, any>;
+  const payload = ctx.payload as Record<string, any>;
 
-  if (!payload || !args.ctx.session) {
+  if (!payload || !ctx.session) {
     return;
   }
 
   const store = await prisma.store.findFirstOrThrow({
     where: {
-      domain: args.ctx.shop,
+      domain: ctx.shop,
     },
   });
 

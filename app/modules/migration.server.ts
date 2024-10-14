@@ -203,16 +203,9 @@ export class Migration {
       },
     });
 
-    const job = await jobRunner.run({
+    jobRunner.run({
       name: 'import-products',
       storeId: store.id,
-      paused: true,
-    });
-
-    await jobRunner.run({
-      name: 'import-collections',
-      storeId: store.id,
-      payload: { productJobId: job.id },
     });
   }
 }

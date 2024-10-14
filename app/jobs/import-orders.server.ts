@@ -1,4 +1,3 @@
-import { performBulkOperation } from '~/modules/perform-bulk-operation.server';
 import { orderCreateEvent, orderUpdatedEvent } from '~/listeners/order.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { stitchBulkResult } from '~/modules/stitch-bulk-result';
@@ -7,31 +6,28 @@ import { prisma } from '~/modules/prisma.server';
 import { Job } from '~/modules/job/job';
 import _ from 'lodash';
 
-interface Result {
-  importedOrders: any[] | null;
-  updatedOrders: any[] | null;
-}
-
 interface Payload {
   since?: string;
 }
 
-export class ImportOrders extends Job<Result, Payload> {
-  async execute() {
-    const store = await prisma.store.findUniqueOrThrow({
-      where: { id: this.job.storeId! },
-      select: {
-        domain: true,
-        id: true,
-      },
-    });
-    const session = await findOfflineSession(store.domain);
+export class ImportOrders extends Job<Payload> {
+  steps = ['validate', 'fetchOrders', 'importOrders'];
+
+  validate() {
+    if (!this.job.storeId) {
+      return this.cancel({
+        imported: 0,
+        reason: 'Missing storeId',
+      });
+    }
+  }
+
+  async fetchOrders() {
     const since = this.job.payload?.since ?? new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 2).toISOString();
 
-    await this.updateProgress(10);
+    await this.updatePayload({ since: new Date().toISOString() });
 
-    const { data } = await performBulkOperation(
-      session,
+    await this.performShopifyBulkQuery(
         `#graphql
       {
         orders(query: "created_at:>${since} OR updated_at:>${since}", sortKey: ORDER_NUMBER) {
@@ -97,20 +93,45 @@ export class ImportOrders extends Job<Result, Payload> {
       }
       `,
     );
+    await this.updateProgress(10);
+  }
 
-    await this.updateProgress(50);
+  async importOrders() {
+    await this.updateProgress(40);
 
-    await this.updatePayload({ since: new Date().toISOString() });
+    const data = await this.getResult<Record<string, any>[]>('fetchOrders');
 
-    if (data.length === 0) {
+    if (!data?.length) {
       return {
         importedOrders: null,
         updatedOrders: null,
       };
     }
 
-    const orders = stitchBulkResult(data);
+    const store = await prisma.store.findUnique({
+      where: {
+        id: this.job.storeId!,
+      },
+    });
 
+    if (!store) {
+      return {
+        importedOrders: null,
+        updatedOrders: null,
+      };
+    }
+
+    const session = await findOfflineSession(store.domain);
+
+    if (!session) {
+      return {
+        importedOrders: null,
+        updatedOrders: null,
+      };
+    }
+
+    const restClient = getShopifyRestClient(session);
+    const orders = stitchBulkResult(data);
     const ordersAvailable = await prisma.packageProtectionOrder.findMany({
       where: {
         storeId: this.job.storeId!,
@@ -131,16 +152,7 @@ export class ImportOrders extends Job<Result, Payload> {
       50,
     );
 
-    const orderIdsToUpdate = _.chunk(
-      orders.filter((order) => availableOrderIds.has(order.id))
-        .map((order) => order.id.split('/').pop()!),
-      50,
-    );
-
-    const restClient = getShopifyRestClient(session);
-
     const importedOrders: any[] = [];
-    const updatedOrders: any[] = [];
 
     for (const orderIds of orderIdsToImport) {
       const orders = await restClient.get<{ orders: any[] }>({
@@ -162,6 +174,15 @@ export class ImportOrders extends Job<Result, Payload> {
         importedOrders.push(order);
       }
     }
+    const orderIdsToUpdate = _.chunk(
+      orders.filter((order) => availableOrderIds.has(order.id))
+        .map((order) => order.id.split('/').pop()!),
+      50,
+    );
+
+    await this.updateProgress(80);
+
+    const updatedOrders: any[] = [];
 
     for (const orderIds of orderIdsToUpdate) {
       const orders = await restClient.get<{ orders: any[] }>({

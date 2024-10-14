@@ -1,32 +1,70 @@
-import { performBulkOperation } from '~/modules/perform-bulk-operation.server';
-import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { prisma } from '~/modules/prisma.server';
 import { Job } from '~/modules/job/job';
 
-interface Result {
-  imported: number;
-}
+export class ImportProducts extends Job {
+  steps = ['fetchCollections', 'importCollections', 'fetchProducts', 'importProducts'];
 
-export class ImportProducts extends Job<Result> {
-  async execute() {
+  async validate() {
     if (!this.job.storeId) {
-      throw new Error('Missing storeId');
+      return this.cancel({
+        imported: 0,
+        reason: 'Missing storeId',
+      });
     }
+  }
 
-    const store = await prisma.store.findUniqueOrThrow({
-      where: { id: this.job.storeId },
-      select: {
-        domain: true,
-        id: true,
-      },
-    });
-
-    const session = await findOfflineSession(store.domain);
+  async fetchCollections() {
+    await this.performShopifyBulkQuery(`#graphql
+    {
+      collections {
+        edges {
+          node {
+            id
+            title
+            image {
+              url
+            }
+          }
+        }
+      }
+    }
+    `);
 
     await this.updateProgress(10);
+    this.pause();
+  }
 
-    const { data: nodes } = await performBulkOperation(
-      session,
+  async importCollections() {
+    await this.updateProgress(20);
+
+    const collections = await this.getResult<Record<string, any>[]>('fetchCollections');
+
+    if (!collections?.length) {
+      return {
+        imported: 0,
+      };
+    }
+
+    await this.updateProgress(30);
+
+    await prisma.collection.createMany({
+      data: collections.map((c) => ({
+        id: c.id,
+        title: c.title,
+        featuredImage: c.image?.url,
+        storeId: this.job.storeId!,
+      })),
+    });
+
+    await this.updateProgress(40);
+
+    return {
+      imported: collections.length,
+    };
+  }
+
+  async fetchProducts() {
+    await this.performShopifyBulkQuery(
       `#graphql
       {
         products {
@@ -69,16 +107,25 @@ export class ImportProducts extends Job<Result> {
           }
         }
       }
-      `
+      `,
     );
 
-    if (nodes.length === 0) {
+    await this.updateProgress(50);
+    this.pause();
+  }
+
+  async importProducts() {
+    await this.updateProgress(60);
+
+    const nodes = await this.getResult<Record<string, any>[]>('fetchProducts');
+
+    if (!nodes?.length) {
       return {
         imported: 0,
       };
     }
 
-    await this.updateProgress(50);
+    await this.updateProgress(70);
 
     const products: Record<string, any>[] = [];
     const collections: Record<string, any>[] = [];
@@ -97,7 +144,7 @@ export class ImportProducts extends Job<Result> {
     await prisma.product.createMany({
       data: products.map((p) => ({
         id: p.id,
-        storeId: store.id,
+        storeId: this.job.storeId!,
         title: p.title,
         handle: p.handle,
         productType: p.productType,
@@ -108,7 +155,7 @@ export class ImportProducts extends Job<Result> {
       })),
     });
 
-    await this.updateProgress(70);
+    await this.updateProgress(80);
 
     for (const collection of collections) {
       await prisma.collection.update({

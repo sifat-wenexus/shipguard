@@ -140,11 +140,13 @@ class Queue {
 
 export class JobRunner {
   constructor() {
-    this.initialize().then(() => {
-      setInterval(this.queue.loadJobs.bind(this.queue), 1000);
-      setInterval(this.runJobs.bind(this), 1000);
-      setImmediate(this.runJobs.bind(this));
-    });
+    setTimeout(() => {
+      this.initialize().then(() => {
+        setInterval(this.queue.loadJobs.bind(this.queue), 1000);
+        setInterval(this.runJobs.bind(this), 1000);
+        setImmediate(this.runJobs.bind(this));
+      });
+    }, 10000);
   }
 
   public readonly queue = new Queue(50);
@@ -351,18 +353,46 @@ export class JobRunner {
     return job;
   }
 
-  async resume(id: number) {
+  async resume(id: number, payload?: any) {
     const job = await queryProxy.job.findUnique({
       where: { id },
+      include: {
+        Executions: {
+          take: 1,
+          orderBy: [
+            {
+              id: 'desc',
+            },
+          ],
+        },
+      },
     });
 
     if (job?.status !== 'PAUSED') {
       return job;
     }
 
+    const execution = job.Executions?.[0];
+
+    if (execution?.status === 'PAUSED') {
+      const step = execution.prevStep;
+
+      if (step) {
+        await queryProxy.jobExecution.update({
+          where: { id: execution.id },
+          data: {
+            result: {
+              ...(execution.result || {}) as any,
+              [step]: payload,
+            },
+          },
+        });
+      }
+    }
+
     await queryProxy.job.update({
       where: { id },
-      data: { status: job.scheduledAt || job.interval ? 'SCHEDULED' : 'PENDING' },
+      data: { status: job.Executions?.[0].status === 'PAUSED' ? 'PENDING' : job.scheduledAt || job.interval ? 'SCHEDULED' : 'PENDING' },
     });
 
     return job;
