@@ -7,7 +7,7 @@ import { prisma } from '~/modules/prisma.server';
 
 emitter.on(
   'APP_UNINSTALLED',
-  async ({ ctx: { session, shop } }: WebhookListenerArgs) => {
+  async ({ session, shop }: WebhookListenerArgs) => {
     console.log(`App uninstalled for shop: ${shop}`);
     // console.log('session :', session);
     try {
@@ -22,7 +22,7 @@ emitter.on(
 
 emitter.on(
   'SHOP_REDACT',
-  async ({ ctx: { session, shop } }: WebhookListenerArgs) => {
+  async ({ session, shop }: WebhookListenerArgs) => {
     // TODO: Wait 25 days before deleting the shop data
 
     if (session) {
@@ -52,7 +52,7 @@ emitter.on(
 
 emitter.on(
   'CUSTOMERS_DATA_REQUEST',
-  async ({ ctx: { shop, payload, session } }: WebhookListenerArgs) => {
+  async ({ payload, session }: WebhookListenerArgs) => {
     const customerId = (payload as any).customer.id;
     const ordersRequested = (payload as any).orders_requested as
       | string[]
@@ -98,7 +98,7 @@ emitter.on(
 
 emitter.on(
   'CUSTOMERS_REDACT',
-  async ({ ctx: { payload, session } }: WebhookListenerArgs) => {
+  async ({ payload, session }: WebhookListenerArgs) => {
     const ordersToRedact = (payload as any)?.orders_to_redact as
       | string[]
       | undefined;
