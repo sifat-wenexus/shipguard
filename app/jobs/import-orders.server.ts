@@ -218,9 +218,12 @@ export class ImportOrders extends Job<Payload> {
     }
 
     return {
+      orderIdsToImport,
+      orderIdsToUpdate,
       importedOrders,
       updatedOrders,
       ordersAvailable,
+      orders,
     };
   }
 }
