@@ -155,7 +155,7 @@ export class ImportOrders extends Job<Payload> {
         (order) => !availableOrderIds.has(order.id),
       )
         .map((order) => order.id.split('/').pop()),
-      8,
+      50,
     );
 
     const importedOrders: any[] = [];
@@ -182,7 +182,7 @@ export class ImportOrders extends Job<Payload> {
     const orderIdsToUpdate = _.chunk(
       orders.filter((order) => availableOrderIds.has(order.id))
         .map((order) => order.id.split('/').pop()),
-      8,
+      50,
     );
 
     await this.updateProgress(80);

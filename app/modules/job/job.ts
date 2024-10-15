@@ -208,7 +208,7 @@ export abstract class Job<P = any> {
         id: this.job.id,
       },
       data: {
-        status: this.paused ? 'PAUSED' : error ? 'FAILED' : 'FINISHED',
+        status: error ? 'FAILED' : this.paused ? 'PAUSED' : 'FINISHED',
         tries: isRetry && !error ? 0 : this.job.tries,
         executedAt: new Date(),
       },
