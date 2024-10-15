@@ -73,10 +73,16 @@ class Queue {
               },
               {
                 status: 'FAILED',
-                interval: null,
-                tries: {
-                  lt: queryProxy.job.fields.maxRetries,
-                },
+                OR: [
+                  {
+                    maxRetries: null,
+                  },
+                  {
+                    tries: {
+                      lt: queryProxy.job.fields.maxRetries,
+                    },
+                  }
+                ]
               },
             ],
           },

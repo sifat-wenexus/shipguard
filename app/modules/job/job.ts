@@ -86,16 +86,22 @@ export abstract class Job<P = any> {
   }
 
   async run() {
+    const isRetry = this.job.status === 'FAILED';
+    const jobUpdate: Record<string, any> = {
+      status: 'RUNNING',
+    };
+
+    if (isRetry) {
+      jobUpdate.tries = {
+        increment: 1,
+      };
+    }
+
     let job = await queryProxy.job.update({
       where: {
         id: this.job.id,
       },
-      data: {
-        status: 'RUNNING',
-        tries: {
-          increment: 1,
-        },
-      },
+      data: jobUpdate,
       include: {
         Executions: {
           take: 1,
@@ -202,7 +208,8 @@ export abstract class Job<P = any> {
         id: this.job.id,
       },
       data: {
-        status: this.paused ? 'PAUSED' : error ? 'FAILED' : job.interval ? 'SCHEDULED' : 'FINISHED',
+        status: this.paused ? 'PAUSED' : error ? 'FAILED' : 'FINISHED',
+        tries: isRetry && !error ? 0 : this.job.tries,
         executedAt: new Date(),
       },
     })) as any;

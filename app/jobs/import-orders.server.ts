@@ -155,7 +155,7 @@ export class ImportOrders extends Job<Payload> {
         (order) => !availableOrderIds.has(order.id),
       )
         .map((order) => order.id.split('/').pop()),
-      50,
+      8,
     );
 
     const importedOrders: any[] = [];
@@ -168,21 +168,21 @@ export class ImportOrders extends Job<Payload> {
         },
       });
 
-      importedOrders.push(...orders.body.orders);
-
       for (const order of orders.body.orders) {
         await orderCreateEvent({
           shop: store.domain,
           payload: order,
           session,
         } as any);
+
+        importedOrders.push(order);
       }
     }
 
     const orderIdsToUpdate = _.chunk(
       orders.filter((order) => availableOrderIds.has(order.id))
         .map((order) => order.id.split('/').pop()),
-      50,
+      8,
     );
 
     await this.updateProgress(80);
@@ -196,8 +196,6 @@ export class ImportOrders extends Job<Payload> {
           ids: orderIds.join(','),
         },
       });
-
-      updatedOrders.push(...orders.body.orders);
 
       for (const order of orders.body.orders) {
         const fulfillmentStatus = order.fulfillment_status === 'partial'
@@ -214,16 +212,15 @@ export class ImportOrders extends Job<Payload> {
           payload: order,
           session,
         } as any);
+
+        updatedOrders.push(order);
       }
     }
 
     return {
-      orderIdsToImport,
-      orderIdsToUpdate,
+      ordersAvailable,
       importedOrders,
       updatedOrders,
-      ordersAvailable,
-      orders,
     };
   }
 }
