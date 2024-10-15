@@ -8,45 +8,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (!session) {
     throw new Error(`Session not found!`);
   }
-  const data = await prisma.packageProtection.findFirst({
-    where: { storeId: session.storeId },
-  });
-  const totalAmount = queryParams.total;
-  let variantId: string = '';
-  let variantPrice: any = 0.0;
-  if (data?.insurancePriceType === 'FIXED_PRICE') {
-    const variant = await prisma.product.findFirst({
-      where: { id: data.fixedProductId! },
-      include: { Variants: { select: { id: true, price: true } } },
-    });
-    variantId = variant?.Variants[0].id!;
-    variantPrice = variant?.Variants[0].price!;
-  }
-  if (data?.insurancePriceType === 'PERCENTAGE') {
-    const productAndVariants = await prisma.product.findFirst({
-      where: { id: data.percentageProductId! },
-      include: { Variants: { select: { id: true, price: true } } },
-    });
-    const variants = productAndVariants?.Variants;
-    const percentValue = (Number(totalAmount) * data.percentage) / 100;
-
-    if (variants) {
-      if (percentValue < Number(variants[0].price)) {
-        variantId = variants[0].id!;
-        variantPrice = variants[0].price!;
-      } else if (percentValue > Number(variants[variants.length - 1])) {
-        variantId = variants[variants.length - 1].id!;
-        variantPrice = variants[variants.length - 1].price!;
-      } else {
-        const variant = variants?.find((v) => Number(v.price) >= percentValue);
-        variantId = variant?.id!;
-        variantPrice = variant?.price!;
-      }
-    }
-  }
 
   return json(
-    { message: 'Response', data, variantId, variantPrice },
+    { message: 'Response' },
     {
       headers: {
         'Access-Control-Allow-Origin': '*',

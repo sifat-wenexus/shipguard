@@ -64,7 +64,7 @@ const Dashboard = ({ guidelineVisibility }) => {
   const { storeInfo } = useLivePageData();
 
   let renderElement: React.ReactNode = null;
-
+  // TODO: pending calculations for conversion rate
   const conversionRate = useMemo(() => {
     if (data.loading) {
       return 0;
@@ -79,6 +79,65 @@ const Dashboard = ({ guidelineVisibility }) => {
       return 0;
     }
   }, [data.loading]);
+  const dashboardCartItems: {
+    title: string;
+    value: number | string;
+    tooltip?: string | React.ReactNode;
+  }[] = [
+    {
+      title: 'Total Insurance Order',
+      value: data.total?._count.id ?? 0,
+    },
+    {
+      title: 'Total Revenue',
+      tooltip: 'Total Revenue = Total Insurance Sale - Insurance Order Refund',
+      value: i18n.formatCurrency(
+        isNaN(data.total!._sum.orderAmount! - data.total!._sum.refundAmount!)
+          ? 0
+          : data.total!._sum.orderAmount! - data.total!._sum.refundAmount!
+      ),
+    },
+    {
+      title: 'Total Insurance Earning',
+      value: i18n.formatCurrency(
+        isNaN(data.total!._sum.protectionFee!)
+          ? 0
+          : data.total!._sum.protectionFee!
+      ),
+    },
+    {
+      title: 'Insurance Order Refund',
+      value: i18n.formatCurrency(
+        isNaN(data.total!._sum.refundAmount!)
+          ? 0
+          : data.total!._sum.refundAmount!
+      ),
+    },
+    {
+      title: 'Conversion Rate',
+      value: `${conversionRate}%`,
+      tooltip: (
+        <p
+          dangerouslySetInnerHTML={{
+            __html: ` <p class='' >
+        <span class='text-xs'> Conversion Rate =</span>
+          <math xmlns="" class="text-xl p-2 font-sans ">
+            <mfrac>
+              <mrow>
+                <mi>Total Orders </mi>
+              </mrow>
+              <mrow>
+                <mi>Total Claim</mi>
+              </mrow>
+            </mfrac>
+          </math>
+          &cross; <span class='text-xs'>100%</span>
+        </p> `,
+          }}
+        ></p>
+      ),
+    },
+  ];
 
   if (data.loading) {
     renderElement = <DashboardLoading />;
@@ -89,126 +148,25 @@ const Dashboard = ({ guidelineVisibility }) => {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-2 md:gap:4">
             <div className="col-span-3">
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 gap-y-4 ">
-                <div className="col-span-1 h-full">
-                  <div className="border rounded-lg bg-white shadow-sm p-4 h-full">
-                    <div className="flex flex-col items-start">
-                      <div className="flex justify-between w-full">
-                        <Text as="span">Total Insurance Order</Text>
+                {dashboardCartItems.map((e, i) => (
+                  <div className="col-span-1 h-full" key={i}>
+                    <div className="border rounded-lg bg-white shadow-sm p-4 h-full">
+                      <div className="flex flex-col items-start justify-between h-full">
+                        <div className="flex justify-between w-full ">
+                          <Text as="span">{e.title}</Text>
+                          {e?.tooltip && (
+                            <Tooltip content={e.tooltip}>
+                              <Icon source={AlertCircleIcon} tone="info" />
+                            </Tooltip>
+                          )}
+                        </div>
+                        <span className="font-semibold text-2xl ">
+                          {e.value}
+                        </span>
                       </div>
-                      <span className="font-semibold text-2xl mt-2">
-                        {data.total?._count.id ?? 0}
-                      </span>
                     </div>
                   </div>
-                </div>
-
-                <div className="col-span-1">
-                  <div className="border rounded-lg bg-white shadow-sm p-4 h-full">
-                    <div className="flex flex-col items-start">
-                      <div className="flex justify-between w-full">
-                        <Text as="span">Total Revenue</Text>
-                        <Tooltip content="Total Revenue = Total Insurance Sale - Insurance Order Refund">
-                          <Icon source={AlertCircleIcon} tone="info" />
-                        </Tooltip>
-                      </div>
-                      <span className="font-semibold text-2xl mt-7">
-                        {i18n.formatCurrency(
-                          isNaN(
-                            data.total!._sum.orderAmount! -
-                              data.total!._sum.refundAmount!
-                          )
-                            ? 0
-                            : data.total!._sum.orderAmount! -
-                                data.total!._sum.refundAmount!
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className=" col-span-1">
-                  <div className="border rounded-lg bg-white shadow-sm p-4 h-full">
-                    <div className="flex flex-col items-start">
-                      <div className="flex justify-between w-full">
-                        <Text as="span">Total Insurance Earning</Text>
-                      </div>
-
-                      <span className="font-semibold text-2xl mt-2">
-                        {i18n.formatCurrency(
-                          isNaN(data.total!._sum.protectionFee!)
-                            ? 0
-                            : data.total!._sum.protectionFee!
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-span-1">
-                  <div className="border rounded-lg bg-white shadow-sm p-4 h-full">
-                    <div className="flex flex-col items-start">
-                      <div className="flex justify-between w-full">
-                        <Text as="span">Insurance Order Refund</Text>
-                      </div>
-                      <span className="font-semibold text-2xl mt-2">
-                        {i18n.formatCurrency(
-                          isNaN(data.total!._sum.refundAmount!)
-                            ? 0
-                            : data.total!._sum.refundAmount!
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-span-1">
-                  <div className="border rounded-lg bg-white shadow-sm p-4 h-full">
-                    <div className="flex flex-col items-start">
-                      <div className="flex justify-between w-full">
-                        <Text as="span">Conversion Rate</Text>
-                        {/* <Tooltip content="Total Claimed / Total Order * 100"> */}
-                        <Tooltip
-                          width="wide"
-                          content={
-                            <p
-                              dangerouslySetInnerHTML={{
-                                __html: ` <p class='' >
-                                  <span class='text-xs'> Conversion Rate =</span>
-                                    <math xmlns="" class="text-xl p-2 font-sans ">
-                                      <mfrac>
-                                        <mrow>
-                                          <mi>Total Orders </mi>
-                                        </mrow>
-                                        <mrow>
-                                          <mi>Total Claim</mi>
-                                        </mrow>
-                                      </mfrac>
-                                    </math>
-                                    &cross; <span class='text-xs'>100%</span>
-                                  </p> `,
-                              }}
-                            ></p>
-                          }
-                        >
-                          <Icon source={AlertCircleIcon} tone="info" />
-                        </Tooltip>
-                      </div>
-
-                      <span className="font-semibold text-2xl mt-7">
-                        {conversionRate}%
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className=" col-span-1">
-                  <div className="border rounded-lg bg-white shadow-sm p-4 h-full">
-                    <div className="flex flex-col items-start">
-                      <div className="flex justify-between w-full">
-                        <Text as="span">Total ROI</Text>{' '}
-                      </div>
-                      <span className="font-semibold text-2xl mt-7">
-                        {roi?.toFixed(2)}%
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
             <div className="col-span-2">

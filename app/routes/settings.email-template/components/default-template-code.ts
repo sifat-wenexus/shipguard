@@ -203,7 +203,7 @@ export const reqCustomerTemplate = `<!DOCTYPE html>
       <tbody>
         <tr>
           <td>Order ID</td>
-          <td><strong><a href="{{order_url}}" target="_blank">{{order_id}}</a></strong></td>
+          <td><strong>{{order_id}}</strong></td>
         </tr>
         <tr>
           <td>Claim Reason</td>
@@ -293,18 +293,18 @@ export const refundCustomerTemplate = `<!DOCTYPE html>
 
     <!-- Email Content -->
     <p>Dear <b>{{customer_name}}</b>,</p>
-    <p>Your claim for Order <strong>{{order_id}}</strong> has been approved, and a refund of <strong>{{refund_amount}}</strong> has been processed. The refund will appear in your account within 24 hours.</p>
+    <p>Your claim for Order <strong>{{order_id}}</strong> has been approved, and a refund of <strong>{{currency}} {{refund_amount}}</strong> has been processed. The refund will appear in your account within 24 hours.</p>
 
     <!-- Order Details Table -->
     <table>
       <tbody>
         <tr>
           <td>Order Id</td>
-          <td><strong><a href="{{order_url}}" target="_blank">{{order_id}}</a></strong></td>
+          <td><strong>{{order_id}}</strong></td>
         </tr>
         <tr>
           <td>Refund Amount</td>
-          <td><strong>{{refund_amount}}</strong></td>
+          <td><strong>{{currency}} {{refund_amount}}</strong></td>
         </tr>
         {%if status == 'APPROVE'%}
           <tr>
@@ -333,6 +333,7 @@ export const refundCustomerTemplate = `<!DOCTYPE html>
 
 </body>
 </html>
+
 `;
 export const reOrderCustomerTemplate = `<!DOCTYPE html>
 <html lang="en">
@@ -408,7 +409,7 @@ export const reOrderCustomerTemplate = `<!DOCTYPE html>
       <tbody>
         <tr>
           <td>Order Id</td>
-          <td><strong><a href="{{order_url}}" target="_blank">{{order_id}}</a></strong></td>
+          <td><strong>{{order_id}}</strong></td>
         </tr>
         <tr>
           <td>Replacement Order ID</td>
@@ -495,7 +496,7 @@ export const cancelCustomerTemplate = `<!DOCTYPE html>
       <tbody>
         <tr>
           <td>Order Id</td>
-          <td><strong><a href="{{order_url}}" target="_blank">{{order_id}}</a></strong></td>
+          <td><strong>{{order_id}}</strong></td>
         </tr>
         <tr>
           <td>Status</td>

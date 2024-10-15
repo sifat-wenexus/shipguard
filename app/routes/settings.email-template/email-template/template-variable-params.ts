@@ -1,6 +1,4 @@
 import { $Enums } from '#prisma-client';
-import { getConfig } from '~/modules/get-config.server';
-import { prisma } from '~/modules/prisma.server';
 
 export const templateParameters = (
   name: $Enums.EmailTemplateName,
@@ -23,7 +21,6 @@ export const templateParameters = (
         claim_reason: '{{claim_reason}}',
         claim_date: '{{claim_date}}',
         shop_name: '{{shop_name}}',
-        order_url: '{{order_url}}',
         order_id: '{{order_id}}',
         shop_logo: logo,
       };
@@ -35,6 +32,7 @@ export const templateParameters = (
         order_id: '{{order_id}}',
         status: '{{status}}',
         date: '{{date}}',
+        currency: 'BDT',
         shop_logo: logo,
       };
     case 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER':

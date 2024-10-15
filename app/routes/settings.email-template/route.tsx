@@ -1,4 +1,8 @@
-import type { ActionFunctionArgs, LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
+import type {
+  ActionFunctionArgs,
+  LinksFunction,
+  LoaderFunctionArgs,
+} from '@remix-run/node';
 import { shopify as shopifyRemix, shopify } from '../../modules/shopify.server';
 import { templateParameters } from './email-template/template-variable-params';
 import { ClaimRequestAdminTemplate } from './email-template/template';
@@ -33,7 +37,6 @@ import {
   EditIcon,
   ViewIcon,
 } from '@shopify/polaris-icons';
-
 
 import {
   ClaimRequestCustomerVariable,
@@ -144,7 +147,11 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const EmailTemplate = () => {
-  const { data: { templates: data, currencyCode }, storeId, appUrl } = useLoaderData<typeof loader>();
+  const {
+    data: { templates: data, currencyCode },
+    storeId,
+    appUrl,
+  } = useLoaderData<typeof loader>();
   const [templateSubject, setTemplateSubject] = useState<string>('');
   const [editorState, setEditorState] = useState(false);
   const [templatePreview, setTemplatePreview] = useState('');
@@ -162,10 +169,10 @@ const EmailTemplate = () => {
 
   const dataQuery = useMemo(
     () => queryProxy.packageProtection.subscribeFindFirst(),
-    [],
+    []
   );
   const packageProtection = useQuery(dataQuery);
-  const logo = `${appUrl}api/files/${packageProtection.data?.emailTemplateLogo}`;
+  const logo = `${appUrl}/api/files/${packageProtection.data?.emailTemplateLogo}`;
 
   useEffect(() => {
     queryProxy.file
@@ -205,12 +212,12 @@ const EmailTemplate = () => {
       setTemplatePreview(reqCustomerTemplate);
     } else if (e === 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER') {
       setTemplateSubject(
-        'Claim Approved: Refund Issued for Order {{order_id}}',
+        'Claim Approved: Refund Issued for Order {{order_id}}'
       );
       setTemplatePreview(refundCustomerTemplate);
     } else if (e === 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER') {
       setTemplateSubject(
-        'Claim Approved: Replacement Order Confirmed for Order',
+        'Claim Approved: Replacement Order Confirmed for Order'
       );
       setTemplatePreview(reOrderCustomerTemplate);
     } else if (e === 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER') {
@@ -412,16 +419,16 @@ const EmailTemplate = () => {
                         {templateName === 'CLAIM_REQUEST_EMAIL_FOR_ADMIN' ? (
                           <ClaimRequestAdminVariable />
                         ) : templateName ===
-                        'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER' ? (
+                          'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER' ? (
                           <ClaimRequestCustomerVariable />
                         ) : templateName ===
-                        'CLAIM_REFUND_EMAIL_FOR_CUSTOMER' ? (
+                          'CLAIM_REFUND_EMAIL_FOR_CUSTOMER' ? (
                           <ClaimRefundCustomerVariable />
                         ) : templateName ===
-                        'CLAIM_REORDER_EMAIL_FOR_CUSTOMER' ? (
+                          'CLAIM_REORDER_EMAIL_FOR_CUSTOMER' ? (
                           <ClaimReOrderCustomerVariable />
                         ) : templateName ===
-                        'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER' ? (
+                          'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER' ? (
                           <ClaimCancelCustomerVariable />
                         ) : null}
                       </Layout.Section>

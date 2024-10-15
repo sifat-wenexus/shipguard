@@ -60,7 +60,7 @@ const ClaimRequestProcess = ({ setIsProcess, orderId, shop }) => {
   return (
     <>
       {loading ? (
-        <Layout.Section variant="fullWidth">
+        <Layout.Section>
           <SkeletonLoading />
         </Layout.Section>
       ) : (

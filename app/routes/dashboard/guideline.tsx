@@ -17,7 +17,12 @@ import {
 } from '@shopify/polaris-icons';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import InstructionModal from './instruction-modal';
-// TODO: change collapsible and cookie for user interaction
+
+import checkoutImg from '~/assets/images/guideline/product-reviews.svg';
+import claimPageImg from '~/assets/images/guideline/wishlist.svg';
+import packageProtectionImg from '~/assets/images/guideline/product-reviews.svg';
+import widgetImg from '~/assets/images/guideline/wishlist (1).svg';
+
 const GuideLine = ({ storeInfo, guidelineVisibility }) => {
   const [actionActive, toggleAction] = useState(false);
   const [dismiss, setDismiss] = useState(guidelineVisibility ? true : false);
@@ -39,6 +44,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
     setUp: false,
     enable: false,
     claim: false,
+    checkout: false,
   });
   // useEffect(() => {
   //   if (storeInfo?.claimPage && storeInfo?.ebbedBlock && storeInfo?.install) {
@@ -54,6 +60,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
       setUp: name === 'setUp',
       enable: name === 'enable',
       claim: name === 'claim',
+      checkout: name === 'checkout',
     }));
   };
 
@@ -226,12 +233,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                       )}
                     </div>
                     <div className="text-right hidden sm:block">
-                      {toggleLine.setUp && (
-                        <img
-                          src="https://d3acrzpqhtrug6.cloudfront.net/asset/apps/vitals/img/extended-trial/wishlist.svg"
-                          alt="i"
-                        />
-                      )}
+                      {toggleLine.setUp && <img src={widgetImg} alt="i" />}
                     </div>
                   </div>
                 </div>
@@ -307,10 +309,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                     </div>
                     <div className="text-right hidden sm:block">
                       {toggleLine.enable && (
-                        <img
-                          src="https://d3acrzpqhtrug6.cloudfront.net/asset/apps/vitals/img/extended-trial/visitor-replays.svg"
-                          alt="i"
-                        />
+                        <img src={packageProtectionImg} alt="i" />
                       )}
                     </div>
                   </div>
@@ -359,12 +358,56 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                       )}
                     </div>
                     <div className="text-right hidden sm:block">
-                      {toggleLine.claim && (
-                        <img
-                          src="https://d3acrzpqhtrug6.cloudfront.net/asset/apps/vitals/img/extended-trial/wishlist.svg"
-                          alt="i"
-                        />
+                      {toggleLine.claim && <img src={claimPageImg} alt="i" />}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <hr />
+              <div className="m-4">
+                <div className="flex gap-3">
+                  <span className="guideline-icon mt-1">
+                    {storeInfo?.checkout ? (
+                      <Icon source={CheckCircleIcon} tone="success" />
+                    ) : (
+                      <Icon source={MenuHorizontalIcon} tone="info" />
+                    )}
+                  </span>
+                  <div className="flex justify-between w-full">
+                    <div>
+                      <span
+                        className="cursor-pointer "
+                        onClick={() => handleClick('checkout')}
+                      >
+                        <span className="font-light text-xs">
+                          Set up a claim page on your frontend to allow
+                          customers to submit claims, and you will receive
+                          notifications.
+                        </span>
+                        <h2 className="font-semibold text-base">
+                          Setup Checkout Extension
+                        </h2>
+                      </span>
+
+                      {toggleLine?.checkout && (
+                        <>
+                          <br />
+                          <br />
+
+                          <div className="flex gap-4 items-center">
+                            <Button
+                              variant="secondary"
+                              url="/settings/checkout-extension"
+                            >
+                              Setup Checkout Extension
+                            </Button>
+                          </div>
+                        </>
                       )}
+                    </div>
+                    <div className="text-right hidden sm:block">
+                      {toggleLine.checkout && <img src={checkoutImg} alt="i" />}
                     </div>
                   </div>
                 </div>
