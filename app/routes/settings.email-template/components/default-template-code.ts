@@ -6,15 +6,36 @@ export const reqAdminTemplate = `<!DOCTYPE html>
     <title>Email Title</title>
     <style>
       body {
-        max-width: 600px;
-        margin: 10px auto !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        width: 100% !important;
+        background-color: #f0f0f0;
       }
+
       p {
         line-height: 25px;
+        font-size: 16px;
+        color: #333;
       }
+
       td {
-        padding: 0px 10px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
       }
+
+      .email-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: white;
+      }
+
+      .email-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
       .claim-button {
         text-decoration: none;
         border: 1px solid green;
@@ -24,72 +45,89 @@ export const reqAdminTemplate = `<!DOCTYPE html>
         color: white;
         font-weight: bold;
       }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      a {
+        color: #3498db;
+        text-decoration: none;
+      }
+
+      /* Responsive Design */
+      @media only screen and (max-width: 600px) {
+        .email-container {
+          padding: 15px;
+        }
+        .claim-button {
+          padding: 8px 15px;
+        }
+        td {
+          font-size: 14px;
+        }
+      }
     </style>
   </head>
-  <body style="">
-    <div
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 80px 0px;
-      "
-    >
-      <img
-        src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse-Shipping-Protection_4a82e447-3fb5-48d1-b85e-7f46ab866e4a.png?v=1727505148"
-        alt="inhouse-shipping-protection"
-        width="220px"
-        height="auto"
-      />
-    </div>
-    <p>Dear <b>{{shop_name}}</b>,</p>
-    <p>A new claim has been requested for the following order:</p>
-    <table
-      style="border-collapse: collapse; width: 100.035%; height: 144.574px"
-      border="1"
-    >
-      <colgroup>
-        <col style="width: 49.9079%" />
-        <col style="width: 49.9079%" />
-      </colgroup>
-      <tbody>
-        <tr style="height: 36.1648px">
-          <td>Order Id</td>
-          <td><strong><a href="{{order_url}}" targget="_blank">{{order_id}}</a></strong></td>
-        </tr>
-        <tr style="height: 36.0795px">
-          <td>Customer Name</td>
-          <td><strong>{{customer_name}}</strong></td>
-        </tr>
-        <tr style="height: 36.1648px">
-          <td>Claim Reason</td>
-          <td><strong>{{claim_reason}}</strong></td>
-        </tr>
-        <tr style="height: 36.1648px">
-          <td>Claim Date:</td>
-          <td><strong>{{claim_date}}</strong></td>
-        </tr>
-      </tbody>
-    </table>
-    <div
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 20px 0px;
-      "
-    >
-      <a class="claim-button" href="{{go_to_claim}}">View Claim</a>
-    </div>
-    <p>Please review the claim request and take appropriate action.</p>
-    <br />
-    <p>
-      Best regards,<br />
-      <strong>Inhouse Shipping Protection</strong> <strong>Team</strong>
-    </p>
-    <p>&nbsp;</p>
+  <body>
+    <!-- Email Container -->
+    <div class="email-container">
+      <!-- Logo Section -->
+      <div class="email-header">
+        <img
+          src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse-Shipping-Protection_4a82e447-3fb5-48d1-b85e-7f46ab866e4a.png?v=1727505148"
+          alt="inhouse-shipping-protection"
+          width="220px"
+          height="auto"
+        />
+      </div>
+
+      <!-- Email Body -->
+      <p>Dear <b>{{shop_name}}</b>,</p>
+      <p>A new claim has been requested for the following order:</p>
+
+      <!-- Order Details Table -->
+      <table>
+        <tbody>
+          <tr>
+            <td>Order Id</td>
+            <td>
+              <strong><a href="{{order_url}}" target="_blank">{{order_id}}</a></strong>
+            </td>
+          </tr>
+          <tr>
+            <td>Customer Name</td>
+            <td><strong>{{customer_name}}</strong></td>
+          </tr>
+          <tr>
+            <td>Claim Reason</td>
+            <td><strong>{{claim_reason}}</strong></td>
+          </tr>
+          <tr>
+            <td>Claim Date</td>
+            <td><strong>{{claim_date}}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Claim Button -->
+      <div style="text-align: center;">
+        <a class="claim-button" href="{{go_to_claim}}">View Claim</a>
+      </div>
+
+      <!-- Footer -->
+      <p>Please review the claim request and take appropriate action.</p>
+      <br />
+      <p>
+        Best regards,<br />
+        <strong>Inhouse Shipping Protection</strong> Team
+      </p>
+    </div> <!-- End of Email Container -->
   </body>
 </html>
+
 `;
 export const reqCustomerTemplate = `<!DOCTYPE html>
 <html lang="en">
@@ -98,48 +136,95 @@ export const reqCustomerTemplate = `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Email Title</title>
   <style>
-  body{
-  max-width:600px;
-  margin:10px auto !important;
-}
-p{
+    html, body {
+      margin: 0 auto !important;
+      padding: 0 !important;
+      width: 100% !important;
+      background-color: #f0f0f0; /* Light gray background */
+    }
 
-    line-height: 25px;
-}
-  td{
-padding:0px 10px}
+    p {
+      line-height: 25px;
+      font-size: 16px;
+    }
+
+    td {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .email-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: white;
+    }
+
+    .email-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    table, td {
+      border: 1px solid #ddd;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
-  <div style="display:flex; justify-content:center;align-items:center; margin:50px 0px;">
- {%if shop_logo%}
-   <img src="{{shop_logo}}" alt="{{shop_name}}" width="220px" height="auto">
-    {%else%}
-    <h2>{{shop_name}}</h2>
-   {%endif%}
-  </div>
-  <p>Dear <b>{{customer_name}}</b>,</p>
-<p>We have received your claim request for Order {order_id}. Our team will review your claim and get back to you within 24hours.</p>
-<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-<tbody>
-<tr style="height: 36.1648px;">
-<td>Order ID</td>
-<td><strong><a href="{{order_url}}" targget="_blank">{{order_id}}</a></strong></td>
-</tr>
-<tr style="height: 36.1648px;">
-<td>Claim Reason</td>
-<td><strong>{{claim_reason}}</strong></td>
-</tr>
-<tr style="height: 36.1648px;">
-<td>Claim Date</td>
-<td><strong>{{claim_date}}</strong></td>
-</tr>
-</tbody>
-</table>
-<p>If you have any questions, feel free to contact us.</p>
-<p>Best regards,<br><strong>{{shop_name}}</strong></p>
-<p>&nbsp;</p></body>
+
+  <!-- Email Container -->
+  <div class="email-container">
+
+    <!-- Logo or Shop Name -->
+    <div class="email-header">
+      {%if shop_logo%}
+        <img src="{{shop_logo}}" alt="{{shop_name}}" width="200px" height="auto">
+      {%else%}
+        <h2>{{shop_name}}</h2>
+      {%endif%}
+    </div>
+
+    <!-- Email Content -->
+    <p>Dear <b>{{customer_name}}</b>,</p>
+    <p>We have received your claim request for Order <strong>{{order_id}}</strong>. Our team will review your claim and get back to you within 24 hours.</p>
+
+    <!-- Order Details Table -->
+    <table>
+      <tbody>
+        <tr>
+          <td>Order ID</td>
+          <td><strong><a href="{{order_url}}" target="_blank">{{order_id}}</a></strong></td>
+        </tr>
+        <tr>
+          <td>Claim Reason</td>
+          <td><strong>{{claim_reason}}</strong></td>
+        </tr>
+        <tr>
+          <td>Claim Date</td>
+          <td><strong>{{claim_date}}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Closing -->
+    <p>If you have any questions, feel free to contact us.</p>
+    <p>Best regards,<br><strong>{{shop_name}}</strong></p>
+
+  </div> <!-- End of Email Container -->
+
+</body>
 </html>
+
 `;
 export const refundCustomerTemplate = `<!DOCTYPE html>
 <html lang="en">
@@ -147,102 +232,211 @@ export const refundCustomerTemplate = `<!DOCTYPE html>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Email Title</title>
- <style>
-      body {
-        max-width: 600px;
-        margin: 10px auto !important;
-      }
-      p {
-        line-height: 25px;
-      }
-      td {
-        padding: 0px 10px;
-      }
+  <style>
+    html, body {
+      margin: 0 auto !important;
+      padding: 0 !important;
+      width: 100% !important;
+      background-color: #f0f0f0; /* Light gray background */
+    }
 
-    </style>
+    p {
+      line-height: 25px;
+      font-size: 16px;
+    }
+
+    td {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .email-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: white;
+    }
+
+    .email-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    table, td {
+      border: 1px solid #ddd;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
- <div style="display:flex; justify-content:center;align-items:center; margin:50px 0px;">
- {%if shop_logo%}
-   <img src="{{shop_logo}}" alt="{{shop_name}}" width="220px" height="auto">
-    {%else%}
-    <h2>{{shop_name}}</h2>
-   {%endif%}
-  </div>
 
-<p>Dear <b>{{customer_name}}</b>,</p>
-<p>Your claim for Order {{order_id}} has been approved, and a refund of {{refund_amount}} has been processed. The refund will appear in your account within 24hours.</p>
-<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-<tbody>
-<tr style="height: 36.1648px;">
-<td>Order Id</td>
-<td><strong><a href="{{order_url}}" targget="_blank">{{order_id}}</a></strong></td>
-</tr>
-<tr style="height: 36.1648px;">
-<td>Refund Amount</td>
-<td><strong>{{refund_amount}}</strong></td>
-</tr>
-<tr style="height: 36.1648px;">
-<td>Refund Processed On</td>
-<td><strong>{{date}}</strong></td>
-</tr>
-</tbody>
-</table>
-<p>If you have any questions, feel free to contact us.</p>
-<p>Best regards,<br><strong>{{shop_name}}</strong></p>
-<p>&nbsp;</p></body>
-</html>`;
+  <!-- Email Container -->
+  <div class="email-container">
+
+    <!-- Logo or Shop Name -->
+    <div class="email-header">
+      {%if shop_logo%}
+        <img src="{{shop_logo}}" alt="{{shop_name}}" width="200px" height="auto">
+      {%else%}
+        <h2>{{shop_name}}</h2>
+      {%endif%}
+    </div>
+
+    <!-- Email Content -->
+    <p>Dear <b>{{customer_name}}</b>,</p>
+    <p>Your claim for Order <strong>{{order_id}}</strong> has been approved, and a refund of <strong>{{refund_amount}}</strong> has been processed. The refund will appear in your account within 24 hours.</p>
+
+    <!-- Order Details Table -->
+    <table>
+      <tbody>
+        <tr>
+          <td>Order Id</td>
+          <td><strong><a href="{{order_url}}" target="_blank">{{order_id}}</a></strong></td>
+        </tr>
+        <tr>
+          <td>Refund Amount</td>
+          <td><strong>{{refund_amount}}</strong></td>
+        </tr>
+        {%if status == 'APPROVE'%}
+          <tr>
+          <td>Status</td>
+          <td><strong>{{status}}</strong></td>
+        </tr>
+          {%endif%}
+        {%if status_message and status == 'APPROVE'%}
+          <tr>
+          <td>Approve Message</td>
+          <td><strong>{{status_message}}</strong></td>
+        </tr>
+          {%endif%}
+        <tr>
+          <td>Refund Processed On</td>
+          <td><strong>{{date}}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Closing -->
+    <p>If you have any questions, feel free to contact us.</p>
+    <p>Best regards,<br><strong>{{shop_name}}</strong></p>
+
+  </div> <!-- End of Email Container -->
+
+</body>
+</html>
+`;
 export const reOrderCustomerTemplate = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Email Title</title>
- <style>
-      body {
-        max-width: 600px;
-        margin: 10px auto !important;
-      }
-      p {
-        line-height: 25px;
-      }
-      td {
-        padding: 0px 10px;
-      }
+  <style>
+    html, body {
+      margin: 0 auto !important;
+      padding: 0 !important;
+      width: 100% !important;
+      background-color: #f0f0f0; /* Light gray background */
+    }
 
-    </style>
+    p {
+      line-height: 25px;
+      font-size: 16px;
+    }
+
+    td {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .email-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: white;
+    }
+
+    .email-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    table, td {
+      border: 1px solid #ddd;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
 
- <div style="display:flex; justify-content:center;align-items:center; margin:50px 0px;">
- {%if shop_logo%}
-   <img src="{{shop_logo}}" alt="{{shop_name}}" width="220px" height="auto">
-    {%else%}
-    <h2>{{shop_name}}</h2>
-   {%endif%}
-  </div>
-  <p>Dear <b>{{customer_name}}</b>,</p>
-<p>Your claim for Order {{order_id}} has been approved, and we have initiated a replacement order. You can expect your new shipment soon.</p>
-<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-<tbody>
-<tr style="height: 36.1648px;">
-<td>Order Id</td>
-<td><strong><a href="{{order_url}}" targget="_blank">{{order_id}}</a></strong></td>
-</tr>
-<tr style="height: 36.1648px;">
-<td>Replacement Order ID</td>
-<td><strong>{{replacement_order_id}}</strong></td>
-</tr>
-<tr style="height: 36.1648px;">
-<td>Status</td>
-<td><strong>{{status}}</strong></td>
-</tr>
-</tbody>
-</table>
-<p>Thank you for your continued support.</p>
-<p>Best regards,<br><strong>{{shop_name}}</strong></p>
-<p>&nbsp;</p></body>
-</html>`;
+  <!-- Email Container -->
+  <div class="email-container">
+
+    <!-- Logo or Shop Name -->
+    <div class="email-header">
+      {%if shop_logo%}
+        <img src="{{shop_logo}}" alt="{{shop_name}}" width="200px" height="auto">
+      {%else%}
+        <h2>{{shop_name}}</h2>
+      {%endif%}
+    </div>
+
+    <!-- Email Content -->
+    <p>Dear <b>{{customer_name}}</b>,</p>
+    <p>Your claim for Order <strong>{{order_id}}</strong> has been approved, and we have initiated a replacement order. You can expect your new shipment soon.</p>
+
+    <!-- Order Details Table -->
+    <table>
+      <tbody>
+        <tr>
+          <td>Order Id</td>
+          <td><strong><a href="{{order_url}}" target="_blank">{{order_id}}</a></strong></td>
+        </tr>
+        <tr>
+          <td>Replacement Order ID</td>
+          <td><strong>{{replacement_order_id}}</strong></td>
+        </tr>
+        <tr>
+          <td>Status</td>
+          <td><strong>{{status}}</strong></td>
+        </tr>
+        {%if status_message and status == 'APPROVE'%}
+          <tr>
+          <td>Message</td>
+          <td><strong>{{status_message}}</strong></td>
+        </tr>
+          {%endif%}
+
+      </tbody>
+    </table>
+
+    <!-- Closing -->
+    <p>Thank you for your continued support.</p>
+    <p>Best regards,<br><strong>{{shop_name}}</strong></p>
+
+  </div> <!-- End of Email Container -->
+
+</body>
+</html>
+`;
 export const cancelCustomerTemplate = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -250,42 +444,77 @@ export const cancelCustomerTemplate = `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Email Title</title>
   <style>
-      body {
-        max-width: 600px;
-        margin: 10px auto !important;
+     html,
+     body {
+        margin: 0 auto !important;
+        padding: 0 !important;
+        width: 100% !important;
+        background-color: #f0f0f0; /* Light gray background */
       }
+
       p {
         line-height: 25px;
       }
+
       td {
-        padding: 0px 10px;
+        padding: 10px;
       }
 
-    </style>
+      .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: white;
+      }
+  </style>
 </head>
 <body>
-   <div style="display:flex; justify-content:center;align-items:center; margin:50px 0px;">
- {%if shop_logo%}
-   <img src="{{shop_logo}}" alt="{{shop_name}}" width="220px" height="auto">
-    {%else%}
-    <h2>{{shop_name}}</h2>
-   {%endif%}
-  </div>
-  <p>Dear <b>{{customer_name}}</b>,</p>
-<p>Your claim request for Order {{order_id}} has been canceled. If you have any questions or believe this was done in error, please reach out to our support team.</p>
-<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-<tbody>
-<tr style="height: 36.1648px;">
-<td>Order Id</td>
-<td><strong><a href="{{order_url}}" targget="_blank">{{order_id}}</a></strong></td>
-</tr>
-<tr style="height: 36.1648px;">
-<td>Cancellation Reason</td>
-<td><strong>{{cancellation_reason}}</strong></td>
-</tr>
-</tbody>
-</table>
-<p>Thank you for your understanding.</p>
-<p>Best regards,<br><strong>{{shop_name}}</strong></p>
-<p>&nbsp;</p></body>
-</html>`;
+
+  <!-- Email Container -->
+  <div class="email-container" style="max-width: 600px; margin: 40px auto; padding: 20px; background-color: white;">
+
+    <!-- Logo or Shop Name -->
+    <div style="text-align: center; margin-bottom: 40px;">
+      {%if shop_logo%}
+        <img src="{{shop_logo}}" alt="{{shop_name}}" width="200px" height="auto">
+      {%else%}
+        <h2>{{shop_name}}</h2>
+      {%endif%}
+    </div>
+
+    <!-- Email Greeting and Content -->
+    <p>Dear <b>{{customer_name}}</b>,</p>
+    <p>Your claim request for Order <strong>{{order_id}}</strong> has been canceled. If you have any questions or believe this was done in error, please reach out to our support team.</p>
+
+    <!-- Order Details Table -->
+    <table style="border-collapse: collapse; width: 100%;" border="1">
+      <colgroup>
+        <col style="width: 50%;">
+        <col style="width: 50%;">
+      </colgroup>
+      <tbody>
+        <tr>
+          <td>Order Id</td>
+          <td><strong><a href="{{order_url}}" target="_blank">{{order_id}}</a></strong></td>
+        </tr>
+        <tr>
+          <td>Status</td>
+          <td><strong>{{status}}</strong></td>
+        </tr>
+        <tr>
+          <td>Cancellation Reason</td>
+          <td><strong>{{cancellation_reason}}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Closing -->
+    <p>Thank you for your understanding.</p>
+    <p>Best regards,<br><strong>{{shop_name}}</strong></p>
+
+  </div> <!-- End of Email Container -->
+
+</body>
+</html>
+
+`;
