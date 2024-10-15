@@ -137,7 +137,7 @@ export abstract class Job<P = any> {
         data: {
           jobId: this.job.id,
           status: 'RUNNING',
-          currentStep: lastExecution.prevStep,
+          currentStep: lastExecution.prevStep || this.steps[0],
           result: lastExecution.result,
         },
       });
@@ -225,7 +225,7 @@ export abstract class Job<P = any> {
         },
       });
 
-      if (job.interval) {
+      if (job.interval && !error) {
         this.runner.scheduleJob(job, true, this.execution);
       }
     }
