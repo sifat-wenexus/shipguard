@@ -30,7 +30,7 @@ export class ImportOrders extends Job<Payload> {
     await this.performShopifyBulkQuery(
         `#graphql
       {
-        orders(query: "created_at:>${since} OR updated_at:>${since}", sortKey: ORDER_NUMBER) {
+        orders(query: "created_at:>='${since}' OR updated_at:>='${since}'", sortKey: ORDER_NUMBER) {
           edges {
             node {
               id
@@ -133,7 +133,9 @@ export class ImportOrders extends Job<Payload> {
     }
 
     const restClient = getShopifyRestClient(session);
+
     const orders = stitchBulkResult(data);
+
     const ordersAvailable = await prisma.packageProtectionOrder.findMany({
       where: {
         storeId: this.job.storeId!,
@@ -149,8 +151,10 @@ export class ImportOrders extends Job<Payload> {
     const availableOrderIds = new Set(ordersAvailable.map((order) => order.orderId));
 
     const orderIdsToImport = _.chunk(
-      orders.filter((order) => !availableOrderIds.has(order.id))
-        .map((order) => order.id.split('/').pop()!),
+      orders.filter(
+        (order) => !availableOrderIds.has(order.admin_graphql_api_id),
+      )
+        .map((order) => order.id),
       50,
     );
 
@@ -175,8 +179,8 @@ export class ImportOrders extends Job<Payload> {
       }
     }
     const orderIdsToUpdate = _.chunk(
-      orders.filter((order) => availableOrderIds.has(order.id))
-        .map((order) => order.id.split('/').pop()!),
+      orders.filter((order) => availableOrderIds.has(order.admin_graphql_api_id))
+        .map((order) => order.id),
       50,
     );
 
@@ -196,7 +200,7 @@ export class ImportOrders extends Job<Payload> {
         const fulfillmentStatus = order.fulfillment_status === 'partial'
           ? 'PARTIALLY_FULFILLED' : order.fulfillment_status === 'fulfilled'
             ? 'FULFILLED' : 'UNFULFILLED';
-        const orderInDb = ordersAvailable.find((o) => o.orderId === order.id);
+        const orderInDb = ordersAvailable.find((o) => o.orderId === order.admin_graphql_api_id);
 
         if (orderInDb?.fulfillmentStatus === fulfillmentStatus) {
           continue;
@@ -215,6 +219,7 @@ export class ImportOrders extends Job<Payload> {
     return {
       importedOrders,
       updatedOrders,
+      ordersAvailable,
     };
   }
 }
