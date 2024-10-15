@@ -152,9 +152,9 @@ export class ImportOrders extends Job<Payload> {
 
     const orderIdsToImport = _.chunk(
       orders.filter(
-        (order) => !availableOrderIds.has(order.admin_graphql_api_id),
+        (order) => !availableOrderIds.has(order.id),
       )
-        .map((order) => order.id),
+        .map((order) => order.id.split('/').pop()),
       50,
     );
 
@@ -178,9 +178,10 @@ export class ImportOrders extends Job<Payload> {
         importedOrders.push(order);
       }
     }
+
     const orderIdsToUpdate = _.chunk(
-      orders.filter((order) => availableOrderIds.has(order.admin_graphql_api_id))
-        .map((order) => order.id),
+      orders.filter((order) => availableOrderIds.has(order.id))
+        .map((order) => order.id.split('/').pop()),
       50,
     );
 
