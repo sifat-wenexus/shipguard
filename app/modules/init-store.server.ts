@@ -1,9 +1,11 @@
 import { getShopifyGQLClient } from './shopify.server';
 import type { Session } from '~/shopify-api/lib';
 import { prisma } from './prisma.server';
+import { Migration } from '~/modules/migration.server';
 
 export class InitStore {
-  constructor(private readonly session: Session) {}
+  constructor(private readonly session: Session) {
+  }
 
   async run() {
     const hasStore = await prisma.store.findFirst({
@@ -62,9 +64,9 @@ export class InitStore {
         moneyFormat: body.data.shop.currencyFormats.moneyFormat,
         moneyInEmailsFormat: body.data.shop.currencyFormats.moneyInEmailsFormat,
         moneyWithCurrencyFormat:
-          body.data.shop.currencyFormats.moneyWithCurrencyFormat,
+        body.data.shop.currencyFormats.moneyWithCurrencyFormat,
         moneyWithCurrencyInEmailsFormat:
-          body.data.shop.currencyFormats.moneyWithCurrencyInEmailsFormat,
+        body.data.shop.currencyFormats.moneyWithCurrencyInEmailsFormat,
       },
     });
 
@@ -87,5 +89,11 @@ export class InitStore {
     });
 
     console.log(`Initialized store ${this.session.shop}`);
+
+    setTimeout(() => {
+      this.session.storeId = store.id;
+
+      Migration.attempt(this.session);
+    }, 10000);
   }
 }

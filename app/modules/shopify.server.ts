@@ -6,7 +6,6 @@ import { PrismaSessionStorage } from './prisma-session-storage.server';
 import { restResources } from '~/shopify-api/rest/admin/2024-01';
 import type { Session, WebhookHandler } from '~/shopify-api/lib';
 import { InitStore } from '~/modules/init-store.server';
-import { Migration } from '~/modules/migration.server';
 import { getConfig } from './get-config.server';
 import { prisma } from './prisma.server';
 
@@ -57,7 +56,6 @@ export const shopify = shopifyApp({
       }
 
       await new InitStore(session).run();
-      await Migration.attempt(session);
     },
   },
   future: {
