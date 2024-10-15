@@ -137,17 +137,9 @@ export abstract class Job<P = any> {
         data: {
           jobId: this.job.id,
           status: 'RUNNING',
-          currentStep: lastExecution.prevStep || this.steps[0],
+          currentStep: lastExecution.currentStep || this.steps[0],
+          prevStep: lastExecution.prevStep,
           result: lastExecution.result,
-        },
-      });
-
-      await queryProxy.jobExecution.update({
-        where: {
-          id: lastExecution.id,
-        },
-        data: {
-          result: `Result copied to the new execution ${this.execution.id}`,
         },
       });
     } else {

@@ -88,12 +88,8 @@ export class InitStore {
       },
     });
 
+    await Migration.attempt(this.session);
+
     console.log(`Initialized store ${this.session.shop}`);
-
-    setTimeout(() => {
-      this.session.storeId = store.id;
-
-      Migration.attempt(this.session);
-    }, 10000);
   }
 }
