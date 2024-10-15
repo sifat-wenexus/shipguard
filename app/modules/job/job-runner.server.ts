@@ -53,15 +53,27 @@ class Queue {
           {
             id: { notIn: Array.from(this.ids) },
             node: process.env.NODE_ID,
-            interval: null,
           },
           {
             OR: [
               {
                 status: 'PENDING',
+                interval: null,
+              },
+              {
+                status: 'PENDING',
+                interval: {
+                  not: null,
+                },
+                Executions: {
+                  some: {
+                    status: 'PAUSED',
+                  }
+                }
               },
               {
                 status: 'FAILED',
+                interval: null,
                 tries: {
                   lt: queryProxy.job.fields.maxRetries,
                 },
