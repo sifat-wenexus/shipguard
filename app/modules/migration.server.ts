@@ -22,6 +22,10 @@ export class Migration {
       id: 'sync-collections-and-products',
       method: this.syncCollectionsAndProducts.bind(this),
     },
+    {
+      id: 'import-orders',
+      method: this.importOrders.bind(this),
+    },
   ];
 
   static attempt(session: Session) {
@@ -204,9 +208,25 @@ export class Migration {
       },
     });
 
-    jobRunner.run({
+    await jobRunner.run({
       name: 'import-products',
       storeId: store.id,
+      maxRetries: 5,
+    });
+  }
+
+  async importOrders() {
+    const store = await prisma.store.findFirstOrThrow({
+      where: {
+        domain: this.session.shop,
+      },
+    });
+
+    await jobRunner.run({
+      name: 'import-orders',
+      storeId: store.id,
+      interval: 60 * 60 * 3,
+      maxRetries: 5,
     });
   }
 }

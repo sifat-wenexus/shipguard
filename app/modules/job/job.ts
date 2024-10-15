@@ -147,7 +147,7 @@ export abstract class Job<P = any> {
           id: lastExecution.id,
         },
         data: {
-          result: null,
+          result: `Result copied to the new execution ${this.execution.id}`,
         },
       });
     } else {

@@ -153,6 +153,7 @@ export class ImportProducts extends Job {
         tags: p.tags,
         featuredImage: p.featuredImage?.url,
       })),
+      skipDuplicates: true,
     });
 
     await this.updateProgress(80);
@@ -186,6 +187,7 @@ export class ImportProducts extends Job {
         sellableOnlineQuantity: v.sellableOnlineQuantity,
         featuredImage: v.image?.url,
       })),
+      skipDuplicates: true,
     });
 
     return {
