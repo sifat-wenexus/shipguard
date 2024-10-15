@@ -168,14 +168,14 @@ export class ImportOrders extends Job<Payload> {
         },
       });
 
+      importedOrders.push(...orders.body.orders);
+
       for (const order of orders.body.orders) {
         await orderCreateEvent({
           shop: store.domain,
           payload: order,
           session,
         } as any);
-
-        importedOrders.push(order);
       }
     }
 
@@ -197,6 +197,8 @@ export class ImportOrders extends Job<Payload> {
         },
       });
 
+      updatedOrders.push(...orders.body.orders);
+
       for (const order of orders.body.orders) {
         const fulfillmentStatus = order.fulfillment_status === 'partial'
           ? 'PARTIALLY_FULFILLED' : order.fulfillment_status === 'fulfilled'
@@ -212,8 +214,6 @@ export class ImportOrders extends Job<Payload> {
           payload: order,
           session,
         } as any);
-
-        updatedOrders.push(order);
       }
     }
 
