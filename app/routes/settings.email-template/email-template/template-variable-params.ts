@@ -9,47 +9,51 @@ export const templateParameters = (
   switch (name) {
     case 'CLAIM_REQUEST_EMAIL_FOR_ADMIN':
       return {
-        order_id: '{{order_id}}',
         customer_name: '{{customer_name}}',
         claim_reason: '{{claim_reason}}',
         claim_date: '{{claim_date}}',
         shop_name: '{{shop_name}}',
         order_url: '{{order_url}}',
+        order_id: '{{order_id}}',
       };
 
     case 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER':
       return {
-        order_id: '{{order_id}}',
         customer_name: '{{customer_name}}',
-        shop_name: '{{shop_name}}',
-        shop_logo: logo,
-        order_url: '{{order_url}}',
-        claim_date: '{{claim_date}}',
         claim_reason: '{{claim_reason}}',
+        claim_date: '{{claim_date}}',
+        shop_name: '{{shop_name}}',
+        order_url: '{{order_url}}',
+        order_id: '{{order_id}}',
+        shop_logo: logo,
       };
     case 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER':
       return {
-        order_id: '{{order_id}}',
-        shop_name: '{{shop_name}}',
-        shop_logo: logo,
+        status_message: '{{status_message}}',
         refund_amount: '{{refund_amount}}',
+        shop_name: '{{shop_name}}',
+        order_id: '{{order_id}}',
+        status: '{{status}}',
         date: '{{date}}',
+        shop_logo: logo,
       };
     case 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER':
       return {
-        order_id: '{{order_id}}',
-        shop_name: '{{shop_name}}',
-        shop_logo: logo,
         replacement_order_id: '{{replacement_order_id}}',
+        status_message: '{{status_message}}',
+        shop_name: '{{shop_name}}',
+        order_id: '{{order_id}}',
         status: '{{status}}',
+        shop_logo: logo,
       };
     case 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER':
       return {
-        order_id: '{{order_id}}',
-        shop_name: '{{shop_name}}',
-        shop_logo: logo,
         cancellation_reason: '{{cancellation_reason}}',
         customer_name: '{{customer_name}}',
+        shop_name: '{{shop_name}}',
+        order_id: '{{order_id}}',
+        status: '{{status}}',
+        shop_logo: logo,
       };
     default:
       return '';

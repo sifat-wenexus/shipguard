@@ -272,6 +272,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             }/orders/${orderId}`,
             shop_name: data.Store.name,
             shop_logo: logo,
+            status: data.claimStatus!,
           },
         });
       }
@@ -394,7 +395,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const data = await prisma.packageProtectionOrder.findFirst({
             where: { orderId: orderID },
             include: {
-              PackageProtectionClaimOrder: { select: { comments: true } },
+              PackageProtectionClaimOrder: {
+                select: { comments: true, claimStatusMessage: true },
+              },
               Store: { select: { name: true, domain: true, email: true } },
             },
           });
@@ -418,6 +421,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 replacement_order_id: `${data?.orderName}-R`,
                 shop_name: data.Store.name,
                 status: data.claimStatus!,
+                status_message:
+                  data.PackageProtectionClaimOrder[0].claimStatusMessage!,
                 shop_logo: logo,
               },
             });
@@ -537,7 +542,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const data = await prisma.packageProtectionOrder.findFirst({
             where: { orderId: orderID },
             include: {
-              PackageProtectionClaimOrder: { select: { comments: true } },
+              PackageProtectionClaimOrder: {
+                select: { comments: true, claimStatusMessage: true },
+              },
               Store: { select: { name: true, domain: true, email: true } },
             },
           });
@@ -562,6 +569,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 refund_amount: data.refundAmount.toString(),
                 shop_name: data.Store.name,
                 shop_logo: logo,
+                status: data.claimStatus!,
+                status_message:
+                  data.PackageProtectionClaimOrder[0].claimStatusMessage!,
               },
             });
           }
@@ -687,7 +697,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const data = await prisma.packageProtectionOrder.findFirst({
             where: { orderId: orderID },
             include: {
-              PackageProtectionClaimOrder: { select: { comments: true } },
+              PackageProtectionClaimOrder: {
+                select: { comments: true, claimStatusMessage: true },
+              },
               Store: { select: { name: true, domain: true, email: true } },
             },
           });
@@ -712,6 +724,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 refund_amount: data.refundAmount.toString(),
                 shop_name: data.Store.name,
                 shop_logo: logo,
+                status: data.claimStatus!,
+                status_message:
+                  data.PackageProtectionClaimOrder[0].claimStatusMessage!,
               },
             });
           }
