@@ -195,12 +195,17 @@ export abstract class Job<P = any> {
       }
     }
 
+    const shouldReschedule = !!job.interval && !this.paused && (!error || job.tries >= (job.maxRetries || 10));
+
     job = (await queryProxy.job.update({
       where: {
         id: this.job.id,
       },
       data: {
-        status: error ? 'FAILED' : this.paused ? 'PAUSED' : 'FINISHED',
+        status: this.paused
+          ? 'PAUSED' : this.cancelled || shouldReschedule
+              ? 'FINISHED' : error
+                ? 'FAILED' : 'FINISHED',
         tries: isRetry && !error ? 0 : this.job.tries,
         executedAt: new Date(),
       },
@@ -217,7 +222,7 @@ export abstract class Job<P = any> {
         },
       });
 
-      if (job.interval && !error) {
+      if (shouldReschedule) {
         this.runner.scheduleJob(job, true, this.execution);
       }
     }
@@ -236,6 +241,11 @@ export abstract class Job<P = any> {
     } else {
       emitter.emitAsync(`${eventBase}.completed`, job);
       emitter.emitAsync(`${job.storeId}.${eventBase}.completed`, job);
+    }
+
+    if (shouldReschedule) {
+      emitter.emitAsync(`${eventBase}.rescheduled`, job);
+      emitter.emitAsync(`${job.storeId}.${eventBase}.rescheduled`, job);
     }
   }
 

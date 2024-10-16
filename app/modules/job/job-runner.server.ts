@@ -75,6 +75,11 @@ class Queue {
                 status: 'FAILED',
                 OR: [
                   {
+                    interval: {
+                      not: null,
+                    }
+                  },
+                  {
                     maxRetries: null,
                   },
                   {

@@ -1,7 +1,6 @@
 import { getShopifyGQLClient } from './shopify.server';
 import type { Session } from '~/shopify-api/lib';
 import { prisma } from './prisma.server';
-import { Migration } from '~/modules/migration.server';
 
 export class InitStore {
   constructor(private readonly session: Session) {
@@ -18,7 +17,7 @@ export class InitStore {
     });
 
     if (hasStore) {
-      return;
+      return null;
     }
 
     console.log(`Initializing store ${this.session.shop}`);
@@ -70,6 +69,8 @@ export class InitStore {
       },
     });
 
+    this.session.storeId = store.id;
+
     await prisma.session.update({
       where: {
         id: this.session.id,
@@ -88,8 +89,8 @@ export class InitStore {
       },
     });
 
-    await Migration.attempt(this.session);
-
     console.log(`Initialized store ${this.session.shop}`);
+
+    return store
   }
 }
