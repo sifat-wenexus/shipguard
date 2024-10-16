@@ -54,82 +54,100 @@ const Dashboard = ({ guidelineVisibility }) => {
     : new Date().toISOString(); //.split('T')[0];
   const endDate = period
     ? new Date(
-      new Date(period?.until).setDate(new Date(period.until).getDate() + 1),
-    ).toISOString()
+        new Date(period?.until).setDate(new Date(period.until).getDate() + 1)
+      ).toISOString()
     : //.split('T')[0]
-    new Date().toISOString(); //.split('T')[0];
+      new Date().toISOString(); //.split('T')[0];
   // let startPoint = 0;
 
   const data = useDashboardData(startDate, endDate);
   const { storeInfo } = useLivePageData();
+  console.log('data::', data);
 
   let renderElement: React.ReactNode = null;
   // TODO: pending calculations for conversion rate
+  // total protected order / total order * 100
   const conversionRate = useMemo(() => {
     if (data.loading) {
       return 0;
     }
 
-    return ((data.claimed || 0) / (data.total?._count.id || 0) * 100).toFixed(2);
+    return (((data.claimed || 0) / (data.total?._count.id || 0)) * 100).toFixed(
+      2
+    );
   }, [data.claimed, data.loading, data.total]);
-
-  const dashboardCartItems: {
-    title: string;
-    value: number | string;
-    tooltip?: string | React.ReactNode;
-  }[] = [
-    {
-      title: 'Total Insurance Order',
-      value: data.total?._count.id ?? 0,
-    },
-    {
-      title: 'Total Revenue',
-      tooltip: 'Total Revenue = Total Insurance Sale - Insurance Order Refund',
-      value: i18n.formatCurrency(
-        (data.total?._sum.orderAmount || 0) - (data.total?._sum.refundAmount || 0),
-      ),
-    },
-    {
-      title: 'Total Insurance Earning',
-      value: i18n.formatCurrency(
-        data.total?._sum.protectionFee || 0,
-      ),
-    },
-    {
-      title: 'Insurance Order Refund',
-      value: i18n.formatCurrency(
-        data.total?._sum.refundAmount || 0,
-      ),
-    },
-    {
-      title: 'Conversion Rate',
-      value: `${conversionRate}%`,
-      tooltip: (
-        <p
-          dangerouslySetInnerHTML={{
-            __html: ` <p class='' >
-        <span class='text-xs'> Conversion Rate =</span>
-          <math xmlns="" class="text-xl p-2 font-sans ">
-            <mfrac>
-              <mrow>
-                <mi>Total Orders </mi>
-              </mrow>
-              <mrow>
-                <mi>Total Claim</mi>
-              </mrow>
-            </mfrac>
-          </math>
-          &cross; <span class='text-xs'>100%</span>
-        </p> `,
-          }}
-        ></p>
-      ),
-    },
-  ];
+  const roi = useMemo(() => {
+    if (data.loading) {
+      return 0;
+    }
+  }, [data.loading]);
 
   if (data.loading) {
     renderElement = <DashboardLoading />;
   } else {
+    const dashboardCartItems: {
+      title: string;
+      value: number | string;
+      tooltip?: string | React.ReactNode;
+    }[] = [
+      // TODO: get all order filter [channel= online store and sku= wenexus-shipping-protection] to get actual order
+      { title: 'Total Non-Protected Order', value: 0 },
+      {
+        title: 'Total Protected Insurance Order',
+        value: data.total?._count.id ?? 0,
+      },
+      {
+        title: 'Total Revenue',
+        tooltip:
+          'Total Revenue = Total Insurance Sale - Insurance Order Refund',
+        value: i18n.formatCurrency(
+          isNaN(data.total!._sum.orderAmount! - data.total!._sum.refundAmount!)
+            ? 0
+            : data.total!._sum.orderAmount! - data.total!._sum.refundAmount!
+        ),
+      },
+      {
+        title: 'Total Insurance Earning',
+        value: i18n.formatCurrency(
+          isNaN(data.total!._sum.protectionFee!)
+            ? 0
+            : data.total!._sum.protectionFee!
+        ),
+      },
+      {
+        title: 'Insurance Order Refund',
+        value: i18n.formatCurrency(
+          isNaN(data.total!._sum.refundAmount!)
+            ? 0
+            : data.total!._sum.refundAmount!
+        ),
+      },
+      {
+        title: 'Conversion Rate',
+        value: `${conversionRate}%`,
+        tooltip: (
+          <p
+            dangerouslySetInnerHTML={{
+              __html: ` <p class='' >
+          <span class='text-xs'> Conversion Rate =</span>
+            <math xmlns="" class="text-xl p-2 font-sans ">
+              <mfrac>
+                <mrow>
+                  <mi>Total Orders </mi>
+                </mrow>
+                <mrow>
+                  <mi>Total Claim</mi>
+                </mrow>
+              </mfrac>
+            </math>
+            &cross; <span class='text-xs'>100%</span>
+          </p> `,
+            }}
+          ></p>
+        ),
+      },
+    ];
+
     renderElement = (
       <>
         <Box paddingBlockStart={'400'} paddingBlockEnd={'400'}>
@@ -138,7 +156,9 @@ const Dashboard = ({ guidelineVisibility }) => {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 gap-y-4 ">
                 {dashboardCartItems.map((e, i) => (
                   <div className="col-span-1 h-full" key={i}>
-                    <div className="border rounded-lg bg-white shadow-sm p-4 h-full">
+                    <div
+                      className={`border rounded-lg bg-white shadow-sm p-4 h-full`}
+                    >
                       <div className="flex flex-col items-start justify-between h-full">
                         <div className="flex justify-between w-full ">
                           <Text as="span">{e.title}</Text>
@@ -148,7 +168,15 @@ const Dashboard = ({ guidelineVisibility }) => {
                             </Tooltip>
                           )}
                         </div>
-                        <span className="font-semibold text-2xl ">
+                        <span
+                          className={`font-semibold text-2xl  ${
+                            i === 1
+                              ? 'text-green-600'
+                              : i === 0
+                              ? 'text-red-300'
+                              : 'text-gray-700'
+                          }`}
+                        >
                           {e.value}
                         </span>
                       </div>

@@ -1,22 +1,64 @@
 import { json, LoaderFunction } from '@remix-run/node';
-import { findOfflineSession } from '~/modules/find-offline-session.server';
-import { prisma } from '~/modules/prisma.server';
+import { getShopifyGQLClient, shopify } from '~/modules/shopify.server';
 export const loader: LoaderFunction = async ({ request }) => {
-  const params = new URL(request.url);
-  const queryParams = Object.fromEntries(params.searchParams.entries());
-  const session = await findOfflineSession(queryParams.shopUrl);
-  if (!session) {
-    throw new Error(`Session not found!`);
+  const ctx = await shopify.authenticate.admin(request);
+
+  const gql = getShopifyGQLClient(ctx.session);
+
+  const fetchOrders = async (pageSize: number, after: string | null) => {
+    const result = await gql.query<any>({
+      data: {
+        query: `#graphql
+        query orders($pageSize: Int, $after: String){
+          orders(first:$pageSize, after: $after){
+            pageInfo{
+              endCursor
+              hasNextPage
+            }
+            edges{
+              node{
+                id
+                name
+                customer{
+                  firstName
+                  lastName
+                  email
+                }
+              }
+            }
+          }
+        }`,
+        variables: {
+          pageSize: pageSize,
+          after: after,
+        },
+      },
+    });
+    return result.body.data.orders;
+  };
+  async function getAllOrders() {
+    let allOrders = [];
+    let cursor = null;
+    let hasNextPage = true;
+
+    while (hasNextPage) {
+      const orders = await fetchOrders(5, cursor);
+      allOrders = allOrders.concat(orders.edges.map((edge) => edge.node));
+
+      // Check if there's a next page
+      hasNextPage = orders.pageInfo.hasNextPage;
+
+      // Set the cursor to the last order's cursor for the next page request
+      cursor = orders.pageInfo.endCursor ?? null;
+    }
+
+    console.log(allOrders);
+    return allOrders;
   }
 
-  return json(
-    { message: 'Response' },
-    {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-    }
-  );
+  const r = await getAllOrders();
+
+  return json({ message: 'Response', r });
 };
 
 // import { Tag, Thumbnail, Tooltip } from '@shopify/polaris';
