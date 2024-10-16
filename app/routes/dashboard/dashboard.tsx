@@ -6,23 +6,23 @@ import DashboardLoading from './dashboard-loading';
 import '@shopify/polaris-viz/build/esm/styles.css';
 import type { IActiveDates } from '../order/route';
 import LineChartForDashboard from './line-chart';
+import React, { useMemo, useState } from 'react';
 import '@shopify/polaris/build/esm/styles.css';
 import { useI18n } from '@shopify/react-i18n';
-import { useMemo, useState } from 'react';
 import DateRangePicker from './date-range';
 import GuideLine from './guideline';
 import PieChart from './pie-chart';
 
 import {
-  Box,
-  Button,
-  Card,
+  Tooltip,
   Divider,
-  Icon,
+  Button,
   Layout,
+  Card,
+  Icon,
   Link,
   Text,
-  Tooltip,
+  Box,
 } from '@shopify/polaris';
 
 export const default30Days = () => {
@@ -54,10 +54,10 @@ const Dashboard = ({ guidelineVisibility }) => {
     : new Date().toISOString(); //.split('T')[0];
   const endDate = period
     ? new Date(
-        new Date(period?.until).setDate(new Date(period.until).getDate() + 1)
-      ).toISOString()
+      new Date(period?.until).setDate(new Date(period.until).getDate() + 1),
+    ).toISOString()
     : //.split('T')[0]
-      new Date().toISOString(); //.split('T')[0];
+    new Date().toISOString(); //.split('T')[0];
   // let startPoint = 0;
 
   const data = useDashboardData(startDate, endDate);
@@ -70,15 +70,9 @@ const Dashboard = ({ guidelineVisibility }) => {
       return 0;
     }
 
-    return isNaN((data.claimed! / data.total!._count.id) * 100)
-      ? 0
-      : ((data.claimed! / data.total!._count.id) * 100).toFixed(2);
+    return ((data.claimed || 0) / (data.total?._count.id || 0) * 100).toFixed(2);
   }, [data.claimed, data.loading, data.total]);
-  const roi = useMemo(() => {
-    if (data.loading) {
-      return 0;
-    }
-  }, [data.loading]);
+
   const dashboardCartItems: {
     title: string;
     value: number | string;
@@ -92,25 +86,19 @@ const Dashboard = ({ guidelineVisibility }) => {
       title: 'Total Revenue',
       tooltip: 'Total Revenue = Total Insurance Sale - Insurance Order Refund',
       value: i18n.formatCurrency(
-        isNaN(data.total!._sum.orderAmount! - data.total!._sum.refundAmount!)
-          ? 0
-          : data.total!._sum.orderAmount! - data.total!._sum.refundAmount!
+        (data.total?._sum.orderAmount || 0) - (data.total?._sum.refundAmount || 0),
       ),
     },
     {
       title: 'Total Insurance Earning',
       value: i18n.formatCurrency(
-        isNaN(data.total!._sum.protectionFee!)
-          ? 0
-          : data.total!._sum.protectionFee!
+        data.total?._sum.protectionFee || 0,
       ),
     },
     {
       title: 'Insurance Order Refund',
       value: i18n.formatCurrency(
-        isNaN(data.total!._sum.refundAmount!)
-          ? 0
-          : data.total!._sum.refundAmount!
+        data.total?._sum.refundAmount || 0,
       ),
     },
     {
