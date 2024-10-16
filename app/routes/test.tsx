@@ -26,6 +26,7 @@ export const loader: LoaderFunction = async ({ request }) => {
                 }
               }
             }
+
           }
         }`,
         variables: {
@@ -58,7 +59,40 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const r = await getAllOrders();
 
-  return json({ message: 'Response', r });
+  const bulkRequest = await gql.query<any>({
+    data: {
+      query: `#graphql
+mutation {
+  bulkOperationRunQuery(
+    query: """
+    {
+      orders(query: "created_at:<2023-04-16", first: 250) {
+        edges {
+          node {
+            id
+            createdAt
+            name
+          }
+        }
+      }
+    }
+    """
+  ) {
+    bulkOperation {
+      id
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}
+
+`,
+    },
+  });
+
+  return json({ message: 'Response', data: bulkRequest.body.data });
 };
 
 // import { Tag, Thumbnail, Tooltip } from '@shopify/polaris';
