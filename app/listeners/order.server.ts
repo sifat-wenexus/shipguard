@@ -4,10 +4,11 @@ import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
+import { prisma } from '~/modules/prisma.server';
 
 const makePackageProtectionFulfill = async (
   data: Record<string, any>[],
-  gqlClient: GraphqlClient,
+  gqlClient: GraphqlClient
 ) => {
   const result: { orderId: string; id: string; productTitle: string }[] = [];
   const orders = await data;
@@ -57,7 +58,10 @@ const makePackageProtectionFulfill = async (
   return result;
 };
 
-export const orderCreateEvent = async ({ payload: _payload, session }: WebhookListenerArgs) => {
+export const orderCreateEvent = async ({
+  payload: _payload,
+  session,
+}: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -66,13 +70,12 @@ export const orderCreateEvent = async ({ payload: _payload, session }: WebhookLi
   const payload = _payload as Record<string, any>;
 
   const existPackageProtection = payload.line_items.find(
-    (lineItem) => lineItem.sku === PRODUCT_SKU,
+    (lineItem) => lineItem.sku === PRODUCT_SKU
   );
+  const orderId = payload.admin_graphql_api_id;
 
   try {
     if (existPackageProtection) {
-      const orderId = payload.admin_graphql_api_id;
-
       const fulfillmentStatus = await queryProxy.packageProtection.findFirst({
         where: {
           storeId: session?.storeId,
@@ -144,21 +147,25 @@ export const orderCreateEvent = async ({ payload: _payload, session }: WebhookLi
 
       await queryProxy.packageProtectionOrder.create({
         data: {
+          hasPackageProtection: true,
           orderId: orderId,
           customerId: payload.customer.id.toString(),
           customerEmail: payload.customer.email,
           customerFirstName: payload.customer.first_name,
           customerLastName: payload.customer.last_name,
           orderName: updatedOrder.body.data.orderUpdate.order.name,
-          storeId: session?.storeId,
+          storeId: session?.storeId!,
           orderAmount: Number(
             updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
-              .amount,
+              .amount
           ),
           protectionFee: Number(protectionFee),
-          fulfillmentStatus: payload.fulfillment_status === 'partial'
-            ? 'PARTIALLY_FULFILLED' : payload.fulfillment_status === 'fulfilled'
-              ? 'FULFILLED' : 'UNFULFILLED',
+          fulfillmentStatus:
+            payload.fulfillment_status === 'partial'
+              ? 'PARTIALLY_FULFILLED'
+              : payload.fulfillment_status === 'fulfilled'
+              ? 'FULFILLED'
+              : 'UNFULFILLED',
         },
       });
 
@@ -168,16 +175,43 @@ export const orderCreateEvent = async ({ payload: _payload, session }: WebhookLi
       ) {
         await makePackageProtectionFulfill(
           updatedOrder.body.data.orderUpdate.order.fulfillmentOrders.nodes,
-          gqlClient,
+          gqlClient
         );
       }
+    } else {
+      await queryProxy.packageProtectionOrder.create({
+        data: {
+          hasPackageProtection: true,
+          orderId: orderId,
+          customerId: payload.customer.id.toString(),
+          customerEmail: payload.customer.email,
+          customerFirstName: payload.customer.first_name,
+          customerLastName: payload.customer.last_name,
+          // orderName: updatedOrder.body.data.orderUpdate.order.name,
+          storeId: session?.storeId!,
+          // orderAmount: Number(
+          //   updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
+          //     .amount
+          // ),
+          protectionFee: 0,
+          fulfillmentStatus:
+            payload.fulfillment_status === 'partial'
+              ? 'PARTIALLY_FULFILLED'
+              : payload.fulfillment_status === 'fulfilled'
+              ? 'FULFILLED'
+              : 'UNFULFILLED',
+        },
+      });
     }
   } catch (err) {
     console.error('Error in OrderCreateEvent', err);
   }
 };
 
-const orderRefundEvent = async ({ payload: _payload, session }: WebhookListenerArgs) => {
+const orderRefundEvent = async ({
+  payload: _payload,
+  session,
+}: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -208,14 +242,19 @@ const orderRefundEvent = async ({ payload: _payload, session }: WebhookListenerA
   }
 };
 
-const orderFulfilledEvent = async ({ payload: _payload }: WebhookListenerArgs) => {
+const orderFulfilledEvent = async ({
+  payload: _payload,
+}: WebhookListenerArgs) => {
   console.log('orderFulfilledEvent');
   if (!_payload) {
     return;
   }
 };
 
-const orderPartiallyFulfilledEvent = async ({ payload: _payload, session }: WebhookListenerArgs) => {
+const orderPartiallyFulfilledEvent = async ({
+  payload: _payload,
+  session,
+}: WebhookListenerArgs) => {
   if (!_payload) {
     return;
   }
@@ -232,7 +271,7 @@ const orderPartiallyFulfilledEvent = async ({ payload: _payload, session }: Webh
     const payload = _payload as Record<string, any>;
 
     const existPackageProtection = payload.line_items.find(
-      (line) => line.sku === PRODUCT_SKU,
+      (line) => line.sku === PRODUCT_SKU
     );
     if (existPackageProtection) {
       const orderId = payload.admin_graphql_api_id;
@@ -316,7 +355,7 @@ const orderPartiallyFulfilledEvent = async ({ payload: _payload, session }: Webh
         const isExistFulfillmentPackageItem = fulfillmentOrder
           .filter((order) => order.status !== 'CLOSED')
           .filter((e) =>
-            fulfillmentLineItems.every((i) => i.productTitle !== e.productTitle),
+            fulfillmentLineItems.every((i) => i.productTitle !== e.productTitle)
           )
           .filter((item) => item.sku === PRODUCT_SKU);
 
@@ -354,7 +393,7 @@ const orderPartiallyFulfilledEvent = async ({ payload: _payload, session }: Webh
       ) {
         await makePackageProtectionFulfill(
           getOrder.body.data.order.fulfillmentOrders.nodes,
-          gqlClient,
+          gqlClient
         );
       }
     }
@@ -363,9 +402,12 @@ const orderPartiallyFulfilledEvent = async ({ payload: _payload, session }: Webh
   }
 };
 
-export const orderUpdatedEvent = async ({ payload: _payload, session }: WebhookListenerArgs) => {
+export const orderUpdatedEvent = async ({
+  payload: _payload,
+  session,
+}: WebhookListenerArgs) => {
   console.log(
-    '-------------------------orderUpdated-----------------------------',
+    '-------------------------orderUpdated-----------------------------'
   );
   if (!_payload) {
     return;
@@ -375,7 +417,7 @@ export const orderUpdatedEvent = async ({ payload: _payload, session }: WebhookL
 
   try {
     const existPackageProtection = payload.line_items.find(
-      (line) => line.sku === PRODUCT_SKU,
+      (line) => line.sku === PRODUCT_SKU
     );
     if (existPackageProtection) {
       const orderId = payload.admin_graphql_api_id;
@@ -418,7 +460,7 @@ export const orderUpdatedEvent = async ({ payload: _payload, session }: WebhookL
 
       console.log(
         'getOrder.body.data.order.displayFulfillmentStatus',
-        getOrder.body.data.order.displayFulfillmentStatus,
+        getOrder.body.data.order.displayFulfillmentStatus
       );
       const updateOrder = await queryProxy.packageProtectionOrder.update({
         data: {

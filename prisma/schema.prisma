@@ -432,16 +432,17 @@ model PackageProtectionOrder {
   customerId String?
   storeId    String
 
-  customerFirstName String?
-  customerLastName  String?
-  customerEmail     String?
-  protectionFee     Float              @default(0.00)
-  orderAmount       Float              @default(0.00)
-  hasClaimRequest   Boolean            @default(false)
-  fulfillmentStatus FullfillmentStatus @default(UNFULFILLED)
-  claimStatus       ClaimStatus?
-  orderName         String
-  refundAmount      Float              @default(0.00)
+  customerFirstName    String?
+  customerLastName     String?
+  customerEmail        String?
+  protectionFee        Float              @default(0.00)
+  orderAmount          Float              @default(0.00)
+  hasClaimRequest      Boolean            @default(false)
+  fulfillmentStatus    FullfillmentStatus @default(UNFULFILLED)
+  claimStatus          ClaimStatus?
+  orderName            String
+  refundAmount         Float              @default(0.00)
+  hasPackageProtection Boolean
 
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @updatedAt @db.Timestamptz()
