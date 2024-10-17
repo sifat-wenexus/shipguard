@@ -2,7 +2,7 @@ import { prisma } from '~/modules/prisma.server';
 import { Job } from '~/modules/job/job';
 
 export class ImportProducts extends Job {
-  steps = ['fetchCollections', 'importCollections', 'fetchProducts', 'importProducts'];
+  steps = ['validate', 'fetchCollections', 'importCollections', 'fetchProducts', 'importProducts'];
 
   async validate() {
     if (!this.job.storeId) {

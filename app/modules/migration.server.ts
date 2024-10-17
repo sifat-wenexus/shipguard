@@ -68,7 +68,7 @@ export class Migration {
       data: {
         appStatus: 'UPDATING',
       },
-    }, { session: this.session });
+    });
 
     // If lastMigrationId is null, start from the beginning, otherwise start after the last migration that was run
     const lastIndex = lastMigrationId
@@ -95,7 +95,7 @@ export class Migration {
               data: {
                 lastMigrationId: migration.id,
               },
-            }, { session: this.session });
+            });
           }
         },
         {
@@ -112,7 +112,7 @@ export class Migration {
         data: {
           appStatus: 'READY',
         },
-      }, { session: this.session });
+      });
 
       console.log(`Finished migrations for ${this.session.shop}`);
     }
