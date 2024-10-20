@@ -1,5 +1,5 @@
+import type { Job, JobExecution, Prisma } from '#prisma-client';
 import { queryProxy } from '~/modules/query/query-proxy';
-import { Job, JobExecution, Prisma } from '#prisma-client';
 import type { JobName } from '~/jobs/index.server';
 import { jobExecutors } from '~/jobs/index.server';
 import { prisma } from '~/modules/prisma.server';
