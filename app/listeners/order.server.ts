@@ -181,18 +181,15 @@ export const orderCreateEvent = async ({
     } else {
       await queryProxy.packageProtectionOrder.create({
         data: {
-          hasPackageProtection: true,
+          hasPackageProtection: false,
           orderId: orderId,
           customerId: payload.customer.id.toString(),
           customerEmail: payload.customer.email,
           customerFirstName: payload.customer.first_name,
           customerLastName: payload.customer.last_name,
-          // orderName: updatedOrder.body.data.orderUpdate.order.name,
+          orderName: payload.name,
           storeId: session?.storeId!,
-          // orderAmount: Number(
-          //   updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
-          //     .amount
-          // ),
+          orderAmount: Number(payload.total_price),
           protectionFee: 0,
           fulfillmentStatus:
             payload.fulfillment_status === 'partial'

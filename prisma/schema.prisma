@@ -33,6 +33,7 @@ enum ContentStatus {
 enum InsurancePricingType {
   PERCENTAGE
   FIXED_PRICE
+  FIXED_MULTIPLE
 }
 
 enum JobStatus {
@@ -391,6 +392,8 @@ model PackageProtection {
   showOnMiniCart                  Boolean                  @default(false)
   packageProtectionDefaultSetting Boolean                  @default(true)
   emailTemplateLogo               String?
+  fixedMultiplePlan               Json?
+  isSingle                        Boolean                  @default(true)
 
   // ExcludedVariants ExcludedPackageProtectionVariant[]
   excludedPackageProtectionProducts ExcludedPackageProtectionProduct[]

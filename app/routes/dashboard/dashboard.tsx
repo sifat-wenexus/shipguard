@@ -72,10 +72,11 @@ const Dashboard = ({ guidelineVisibility }) => {
       return 0;
     }
 
-    return (((data.claimed || 0) / (data.total?._count.id || 0)) * 100).toFixed(
-      2
-    );
-  }, [data.claimed, data.loading, data.total]);
+    return (
+      ((data.totalPackageProtect || 0) / (data.total?._count.id || 0)) *
+      100
+    ).toFixed(2);
+  }, [data.totalPackageProtect, data.loading, data.total]);
   const roi = useMemo(() => {
     if (data.loading) {
       return 0;
@@ -91,10 +92,13 @@ const Dashboard = ({ guidelineVisibility }) => {
       tooltip?: string | React.ReactNode;
     }[] = [
       // TODO: get all order filter [channel= online store and sku= wenexus-shipping-protection] to get actual order
-      { title: 'Total Non-Protected Order', value: 0 },
+      {
+        title: 'Total Non-Protected Order',
+        value: data.totalNonPackageProtect ?? 0,
+      },
       {
         title: 'Total Protected Insurance Order',
-        value: data.total?._count.id ?? 0,
+        value: data.totalPackageProtect ?? 0,
       },
       {
         title: 'Total Revenue',
@@ -124,7 +128,7 @@ const Dashboard = ({ guidelineVisibility }) => {
       },
       {
         title: 'Conversion Rate',
-        value: `${conversionRate}%`,
+        value: `${isNaN(+conversionRate) ? 0 : conversionRate}%`,
         tooltip: (
           <p
             dangerouslySetInnerHTML={{
@@ -133,14 +137,15 @@ const Dashboard = ({ guidelineVisibility }) => {
             <math xmlns="" class="text-xl p-2 font-sans ">
               <mfrac>
                 <mrow>
-                  <mi>Total Orders </mi>
+                  <mi>Total Protected Order</mi>
                 </mrow>
                 <mrow>
-                  <mi>Total Claim</mi>
+                  <mi>Total Order</mi>
                 </mrow>
               </mfrac>
             </math>
-            &cross; <span class='text-xs'>100%</span>
+            &cross; <span class='text-xs'>100</span>
+            <p><b>Explanation:</b> This indicate how often customers are opting fot package protection out of all orders placed.</p>
           </p> `,
             }}
           ></p>
@@ -163,7 +168,7 @@ const Dashboard = ({ guidelineVisibility }) => {
                         <div className="flex justify-between w-full ">
                           <Text as="span">{e.title}</Text>
                           {e?.tooltip && (
-                            <Tooltip content={e.tooltip}>
+                            <Tooltip content={e.tooltip} width="wide">
                               <Icon source={AlertCircleIcon} tone="info" />
                             </Tooltip>
                           )}

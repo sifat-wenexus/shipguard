@@ -32,9 +32,10 @@ interface IShopifyBulkVariantUpdate {
   sku: string;
   options: string;
   requiresShipping: boolean;
-  id: string;
+  id?: string;
   price: number;
   taxable: boolean;
+  inventoryItem: { tracked?: boolean; cost?: number };
 }
 
 interface IShopifyProductCreateAndUpdateArgs {
@@ -118,6 +119,14 @@ onDBEvtBuffered(
           namespace: 'package_protection',
           type: 'single_line_text_field',
           value: data.insurancePriceType,
+        });
+      }
+      if (data.fixedMultiplePlan !== undefined) {
+        metafields.push({
+          key: 'fixedMultiplePlan',
+          namespace: 'package_protection',
+          type: 'json',
+          value: JSON.stringify(data.fixedMultiplePlan),
         });
       }
       if (data.price !== undefined) {
@@ -335,7 +344,10 @@ onDBEvtBuffered(
             });
           }
 
-          if (data.insurancePriceType === 'FIXED_PRICE') {
+          if (
+            data.insurancePriceType === 'FIXED_PRICE' ||
+            data.insurancePriceType === 'FIXED_MULTIPLE'
+          ) {
             if (data.enabled) {
               await shopifyProductUpdate({
                 productId: fixedProductId!,
@@ -361,22 +373,32 @@ onDBEvtBuffered(
               });
             }
 
-            // product update done for fixed price - now updating product variants
-            const variantExists = await queryProxy.productVariant.findFirst({
+            const variantsForDelete = await queryProxy.productVariant.findMany({
               where: { productId: fixedProductId },
+              pageSize: 100,
             });
+            const variants = await variantsForDelete.firstPage();
+            if (variants.length) {
+              await shopifyBulkVariantsDelete(
+                fixedProductId!,
+                variants.map((variant) => variant.id),
+                gql
+              );
+            }
 
-            if (variantExists) {
-              const singleVariant = await shopifyBulkVariantUpdate(
+            if (data.insurancePriceType === 'FIXED_PRICE') {
+              const balkVariant = await shopifyBulkVariantsCreate(
                 fixedProductId!,
                 [
                   {
                     sku: PRODUCT_SKU,
                     options: data.price.toString(),
                     requiresShipping: false,
-                    id: variantExists?.id,
                     price: data.price,
                     taxable: false,
+                    inventoryItem: {
+                      tracked: false,
+                    },
                   },
                 ],
                 gql
@@ -386,22 +408,51 @@ onDBEvtBuffered(
                 namespace: 'package_protection',
                 type: 'json',
                 value: JSON.stringify(
-                  singleVariant.productVariants.map((v) => ({
+                  balkVariant.productVariants.map((v) => ({
                     id: v.id.replace('gid://shopify/ProductVariant/', ''),
                     price: v.price,
                   }))
                 ),
               });
             }
+            if (data.insurancePriceType === 'FIXED_MULTIPLE') {
+              let multiplePlane: any = null;
 
-            await queryProxy.productVariant.update({
-              data: {
-                price: data.price,
-                title: data.price.toString(),
-              },
+              if (typeof data.fixedMultiplePlan === 'string') {
+                multiplePlane = JSON.parse(data.fixedMultiplePlan);
+              }
+              if (!multiplePlane) return;
 
-              where: { id: variantExists?.id },
-            });
+              const balkVariant = await shopifyBulkVariantsCreate(
+                fixedProductId!,
+                multiplePlane?.map((plan) => {
+                  return {
+                    optionValues: plan.protectionFees.toString(),
+                    // sku: PRODUCT_SKU,
+                    // requiresShipping: false,
+                    price: plan.protectionFees,
+                    taxable: false,
+                    inventoryItem: {
+                      tracked: false,
+                      sku: PRODUCT_SKU,
+                      requiresShipping: false,
+                    },
+                  };
+                }),
+                gql
+              );
+              await metafields.push({
+                key: 'productVariants',
+                namespace: 'package_protection',
+                type: 'json',
+                value: JSON.stringify(
+                  balkVariant.productVariants.map((v) => ({
+                    id: v.id.replace('gid://shopify/ProductVariant/', ''),
+                    price: v.price,
+                  }))
+                ),
+              });
+            }
           }
           if (data.insurancePriceType === 'PERCENTAGE') {
             if (data.enabled) {
@@ -448,6 +499,9 @@ onDBEvtBuffered(
                   id: variants[i].id,
                   taxable: false,
                   price: price,
+                  inventoryItem: {
+                    tracked: false,
+                  },
                 });
 
                 price += 0.5;
@@ -473,7 +527,10 @@ onDBEvtBuffered(
             });
           }
         } else {
-          if (data.insurancePriceType === 'FIXED_PRICE') {
+          if (
+            data.insurancePriceType === 'FIXED_PRICE' ||
+            data.insurancePriceType === 'FIXED_MULTIPLE'
+          ) {
             let productId = '';
             if (data.enabled) {
               const createFixedProduct = await shopifyCreateProduct({
@@ -552,44 +609,115 @@ onDBEvtBuffered(
 
               // product creation done for fixed price - now creating product variants
               await sleep(1500);
-              const variantExists = await queryProxy.productVariant.findFirst({
+              const variantsForDelete = await prisma.productVariant.findMany({
                 where: { productId: productId },
               });
+              if (variantsForDelete.length) {
+                await shopifyBulkVariantsDelete(
+                  productId,
+                  variantsForDelete.map((variant) => variant.id),
+                  gql
+                );
+              }
+              if (data.insurancePriceType === 'FIXED_PRICE') {
+                const balkVariant = await shopifyBulkVariantsCreate(
+                  productId,
+                  [
+                    {
+                      sku: PRODUCT_SKU,
+                      options: data.price.toString(),
+                      requiresShipping: false,
+                      price: data.price,
+                      taxable: false,
+                      inventoryItem: {
+                        tracked: false,
+                      },
+                    },
+                  ],
+                  gql
+                );
+                await metafields.push({
+                  key: 'productVariants',
+                  namespace: 'package_protection',
+                  type: 'json',
+                  value: JSON.stringify(
+                    balkVariant.productVariants.map((v) => ({
+                      id: v.id.replace('gid://shopify/ProductVariant/', ''),
+                      price: v.price,
+                    }))
+                  ),
+                });
+              }
+              if (data.insurancePriceType === 'FIXED_MULTIPLE') {
+                if (!data.fixedMultiplePlan) return;
+                const multiplePlane = data.fixedMultiplePlan as any[];
 
-              const singleVariant = await shopifyBulkVariantUpdate(
-                productId,
-                [
-                  {
-                    sku: PRODUCT_SKU,
-                    options: data.price.toString(),
-                    requiresShipping: false,
-                    id: variantExists?.id as string,
-                    price: data.price,
-                    taxable: false,
-                  },
-                ],
-                gql
-              );
-              await metafields.push({
-                key: 'productVariants',
-                namespace: 'package_protection',
-                type: 'json',
-                value: JSON.stringify(
-                  singleVariant.productVariants.map((v) => ({
-                    id: v.id.replace('gid://shopify/ProductVariant/', ''),
-                    price: v.price,
-                  }))
-                ),
-              });
+                const balkVariant = await shopifyBulkVariantsCreate(
+                  productId,
+                  multiplePlane?.map((plan) => {
+                    return {
+                      sku: PRODUCT_SKU,
+                      options: plan.protectionFees.toString(),
+                      requiresShipping: false,
+                      price: plan.protectionFees,
+                      taxable: false,
+                      inventoryItem: {
+                        tracked: false,
+                      },
+                    };
+                  }),
+                  gql
+                );
+                await metafields.push({
+                  key: 'productVariants',
+                  namespace: 'package_protection',
+                  type: 'json',
+                  value: JSON.stringify(
+                    balkVariant.productVariants.map((v) => ({
+                      id: v.id.replace('gid://shopify/ProductVariant/', ''),
+                      price: v.price,
+                    }))
+                  ),
+                });
+              }
+              // const variantExists = await queryProxy.productVariant.findFirst({
+              //   where: { productId: productId },
+              // });
 
-              await queryProxy.productVariant.update({
-                data: {
-                  price: data.price,
-                  title: data.price.toString(),
-                },
+              // const singleVariant = await shopifyBulkVariantUpdate(
+              //   productId,
+              //   [
+              //     {
+              //       sku: PRODUCT_SKU,
+              //       options: data.price.toString(),
+              //       requiresShipping: false,
+              //       id: variantExists?.id as string,
+              //       price: data.price,
+              //       taxable: false,
+              //     },
+              //   ],
+              //   gql
+              // );
+              // await metafields.push({
+              //   key: 'productVariants',
+              //   namespace: 'package_protection',
+              //   type: 'json',
+              //   value: JSON.stringify(
+              //     singleVariant.productVariants.map((v) => ({
+              //       id: v.id.replace('gid://shopify/ProductVariant/', ''),
+              //       price: v.price,
+              //     }))
+              //   ),
+              // });
 
-                where: { id: variantExists?.id },
-              });
+              // await queryProxy.productVariant.update({
+              //   data: {
+              //     price: data.price,
+              //     title: data.price.toString(),
+              //   },
+
+              //   where: { id: variantExists?.id },
+              // });
             }
           }
           if (data.insurancePriceType === 'PERCENTAGE') {
@@ -791,6 +919,68 @@ async function shopifyBulkProductVariantCreate({
     data: productVariantsCreatedList,
   });
   return productVariantsCreatedList;
+}
+
+async function shopifyBulkVariantsCreate(
+  productId: string,
+  variants: IShopifyBulkVariantUpdate[],
+  gql: GraphqlClient
+) {
+  const res = await gql.query<any>({
+    data: {
+      query: `#graphql
+    mutation productVariantsBulkCreate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+      productVariantsBulkCreate(productId: $productId, variants: $variants) {
+        product {
+          id
+        }
+        productVariants {
+          id
+          price
+
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }`,
+      variables: {
+        productId: productId,
+        variants: variants,
+      },
+    },
+  });
+  return res.body.data.productVariantsBulkCreate;
+}
+
+async function shopifyBulkVariantsDelete(
+  productId: string,
+  variants: string[],
+  gql: GraphqlClient
+) {
+  const res = await gql.query<any>({
+    data: {
+      query: `#graphql
+      mutation productVariantsBulkDelete($productId: ID!, $variantsIds: [ID!]!) {
+        productVariantsBulkDelete(productId: $productId, variantsIds: $variantsIds) {
+          product {
+            id
+          },
+          userErrors {
+            field
+            message
+          }
+        }
+      }`,
+      variables: {
+        productId: productId,
+        variantsIds: variants,
+      },
+    },
+    tries: 20,
+  });
+  return res.body.data.productVariantsBulkDelete;
 }
 
 async function shopifyBulkVariantUpdate(

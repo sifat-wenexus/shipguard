@@ -65,10 +65,10 @@ const OrderSearchAndFilter = ({
     >
       <p className="flex justify-center">
         {' '}
-        <span className="hidden md:block">
+        <span className="hidden md:block mr-2">
           <Icon source={FilterIcon} />
         </span>
-        <span className="hidden md:block">Filter</span>{' '}
+        <span className="hidden md:block">More Filter</span>{' '}
         <span className="md:hidden">
           {' '}
           <Icon source={FilterIcon} />
@@ -107,8 +107,8 @@ const OrderSearchAndFilter = ({
 
   return (
     <>
-      <div className="flex items-center w-full">
-        <Box padding={'200'} width="100%">
+      <div className="flex items-center justify-between w-full">
+        <Box padding={'200'}>
           <TextField
             onChange={(text) => setInputText(text)}
             label=""

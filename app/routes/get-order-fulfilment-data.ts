@@ -28,7 +28,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const orderId = `#${params.orderId}`;
     const getPackageProtectionOrder =
       await prisma.packageProtectionOrder.findFirst({
-        where: { orderName: orderId },
+        where: { orderName: orderId, hasPackageProtection: { equals: true } },
         include: { PackageProtectionClaimOrder: true },
       });
 
@@ -440,9 +440,6 @@ export const action: ActionFunction = async ({ request }) => {
           }`,
           shop_name: data?.Store.name,
           shop_logo: logo,
-          order_url: `https://admin.shopify.com/store/${
-            data.Store.domain.split('.')[0]
-          }/orders/${orderId}`,
         },
       });
     }

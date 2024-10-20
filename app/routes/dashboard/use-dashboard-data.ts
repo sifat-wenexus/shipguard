@@ -82,12 +82,12 @@ export function useDashboardData(startDate: string, endDate: string) {
       }),
     [endDate, startDate]
   );
-  const claimedQuery = useMemo(
+  const totalPackageProtectionQuery = useMemo(
     () =>
       queryProxy.packageProtectionOrder.subscribeCount({
         where: {
           AND: [
-            { hasClaimRequest: true },
+            { hasPackageProtection: true },
             {
               createdAt: {
                 gte: startDate,
@@ -99,11 +99,33 @@ export function useDashboardData(startDate: string, endDate: string) {
       }),
     [endDate, startDate]
   );
+  const totalNonPackageProtectionQuery = useMemo(
+    () =>
+      queryProxy.packageProtectionOrder.subscribeCount({
+        where: {
+          AND: [
+            { hasPackageProtection: false },
+            {
+              createdAt: {
+                gte: startDate,
+                lte: endDate,
+              },
+            },
+          ],
+        },
+      }),
+    [endDate, startDate]
+  );
+  const totalNonPackageProtectionSubscription = useQuery(
+    totalNonPackageProtectionQuery
+  );
 
+  const totalPackageProtectionSubscription = useQuery(
+    totalPackageProtectionQuery
+  );
   const lineDataSubscription = useQueryPaginated(lineDataQuery);
   const pieDataSubscription = useQueryPaginated(pieDataQuery);
   const notClaimedSubscription = useQuery(notClaimedQuery);
-  const claimedSubscription = useQuery(claimedQuery);
   const totalSubscription = useQuery(totalQuery);
 
   const lineData = useMemo(
@@ -130,7 +152,8 @@ export function useDashboardData(startDate: string, endDate: string) {
     lineDataSubscription.loading ||
     pieDataSubscription.loading ||
     notClaimedSubscription.loading ||
-    claimedSubscription.loading ||
+    totalPackageProtectionSubscription.loading ||
+    totalNonPackageProtectionSubscription.loading ||
     totalSubscription.loading;
 
   return {
@@ -138,7 +161,8 @@ export function useDashboardData(startDate: string, endDate: string) {
     loading,
     notClaimed: notClaimedSubscription.data,
     pieData: pieDataSubscription.data,
-    claimed: claimedSubscription.data,
+    totalPackageProtect: totalPackageProtectionSubscription.data,
+    totalNonPackageProtect: totalNonPackageProtectionSubscription.data,
     total: totalSubscription.data,
   };
 }

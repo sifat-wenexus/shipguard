@@ -597,6 +597,32 @@ var __publicField = (obj, key, value) => {
         client.refreshUI(item ?? null);
       }
     }
+    const fixedMultiplePlan = JSON.parse(settings.fixedMultiplePlan);
+    const cartValue = (await window.weNexusCartApi.get()).total_price / 100;
+    console.log(
+      "package-1",
+      settings.productVariants.reduce(
+        (a, b) => {
+          a[b.price] = Number(b.id);
+          return a;
+        },
+        {}
+      ),
+      fixedMultiplePlan,
+      cartValue
+    );
+    if (settings.insurancePriceType === "FIXED_MULTIPLE") {
+      const result = fixedMultiplePlan.find(
+        (item) => cartValue >= Number(item.cartMinPrice) && cartValue <= Number(item.cartMaxPrice)
+      );
+      const multipleVariantToSet = settings.productVariants.find(
+        (v) => Number(v.price) === Number(result == null ? void 0 : result.protectionFees)
+      );
+      console.log(
+        { result },
+        { [multipleVariantToSet.price]: Number(multipleVariantToSet.id) }
+      );
+    }
     packageProtectionApi.setVariants(
       settings.productVariants.reduce(
         (a, b) => {

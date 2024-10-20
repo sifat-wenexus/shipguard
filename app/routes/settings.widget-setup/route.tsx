@@ -1,4 +1,8 @@
-import type { ActionFunctionArgs, LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
+import type {
+  ActionFunctionArgs,
+  LinksFunction,
+  LoaderFunctionArgs,
+} from '@remix-run/node';
 import CustomizedInsuranceStyle from './components/customized-insurance-style';
 import { hexToHsba, hsbaToHexWithAlpha } from '~/modules/utils/color-utils';
 import { shopify as shopifyRemix } from '../../modules/shopify.server';
@@ -42,6 +46,7 @@ export async function action({ request }: ActionFunctionArgs) {
       price,
       percentage,
       defaultPercentage,
+
       ...payload
     } = state;
     const packageProtectionCreateAndUpdate: Partial<PackageProtection> = {
@@ -63,7 +68,7 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         {
           session: ctx.session,
-        },
+        }
       );
     } catch (e) {
       console.error(e);
@@ -110,7 +115,7 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         {
           session: ctx.session,
-        },
+        }
       );
       if (excludeProductVariant.length === 0) {
         await prisma.excludedPackageProtectionProduct.deleteMany();
@@ -157,7 +162,7 @@ export async function action({ request }: ActionFunctionArgs) {
               create: payload,
               update: payload,
               where: { id: item.id },
-            }),
+            })
           );
 
           item.variants.forEach((variant) => {
@@ -253,6 +258,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
           variants: e.excludedPackageProtectionVariants,
           images: e.image,
         })) ?? [],
+
+      isSingle: settingsData?.isSingle ?? true,
+      fixedMultiplePlan: settingsData?.fixedMultiplePlan ?? [
+        {
+          protectionFees: '',
+          cartMinPrice: '',
+          cartMaxPrice: '',
+        },
+      ],
     },
   });
 }
@@ -281,7 +295,7 @@ const Settings = () => {
         },
         {
           method: 'POST',
-        },
+        }
       );
     } catch (e) {
       console.error(e);

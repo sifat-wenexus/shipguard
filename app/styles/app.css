@@ -121,3 +121,7 @@
 .tox-statusbar__branding {
   display: none !important;
 }
+
+.Polaris-Box:has(.fixed-cart-height) {
+  height: 100% !important;
+}
