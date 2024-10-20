@@ -1,4 +1,4 @@
-import { performBulkQuery } from '~/modules/perform-bulk-operation.server';
+import { performBulkMutation, performBulkQuery } from '~/modules/perform-bulk-operation.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import type { Job as BaseJobDetails, JobExecution } from '#prisma-client';
 import type { JobRunner } from '~/modules/job/job-runner.server';
@@ -14,23 +14,22 @@ export interface JobDetails<P = any> extends Omit<BaseJobDetails, 'payload'> {
 export abstract class Job<P = any> {
   constructor(
     private readonly runner: JobRunner,
-    public readonly job: JobDetails<P>,
-  ) {
-  }
+    public readonly job: JobDetails<P>
+  ) {}
 
   private execution: JobExecution | null = null;
-  private cancelled = false;
-  private paused = false;
+  private executionCancelled = false;
+  private executionPaused = false;
   steps: string[] = ['execute'];
 
-  pause(result?: any) {
-    this.paused = true;
+  pauseExecution(result?: any) {
+    this.executionPaused = true;
 
     return result;
   }
 
-  cancel(result?: any) {
-    this.cancelled = true;
+  cancelExecution(result?: any) {
+    this.executionCancelled = true;
 
     return result;
   }
@@ -61,6 +60,46 @@ export abstract class Job<P = any> {
     }
 
     const { operationId } = await performBulkQuery(session, query, false);
+
+    await prisma.jobBulkOperation.create({
+      data: {
+        id: operationId,
+        jobId: this.job.id,
+      },
+    });
+  }
+
+  async performShopifyBulkMutation(
+    mutation: string,
+    variables: any[],
+    storeId = this.job.storeId
+  ) {
+    if (!storeId) {
+      throw new Error('No storeId provided');
+    }
+
+    const store = await prisma.store.findUnique({
+      where: {
+        id: storeId,
+      },
+    });
+
+    if (!store) {
+      throw new Error('Store not found');
+    }
+
+    const session = await findOfflineSession(store.domain);
+
+    if (!session) {
+      throw new Error('Session not found');
+    }
+
+    const { operationId } = await performBulkMutation(
+      session,
+      mutation,
+      variables,
+      false
+    );
 
     await prisma.jobBulkOperation.create({
       data: {
@@ -156,7 +195,11 @@ export abstract class Job<P = any> {
 
     let error: any = null;
 
-    for (let i = this.steps.indexOf(this.execution.currentStep); i < this.steps.length; i++) {
+    for (
+      let i = this.steps.indexOf(this.execution.currentStep);
+      i < this.steps.length;
+      i++
+    ) {
       let result: any = null;
 
       const currentStep = this.steps[i];
@@ -172,11 +215,19 @@ export abstract class Job<P = any> {
       const executionUpdate: Record<string, any> = {
         currentStep: error ? currentStep : nextStep,
         prevStep: error ? this.execution.prevStep : currentStep,
-        status: error ? 'FAILED' : this.cancelled ? 'CANCELLED' : this.paused && nextStep ? 'PAUSED' : 'SUCCEEDED',
+        status: error
+          ? 'FAILED'
+          : this.executionCancelled
+            ? 'CANCELLED'
+            : this.executionPaused && nextStep
+              ? 'PAUSED'
+              : 'SUCCEEDED',
         result: {
-          ...(this.execution.result as Record<string, any> || {}),
-          [currentStep]: error ? (_.isEmpty(JSON.parse(JSON.stringify(error)))
-              ? { message: error?.message, stack: error?.stack } : error)
+          ...((this.execution.result as Record<string, any>) || {}),
+          [currentStep]: error
+            ? _.isEmpty(JSON.parse(JSON.stringify(error)))
+              ? { message: error?.message, stack: error?.stack }
+              : error
             : result,
         },
         executedAt: new Date(),
@@ -190,29 +241,35 @@ export abstract class Job<P = any> {
       });
       _.merge(this.execution, execution);
 
-      if (error || this.paused || this.cancelled) {
+      if (error || this.executionPaused || this.executionCancelled) {
         break;
       }
     }
 
-    const shouldReschedule = !!job.interval && !this.paused && (!error || job.tries >= (job.maxRetries || 10));
+    const shouldReschedule =
+      !!job.interval &&
+      !this.executionPaused &&
+      (!error || job.tries >= (job.maxRetries || 10));
 
     job = (await queryProxy.job.update({
       where: {
         id: this.job.id,
       },
       data: {
-        status: this.paused
-          ? 'PAUSED' : this.cancelled || shouldReschedule
-              ? 'FINISHED' : error
-                ? 'FAILED' : 'FINISHED',
+        status: this.executionPaused
+          ? 'PAUSED'
+          : this.executionCancelled || shouldReschedule
+            ? 'FINISHED'
+            : error
+              ? 'FAILED'
+              : 'FINISHED',
         tries: isRetry && !error ? 0 : this.job.tries,
         executedAt: new Date(),
       },
     })) as any;
     _.merge(this.job, job);
 
-    if (!this.paused) {
+    if (!this.executionPaused) {
       await queryProxy.jobExecution.update({
         where: {
           id: this.execution.id,
@@ -232,10 +289,10 @@ export abstract class Job<P = any> {
     if (error) {
       emitter.emitAsync(`${eventBase}.failed`, job);
       emitter.emitAsync(`${job.storeId}.${eventBase}.failed`, job);
-    } else if (this.paused) {
+    } else if (this.executionPaused) {
       emitter.emitAsync(`${eventBase}.paused`, job);
       emitter.emitAsync(`${job.storeId}.${eventBase}.paused`, job);
-    } else if (this.cancelled) {
+    } else if (this.executionCancelled) {
       emitter.emitAsync(`${eventBase}.cancelled`, job);
       emitter.emitAsync(`${job.storeId}.${eventBase}.cancelled`, job);
     } else {
@@ -270,5 +327,5 @@ export abstract class Job<P = any> {
 }
 
 export interface JobConstructor {
-  new(job: JobDetails): Job;
+  new (job: JobDetails): Job;
 }

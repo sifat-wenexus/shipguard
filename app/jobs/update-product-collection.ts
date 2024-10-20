@@ -10,7 +10,7 @@ export class UpdateProductCollection extends Job<Payload> {
 
   async fetchProducts() {
     if (!this.job.storeId) {
-      return this.cancel({
+      return this.cancelExecution({
         updated: 0,
         reason: 'Missing storeId',
       });
@@ -35,7 +35,7 @@ export class UpdateProductCollection extends Job<Payload> {
     );
 
     await this.updateProgress(20);
-    this.pause();
+    this.pauseExecution();
   }
 
   async updateProducts() {

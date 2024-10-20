@@ -15,7 +15,7 @@ export class ImportOrders extends Job<Payload> {
 
   validate() {
     if (!this.job.storeId) {
-      return this.cancel({
+      return this.cancelExecution({
         imported: 0,
         reason: 'Missing storeId',
       });
@@ -95,7 +95,7 @@ export class ImportOrders extends Job<Payload> {
     );
     await this.updateProgress(10);
 
-    this.pause();
+    this.pauseExecution();
   }
 
   async importOrders() {

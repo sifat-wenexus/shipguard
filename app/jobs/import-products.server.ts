@@ -6,7 +6,7 @@ export class ImportProducts extends Job {
 
   async validate() {
     if (!this.job.storeId) {
-      return this.cancel({
+      return this.cancelExecution({
         imported: 0,
         reason: 'Missing storeId',
       });
@@ -31,7 +31,7 @@ export class ImportProducts extends Job {
     `);
 
     await this.updateProgress(10);
-    this.pause();
+    this.pauseExecution();
   }
 
   async importCollections() {
@@ -111,7 +111,7 @@ export class ImportProducts extends Job {
     );
 
     await this.updateProgress(50);
-    this.pause();
+    this.pauseExecution();
   }
 
   async importProducts() {

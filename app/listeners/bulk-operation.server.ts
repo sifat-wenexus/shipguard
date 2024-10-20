@@ -22,6 +22,6 @@ emitter.on('BULK_OPERATIONS_FINISH', async (ctx: WebhookListenerArgs) => {
   if (jobBulkOperation) {
     const data = await fetchBulkOperationData(operationId, ctx.session!);
 
-    jobRunner.resume(jobBulkOperation.jobId, data);
+    jobRunner.resumeExecution(jobBulkOperation.jobId, data);
   }
 });

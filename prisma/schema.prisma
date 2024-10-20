@@ -37,10 +37,11 @@ enum InsurancePricingType {
 
 enum JobStatus {
   SCHEDULED
+  CANCELLED
   FINISHED
-  FAILED
   PENDING
   RUNNING
+  FAILED
   PAUSED
 }
 

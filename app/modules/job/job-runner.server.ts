@@ -1,24 +1,25 @@
 import { queryProxy } from '~/modules/query/query-proxy';
-import type { Job, JobExecution } from '#prisma-client';
+import { Job, JobExecution, Prisma } from '#prisma-client';
 import type { JobName } from '~/jobs/index.server';
 import { jobExecutors } from '~/jobs/index.server';
+import { prisma } from '~/modules/prisma.server';
 
 export interface JobRunnerOptions {
   name: JobName;
   storeId?: string;
   interval?: number;
-  timeout?: number;
   maxRetries?: number;
   scheduleAt?: Date;
+  dependencies?: number[];
   paused?: boolean;
   payload?: (typeof jobExecutors)[JobName]['prototype']['job']['payload'];
 }
 
 class Queue {
-  constructor(private readonly batchSize = 50) {
-  }
+  constructor(private readonly batchSize = 50) {}
 
   public readonly items = new Set<Job>();
+  public readonly timeouts: Record<number, NodeJS.Timeout> = {};
   public readonly ids = new Set<number>();
   public loading = false;
 
@@ -53,6 +54,15 @@ class Queue {
           {
             id: { notIn: Array.from(this.ids) },
             node: process.env.NODE_ID,
+            Dependencies: {
+              every: {
+                DependsOn: {
+                  status: {
+                    in: ['FINISHED', 'CANCELLED'],
+                  },
+                },
+              },
+            },
           },
           {
             OR: [
@@ -68,8 +78,8 @@ class Queue {
                 Executions: {
                   some: {
                     status: 'PAUSED',
-                  }
-                }
+                  },
+                },
               },
               {
                 status: 'FAILED',
@@ -77,7 +87,7 @@ class Queue {
                   {
                     interval: {
                       not: null,
-                    }
+                    },
                   },
                   {
                     maxRetries: null,
@@ -86,8 +96,8 @@ class Queue {
                     tries: {
                       lt: queryProxy.job.fields.maxRetries,
                     },
-                  }
-                ]
+                  },
+                ],
               },
             ],
           },
@@ -134,7 +144,7 @@ class Queue {
         },
       });
 
-      setTimeout(async () => {
+      this.timeouts[job.id] = setTimeout(async () => {
         this.items.add(job);
         this.ids.add(job.id);
 
@@ -192,7 +202,7 @@ export class JobRunner {
         } catch (e) {
           console.error(e);
         }
-      }),
+      })
     );
 
     this.running = false;
@@ -237,7 +247,7 @@ export class JobRunner {
                 resolve(null);
               }
             });
-          }),
+          })
       );
 
     // Load scheduled jobs
@@ -286,14 +296,14 @@ export class JobRunner {
             } else {
               resolve(null);
             }
-          }),
+          })
       );
   }
 
   async scheduleJob(
     job: Job,
     ignoreScheduledAt?: boolean,
-    lastExecution?: JobExecution,
+    lastExecution?: JobExecution
   ) {
     const { scheduledAt, interval } = job;
 
@@ -347,18 +357,27 @@ export class JobRunner {
   }
 
   async run(options: JobRunnerOptions) {
-    const { name, interval, timeout, maxRetries, scheduleAt, payload } =
-      options;
+    const { name, interval, maxRetries, scheduleAt, payload } = options;
 
     const job = await queryProxy.job.create({
       data: {
-        status: options.paused ? 'PAUSED' : (scheduleAt || interval) ? 'SCHEDULED' : 'PENDING',
+        status: options.paused
+          ? 'PAUSED'
+          : scheduleAt || interval
+            ? 'SCHEDULED'
+            : 'PENDING',
         node: process.env.NODE_ID!,
         storeId: options.storeId,
         scheduledAt: scheduleAt,
+        Dependencies: {
+          createMany: {
+            data: (options.dependencies || []).map((id) => ({
+              dependsOnId: id,
+            })),
+          },
+        },
         maxRetries,
         interval,
-        timeout,
         payload,
         name,
       },
@@ -370,15 +389,28 @@ export class JobRunner {
 
     await this.queue.add(
       job,
-      scheduleAt ? scheduleAt.getTime() - Date.now() : undefined,
+      scheduleAt ? scheduleAt.getTime() - Date.now() : undefined
     );
 
     return job;
   }
 
-  async resume(id: number, payload?: any) {
-    const job = await queryProxy.job.findUnique({
-      where: { id },
+  async resumeExecution(
+    filterOrId: number | Prisma.JobWhereInput,
+    payload?: any
+  ) {
+    const job = await queryProxy.job.findFirst({
+      where:
+        typeof filterOrId === 'number'
+          ? { id: filterOrId, status: 'PAUSED' }
+          : {
+            AND: [
+              filterOrId,
+              {
+                status: 'PAUSED',
+              },
+            ],
+          },
       include: {
         Executions: {
           take: 1,
@@ -391,7 +423,7 @@ export class JobRunner {
       },
     });
 
-    if (job?.status !== 'PAUSED') {
+    if (!job) {
       return job;
     }
 
@@ -405,7 +437,7 @@ export class JobRunner {
           where: { id: execution.id },
           data: {
             result: {
-              ...(execution.result || {}) as any,
+              ...((execution.result || {}) as any),
               [step]: payload,
             },
           },
@@ -414,11 +446,60 @@ export class JobRunner {
     }
 
     await queryProxy.job.update({
-      where: { id },
-      data: { status: job.Executions?.[0].status === 'PAUSED' ? 'PENDING' : job.scheduledAt || job.interval ? 'SCHEDULED' : 'PENDING' },
+      where: { id: job.id },
+      data: {
+        status:
+          job.Executions?.[0].status === 'PAUSED'
+            ? 'PENDING'
+            : job.scheduledAt || job.interval
+              ? 'SCHEDULED'
+              : 'PENDING',
+      },
     });
 
     return job;
+  }
+
+  async cancel(filterOrIds: number[] | Prisma.JobWhereInput) {
+    const jobs = await prisma.job.findMany({
+      where: Array.isArray(filterOrIds)
+        ? {
+          id: {
+            in: filterOrIds,
+          },
+          status: {
+            notIn: ['CANCELLED', 'FINISHED', 'RUNNING'],
+          },
+        }
+        : {
+          AND: [
+            filterOrIds,
+            {
+              status: {
+                notIn: ['CANCELLED', 'FINISHED', 'RUNNING'],
+              },
+            },
+          ],
+        },
+    });
+
+    for (const job of jobs) {
+      clearTimeout(this.queue.timeouts[job.id]);
+      delete this.queue.timeouts[job.id];
+      this.queue.remove(job);
+    }
+
+
+    return await queryProxy.job.updateMany({
+      where: {
+        id: {
+          in: jobs.map((job) => job.id),
+        },
+      },
+      data: {
+        status: 'CANCELLED',
+      },
+    });
   }
 }
 
