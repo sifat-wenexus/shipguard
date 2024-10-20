@@ -20,7 +20,7 @@ export const shopify = shopifyApp({
   isEmbeddedApp: true,
   apiKey: _config.apiKey,
   apiSecretKey: _config.apiSecretKey,
-  apiVersion: ApiVersion.January24,
+  apiVersion: ApiVersion.October24,
   scopes: _config.scopes,
   appUrl: _config.appUrl.toString(),
   authPathPrefix: '/auth',

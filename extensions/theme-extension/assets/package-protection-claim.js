@@ -14677,7 +14677,7 @@ function Ti(e, t, r) {
     }
     return a === void 0 && (a = P(S, x)), i;
   }
-  return (D.cancel = k), (D.flush = N), (D.pending = O), D;
+  return (D.cancelExecution = k), (D.flush = N), (D.pending = O), D;
 }
 class Mo {
   static get zero() {
