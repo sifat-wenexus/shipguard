@@ -224,6 +224,8 @@ model Job {
   Store          Store?             @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   Executions     JobExecution[]
   BulkOperations JobBulkOperation[]
+  Dependencies   JobDependency[]    @relation("JobDependency")
+  Dependents     JobDependency[]    @relation("DependsOn")
 
   @@index([status, storeId, name])
   @@index([executedAt], type: Brin)
@@ -246,6 +248,16 @@ model JobExecution {
 
   @@index([jobId])
   @@index([status])
+}
+
+model JobDependency {
+  jobId       Int
+  dependsOnId Int
+
+  Job       Job @relation("JobDependency", fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  DependsOn Job @relation("DependsOn", fields: [dependsOnId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([jobId, dependsOnId])
 }
 
 model File {
