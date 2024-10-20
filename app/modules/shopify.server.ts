@@ -1,9 +1,14 @@
 import '~/shopify-app-remix/server/adapters/node';
 import '~/shopify-api/adapters/web-api';
 
-import { ApiVersion, AppDistribution, DeliveryMethod, shopifyApp } from '~/shopify-app-remix/server';
+import {
+  ApiVersion,
+  AppDistribution,
+  DeliveryMethod,
+  shopifyApp,
+} from '~/shopify-app-remix/server';
 import { PrismaSessionStorage } from './prisma-session-storage.server';
-import { restResources } from '~/shopify-api/rest/admin/2024-01';
+import { restResources } from '~/shopify-api/rest/admin/2024-10';
 import type { Session, WebhookHandler } from '~/shopify-api/lib';
 import { InitStore } from '~/modules/init-store.server';
 import { Migration } from '~/modules/migration.server';

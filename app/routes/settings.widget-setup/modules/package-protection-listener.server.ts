@@ -29,13 +29,18 @@ interface IProductVariant {
 }
 
 interface IShopifyBulkVariantUpdate {
-  sku: string;
-  options: string;
-  requiresShipping: boolean;
+  optionValues: {
+    name: string;
+  };
   id?: string;
   price: number;
   taxable: boolean;
-  inventoryItem: { tracked?: boolean; cost?: number };
+  inventoryItem: {
+    sku: string;
+    requiresShipping: boolean;
+    tracked?: boolean;
+    cost?: number;
+  };
 }
 
 interface IShopifyProductCreateAndUpdateArgs {
@@ -391,13 +396,15 @@ onDBEvtBuffered(
                 fixedProductId!,
                 [
                   {
-                    sku: PRODUCT_SKU,
-                    options: data.price.toString(),
-                    requiresShipping: false,
+                    optionValues: {
+                      name: data.price.toString(),
+                    },
                     price: data.price,
                     taxable: false,
                     inventoryItem: {
+                      requiresShipping: false,
                       tracked: false,
+                      sku: PRODUCT_SKU,
                     },
                   },
                 ],
@@ -427,7 +434,9 @@ onDBEvtBuffered(
                 fixedProductId!,
                 multiplePlane?.map((plan) => {
                   return {
-                    optionValues: plan.protectionFees.toString(),
+                    optionValues: {
+                      name: plan.protectionFees.toString(),
+                    },
                     // sku: PRODUCT_SKU,
                     // requiresShipping: false,
                     price: plan.protectionFees,
@@ -493,13 +502,15 @@ onDBEvtBuffered(
               let price = data.defaultPercentage;
               for (let i = 0; i < variants.length; i++) {
                 productVariantsUpdate.push({
-                  sku: PRODUCT_SKU,
-                  options: price.toString(),
-                  requiresShipping: false,
+                  optionValues: {
+                    name: price.toString(),
+                  },
                   id: variants[i].id,
                   taxable: false,
                   price: price,
                   inventoryItem: {
+                    sku: PRODUCT_SKU,
+                    requiresShipping: false,
                     tracked: false,
                   },
                 });
@@ -624,12 +635,14 @@ onDBEvtBuffered(
                   productId,
                   [
                     {
-                      sku: PRODUCT_SKU,
-                      options: data.price.toString(),
-                      requiresShipping: false,
+                      optionValues: {
+                        name: data.price.toString(),
+                      },
                       price: data.price,
                       taxable: false,
                       inventoryItem: {
+                        sku: PRODUCT_SKU,
+                        requiresShipping: false,
                         tracked: false,
                       },
                     },
@@ -656,13 +669,15 @@ onDBEvtBuffered(
                   productId,
                   multiplePlane?.map((plan) => {
                     return {
-                      sku: PRODUCT_SKU,
-                      options: plan.protectionFees.toString(),
-                      requiresShipping: false,
+                      optionValues: {
+                        name: plan.protectionFees.toString(),
+                      },
                       price: plan.protectionFees,
                       taxable: false,
                       inventoryItem: {
                         tracked: false,
+                        sku: PRODUCT_SKU,
+                        requiresShipping: false,
                       },
                     };
                   }),

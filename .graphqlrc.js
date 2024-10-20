@@ -1,5 +1,5 @@
 const fs = require('node:fs');
-const apiVersion = '2024-01';
+const apiVersion = '2024-10';
 
 function getConfig() {
   const config = {
