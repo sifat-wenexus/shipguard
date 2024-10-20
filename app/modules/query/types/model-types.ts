@@ -81,4 +81,8 @@ export interface ModelTypes {
     model: Base.SmtpSetting;
     whereInput: Base.Prisma.SmtpSettingWhereInput;
   };
+  jobDependency: {
+    model: Base.JobDependency;
+    whereInput: Base.Prisma.JobDependencyWhereInput;
+  };
 }
