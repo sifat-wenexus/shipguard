@@ -91,14 +91,18 @@ async function handleWebhook({ shop, payload: _payload }: WebhookListenerArgs) {
 
 emitter.on('PRODUCTS_UPDATE', handleWebhook);
 emitter.on('PRODUCTS_CREATE', handleWebhook);
-emitter.on('PRODUCTS_DELETE', async ({ ctx: { payload } }) => {
+emitter.on('PRODUCTS_DELETE', async ({ payload }) => {
   if (!payload) {
     return;
   }
-  console.log('-----deleting product------');
-  await prisma.product.delete({
-    where: {
-      id: `gid://shopify/Product/${payload.id}`,
-    },
-  });
+  try {
+    const res = await prisma.product.delete({
+      where: {
+        id: `gid://shopify/Product/${payload.id}`,
+      },
+    });
+    console.log(`product deleted successfully Id: ${res.id}`);
+  } catch (err) {
+    console.error('Error while deleting product', err);
+  }
 });

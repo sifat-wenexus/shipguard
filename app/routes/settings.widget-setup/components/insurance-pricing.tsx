@@ -32,16 +32,14 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
   const [emptyIndex, setEmptyIndex] = useState(-1);
   const [warning, setWarning] = useState(false);
   const [active, setActive] = useState(false);
-  console.log({ state });
   const initialData = {
     protectionFees: '',
     cartMinPrice: '',
     cartMaxPrice: '',
   };
   const [planByValues, setPlanByValues] = useState<Record<string, any>[]>(
-    JSON.parse(state.fixedMultiplePlan)
+    state.fixedMultiplePlan
   );
-  console.log({ planByValues });
   const handleAddItem = () => {
     setPlanByValues((prev) => [...prev, initialData]);
   };
@@ -77,11 +75,21 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
       return;
     }
     formState.addChange({
-      fixedMultiplePlan: JSON.stringify(planByValues),
+      fixedMultiplePlan: planByValues,
     });
     setActive(false);
   };
-
+  const activator = (
+    <Button
+      onClick={() => {
+        setActive(true);
+      }}
+      tone="success"
+      variant="primary"
+    >
+      Add Plan
+    </Button>
+  );
   const activator2 = (
     <Box paddingBlockStart="100" paddingBlockEnd="100" minHeight="100%">
       <div
@@ -124,10 +132,11 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
   const modal = (
     <Modal
       size="large"
-      activator={activator2}
+      activator={activator}
       open={active}
       onClose={() => setActive(false)}
       title="Create Fixed Type Protection Plan"
+      titleHidden
       primaryAction={{
         content: 'Save',
 
@@ -141,7 +150,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
       ]}
     >
       <Modal.Section>
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-4">
           <div className="flex gap-4 m-auto mb-8">
             <Radio
               checked={state.isSingle}
@@ -251,7 +260,6 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
       </Modal.Section>
     </Modal>
   );
-
   return (
     <ShadowBevelBox
       icon={<Icon source={PriceListIcon} />}
@@ -264,7 +272,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
     >
       <FormLayout>
         <FormLayout.Group>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-4">
             <Box paddingBlockStart="100" paddingBlockEnd="100">
               <div
                 onClick={() => {
@@ -272,9 +280,10 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                     insurancePriceType: 'PERCENTAGE',
                   });
                 }}
-                className={`p-3 h-full text-center shadow-md border rounded-md wenexus-icon-size cursor-pointer ${
-                  state.insurancePriceType === 'PERCENTAGE' &&
-                  'ring-2 ring-green-500 ring-offset-0 bg-[#6BCE6A] text-white'
+                className={`p-3 h-full text-center shadow-sm border rounded-md wenexus-icon-size cursor-pointer ${
+                  state.insurancePriceType === 'PERCENTAGE'
+                    ? 'ring-2 ring-green-500 ring-offset-0 bg-[#6BCE6A] text-white'
+                    : 'bg-[#F1F1F1] ring-2 ring-gray-300 ring-offset-0'
                 }`}
               >
                 <Icon
@@ -294,7 +303,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                   tone={
                     state.insurancePriceType === 'PERCENTAGE'
                       ? 'base'
-                      : 'disabled'
+                      : 'subdued'
                   }
                   as="p"
                 >
@@ -302,17 +311,22 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                 </Text>
               </div>
             </Box>
-            {modal}
-            {/* <Box paddingBlockStart="100" paddingBlockEnd="100">
+            {/* {modal} */}
+            <Box paddingBlockStart="100" paddingBlockEnd="100" minHeight="100%">
               <div
-                onClick={() =>
+                onClick={() => {
+                  // setActive(true);
                   formState.addChange({
-                    insurancePriceType: 'FIXED_PRICE',
-                  })
-                }
-                className={`p-3 h-full text-center shadow-md border rounded-md wenexus-icon-size cursor-pointer ${
-                  state.insurancePriceType === 'FIXED_PRICE' &&
-                  'ring-2 ring-green-500 ring-offset-0 bg-[#6BCE6A] text-white'
+                    insurancePriceType: state.isSingle
+                      ? 'FIXED_PRICE'
+                      : 'FIXED_MULTIPLE',
+                  });
+                }}
+                className={`fixed-cart-height p-3 h-full text-center shadow-sm border rounded-md wenexus-icon-size cursor-pointer ${
+                  state.insurancePriceType === 'FIXED_PRICE' ||
+                  state.insurancePriceType === 'FIXED_MULTIPLE'
+                    ? 'ring-2 ring-green-500 ring-offset-0 bg-[#6BCE6A] text-white'
+                    : 'bg-[#F1F1F1] ring-2 ring-gray-300 ring-offset-0'
                 }`}
               >
                 <Icon
@@ -329,27 +343,37 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                 </Text>
                 <Text
                   tone={
-                    state.insurancePriceType === 'FIXED_PRICE'
+                    state.insurancePriceType === 'FIXED_PRICE' ||
+                    state.insurancePriceType === 'FIXED_MULTIPLE'
                       ? 'base'
-                      : 'disabled'
+                      : 'subdued'
                   }
                   as="p"
                 >
                   Select to add fixed-price protection fees
                 </Text>
               </div>
-            </Box> */}
+            </Box>
           </div>
-          {state.insurancePriceType === 'FIXED_PRICE' && (
+          {(state.insurancePriceType === 'FIXED_PRICE' ||
+            state.insurancePriceType === 'FIXED_MULTIPLE') && (
             <Box paddingBlockStart="100" paddingBlockEnd="100">
-              {/* <div className="flex items-center mb-2">
+              <div className="flex items-center mb-2 py-4">
                 <Text variant="headingMd" as="strong">
-                  {2} Plan added
+                  {state.insurancePriceType === 'FIXED_PRICE'
+                    ? state.price === '0' || state.price === ''
+                      ? `No Plan Added`
+                      : `${1} Single Plan Added`
+                    : state.fixedMultiplePlan[0].cartMaxPrice === '' ||
+                      state.fixedMultiplePlan[0].cartMinPrice === '' ||
+                      state.fixedMultiplePlan[0].protectionFees === ''
+                    ? `No Plan Added`
+                    : `${state.fixedMultiplePlan.length} Multiple Plan Added`}
                 </Text>
                 <div className="ms-5"></div>
 
                 {modal}
-              </div> */}
+              </div>
               {/* TODO: implement for version 2 */}
               {/* <TextField
                 onChange={(price) => formState.addToStaged({ price })}
@@ -365,22 +389,52 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
           )}
           {state.insurancePriceType === 'PERCENTAGE' && (
             <div className="grid grid-cols-2 gap-2">
+              <div className="col-span-2">
+                <Box paddingBlockStart="100" paddingBlockEnd="100">
+                  <TextField
+                    label={
+                      <>
+                        <Tooltip
+                          content="Shipping protection fee's increment by 0.50 starting at Default Fee to maximum of Default Fee + (99 * 0.50)"
+                          width="wide"
+                          padding="400"
+                        >
+                          <Text as="p">
+                            <div className="flex">
+                              Percentage
+                              <Icon source={InfoIcon} tone="info" />
+                            </div>
+                          </Text>
+                        </Tooltip>
+                      </>
+                    }
+                    autoComplete="yes"
+                    onChange={(percentage) =>
+                      formState.addToStaged({ percentage })
+                    }
+                    onBlur={() => formState.commitStaged()}
+                    value={formState.staged.percentage}
+                    inputMode="decimal"
+                    suffix={'%'}
+                  />
+                </Box>
+              </div>
               <Box paddingBlockStart="100" paddingBlockEnd="100">
                 <TextField
-                  onChange={(defaultPercentage) =>
-                    formState.addToStaged({ defaultPercentage })
+                  onChange={(minimumFee) =>
+                    formState.addToStaged({ minimumFee })
                   }
                   onBlur={() => formState.commitStaged()}
                   label={
                     <>
                       <Tooltip
-                        content="Set your default shipping protection fees and percentage fees."
+                        content="The Initial Cost of Protection."
                         width="wide"
                         padding="400"
                       >
                         <Text as="p">
                           <div className="flex">
-                            Default Fee
+                            Minimum Fee
                             <Icon source={InfoIcon} tone="info" />
                           </div>
                         </Text>
@@ -388,7 +442,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                     </>
                   }
                   placeholder=""
-                  value={formState.staged.defaultPercentage}
+                  value={formState.staged.minimumFee}
                   inputMode="decimal"
                   autoComplete="yes"
                   prefix={currencySymbol}
@@ -397,30 +451,32 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
               </Box>
               <Box paddingBlockStart="100" paddingBlockEnd="100">
                 <TextField
+                  onChange={(maximumFee) =>
+                    formState.addToStaged({ maximumFee })
+                  }
+                  onBlur={() => formState.commitStaged()}
                   label={
                     <>
                       <Tooltip
-                        content="Shipping protection fee's increment by 0.50 starting at Default Fee to maximum of Default Fee + (99 * 0.50)"
+                        content="The Maximum Cost of Protection."
                         width="wide"
                         padding="400"
                       >
                         <Text as="p">
                           <div className="flex">
-                            Percentage Fee
+                            Maximum Fee
                             <Icon source={InfoIcon} tone="info" />
                           </div>
                         </Text>
                       </Tooltip>
                     </>
                   }
-                  autoComplete="yes"
-                  onChange={(percentage) =>
-                    formState.addToStaged({ percentage })
-                  }
-                  onBlur={() => formState.commitStaged()}
-                  value={formState.staged.percentage}
+                  placeholder=""
+                  value={formState.staged.maximumFee}
                   inputMode="decimal"
-                  suffix={'%'}
+                  autoComplete="yes"
+                  prefix={currencySymbol}
+                  // readOnly
                 />
               </Box>
             </div>

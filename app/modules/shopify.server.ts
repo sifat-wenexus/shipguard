@@ -77,13 +77,13 @@ export const shopify = shopifyApp({
 export function getShopifyGQLClient(session: Session) {
   return new shopify.api.clients.Graphql({
     session: session,
-    apiVersion: ApiVersion.January24,
+    apiVersion: ApiVersion.October24,
   });
 }
 
 export function getShopifyRestClient(session: Session) {
   return new shopify.api.clients.Rest({
     session: session,
-    apiVersion: ApiVersion.January24,
+    apiVersion: ApiVersion.October24,
   });
 }

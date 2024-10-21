@@ -13,25 +13,14 @@ import { sleep } from '~/modules/utils/sleep';
 import type { Product } from '#prisma-client';
 import _ from 'lodash';
 
-interface IShopifyBulkProductVariantCreateArgs {
-  defaultPrice: number;
-  productId: string;
-  gql: GraphqlClient;
-}
-
-interface IProductVariant {
-  price: number;
-  options: string;
-  sku: string;
-  requiresShipping: boolean;
-  inventoryItem: { tracked: boolean };
-  taxable: boolean;
-}
-
 interface IShopifyBulkVariantUpdate {
   optionValues: {
-    name: string;
-  };
+    id?: string;
+    linkedMetafieldValue?: string;
+    name?: string;
+    optionId?: string;
+    optionName?: string;
+  }[];
   id?: string;
   price: number;
   taxable: boolean;
@@ -64,6 +53,7 @@ const icons: {
   { id: 'three', icon: `${getConfig().appUrl}${packageBlack}` },
   { id: 'four', icon: `${getConfig().appUrl}${packageFour}` },
 ];
+let percentageValueIncreaseBy = 0.5;
 
 onDBEvtBuffered(
   'packageProtection',
@@ -91,6 +81,12 @@ onDBEvtBuffered(
       const icon = icons.find((i) => i.id === data.icon)?.icon ?? packageGreen;
 
       const gql = getShopifyGQLClient(session);
+
+      if (data.minimumFee > 0 && data.maximumFee > 0) {
+        percentageValueIncreaseBy = Number(
+          ((data.maximumFee - data.minimumFee) / 99).toFixed(2)
+        );
+      }
 
       let metafields: Record<string, any> = [];
 
@@ -383,7 +379,7 @@ onDBEvtBuffered(
               pageSize: 100,
             });
             const variants = await variantsForDelete.firstPage();
-            if (variants.length) {
+            if (variants.length > 0) {
               await shopifyBulkVariantsDelete(
                 fixedProductId!,
                 variants.map((variant) => variant.id),
@@ -391,14 +387,18 @@ onDBEvtBuffered(
               );
             }
 
+            const option = await getProductWithOption(fixedProductId!, gql);
             if (data.insurancePriceType === 'FIXED_PRICE') {
               const balkVariant = await shopifyBulkVariantsCreate(
                 fixedProductId!,
                 [
                   {
-                    optionValues: {
-                      name: data.price.toString(),
-                    },
+                    optionValues: [
+                      {
+                        name: data.price.toFixed(2),
+                        optionName: option[0].name,
+                      },
+                    ],
                     price: data.price,
                     taxable: false,
                     inventoryItem: {
@@ -425,42 +425,42 @@ onDBEvtBuffered(
             if (data.insurancePriceType === 'FIXED_MULTIPLE') {
               let multiplePlane: any = null;
 
-              if (typeof data.fixedMultiplePlan === 'string') {
-                multiplePlane = JSON.parse(data.fixedMultiplePlan);
-              }
-              if (!multiplePlane) return;
+              multiplePlane = data.fixedMultiplePlan;
 
-              const balkVariant = await shopifyBulkVariantsCreate(
-                fixedProductId!,
-                multiplePlane?.map((plan) => {
-                  return {
-                    optionValues: {
-                      name: plan.protectionFees.toString(),
-                    },
-                    // sku: PRODUCT_SKU,
-                    // requiresShipping: false,
-                    price: plan.protectionFees,
-                    taxable: false,
-                    inventoryItem: {
-                      tracked: false,
-                      sku: PRODUCT_SKU,
-                      requiresShipping: false,
-                    },
-                  };
-                }),
-                gql
-              );
-              await metafields.push({
-                key: 'productVariants',
-                namespace: 'package_protection',
-                type: 'json',
-                value: JSON.stringify(
-                  balkVariant.productVariants.map((v) => ({
-                    id: v.id.replace('gid://shopify/ProductVariant/', ''),
-                    price: v.price,
-                  }))
-                ),
-              });
+              if (multiplePlane) {
+                const balkVariant = await shopifyBulkVariantsCreate(
+                  fixedProductId!,
+                  multiplePlane?.map((plan) => {
+                    return {
+                      optionValues: [
+                        {
+                          name: plan.protectionFees,
+                          optionName: option[0].name,
+                        },
+                      ],
+                      price: plan.protectionFees,
+                      taxable: false,
+                      inventoryItem: {
+                        tracked: false,
+                        sku: PRODUCT_SKU,
+                        requiresShipping: false,
+                      },
+                    };
+                  }),
+                  gql
+                );
+                await metafields.push({
+                  key: 'productVariants',
+                  namespace: 'package_protection',
+                  type: 'json',
+                  value: JSON.stringify(
+                    balkVariant.productVariants.map((v) => ({
+                      id: v.id.replace('gid://shopify/ProductVariant/', ''),
+                      price: v.price,
+                    }))
+                  ),
+                });
+              }
             }
           }
           if (data.insurancePriceType === 'PERCENTAGE') {
@@ -497,17 +497,23 @@ onDBEvtBuffered(
               },
             });
             const productVariantsUpdate: IShopifyBulkVariantUpdate[] = [];
-
+            const option = await getProductWithOption(
+              percentageProductId!,
+              gql
+            );
             await prevVariants.firstPage().then(async (variants) => {
-              let price = data.defaultPercentage;
+              let price = data.minimumFee;
               for (let i = 0; i < variants.length; i++) {
                 productVariantsUpdate.push({
-                  optionValues: {
-                    name: price.toString(),
-                  },
+                  optionValues: [
+                    {
+                      name: price.toFixed(2),
+                      optionName: option[0].name,
+                    },
+                  ],
                   id: variants[i].id,
                   taxable: false,
-                  price: price,
+                  price: Number(price.toFixed(2)),
                   inventoryItem: {
                     sku: PRODUCT_SKU,
                     requiresShipping: false,
@@ -515,7 +521,7 @@ onDBEvtBuffered(
                   },
                 });
 
-                price += 0.5;
+                price += percentageValueIncreaseBy;
               }
             });
 
@@ -612,17 +618,44 @@ onDBEvtBuffered(
               } catch (err) {
                 console.error(err);
               }
-              await shopifyBulkProductVariantCreate({
-                defaultPrice: 0.25,
-                productId: productGqlDraftId,
-                gql,
-              });
+
+              const options = await getProductWithOption(
+                productGqlDraftId!,
+                gql
+              );
+              const productVariants: IShopifyBulkVariantUpdate[] = [];
+              let price = data.minimumFee;
+              for (let i = 1; i <= 100; i++) {
+                productVariants.push({
+                  price: Number(price.toFixed(2)),
+                  optionValues: [
+                    {
+                      optionName: options[0].name,
+                      name: price.toFixed(2),
+                    },
+                  ],
+                  inventoryItem: {
+                    requiresShipping: false,
+                    sku: PRODUCT_SKU,
+                    tracked: false,
+                  },
+                  taxable: false,
+                });
+                price += percentageValueIncreaseBy;
+              }
+
+              await shopifyBulkVariantsCreate(
+                productGqlDraftId,
+                productVariants,
+                gql
+              );
 
               // product creation done for fixed price - now creating product variants
               await sleep(1500);
               const variantsForDelete = await prisma.productVariant.findMany({
                 where: { productId: productId },
               });
+              const option = await getProductWithOption(productId!, gql);
               if (variantsForDelete.length) {
                 await shopifyBulkVariantsDelete(
                   productId,
@@ -635,9 +668,12 @@ onDBEvtBuffered(
                   productId,
                   [
                     {
-                      optionValues: {
-                        name: data.price.toString(),
-                      },
+                      optionValues: [
+                        {
+                          name: data.price.toFixed(2),
+                          optionName: option[0].name,
+                        },
+                      ],
                       price: data.price,
                       taxable: false,
                       inventoryItem: {
@@ -669,9 +705,12 @@ onDBEvtBuffered(
                   productId,
                   multiplePlane?.map((plan) => {
                     return {
-                      optionValues: {
-                        name: plan.protectionFees.toString(),
-                      },
+                      optionValues: [
+                        {
+                          name: plan.protectionFees,
+                          optionName: option[0].name,
+                        },
+                      ],
                       price: plan.protectionFees,
                       taxable: false,
                       inventoryItem: {
@@ -806,12 +845,34 @@ onDBEvtBuffered(
                 console.error(error);
               }
             }
+
+            const option = await getProductWithOption(productId!, gql);
+            const productVariants: IShopifyBulkVariantUpdate[] = [];
+            let price = data.minimumFee;
+            for (let i = 1; i <= 100; i++) {
+              productVariants.push({
+                price: price,
+                optionValues: [
+                  {
+                    optionName: option[0].name,
+                    name: price.toFixed(2),
+                  },
+                ],
+                inventoryItem: {
+                  requiresShipping: false,
+                  sku: PRODUCT_SKU,
+                  tracked: false,
+                },
+                taxable: false,
+              });
+              price += percentageValueIncreaseBy;
+            }
             // product creation done for percentage -> now creating product variants
-            const res = await shopifyBulkProductVariantCreate({
-              defaultPrice: data.defaultPercentage,
+            const res = await shopifyBulkVariantsCreate(
               productId,
-              gql,
-            });
+              productVariants,
+              gql
+            );
 
             await metafields.push({
               key: 'productVariants',
@@ -820,7 +881,7 @@ onDBEvtBuffered(
               value: JSON.stringify(
                 res.map((e) => ({
                   id: e.id.replace('gid://shopify/ProductVariant/', ''),
-                  price: e.price,
+                  price: e.price.toFixed(2),
                 }))
               ),
             });
@@ -876,64 +937,25 @@ onDBEvtBuffered(
   }
 );
 
-async function shopifyBulkProductVariantCreate({
-  defaultPrice,
-  productId,
-  gql,
-}: IShopifyBulkProductVariantCreateArgs): Promise<any> {
-  const productVariants: IProductVariant[] = [];
-  let price = defaultPrice;
-  for (let i = 1; i <= 100; i++) {
-    productVariants.push({
-      price: price,
-      options: price.toString(),
-      sku: PRODUCT_SKU,
-      requiresShipping: false,
-      inventoryItem: { tracked: false },
-      taxable: false,
-    });
-    price += 0.5;
-  }
-  // bulk
-  const variantCreate = await gql.query<any>({
+async function getProductWithOption(productId: string, gql: GraphqlClient) {
+  const res = await gql.query<any>({
     data: {
       query: `#graphql
-      mutation productVariantsBulkCreate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
-        productVariantsBulkCreate(productId: $productId, variants: $variants) {
-          productVariants{
-            id
-            price
-            sku
-          }
-          userErrors {
-            field
-            message
-          }
-        }
-      }`,
+    query product($id: ID!) {
+      product(id: $id) {
+       options{
+        name
+       }
+
+      }
+    }
+    `,
       variables: {
-        productId: productId,
-        variants: productVariants,
+        id: productId,
       },
     },
-    tries: 20,
   });
-
-  const productVariantsCreatedList =
-    await variantCreate.body.data.productVariantsBulkCreate.productVariants.map(
-      (variant) => {
-        return {
-          ...variant,
-          productId,
-          title: variant.price.toString(),
-        };
-      }
-    );
-
-  await queryProxy.productVariant.createMany({
-    data: productVariantsCreatedList,
-  });
-  return productVariantsCreatedList;
+  return res.body.data.product.options;
 }
 
 async function shopifyBulkVariantsCreate(
@@ -952,6 +974,7 @@ async function shopifyBulkVariantsCreate(
         productVariants {
           id
           price
+          sku
 
         }
         userErrors {
@@ -1058,12 +1081,35 @@ export async function shopifyProductUpdate({
     tries: 20,
   });
 
-  await gql.query<any>({
-    data: {
-      query: `#graphql
-    mutation productDeleteMedia($mediaIds: [ID!]!, $productId: ID!) {
-      productDeleteMedia(mediaIds: $mediaIds, productId: $productId) {
-        deletedProductImageIds
+  if (getOldImage.body.data.product.media.nodes.length > 1) {
+    const deleteImage = await gql.query<any>({
+      data: {
+        query: `#graphql
+      mutation productDeleteMedia($mediaIds: [ID!]!, $productId: ID!) {
+        productDeleteMedia(mediaIds: $mediaIds, productId: $productId) {
+          deletedProductImageIds
+          mediaUserErrors {
+            field
+            message
+          }
+
+        }
+      }`,
+        variables: {
+          mediaIds: getOldImage.body.data.product.media.nodes.map(
+            (media) => media.id
+          ),
+          productId: productId,
+        },
+      },
+      tries: 20,
+    });
+    const imageCreate = await gql.query<any>({
+      data: {
+        query: `#graphql
+    mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
+      productCreateMedia(media: $media, productId: $productId) {
+
         mediaUserErrors {
           field
           message
@@ -1071,47 +1117,26 @@ export async function shopifyProductUpdate({
 
       }
     }`,
-      variables: {
-        mediaIds: getOldImage.body.data.product.media.nodes.map(
-          (media) => media.id
-        ),
-        productId: productId,
+        variables: {
+          media: [
+            {
+              alt: 'package-protection',
+              mediaContentType: 'IMAGE',
+              originalSource: productImage,
+            },
+          ],
+          productId: productId,
+        },
       },
-    },
-    tries: 20,
-  });
+      tries: 20,
+    });
+  }
 
-  await gql.query<any>({
-    data: {
-      query: `#graphql
-  mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
-    productCreateMedia(media: $media, productId: $productId) {
-
-      mediaUserErrors {
-        field
-        message
-      }
-
-    }
-  }`,
-      variables: {
-        media: [
-          {
-            alt: 'package-protection',
-            mediaContentType: 'IMAGE',
-            originalSource: productImage,
-          },
-        ],
-        productId: productId,
-      },
-    },
-    tries: 20,
-  });
   const res = await gql.query<any>({
     data: {
       query: `#graphql
-      mutation  productUpdate($input:ProductInput!) {
-        productUpdate(input:$input){
+      mutation  productUpdate($input:ProductUpdateInput!) {
+        productUpdate(product: $input){
           product {
             id
             media(first:20){
@@ -1140,7 +1165,7 @@ export async function shopifyProductUpdate({
     },
     tries: 20,
   });
-  return res;
+  return res.body.data;
 }
 
 async function shopifyCreateProduct({
@@ -1153,8 +1178,8 @@ async function shopifyCreateProduct({
   const res = await gql.query<any>({
     data: {
       query: `#graphql
-      mutation productCreate($input:ProductInput!,$media:[CreateMediaInput!]) {
-        productCreate(input:$input,media:$media){
+      mutation productCreate($input:ProductCreateInput!,$media:[CreateMediaInput!]) {
+        productCreate(product:$input,media:$media){
           product {
             id
           }
@@ -1227,12 +1252,7 @@ const productPublish = async (productId: string, gql: GraphqlClient) => {
       query: `#graphql
       mutation publishablePublish($id: ID!, $input: [PublicationInput!]!) {
         publishablePublish(id: $id, input: $input) {
-          publishable {
-            availablePublicationCount
-          }
-          shop {
-            publicationCount
-          }
+
           userErrors {
             field
             message

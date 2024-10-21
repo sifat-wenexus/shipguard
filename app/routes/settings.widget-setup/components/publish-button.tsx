@@ -17,11 +17,12 @@ const PublishButton = ({
 
   const toggleEnabled = useCallback(
     (enabled: boolean) => {
-      // if (!state.insurancePriceType) {
-      //   setInsurancePriceError(true);
-      //   return;
-      // } else {
-      setInsurancePriceError(false);
+      if (enabled && state.insurancePriceType === 'NOT_SELECTED') {
+        setInsurancePriceError(true);
+        console.log('true', enabled);
+        return;
+      }
+
       setEnabled(enabled);
 
       return fetcher.submit(

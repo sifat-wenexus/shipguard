@@ -6,10 +6,19 @@ var __publicField = (obj, key, value) => {
 };
 (function() {
   "use strict";
+  var PackageProtectionType = /* @__PURE__ */ ((PackageProtectionType2) => {
+    PackageProtectionType2["BASED_ON_CART_VALUE"] = "BASED_ON_CART_VALUE";
+    PackageProtectionType2["PERCENTAGE"] = "PERCENTAGE";
+    PackageProtectionType2["FIXED"] = "FIXED";
+    return PackageProtectionType2;
+  })(PackageProtectionType || {});
   const _PackageProtectionApi = class _PackageProtectionApi {
     constructor(percentage, enabled) {
+      __publicField(this, "basedOnCartValueVariants", []);
+      __publicField(this, "percentageVariants", {});
+      __publicField(this, "fixedVariantOption", null);
+      __publicField(this, "_type", "PERCENTAGE");
       __publicField(this, "variantIds", /* @__PURE__ */ new Set());
-      __publicField(this, "variants", {});
       __publicField(this, "prices", []);
       this.percentage = percentage;
       this.enabled = enabled;
@@ -24,18 +33,35 @@ var __publicField = (obj, key, value) => {
     get lowestPrice() {
       return this.prices[0];
     }
-    setVariants(variants) {
+    setVariants(_type, variants) {
+      this._type = _type;
       this.prices.length = 0;
       this.variantIds.clear();
-      for (const key of Object.keys(this.variants)) {
-        delete this.variants[key];
-      }
-      this.prices.push(
-        ...Object.keys(variants).map(Number).sort((a, b) => a - b)
-      );
-      for (const key of Object.keys(variants)) {
-        this.variants[key] = variants[key];
-        this.variantIds.add(variants[key]);
+      if (_type === "PERCENTAGE") {
+        for (const key of Object.keys(this.percentageVariants)) {
+          delete this.percentageVariants[key];
+        }
+        this.prices.push(
+          ...Object.keys(variants).map(Number).sort((a, b) => a - b)
+        );
+        for (const key of Object.keys(variants)) {
+          this.percentageVariants[key] = variants[key];
+          this.variantIds.add(variants[key]);
+        }
+      } else if (_type === "FIXED") {
+        this.variantIds.add(variants.variantId);
+        this.fixedVariantOption = variants;
+        this.prices.push(variants.price);
+      } else {
+        this.basedOnCartValueVariants.push(
+          ...variants
+        );
+        this.basedOnCartValueVariants.forEach(
+          (variant) => this.variantIds.add(variant.variantId)
+        );
+        this.prices.push(
+          ...this.basedOnCartValueVariants.map((variant) => variant.price).sort((a, b) => a - b)
+        );
       }
     }
     async getNonPackageProtectionItems() {
@@ -47,45 +73,74 @@ var __publicField = (obj, key, value) => {
       return cart.items.filter((item) => this.variantIds.has(item.variant_id));
     }
     async calculate() {
-      if (this.prices.length === 0) {
-        throw new Error("No variants have been set");
-      }
-      const allvariants = await this.getNonPackageProtectionItems();
+      const allVariants = await this.getNonPackageProtectionItems();
       const excludeVariants = window.WeNexusOverallPackageProtectionSettings.packageProtectionProductAndVariants.map((product) => {
         return product.excludedPackageProtectionVariants.map(
-          (variant) => Number(variant.id.replace("gid://shopify/ProductVariant/", ""))
+          (variant2) => Number(variant2.id.replace("gid://shopify/ProductVariant/", ""))
         );
       }).flat();
       const checkExcludeVariants = () => {
         const result = [];
-        for (let i = 0; i < allvariants.length; i++) {
-          const variantId = allvariants[i].variant_id;
+        for (let i = 0; i < allVariants.length; i++) {
+          const variantId = allVariants[i].variant_id;
           if (!excludeVariants.includes(variantId)) {
-            result.push(allvariants[i]);
+            result.push(allVariants[i]);
           }
         }
         return result;
       };
       const variants = checkExcludeVariants();
       const forPrice = variants.reduce((acc, item) => acc + item.final_line_price, 0) / 100;
-      let coercedPrice = this.lowestPrice.toFixed(2);
-      let actualPrice = forPrice / 100 * this.percentage;
-      if (actualPrice <= this.highestPrice && actualPrice >= this.lowestPrice) {
-        for (const price of this.prices) {
-          if (price > actualPrice) {
-            coercedPrice = price.toFixed(2);
-            break;
-          }
+      if (this._type === "FIXED") {
+        if (this.fixedVariantOption === null) {
+          throw new Error("No variant has been set");
         }
-      } else if (actualPrice > this.highestPrice) {
-        coercedPrice = this.highestPrice.toFixed(2);
-      } else if (actualPrice < this.lowestPrice) {
-        coercedPrice = this.lowestPrice.toFixed(2);
+        return {
+          actualPrice: this.fixedVariantOption.price,
+          variantId: this.fixedVariantOption.variantId,
+          coercedPrice: this.fixedVariantOption.price.toFixed(2),
+          forPrice
+        };
+      }
+      if (this._type === "PERCENTAGE") {
+        if (this.prices.length === 0) {
+          throw new Error("No variants have been set");
+        }
+        let coercedPrice = this.lowestPrice.toFixed(2);
+        let actualPrice = forPrice / 100 * this.percentage;
+        if (actualPrice <= this.highestPrice && actualPrice >= this.lowestPrice) {
+          for (const price of this.prices) {
+            if (price > actualPrice) {
+              coercedPrice = price.toFixed(2);
+              break;
+            }
+          }
+        } else if (actualPrice > this.highestPrice) {
+          coercedPrice = this.highestPrice.toFixed(2);
+        } else if (actualPrice < this.lowestPrice) {
+          coercedPrice = this.lowestPrice.toFixed(2);
+        }
+        return {
+          actualPrice: Number(actualPrice.toFixed(2)),
+          variantId: this.percentageVariants[coercedPrice],
+          coercedPrice,
+          forPrice
+        };
+      }
+      if (this.basedOnCartValueVariants.length === 0) {
+        throw new Error("No variants have been set");
+      }
+      const cartValue = forPrice;
+      const variant = this.basedOnCartValueVariants.find(
+        (variant2) => cartValue >= variant2.min && cartValue <= variant2.max
+      );
+      if (!variant) {
+        throw new Error("No variant found");
       }
       return {
-        actualPrice: Number(actualPrice.toFixed(2)),
-        variantId: this.variants[coercedPrice],
-        coercedPrice,
+        actualPrice: variant.price,
+        variantId: variant.variantId,
+        coercedPrice: variant.price.toFixed(2),
         forPrice
       };
     }
@@ -546,14 +601,14 @@ var __publicField = (obj, key, value) => {
       );
     }).flat();
     const checkExcludeVariants = () => {
-      const result = [];
+      const result2 = [];
       for (let i = 0; i < items.length; i++) {
         const variantId = items[i].variant_id;
         if (!excludeVariants.includes(variantId)) {
-          items[i].vendor !== "OverallInsurance" && result.push(items[i]);
+          items[i].vendor !== "OverallInsurance" && result2.push(items[i]);
         }
       }
-      return result;
+      return result2;
     };
     const variants = checkExcludeVariants();
     const enabledByDefault = settings.insuranceDisplayButton ?? true;
@@ -597,47 +652,52 @@ var __publicField = (obj, key, value) => {
         client.refreshUI(item ?? null);
       }
     }
-    const fixedMultiplePlan = JSON.parse(settings.fixedMultiplePlan);
-    const cartValue = (await window.weNexusCartApi.get()).total_price / 100;
-    console.log(
-      "package-1",
-      settings.productVariants.reduce(
-        (a, b) => {
-          a[b.price] = Number(b.id);
-          return a;
-        },
-        {}
-      ),
-      fixedMultiplePlan,
-      cartValue
-    );
+    const fixedMultiplePlan = settings.fixedMultiplePlan;
+    const fixedMultipleVariants = settings.productVariants;
+    const result = fixedMultiplePlan.map((plan) => {
+      const match = fixedMultipleVariants.find(
+        (v) => Number(v.price) === Number(plan.protectionFees)
+      );
+      if (match) {
+        return {
+          max: Number(plan.cartMaxPrice),
+          min: Number(plan.cartMinPrice),
+          variantId: Number(match.id),
+          price: Number(match.price)
+        };
+      }
+      return null;
+    }).filter((item) => item !== null);
     if (settings.insurancePriceType === "FIXED_MULTIPLE") {
-      const result = fixedMultiplePlan.find(
-        (item) => cartValue >= Number(item.cartMinPrice) && cartValue <= Number(item.cartMaxPrice)
+      packageProtectionApi.setVariants(
+        PackageProtectionType.BASED_ON_CART_VALUE,
+        result
       );
-      const multipleVariantToSet = settings.productVariants.find(
-        (v) => Number(v.price) === Number(result == null ? void 0 : result.protectionFees)
-      );
-      console.log(
-        { result },
-        { [multipleVariantToSet.price]: Number(multipleVariantToSet.id) }
+    } else if (settings.insurancePriceType === "FIXED_PRICE") {
+      const fixedVariant = settings.productVariants[0];
+      packageProtectionApi.setVariants(PackageProtectionType.FIXED, {
+        price: Number(fixedVariant.price),
+        variantId: Number(fixedVariant.id)
+      });
+    } else if (settings.insurancePriceType === "PERCENTAGE") {
+      packageProtectionApi.setVariants(
+        PackageProtectionType.PERCENTAGE,
+        settings.productVariants.reduce(
+          (a, b) => {
+            a[b.price] = Number(b.id);
+            return a;
+          },
+          {}
+        )
       );
     }
-    packageProtectionApi.setVariants(
-      settings.productVariants.reduce(
-        (a, b) => {
-          a[b.price] = Number(b.id);
-          return a;
-        },
-        {}
-      )
-    );
     client.thumbnail = settings.iconUrl;
     client.title = settings.title;
     client.enabledDescription = settings.enabledDescription;
     client.disabledDescription = settings.disabledDescription;
     client.buttonColor = settings.switchColor;
     client.css = settings.css;
+    client.infoPageLink = settings.policyUrl;
     window.weNexusCartApi.addListener(() => refresh());
     if (typeof client.getStyleMarkup === "function") {
       document.head.insertAdjacentHTML(
@@ -668,8 +728,6 @@ var __publicField = (obj, key, value) => {
             await packageProtectionApi.remove();
             (_a2 = document.getElementsByTagName("cart-items")[0]) == null ? void 0 : _a2.onCartUpdate();
             continue;
-          } else {
-            console.log("Please", settings);
           }
           switch (selector.insertPosition) {
             case "before":

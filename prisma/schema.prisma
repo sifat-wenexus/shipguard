@@ -30,10 +30,11 @@ enum ContentStatus {
   DELETING
 }
 
-enum InsurancePricingType {
+enum IinsurancePricingType {
   PERCENTAGE
   FIXED_PRICE
   FIXED_MULTIPLE
+  NOT_SELECTED
 }
 
 enum JobStatus {
@@ -372,10 +373,11 @@ model PackageProtection {
   percentageProductId String?
 
   enabled                         Boolean                  @default(false)
-  insurancePriceType              InsurancePricingType     @default(PERCENTAGE)
+  insurancePriceType              IinsurancePricingType    @default(NOT_SELECTED)
   price                           Float                    @default(0)
   percentage                      Float                    @default(0)
-  defaultPercentage               Float                    @default(0)
+  minimumFee                      Float                    @default(0)
+  maximumFee                      Float                    @default(0)
   icon                            String                   @default("three")
   switchColor                     String                   @default("#000000")
   title                           String?

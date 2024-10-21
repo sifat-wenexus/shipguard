@@ -81,7 +81,6 @@ const Content = ({ formState }) => {
             <TextField
               label="Refund policy url"
               autoComplete="yes"
-              placeholder="Example: https://wenexus.com/terms"
               onChange={(policyUrl) => formState.addToStaged({ policyUrl })}
               onBlur={(event) => {
                 const target = event?.target as HTMLInputElement;

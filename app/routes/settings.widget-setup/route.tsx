@@ -6,7 +6,7 @@ import type {
 import CustomizedInsuranceStyle from './components/customized-insurance-style';
 import { hexToHsba, hsbaToHexWithAlpha } from '~/modules/utils/color-utils';
 import { shopify as shopifyRemix } from '../../modules/shopify.server';
-import { Box, Button, Layout, Page, Text } from '@shopify/polaris';
+import { Banner, Box, Button, Layout, Page, Text } from '@shopify/polaris';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import InsurancePricing from './components/insurance-pricing';
@@ -45,13 +45,14 @@ export async function action({ request }: ActionFunctionArgs) {
       switchColor,
       price,
       percentage,
-      defaultPercentage,
-
+      minimumFee,
+      maximumFee,
       ...payload
     } = state;
     const packageProtectionCreateAndUpdate: Partial<PackageProtection> = {
       switchColor: hsbaToHexWithAlpha(state.switchColor),
-      defaultPercentage: Number(defaultPercentage),
+      minimumFee: Number(minimumFee),
+      maximumFee: Number(maximumFee),
       percentage: Number(percentage),
       price: Number(price),
       enabled: enabled,
@@ -93,13 +94,16 @@ export async function action({ request }: ActionFunctionArgs) {
       switchColor,
       price,
       percentage,
-      defaultPercentage,
+      minimumFee,
+      maximumFee,
       ...payload
     } = state;
     const packageProtectionCreateAndUpdate: Partial<PackageProtection> = {
       switchColor: hsbaToHexWithAlpha(state.switchColor),
-      defaultPercentage: Number(defaultPercentage),
+      minimumFee: Number(minimumFee),
+      maximumFee: Number(maximumFee),
       percentage: Number(percentage),
+
       price: Number(price),
       ...payload,
     };
@@ -225,18 +229,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
     enabled: settingsData?.enabled ?? false,
     currencyCode: currencyCode,
     data: {
-      insurancePriceType: settingsData?.insurancePriceType ?? 'PERCENTAGE',
+      insurancePriceType: settingsData?.insurancePriceType ?? 'NOT_SELECTED',
       insuranceDisplayButton: settingsData?.insuranceDisplayButton ?? false,
       disabledDescription:
         settingsData?.disabledDescription ??
         'By deselecting we are not liable for lost, damaged, or stolen items.',
       enabledDescription:
         settingsData?.enabledDescription ?? '100% Covers Damage, Lost & Theft',
-      defaultPercentage: settingsData?.defaultPercentage ?? 0.75,
-      percentage: settingsData?.percentage ?? 3,
+      minimumFee: settingsData?.minimumFee ?? '',
+      maximumFee: settingsData?.maximumFee ?? '',
+      percentage: settingsData?.percentage ?? '',
       policyUrl: settingsData?.policyUrl ?? '',
       title: settingsData?.title ?? 'Package Protection',
-      price: settingsData?.price ?? 0,
+      price: settingsData?.price ?? '',
       icon: settingsData?.icon ?? 'three',
       css: settingsData?.css ?? '',
 
@@ -314,6 +319,9 @@ const Settings = () => {
         <Page>
           <Layout>
             <Layout.Section variant="fullWidth">
+              {insurancePriceError && (
+                <Banner title="Insurance Pricing is Required." tone="warning" />
+              )}
               {<WarningBanner storeInfo={storeInfo} />}
             </Layout.Section>
             <Layout.Section variant="oneHalf">
@@ -328,6 +336,7 @@ const Settings = () => {
               <div className="sm:hidden block">
                 <Preview formState={formState} />
               </div>
+
               <PublishButton
                 enabled={enabled}
                 formState={formState}

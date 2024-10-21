@@ -33,7 +33,7 @@ const makePackageProtectionFulfill = async (
     await gqlClient.query({
       data: `#graphql
       mutation {
-        fulfillmentCreateV2(fulfillment: {
+        fulfillmentCreate(fulfillment: {
           lineItemsByFulfillmentOrder:{
             fulfillmentOrderId:"${result[0].orderId}",
             fulfillmentOrderLineItems:{id:"${result[0].id}",quantity:1}
@@ -361,7 +361,7 @@ const orderPartiallyFulfilledEvent = async ({
             await gqlClient.query<any>({
               data: `#graphql
               mutation {
-                fulfillmentCreateV2(fulfillment: {
+                fulfillmentCreate(fulfillment: {
                   lineItemsByFulfillmentOrder:{
                     fulfillmentOrderId:"${item.fulfillmentOrderId}",
                     fulfillmentOrderLineItems:{id:"${item.productId}",quantity:1}
