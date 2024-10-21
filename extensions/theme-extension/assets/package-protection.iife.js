@@ -278,7 +278,7 @@ var __publicField = (obj, key, value) => {
                 <img src="${this.thumbnail}" alt="logo" />
             </div>
             <div class="wenexus-package-protection__desc">
-                <h5>${this.title} <a href="${this.infoPageLink}" target="_blank" style="color:blue;">ⓘ</a></h5>
+                <h5>${this.title} <a href="https://${this.infoPageLink}" target="_blank" style="color:blue;">ⓘ</a></h5>
                 <p> <span class="wenexus-package-protection-description">${description} </span></p>
             </div>
         </div>
@@ -286,8 +286,8 @@ var __publicField = (obj, key, value) => {
         <div style="position:relative;">
             <input type="checkbox" ${checked ? "checked" : ""} style="position:absolute; width:100%; height:100%; left:0; z-index:99; opacity:0">
 
-            <div class="toggle-container" style="display: flex;  width: 4rem; height: 1.75rem; background-color: ${checked ? this.buttonColor : "#7b7b7b"}; position: relative; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border-radius: 9999px; cursor: pointer; transition: background-color 0.5s ease-out;">
-                <span class="toggle-switch" style="height: 1.25rem; width: 1.25rem; position: absolute; top: 0.25rem; left: 0.25rem; background-color: white; border-radius: 9999px; ${checked ? "transform: translateX(2rem);" : ""} transition: transform 0.3s ease-out; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); display: flex; align-items: center; justify-content: center;"></span>
+            <div class="toggle-container" style="display: flex;  width: 3rem; height: 1.25rem; background-color: ${checked ? this.buttonColor : "#7b7b7b"}; position: relative; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border-radius: 9999px; cursor: pointer; transition: background-color 0.5s ease-out;">
+                <span class="toggle-switch" style="height: 1rem; width: 1rem; position: absolute; top: 0.15rem; left: -0.2rem; background-color: white; border-radius: 9999px; ${checked ? "transform: translateX(2rem);" : ""} transition: transform 0.3s ease-out; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); display: flex; align-items: center; justify-content: center;"></span>
             </div>
           <p style="margin:0px; font-size:0.85rem; text-align:center;"><strong class="protection-price">${price}</strong></p>
             </div>
@@ -697,7 +697,7 @@ var __publicField = (obj, key, value) => {
     client.disabledDescription = settings.disabledDescription;
     client.buttonColor = settings.switchColor;
     client.css = settings.css;
-    client.infoPageLink = settings.policyUrl;
+    client.infoPageLink = settings.policyUrl.replace("https://", "");
     window.weNexusCartApi.addListener(() => refresh());
     if (typeof client.getStyleMarkup === "function") {
       document.head.insertAdjacentHTML(

@@ -79,9 +79,15 @@ const Content = ({ formState }) => {
           </Box>
           <Box paddingBlockStart="100" paddingBlockEnd="100">
             <TextField
+              type="url"
+              prefix="https://"
               label="Refund policy url"
               autoComplete="yes"
-              onChange={(policyUrl) => formState.addToStaged({ policyUrl })}
+              onChange={(policyUrl) =>
+                formState.addToStaged({
+                  policyUrl: policyUrl.replace('https://', ''),
+                })
+              }
               onBlur={(event) => {
                 const target = event?.target as HTMLInputElement;
                 if (target.value !== '') {
