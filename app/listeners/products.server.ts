@@ -7,11 +7,15 @@ async function handleWebhook({ shop, payload: _payload }: WebhookListenerArgs) {
     return;
   }
 
-  const store = await prisma.store.findFirstOrThrow({
+  const store = await prisma.store.findFirst({
     where: {
       domain: shop,
     },
   });
+
+  if (!store) {
+    return console.error(`Store not found for ${shop}`);
+  }
 
   const payload = _payload as Record<string, any>;
 

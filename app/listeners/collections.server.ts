@@ -8,11 +8,15 @@ async function upsert({ shop, payload: _payload }: WebhookListenerArgs) {
     return;
   }
 
-  const store = await prisma.store.findFirstOrThrow({
+  const store = await prisma.store.findFirst({
     where: {
       domain: shop,
     },
   });
+
+  if (!store) {
+    return console.error(`Store not found for ${shop}`);
+  }
 
   const payload = _payload as Record<string, any>;
 
@@ -42,11 +46,15 @@ emitter.on('COLLECTIONS_UPDATE', async (ctx: WebhookListenerArgs) => {
     return;
   }
 
-  const store = await prisma.store.findFirstOrThrow({
+  const store = await prisma.store.findFirst({
     where: {
       domain: ctx.shop,
     },
   });
+
+  if (!store) {
+    return console.error(`Store not found for ${ctx.shop}`);
+  }
 
   await jobRunner.run({
     name: 'update-product-collection',
