@@ -2,7 +2,13 @@ import { prisma } from '~/modules/prisma.server';
 import { Job } from '~/modules/job/job';
 
 export class ImportProducts extends Job {
-  steps = ['validate', 'fetchCollections', 'importCollections', 'fetchProducts', 'importProducts'];
+  steps = [
+    'validate',
+    'fetchCollections',
+    'importCollections',
+    'fetchProducts',
+    'importProducts',
+  ];
 
   async validate() {
     if (!this.job.storeId) {
@@ -37,7 +43,9 @@ export class ImportProducts extends Job {
   async importCollections() {
     await this.updateProgress(20);
 
-    const collections = await this.getResult<Record<string, any>[]>('fetchCollections');
+    const collections = await this.getResult<Record<string, any>[]>(
+      'fetchCollections'
+    );
 
     if (!collections?.length) {
       return {
@@ -54,6 +62,7 @@ export class ImportProducts extends Job {
         featuredImage: c.image?.url,
         storeId: this.job.storeId!,
       })),
+      skipDuplicates: true,
     });
 
     await this.updateProgress(40);
@@ -77,8 +86,12 @@ export class ImportProducts extends Job {
               vendor
               tags
               productType
-              featuredImage {
-                url
+              featuredMedia{
+                preview{
+                  image{
+                    url
+                  }
+                }
               }
               collections {
                 edges {
@@ -107,7 +120,7 @@ export class ImportProducts extends Job {
           }
         }
       }
-      `,
+      `
     );
 
     await this.updateProgress(50);
@@ -151,7 +164,7 @@ export class ImportProducts extends Job {
         status: p.status === 'ACTIVE' ? 'PUBLISHED' : p.status,
         vendor: p.vendor,
         tags: p.tags,
-        featuredImage: p.featuredImage?.url,
+        featuredImage: p.featuredMedia?.preview?.image?.url,
       })),
       skipDuplicates: true,
     });

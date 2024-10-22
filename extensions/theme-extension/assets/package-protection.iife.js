@@ -264,8 +264,10 @@ var __publicField = (obj, key, value) => {
     async getDescription() {
       return `${this.checked ? this.enabledDescription : this.disabledDescription}`;
     }
+    async getChecked() {
+      return this.checked;
+    }
     async getCheckboxContainer(checked) {
-      this.checked = checked;
       const container = document.createElement("div");
       const price = await this.getPrice();
       const description = await this.getDescription();
@@ -283,11 +285,12 @@ var __publicField = (obj, key, value) => {
             </div>
         </div>
         <div class="wenexus-package-protection__toggle" >
+        
         <div style="position:relative;">
             <input type="checkbox" ${checked ? "checked" : ""} style="position:absolute; width:100%; height:100%; left:0; z-index:99; opacity:0">
 
-            <div class="toggle-container" style="display: flex;  width: 3rem; height: 1.25rem; background-color: ${checked ? this.buttonColor : "#7b7b7b"}; position: relative; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border-radius: 9999px; cursor: pointer; transition: background-color 0.5s ease-out;">
-                <span class="toggle-switch" style="height: 1rem; width: 1rem; position: absolute; top: 0.15rem; left: -0.2rem; background-color: white; border-radius: 9999px; ${checked ? "transform: translateX(2rem);" : ""} transition: transform 0.3s ease-out; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); display: flex; align-items: center; justify-content: center;"></span>
+            <div class="toggle-container" style="display: flex;  width: 3.5rem; height: 1.35rem; background-color: ${checked ? this.buttonColor : "#7b7b7b"}; position: relative; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border-radius: 9999px; cursor: pointer; transition: background-color 0.5s ease-out;">
+                <span class="toggle-switch" style="height: 1.10rem; width: 1.10rem; position: absolute; top: 0.13rem; left: 0.2rem; background-color: white; border-radius: 9999px; ${checked ? "transform: translateX(2rem);" : ""} transition: transform 0.3s ease-out; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); display: flex; align-items: center; justify-content: center;"></span>
             </div>
           <p style="margin:0px; font-size:0.85rem; text-align:center;"><strong class="protection-price">${price}</strong></p>
             </div>
@@ -319,37 +322,6 @@ var __publicField = (obj, key, value) => {
         checkbox
       };
     }
-    // async getCheckboxContainer(checked: boolean) {
-    //   const container = document.createElement('div');
-    //   const price = await this.getPrice();
-    //   container.insertAdjacentHTML(
-    //     'afterbegin',
-    //     `
-    //       <div class="wenexus-package-protection__content">
-    //           <div class="wenexus-package-protection__image">
-    //               <img src="${this.thumbnail}" alt="logo" />
-    //           </div>
-    //           <div class="wenexus-package-protection__desc">
-    //               <h5>Package Protection <a href="${this.infoPageLink}" target="_blank">ⓘ</a></h5>
-    //               <p>Covers Damage, Loss & Theft for <strong class="protection-price">${price}</strong></p>
-    //           </div>
-    //       </div>
-    //       <div class="wenexus-package-protection__toggle">
-    //            <input type="checkbox">
-    //       </div>
-    // `
-    //   );
-    //   const checkbox = container.querySelector(
-    //     '.wenexus-package-protection__toggle input'
-    //   ) as HTMLInputElement;
-    //   container.className = 'wenexus-package-protection';
-    //   checkbox.checked = checked;
-    //   this.container = container;
-    //   return {
-    //     container,
-    //     checkbox,
-    //   };
-    // }
     async getStyleMarkup({
       accentColor,
       imageWidth = 56,
@@ -525,6 +497,9 @@ var __publicField = (obj, key, value) => {
           selector: selector ?? ".cart__ctas",
           insertPosition: position ?? "before",
           boundaryParents: /* @__PURE__ */ new Set([document.body])
+          // boundaryParents: new Set(
+          //   Array.from(document.querySelectorAll('cart-drawer'))
+          // ),
         }
       ];
     }
@@ -541,8 +516,12 @@ var __publicField = (obj, key, value) => {
         accentColor: "#2c7e3f"
       });
     }
+    // theme support
     async refreshUI() {
       Array.from(document.getElementsByTagName("cart-items")).forEach(
+        (i) => i.onCartUpdate()
+      );
+      Array.from(document.getElementsByTagName("cart-drawer-items")).forEach(
         (i) => i.onCartUpdate()
       );
       await this.refreshPriceUI();
@@ -569,11 +548,17 @@ var __publicField = (obj, key, value) => {
       Array.from(descriptionElements).forEach((el) => el.innerHTML = `${des} `);
       setTimeout(() => {
         const data = Array.from(document.getElementsByTagName("a")).filter(
-          (el) => el.href.includes(
-            items.items[items.items.length - 1].variant_id.toString()
-          )
+          (el) => {
+            var _a, _b;
+            return el.href.includes(
+              (_b = (_a = items.items[items.items.length - 1]) == null ? void 0 : _a.variant_id) == null ? void 0 : _b.toString()
+            );
+          }
         );
-        data.forEach((el) => el.setAttribute("href", "#"));
+        data.forEach((el) => {
+          el.href = "#";
+          el.setAttribute("href", "#");
+        });
       }, 1e3);
     }
   }
@@ -593,7 +578,8 @@ var __publicField = (obj, key, value) => {
     if (!ClientClass) {
       return console.error("No package protection client found");
     }
-    const items = (await window.weNexusCartApi.get()).items;
+    const getItems = async () => (await window.weNexusCartApi.get()).items;
+    let items = await getItems();
     const settings = window.WeNexusOverallPackageProtectionSettings;
     const excludeVariants = window.WeNexusOverallPackageProtectionSettings.packageProtectionProductAndVariants.map((product) => {
       return product.excludedPackageProtectionVariants.map(
@@ -605,19 +591,25 @@ var __publicField = (obj, key, value) => {
       for (let i = 0; i < items.length; i++) {
         const variantId = items[i].variant_id;
         if (!excludeVariants.includes(variantId)) {
-          items[i].vendor !== "OverallInsurance" && result2.push(items[i]);
+          items[i].handle !== "package-protection" && result2.push(items[i]);
         }
       }
       return result2;
     };
-    const variants = checkExcludeVariants();
     const enabledByDefault = settings.insuranceDisplayButton ?? true;
     const enabled = () => {
       const value = localStorage.getItem("package-protection-enabled");
       if (value === "false") {
         return false;
       }
+      if (value === "true") {
+        return true;
+      }
       if (value === null) {
+        localStorage.setItem(
+          "package-protection-enabled",
+          enabledByDefault.toString()
+        );
         return enabledByDefault;
       }
       return value === "true";
@@ -718,13 +710,14 @@ var __publicField = (obj, key, value) => {
       );
       liveQuery.addListener(async (elements) => {
         var _a2;
+        items = await getItems();
+        const variants = checkExcludeVariants();
         for (const element of elements) {
           const { container, checkbox } = await client.getCheckboxContainer(
             // enabled()
             variants.length > 0 ? enabled() : false
           );
           if (!checkbox.checked && variants.length == 0) {
-            localStorage.setItem("package-protection-enabled", "false");
             await packageProtectionApi.remove();
             (_a2 = document.getElementsByTagName("cart-items")[0]) == null ? void 0 : _a2.onCartUpdate();
             continue;
@@ -762,7 +755,10 @@ var __publicField = (obj, key, value) => {
       });
     }
     const data = Array.from(document.getElementsByTagName("a")).filter(
-      (el) => el.href.includes(items[items.length - 1].variant_id.toString())
+      (el) => {
+        var _a2;
+        return el.href.includes((_a2 = items[items.length - 1]) == null ? void 0 : _a2.variant_id.toString());
+      }
     );
     data.forEach((el) => el.setAttribute("href", "#"));
     await refresh();

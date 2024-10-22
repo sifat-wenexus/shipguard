@@ -281,7 +281,76 @@ const Settings = () => {
   const fetcher = useBetterFetcher();
   const data = useLoaderData<typeof loader>();
   const initialState = useMemo(() => data.data, [data.data]);
-  const formState = useFormState(initialState);
+  const formState = useFormState(initialState, undefined, {
+    percentage: {
+      target: 'both',
+      validate: (value: string) => {
+        if (Number(value) <= 0) {
+          return {
+            type: 'error',
+            message: 'Percentage can not be Zero.',
+          };
+        }
+        if (value === '') {
+          return {
+            type: 'error',
+            message: 'This field is required.',
+          };
+        }
+      },
+    },
+    maximumFee: {
+      target: 'both',
+      validate: (value: string) => {
+        if (Number(value) <= 0) {
+          return {
+            type: 'error',
+            message: 'Max Fee can not be Zero.',
+          };
+        }
+        if (value === '') {
+          return {
+            type: 'error',
+            message: 'This field is required.',
+          };
+        }
+      },
+    },
+    minimumFee: {
+      target: 'both',
+      validate: (value: string) => {
+        if (Number(value) <= 0) {
+          return {
+            type: 'error',
+            message: 'Min Fee can not be Zero.',
+          };
+        }
+        if (value === '') {
+          return {
+            type: 'error',
+            message: 'This field is required.',
+          };
+        }
+      },
+    },
+    price: {
+      target: 'both',
+      validate: (value: string) => {
+        if (Number(value) <= 0) {
+          return {
+            type: 'error',
+            message: 'Fixed Price can not be Zero.',
+          };
+        }
+        if (value === '') {
+          return {
+            type: 'error',
+            message: 'This field is required.',
+          };
+        }
+      },
+    },
+  });
   const [enabled] = useState(data.enabled);
   const [insurancePriceError, setInsurancePriceError] = useState(false);
   const { state } = formState;

@@ -53,7 +53,7 @@ const icons: {
   { id: 'three', icon: `${getConfig().appUrl}${packageBlack}` },
   { id: 'four', icon: `${getConfig().appUrl}${packageFour}` },
 ];
-let percentageValueIncreaseBy = 0.5;
+let percentageValueIncreaseBy = 0;
 
 onDBEvtBuffered(
   'packageProtection',
@@ -62,7 +62,6 @@ onDBEvtBuffered(
   async (payloads) => {
     for (const storeId in payloads) {
       const payload = _.last(payloads[storeId]);
-
       const data = payload?.newData ?? payload?.oldData;
       const session = payload?.session;
 
@@ -82,7 +81,7 @@ onDBEvtBuffered(
 
       const gql = getShopifyGQLClient(session);
 
-      if (data.minimumFee > 0 && data.maximumFee > 0) {
+      if (data.minimumFee >= 0 && data.maximumFee > 0) {
         percentageValueIncreaseBy = Number(
           ((data.maximumFee - data.minimumFee) / 99).toFixed(2)
         );

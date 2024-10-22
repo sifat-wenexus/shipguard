@@ -110,3 +110,6 @@ const Content = ({ formState }) => {
 };
 
 export default Content;
+
+// TODO: theme detection and package protection support
+// TODO: mini cart package protection issues

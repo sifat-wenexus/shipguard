@@ -29,6 +29,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
   const currencySymbol = i18n.formatCurrency(0).toString().slice(0, 1)[0];
   // const currencyCode = queryProxy.store.findFirst({ where: {} });
   const { state } = formState;
+  console.log({ state }, { formState });
   const [emptyIndex, setEmptyIndex] = useState(-1);
   const [warning, setWarning] = useState(false);
   const [active, setActive] = useState(false);
@@ -184,8 +185,10 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
               onChange={(price) => formState.addToStaged({ price })}
               onBlur={() => formState.commitStaged()}
               label=""
+              type="number"
               placeholder=""
               value={formState.staged.price}
+              error={formState?.messages?.price?.message}
               inputMode="decimal"
               autoComplete="yes"
               prefix={currencySymbol}
@@ -361,7 +364,9 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
               <div className="flex items-center mb-2 py-4">
                 <Text variant="headingMd" as="strong">
                   {state.insurancePriceType === 'FIXED_PRICE'
-                    ? state.price === '0' || state.price === ''
+                    ? state.price === '0' ||
+                      state.price === '' ||
+                      state.price === 0
                       ? `No Plan Added`
                       : `${1} Single Plan Added`
                     : state.fixedMultiplePlan[0].cartMaxPrice === '' ||
@@ -374,7 +379,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
 
                 {modal}
               </div>
-              {/* TODO: implement for version 2 */}
+
               {/* <TextField
                 onChange={(price) => formState.addToStaged({ price })}
                 onBlur={() => formState.commitStaged()}
@@ -394,24 +399,26 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                   <TextField
                     label={
                       <>
-                        <Tooltip
+                        {/* <Tooltip
                           content="Shipping protection fee's increment by 0.50 starting at Default Fee to maximum of Default Fee + (99 * 0.50)"
                           width="wide"
                           padding="400"
-                        >
-                          <Text as="p">
-                            <div className="flex">
-                              Percentage
-                              <Icon source={InfoIcon} tone="info" />
-                            </div>
-                          </Text>
-                        </Tooltip>
+                        > */}
+                        <Text as="p">
+                          <div className="flex">
+                            Percentage
+                            <Icon source={InfoIcon} tone="info" />
+                          </div>
+                        </Text>
+                        {/* </Tooltip> */}
                       </>
                     }
                     autoComplete="yes"
                     onChange={(percentage) =>
                       formState.addToStaged({ percentage })
                     }
+                    type="number"
+                    error={formState?.messages?.percentage?.message}
                     onBlur={() => formState.commitStaged()}
                     value={formState.staged.percentage}
                     inputMode="decimal"
@@ -442,7 +449,9 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                     </>
                   }
                   placeholder=""
+                  type="number"
                   value={formState.staged.minimumFee}
+                  error={formState?.messages?.minimumFee?.message}
                   inputMode="decimal"
                   autoComplete="yes"
                   prefix={currencySymbol}
@@ -451,9 +460,9 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
               </Box>
               <Box paddingBlockStart="100" paddingBlockEnd="100">
                 <TextField
-                  onChange={(maximumFee) =>
-                    formState.addToStaged({ maximumFee })
-                  }
+                  onChange={(maximumFee) => {
+                    formState.addToStaged({ maximumFee });
+                  }}
                   onBlur={() => formState.commitStaged()}
                   label={
                     <>
@@ -472,7 +481,10 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                     </>
                   }
                   placeholder=""
+                  type="number"
+                  min={1}
                   value={formState.staged.maximumFee}
+                  error={formState?.messages?.maximumFee?.message}
                   inputMode="decimal"
                   autoComplete="yes"
                   prefix={currencySymbol}
