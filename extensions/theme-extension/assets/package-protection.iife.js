@@ -689,7 +689,7 @@ var __publicField = (obj, key, value) => {
     client.disabledDescription = settings.disabledDescription;
     client.buttonColor = settings.switchColor;
     client.css = settings.css;
-    client.infoPageLink = settings.policyUrl.replace("https://", "");
+    client.infoPageLink = settings == null ? void 0 : settings.policyUrl;
     window.weNexusCartApi.addListener(() => refresh());
     if (typeof client.getStyleMarkup === "function") {
       document.head.insertAdjacentHTML(

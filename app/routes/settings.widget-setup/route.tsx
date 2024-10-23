@@ -285,13 +285,29 @@ const Settings = () => {
     percentage: {
       target: 'both',
       validate: (value: string) => {
-        if (Number(value) <= 0) {
-          return {
-            type: 'error',
-            message: 'Percentage can not be Zero.',
-          };
+        if (formState.state.insurancePriceType === 'PERCENTAGE') {
+          if (value === '') {
+            return {
+              type: 'error',
+              message: 'This field is required.',
+            };
+          }
+          if (Number(value) === 0) {
+            return {
+              type: 'error',
+              message: 'Percentage can not be Zero.',
+            };
+          }
         }
-        if (value === '') {
+      },
+    },
+    minimumFee: {
+      target: 'both',
+      validate: (value: string) => {
+        if (
+          value === '' &&
+          formState.state.insurancePriceType === 'PERCENTAGE'
+        ) {
           return {
             type: 'error',
             message: 'This field is required.',
@@ -302,50 +318,13 @@ const Settings = () => {
     maximumFee: {
       target: 'both',
       validate: (value: string) => {
-        if (Number(value) <= 0) {
+        if (
+          Number(value) <= Number(formState.state.minimumFee) &&
+          formState.state.insurancePriceType === 'PERCENTAGE'
+        ) {
           return {
             type: 'error',
-            message: 'Max Fee can not be Zero.',
-          };
-        }
-        if (value === '') {
-          return {
-            type: 'error',
-            message: 'This field is required.',
-          };
-        }
-      },
-    },
-    minimumFee: {
-      target: 'both',
-      validate: (value: string) => {
-        if (Number(value) <= 0) {
-          return {
-            type: 'error',
-            message: 'Min Fee can not be Zero.',
-          };
-        }
-        if (value === '') {
-          return {
-            type: 'error',
-            message: 'This field is required.',
-          };
-        }
-      },
-    },
-    price: {
-      target: 'both',
-      validate: (value: string) => {
-        if (Number(value) <= 0) {
-          return {
-            type: 'error',
-            message: 'Fixed Price can not be Zero.',
-          };
-        }
-        if (value === '') {
-          return {
-            type: 'error',
-            message: 'This field is required.',
+            message: 'Max Fee Must be Getter Then Min Fee.',
           };
         }
       },

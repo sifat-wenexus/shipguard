@@ -33,6 +33,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
   const [emptyIndex, setEmptyIndex] = useState(-1);
   const [warning, setWarning] = useState(false);
   const [active, setActive] = useState(false);
+  const [singleErrorMessage, setSingleErrorMessage] = useState('');
   const initialData = {
     protectionFees: '',
     cartMinPrice: '',
@@ -69,6 +70,11 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
     );
   };
   const handleAddPlan = () => {
+    if (state.isSingle && state.price === '') {
+      setSingleErrorMessage('Fixed price is required.');
+      return;
+    }
+
     const emptyIndex = findEmptyValues(planByValues);
     if (!state.isSingle && (emptyIndex === 0 || emptyIndex >= 0)) {
       setEmptyIndex(emptyIndex);
@@ -182,13 +188,24 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
           <div className="sm:w-2/4 md:w-2/5 m-auto mb-4 flex items-center gap-4 ">
             <p className="font-bold">Fixed price </p>
             <TextField
-              onChange={(price) => formState.addToStaged({ price })}
-              onBlur={() => formState.commitStaged()}
+              onChange={(price) => {
+                setSingleErrorMessage('');
+                formState.addToStaged({ price });
+              }}
+              onBlur={(price: any) => {
+                console.log(price?.target.value);
+                if (Number(price?.target.value) === 0) {
+                  formState.addChange({ price: '' });
+                  setSingleErrorMessage('Fixed price cannot be Zero.');
+                  return;
+                }
+                formState.commitStaged();
+              }}
               label=""
               type="number"
               placeholder=""
               value={formState.staged.price}
-              error={formState?.messages?.price?.message}
+              error={singleErrorMessage}
               inputMode="decimal"
               autoComplete="yes"
               prefix={currencySymbol}
