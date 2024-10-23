@@ -189,6 +189,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
             <p className="font-bold">Fixed price </p>
             <TextField
               onChange={(price) => {
+                if (Number(price) < 0) return;
                 setSingleErrorMessage('');
                 formState.addToStaged({ price });
               }}
@@ -234,7 +235,10 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                   placeholder="Enter Protection Fees"
                   autoComplete="off"
                   type="number"
-                  onChange={(value) => handleChange(index, value, 'protection')}
+                  onChange={(value) => {
+                    if (Number(value) < 0) return;
+                    handleChange(index, value, 'protection');
+                  }}
                   value={item.protectionFees}
                   prefix={currencySymbol}
                 />
@@ -245,7 +249,10 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                   type="number"
                   prefix={currencySymbol}
                   value={item.cartMinPrice}
-                  onChange={(value) => handleChange(index, value, 'min-price')}
+                  onChange={(value) => {
+                    if (Number(value) < 0) return;
+                    handleChange(index, value, 'min-price');
+                  }}
                 />
                 <TextField
                   label="Cart Max Price"
@@ -254,7 +261,10 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                   type="number"
                   prefix={currencySymbol}
                   value={item.cartMaxPrice}
-                  onChange={(value) => handleChange(index, value, 'max-price')}
+                  onChange={(value) => {
+                    if (Number(value) < 0) return;
+                    handleChange(index, value, 'max-price');
+                  }}
                 />
                 <div className="mt-4">
                   <Button
@@ -431,9 +441,10 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                       </>
                     }
                     autoComplete="yes"
-                    onChange={(percentage) =>
-                      formState.addToStaged({ percentage })
-                    }
+                    onChange={(percentage) => {
+                      if (Number(percentage) < 0) return;
+                      formState.addToStaged({ percentage });
+                    }}
                     type="number"
                     error={formState?.messages?.percentage?.message}
                     onBlur={() => formState.commitStaged()}
@@ -445,9 +456,10 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
               </div>
               <Box paddingBlockStart="100" paddingBlockEnd="100">
                 <TextField
-                  onChange={(minimumFee) =>
-                    formState.addToStaged({ minimumFee })
-                  }
+                  onChange={(minimumFee) => {
+                    if (Number(minimumFee) < 0) return;
+                    formState.addToStaged({ minimumFee });
+                  }}
                   onBlur={() => formState.commitStaged()}
                   label={
                     <>
@@ -478,6 +490,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
               <Box paddingBlockStart="100" paddingBlockEnd="100">
                 <TextField
                   onChange={(maximumFee) => {
+                    if (Number(maximumFee) < 0) return;
                     formState.addToStaged({ maximumFee });
                   }}
                   onBlur={() => formState.commitStaged()}
