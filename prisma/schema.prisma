@@ -374,10 +374,10 @@ model PackageProtection {
 
   enabled                         Boolean                  @default(false)
   insurancePriceType              IinsurancePricingType    @default(NOT_SELECTED)
-  price                           Float                    @default(0)
+  price                           Decimal                  @default(0) @db.Money()
   percentage                      Float                    @default(0)
-  minimumFee                      Float                    @default(0)
-  maximumFee                      Float                    @default(0)
+  minimumFee                      Decimal                  @default(0) @db.Money()
+  maximumFee                      Decimal                  @default(0) @db.Money()
   icon                            String                   @default("three")
   switchColor                     String                   @default("#000000")
   title                           String?
@@ -430,7 +430,7 @@ model ExcludedPackageProtectionVariant {
 
   availableForSale    Boolean?
   barcode             String?
-  compareAtPrice      Float?
+  compareAtPrice      Decimal? @db.Money()
   displayName         String?
   image               String?
   inventoryManagement String?
@@ -453,13 +453,13 @@ model PackageProtectionOrder {
   customerFirstName    String?
   customerLastName     String?
   customerEmail        String?
-  protectionFee        Float              @default(0.00)
-  orderAmount          Float              @default(0.00)
+  protectionFee        Decimal            @default(0.00) @db.Money()
+  orderAmount          Decimal            @default(0.00) @db.Money()
   hasClaimRequest      Boolean            @default(false)
   fulfillmentStatus    FullfillmentStatus @default(UNFULFILLED)
   claimStatus          ClaimStatus?
   orderName            String
-  refundAmount         Float              @default(0.00)
+  refundAmount         Decimal            @default(0.00) @db.Money()
   hasPackageProtection Boolean
 
   createdAt DateTime @default(now()) @db.Timestamptz()
