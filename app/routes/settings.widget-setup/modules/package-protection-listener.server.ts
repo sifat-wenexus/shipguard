@@ -394,7 +394,7 @@ onDBEvtBuffered(
                   {
                     optionValues: [
                       {
-                        name: data.price.toFixed(2),
+                        name: Number(data.price).toFixed(2),
                         optionName: option[0].name,
                       },
                     ],
@@ -506,7 +506,7 @@ onDBEvtBuffered(
                 productVariantsUpdate.push({
                   optionValues: [
                     {
-                      name: price.toFixed(2),
+                      name: Number(price).toFixed(2),
                       optionName: option[0].name,
                     },
                   ],
@@ -630,7 +630,7 @@ onDBEvtBuffered(
                   optionValues: [
                     {
                       optionName: options[0].name,
-                      name: price.toFixed(2),
+                      name: Number(price).toFixed(2),
                     },
                   ],
                   inventoryItem: {
@@ -669,7 +669,7 @@ onDBEvtBuffered(
                     {
                       optionValues: [
                         {
-                          name: data.price.toFixed(2),
+                          name: Number(data.price).toFixed(2),
                           optionName: option[0].name,
                         },
                       ],
@@ -854,7 +854,7 @@ onDBEvtBuffered(
                 optionValues: [
                   {
                     optionName: option[0].name,
-                    name: price.toFixed(2),
+                    name: Number(price).toFixed(2),
                   },
                 ],
                 inventoryItem: {
@@ -878,9 +878,9 @@ onDBEvtBuffered(
               namespace: 'package_protection',
               type: 'json',
               value: JSON.stringify(
-                res.map((e) => ({
+                res.productVariants.map((e) => ({
                   id: e.id.replace('gid://shopify/ProductVariant/', ''),
-                  price: e.price.toFixed(2),
+                  price: Number(e.price).toFixed(2),
                 }))
               ),
             });

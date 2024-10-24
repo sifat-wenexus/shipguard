@@ -7,8 +7,7 @@ import { prisma } from './prisma.server';
 import _ from 'lodash';
 
 export class Migration {
-  constructor(private readonly session: Session) {
-  }
+  constructor(private readonly session: Session) {}
 
   private readonly GQLClient = getShopifyGQLClient(this.session);
   private readonly RESTClient = getShopifyRestClient(this.session);
@@ -83,7 +82,7 @@ export class Migration {
 
           for (const migration of this.order.slice(lastIndex + 1)) {
             console.log(
-              `Running migration ${migration.id} for ${this.session.shop}`,
+              `Running migration ${migration.id} for ${this.session.shop}`
             );
 
             await migration.method();
@@ -100,7 +99,7 @@ export class Migration {
         },
         {
           timeout: 1000 * 60 * 5, // 5 minutes
-        },
+        }
       );
     } catch (e) {
       console.error(e);
@@ -197,7 +196,6 @@ export class Migration {
   //----------------------- Migration methods ------------------------------
 
   async initialization() {
-
     return this.updateAppUrl();
   }
 
