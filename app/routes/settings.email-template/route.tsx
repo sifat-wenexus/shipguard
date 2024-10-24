@@ -172,7 +172,9 @@ const EmailTemplate = () => {
     []
   );
   const packageProtection = useQuery(dataQuery);
-  const logo = `${appUrl}/api/files/${packageProtection.data?.emailTemplateLogo}`;
+  const logo = packageProtection.data?.emailTemplateLogo
+    ? `${appUrl}/api/files/${packageProtection.data?.emailTemplateLogo}`
+    : null;
 
   useEffect(() => {
     queryProxy.file

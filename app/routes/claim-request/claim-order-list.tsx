@@ -233,7 +233,7 @@ const ClaimOrderList = ({
                 )}
               </IndexTable.Cell>
               <IndexTable.Cell>
-                {refundAmount > 0 ? i18n.formatCurrency(refundAmount) : '-'}
+                {+refundAmount > 0 ? i18n.formatCurrency(+refundAmount) : '-'}
               </IndexTable.Cell>
 
               <IndexTable.Cell>{createdAt.split('T')[0]}</IndexTable.Cell>

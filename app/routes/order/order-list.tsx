@@ -170,9 +170,9 @@ const OrderList = ({
                 </span>
               </IndexTable.Cell>
 
-              <IndexTable.Cell className="text-center">
+              <IndexTable.Cell>
                 {hasClaimRequest ? (
-                  <div className="flex justify-center">
+                  <div className="">
                     <Badge
                       progress={
                         claimStatus === 'Requested'

@@ -120,10 +120,11 @@ const OrderSearchAndFilter = ({
             />
           </Box>
         </div>
-        <div className="col-span-2 sm:col-span-1 md:col-span-2">
+        <div className="col-span-2 sm:col-span-1 md:col-span-2 ">
           <Box padding={'200'}>
-            <div className="flex mt-[2px]">
+            <div className="flex mt-[2px] filter-width">
               <Popover
+                fullWidth
                 active={popoverActive}
                 activator={activator}
                 // autofocusTarget="first-node"

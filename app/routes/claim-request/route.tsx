@@ -18,12 +18,17 @@ export const loader = async ({ request }) => {
   const data = await prisma.packageProtectionOrder.findMany({
     where: { storeId: ctx.session.storeId, hasClaimRequest: { equals: true } },
     select: {
-      id: true,
-      orderId: true,
       orderName: true,
+      customerFirstName: true,
+      customerLastName: true,
+      customerEmail: true,
       orderAmount: true,
       protectionFee: true,
+      refundAmount: true,
       claimStatus: true,
+      fulfillmentStatus: true,
+      createdAt: true,
+      claimDate: true,
     },
   });
   const store = await prisma.store.findUniqueOrThrow({
@@ -53,7 +58,10 @@ export const loader = async ({ request }) => {
 };
 
 const FileClaimRequest = () => {
-  const { data: { data, currencyCode }, shop } = useLoaderData<typeof loader>();
+  const {
+    data: { data, currencyCode },
+    shop,
+  } = useLoaderData<typeof loader>();
   const defaultActiveDates = useMemo(() => default30Days(), []);
   const [activeDates, setActiveDates] =
     useState<IActiveDates>(defaultActiveDates);

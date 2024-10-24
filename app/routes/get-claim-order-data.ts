@@ -257,9 +257,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const customerName = `${data.customerFirstName ?? ''}  ${
           data.customerLastName
         }`;
-        const logo = `${getConfig().appUrl}api/files/${
-          packageProtection?.emailTemplateLogo
-        }`;
+        const logo = packageProtection?.emailTemplateLogo
+          ? `${getConfig().appUrl}api/files/${
+              packageProtection?.emailTemplateLogo
+            }`
+          : null;
         await sendMail({
           template: 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER',
           storeId: ctx.session.storeId!,
@@ -403,9 +405,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             where: { storeId: ctx.session.storeId },
           });
           if (data) {
-            const logo = `${getConfig().appUrl}api/files/${
-              packageProtection?.emailTemplateLogo
-            }`;
+            const logo = packageProtection?.emailTemplateLogo
+              ? `${getConfig().appUrl}api/files/${
+                  packageProtection?.emailTemplateLogo
+                }`
+              : null;
             await sendMail({
               template: 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER',
               storeId: ctx.session.storeId!,
@@ -553,9 +557,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             where: { storeId: ctx.session.storeId },
           });
           if (data) {
-            const logo = `${getConfig().appUrl}api/files/${
-              packageProtection?.emailTemplateLogo
-            }`;
+            const logo = packageProtection?.emailTemplateLogo
+              ? `${getConfig().appUrl}api/files/${
+                  packageProtection?.emailTemplateLogo
+                }`
+              : null;
             await sendMail({
               template: 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER',
               storeId: ctx.session.storeId!,
@@ -712,9 +718,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             where: { storeId: ctx.session.storeId },
           });
           if (data) {
-            const logo = `${getConfig().appUrl}api/files/${
-              packageProtection?.emailTemplateLogo
-            }`;
+            const logo = packageProtection?.emailTemplateLogo
+              ? `${getConfig().appUrl}api/files/${
+                  packageProtection?.emailTemplateLogo
+                }`
+              : null;
             await sendMail({
               template: 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER',
               storeId: ctx.session.storeId!,

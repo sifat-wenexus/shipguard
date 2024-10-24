@@ -125,3 +125,7 @@
 .Polaris-Box:has(.fixed-cart-height) {
   height: 100% !important;
 }
+
+.filter-width>div {
+  width: 100% !important;
+}

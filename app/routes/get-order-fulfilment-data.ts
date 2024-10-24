@@ -403,9 +403,11 @@ export const action: ActionFunction = async ({ request }) => {
 
     if (data) {
       const orderId = data.orderId.replace('gid://shopify/Order/', '');
-      const logo = `${getConfig().appUrl}api/files/${
-        packageProtection?.emailTemplateLogo
-      }`;
+      const logo = packageProtection?.emailTemplateLogo
+        ? `${getConfig().appUrl}api/files/${
+            packageProtection?.emailTemplateLogo
+          }`
+        : null;
       const claimPage = `${getConfig().appUrl}/claim-request`;
       await sendMail({
         template: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',

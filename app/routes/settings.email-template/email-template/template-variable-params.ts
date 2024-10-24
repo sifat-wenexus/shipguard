@@ -2,7 +2,7 @@ import { $Enums } from '#prisma-client';
 
 export const templateParameters = (
   name: $Enums.EmailTemplateName,
-  logo: string
+  logo: string | null
 ) => {
   switch (name) {
     case 'CLAIM_REQUEST_EMAIL_FOR_ADMIN':

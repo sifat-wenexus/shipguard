@@ -44,7 +44,7 @@ export interface ClaimRequestCustomerTemplateVariables {
   claim_reason: string;
   claim_date: string;
   shop_name: string;
-  shop_logo: string;
+  shop_logo: string | null;
 }
 
 export interface ClaimRefundCustomerTemplateVariables {
@@ -52,7 +52,7 @@ export interface ClaimRefundCustomerTemplateVariables {
   refund_amount: string;
   date: string;
   shop_name: string;
-  shop_logo: string;
+  shop_logo: string | null;
   status: string;
   status_message: string;
   currency?: string;
@@ -63,7 +63,7 @@ export interface ClaimReOrderCustomerTemplateVariables {
   replacement_order_id: string;
   status: string;
   shop_name: string;
-  shop_logo: string;
+  shop_logo: string | null;
   status_message: string;
 }
 
@@ -72,7 +72,7 @@ export interface ClaimCancelCustomerTemplateVariables {
   customer_name: string;
   cancellation_reason: string;
   shop_name: string;
-  shop_logo: string;
+  shop_logo: string | null;
   status: string;
 }
 
