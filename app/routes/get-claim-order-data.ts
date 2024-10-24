@@ -749,6 +749,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
     }
   } catch (err) {
+    console.error(err);
     return json({
       message: 'Error fetching order!',
       success: false,
