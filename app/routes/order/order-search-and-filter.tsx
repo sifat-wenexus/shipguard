@@ -107,86 +107,57 @@ const OrderSearchAndFilter = ({
 
   return (
     <>
-      <div className="flex items-center justify-between w-full">
-        <Box padding={'200'}>
-          <TextField
-            onChange={(text) => setInputText(text)}
-            label=""
-            placeholder={'Search Items'}
-            value={inputText}
-            autoComplete="yes"
-            prefix={<Icon source={SearchIcon} />}
-          />
-        </Box>
-        <Box padding={'200'}>
-          <div className="flex mt-[2px]">
-            <Popover
-              active={popoverActive}
-              activator={activator}
-              // autofocusTarget="first-node"
-              onClose={togglePopoverActive}
-              preferredAlignment={'center'}
-              fullHeight
-            >
-              <div className="w-full p-3">
-                <h1 className="font-bold text-base">Fulfillment Status</h1>
-                {fulfillmentStatus.map((item, index) => (
-                  <Radio
-                    onChange={() => handleFulfillmentSelect(index)}
-                    checked={item.selected}
-                    label={item.label}
-                    id={index + 'fulfillments'}
-                  />
-                ))}
-
-                <span
-                  onClick={() => {
-                    setFulfillmentStatus(
-                      fulfillmentsStatusLabels.map((item) => ({
-                        ...item,
-                        selected: false,
-                      }))
-                    );
-                  }}
-                  className="text-base text-blue-500 hover:to-blue-700 hover:underline cursor-pointer"
-                >
-                  clear
-                </span>
-              </div>
-              <div className="w-full p-3">
-                <h1 className="font-bold text-base">Claim Status</h1>
-                {claimStatus.map((item, index) => (
-                  <Radio
-                    onChange={() => handleClaimSelect(index)}
-                    checked={item.selected}
-                    label={item.label}
-                    id={index + 'claim'}
-                  />
-                ))}
-
-                <span
-                  onClick={() => {
-                    setClaimStatus(
-                      claimStatusLabels.map((item) => ({
-                        ...item,
-                        selected: false,
-                      }))
-                    );
-                  }}
-                  className="text-base text-blue-500 hover:to-blue-700 hover:underline cursor-pointer"
-                >
-                  clear
-                </span>
-              </div>
-            </Popover>
-            {/* <Popover
-                active={popoverClaimActive}
+      <div className="grid grid-cols-10 sm:grid-cols-10 md:grid-cols-10">
+        <div className="col-span-8 sm:col-span-9 md:col-span-8">
+          <Box padding={'200'}>
+            <TextField
+              onChange={(text) => setInputText(text)}
+              label=""
+              placeholder={'Search Items'}
+              value={inputText}
+              autoComplete="yes"
+              prefix={<Icon source={SearchIcon} />}
+            />
+          </Box>
+        </div>
+        <div className="col-span-2 sm:col-span-1 md:col-span-2">
+          <Box padding={'200'}>
+            <div className="flex mt-[2px]">
+              <Popover
+                active={popoverActive}
                 activator={activator}
-                autofocusTarget="first-node"
-                onClose={togglePopoverClaimActive}
+                // autofocusTarget="first-node"
+                onClose={togglePopoverActive}
                 preferredAlignment={'center'}
+                fullHeight
               >
                 <div className="w-full p-3">
+                  <h1 className="font-bold text-base">Fulfillment Status</h1>
+                  {fulfillmentStatus.map((item, index) => (
+                    <Radio
+                      onChange={() => handleFulfillmentSelect(index)}
+                      checked={item.selected}
+                      label={item.label}
+                      id={index + 'fulfillments'}
+                    />
+                  ))}
+
+                  <span
+                    onClick={() => {
+                      setFulfillmentStatus(
+                        fulfillmentsStatusLabels.map((item) => ({
+                          ...item,
+                          selected: false,
+                        }))
+                      );
+                    }}
+                    className="text-base text-blue-500 hover:to-blue-700 hover:underline cursor-pointer"
+                  >
+                    clear
+                  </span>
+                </div>
+                <div className="w-full p-3">
+                  <h1 className="font-bold text-base">Claim Status</h1>
                   {claimStatus.map((item, index) => (
                     <Radio
                       onChange={() => handleClaimSelect(index)}
@@ -210,9 +181,10 @@ const OrderSearchAndFilter = ({
                     clear
                   </span>
                 </div>
-              </Popover> */}
-          </div>
-        </Box>
+              </Popover>
+            </div>
+          </Box>
+        </div>
       </div>
       {filterItems.length > 0 && (
         <div className="flex p-2">

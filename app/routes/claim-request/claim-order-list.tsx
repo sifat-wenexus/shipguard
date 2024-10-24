@@ -35,192 +35,230 @@ interface Props {
   shop: string;
 }
 
-const ClaimOrderList = ({ activeDates, setIsProcess, setOrderId, shop }: Props) => {
+const ClaimOrderList = ({
+  activeDates,
+  setIsProcess,
+  setOrderId,
+  shop,
+}: Props) => {
   const [filterItems, setFilterItems] = useState<IFilterOptions[]>([]);
   const [inputText, setInputText] = useState('');
   const searchTerm = useDebounce(inputText, 500);
   const [i18n] = useI18n();
 
   const { period } = activeDates || {};
-  const startDate = useMemo(() => period
-    ? new Date(period?.since).toISOString()
-    : new Date().toISOString(), [period]);
+  const startDate = useMemo(
+    () =>
+      period ? new Date(period?.since).toISOString() : new Date().toISOString(),
+    [period]
+  );
 
-  const endDate = useMemo(() => period
-    ? new Date(
-      new Date(period?.until).setDate(new Date(period.until).getDate() + 1),
-    ).toISOString()
-    : new Date().toISOString(), [period]);
+  const endDate = useMemo(
+    () =>
+      period
+        ? new Date(
+            new Date(period?.until).setDate(
+              new Date(period.until).getDate() + 1
+            )
+          ).toISOString()
+        : new Date().toISOString(),
+    [period]
+  );
 
-  const filterOp = useMemo(() => filterItems.map((item) => item.value.toUpperCase()), [filterItems]);
-  const filterFields = useMemo(() => filterOp.map((field) => {
-    if (claimStatuses.includes(field as any)) {
-      return { claimStatus: field as ClaimStatus };
-    }
+  const filterOp = useMemo(
+    () => filterItems.map((item) => item.value.toUpperCase()),
+    [filterItems]
+  );
+  const filterFields = useMemo(
+    () =>
+      filterOp.map((field) => {
+        if (claimStatuses.includes(field as any)) {
+          return { claimStatus: field as ClaimStatus };
+        }
 
-    return {};
-  }), [filterOp]);
+        return {};
+      }),
+    [filterOp]
+  );
 
-  const query = useMemo(() => queryProxy.packageProtectionOrder.subscribeFindMany({
-    where: {
-      AND: [
-        {
-          OR: [{ orderName: { contains: searchTerm } }],
+  const query = useMemo(
+    () =>
+      queryProxy.packageProtectionOrder.subscribeFindMany({
+        where: {
+          AND: [
+            {
+              OR: [{ orderName: { contains: searchTerm } }],
+            },
+            {
+              createdAt: {
+                gte: startDate,
+                lte: endDate,
+              },
+            },
+            { hasClaimRequest: { equals: true } },
+            filterFields.length
+              ? {
+                  PackageProtectionClaimOrder: {
+                    some: {
+                      OR: filterFields,
+                    },
+                  },
+                }
+              : {},
+          ],
         },
-        {
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
+        include: {
+          PackageProtectionClaimOrder: {
+            where: filterFields.length
+              ? { OR: filterFields }
+              : { claimStatus: { not: 'PARTIALLYAPPROVE' } },
           },
         },
-        { hasClaimRequest: { equals: true } },
-        filterFields.length ? {
-          PackageProtectionClaimOrder: {
-            some: {
-              OR: filterFields,
-            }
-          }
-        } : {},
-      ],
-    },
-    include: {
-      PackageProtectionClaimOrder: {
-        where: filterFields.length
-          ? { OR: filterFields }
-          : { claimStatus: { not: 'PARTIALLYAPPROVE' } },
-      },
-    },
-    orderBy: { createdAt: 'desc' },
-  }), [endDate, filterFields, searchTerm, startDate]);
+        orderBy: { createdAt: 'desc' },
+      }),
+    [endDate, filterFields, searchTerm, startDate]
+  );
 
   const subscription = useQueryPaginated(query);
 
-  const handleProcess = useCallback((orderId: string) => {
-    setIsProcess(true);
-    setOrderId(orderId);
-  }, [setIsProcess, setOrderId]);
+  const handleProcess = useCallback(
+    (orderId: string) => {
+      setIsProcess(true);
+      setOrderId(orderId);
+    },
+    [setIsProcess, setOrderId]
+  );
 
-  const rowMarkup = useMemo(() => subscription.data?.map(
-    (
-      {
-        id,
-        orderName,
-        protectionFee,
-        orderAmount,
-        createdAt,
-        orderId,
-        hasClaimRequest,
-        PackageProtectionClaimOrder,
-        refundAmount,
-      },
-      index,
-    ) => {
-      const status = PackageProtectionClaimOrder.map((i) => i.claimStatus);
-      const claimStatus: 'Requested' | 'Processing' | 'Canceled' | 'Approved' =
-        status.every((i) => i === 'CANCEL')
-          ? 'Canceled'
-          : status.every((i) => i === 'REQUESTED')
+  const rowMarkup = useMemo(
+    () =>
+      subscription.data?.map(
+        (
+          {
+            id,
+            orderName,
+            protectionFee,
+            orderAmount,
+            createdAt,
+            orderId,
+            hasClaimRequest,
+            PackageProtectionClaimOrder,
+            refundAmount,
+          },
+          index
+        ) => {
+          const status = PackageProtectionClaimOrder.map((i) => i.claimStatus);
+          const claimStatus:
+            | 'Requested'
+            | 'Processing'
+            | 'Canceled'
+            | 'Approved' = status.every((i) => i === 'CANCEL')
+            ? 'Canceled'
+            : status.every((i) => i === 'REQUESTED')
             ? 'Requested'
             : status.every((i) => i === 'APPROVE')
-              ? 'Approved'
-              : 'Processing';
+            ? 'Approved'
+            : 'Processing';
 
-      return (
-        <IndexTable.Row id={id.toString()} key={id} position={index}>
-          <IndexTable.Cell>
-            <Text variant="bodyMd" fontWeight="bold" as="span">
-              <Link
-                removeUnderline
-                target="_blank"
-                url={
-                  shop
-                    ? `https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
-                      'gid://shopify/Order/',
-                      '',
-                    )}`
-                    : ''
-                }
-              >
-                {' '}
-                {orderName}
-              </Link>
-            </Text>
-          </IndexTable.Cell>
-          <IndexTable.Cell>
-            {i18n.formatCurrency(Number(protectionFee))}
-          </IndexTable.Cell>
-          <IndexTable.Cell>
-            <Text as="span">{i18n.formatCurrency(Number(orderAmount))}</Text>
-          </IndexTable.Cell>
+          return (
+            <IndexTable.Row id={id.toString()} key={id} position={index}>
+              <IndexTable.Cell>
+                <Text variant="bodyMd" fontWeight="bold" as="span">
+                  <Link
+                    removeUnderline
+                    target="_blank"
+                    url={
+                      shop
+                        ? `https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
+                            'gid://shopify/Order/',
+                            ''
+                          )}`
+                        : ''
+                    }
+                  >
+                    {' '}
+                    {orderName}
+                  </Link>
+                </Text>
+              </IndexTable.Cell>
+              <IndexTable.Cell>
+                {i18n.formatCurrency(Number(protectionFee))}
+              </IndexTable.Cell>
+              <IndexTable.Cell>
+                <Text as="span">
+                  {i18n.formatCurrency(Number(orderAmount))}
+                </Text>
+              </IndexTable.Cell>
 
-          <IndexTable.Cell>
-            {hasClaimRequest ? (
-              <>
-                <Badge
-                  progress={
-                    claimStatus === 'Requested'
-                      ? 'incomplete'
-                      : claimStatus === 'Approved'
-                        ? 'complete'
-                        : 'partiallyComplete'
-                  }
-                  tone={
-                    claimStatus === 'Approved'
-                      ? 'success'
-                      : claimStatus === 'Canceled'
-                        ? 'critical'
-                        : claimStatus === 'Requested'
+              <IndexTable.Cell>
+                {hasClaimRequest ? (
+                  <>
+                    <Badge
+                      progress={
+                        claimStatus === 'Requested'
+                          ? 'incomplete'
+                          : claimStatus === 'Approved'
+                          ? 'complete'
+                          : 'partiallyComplete'
+                      }
+                      tone={
+                        claimStatus === 'Approved'
+                          ? 'success'
+                          : claimStatus === 'Canceled'
+                          ? 'critical'
+                          : claimStatus === 'Requested'
                           ? 'warning'
                           : 'info'
-                  }
-                >
-                  {claimStatus}
-                </Badge>
-                <Badge
-                  tone={
-                    claimStatus === 'Approved'
-                      ? 'success'
-                      : claimStatus === 'Canceled'
-                        ? 'critical'
-                        : claimStatus === 'Requested'
+                      }
+                    >
+                      {claimStatus}
+                    </Badge>
+                    <Badge
+                      tone={
+                        claimStatus === 'Approved'
+                          ? 'success'
+                          : claimStatus === 'Canceled'
+                          ? 'critical'
+                          : claimStatus === 'Requested'
                           ? 'warning'
                           : 'info'
-                  }
-                >
-                  {PackageProtectionClaimOrder.length.toString()}
-                </Badge>
-              </>
-            ) : (
-              <Text as="span" alignment="center">
-                -
-              </Text>
-            )}
-          </IndexTable.Cell>
-          <IndexTable.Cell>
-            {refundAmount > 0 ? i18n.formatCurrency(refundAmount) : '-'}
-          </IndexTable.Cell>
+                      }
+                    >
+                      {PackageProtectionClaimOrder.length.toString()}
+                    </Badge>
+                  </>
+                ) : (
+                  <Text as="span" alignment="center">
+                    -
+                  </Text>
+                )}
+              </IndexTable.Cell>
+              <IndexTable.Cell>
+                {refundAmount > 0 ? i18n.formatCurrency(refundAmount) : '-'}
+              </IndexTable.Cell>
 
-          <IndexTable.Cell>{createdAt.split('T')[0]}</IndexTable.Cell>
-          <IndexTable.Cell>
-            <div className="text-center">
-              <Button
-                accessibilityLabel="Process"
-                onClick={() => handleProcess(orderId)}
-                variant="primary"
-                icon={BlogIcon}
-                tone="success"
-                // disabled={
-                //   claimStatus === 'Approved' || claimStatus === 'Canceled'
-                // }
-              >
-                Process
-              </Button>
-            </div>
-          </IndexTable.Cell>
-        </IndexTable.Row>
-      );
-    },
-  ), [handleProcess, i18n, shop, subscription.data]);
+              <IndexTable.Cell>{createdAt.split('T')[0]}</IndexTable.Cell>
+              <IndexTable.Cell>
+                <div className="text-center">
+                  <Button
+                    accessibilityLabel="Process"
+                    onClick={() => handleProcess(orderId)}
+                    variant="primary"
+                    icon={BlogIcon}
+                    tone="success"
+                    // disabled={
+                    //   claimStatus === 'Approved' || claimStatus === 'Canceled'
+                    // }
+                  >
+                    Process
+                  </Button>
+                </div>
+              </IndexTable.Cell>
+            </IndexTable.Row>
+          );
+        }
+      ),
+    [handleProcess, i18n, shop, subscription.data]
+  );
 
   const emptyStateMarkup = (
     <EmptySearchResult
@@ -232,16 +270,20 @@ const ClaimOrderList = ({ activeDates, setIsProcess, setOrderId, shop }: Props) 
 
   return (
     <div className="w-full bg-white  rounded-lg shadow-md">
-      <ClaimOrderSearchAndFilter
-        filterOption={{
-          inputText,
-          setInputText,
-          filterItems,
-          setFilterItems,
-        }}
-      />
+      {Array.isArray(subscription.data) && subscription.data.length > 0 && (
+        <ClaimOrderSearchAndFilter
+          filterOption={{
+            inputText,
+            setInputText,
+            filterItems,
+            setFilterItems,
+          }}
+        />
+      )}
       <IndexTable
-        itemCount={subscription.loading ? Infinity : subscription.count as number}
+        itemCount={
+          subscription.loading ? Infinity : (subscription.count as number)
+        }
         resourceName={{ singular: 'order', plural: 'orders' }}
         condensed={false} //useBreakpoints().smDown}
         emptyState={emptyStateMarkup}
@@ -257,7 +299,9 @@ const ClaimOrderList = ({ activeDates, setIsProcess, setOrderId, shop }: Props) 
           { title: 'Action', alignment: 'center' },
         ]}
         pagination={{
-          hasNext: Boolean(subscription.page && subscription.pages !== subscription.page),
+          hasNext: Boolean(
+            subscription.page && subscription.pages !== subscription.page
+          ),
           hasPrevious: Boolean(subscription.page && subscription.page > 1),
           onNext: subscription.next,
           onPrevious: subscription.previous,

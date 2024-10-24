@@ -416,3 +416,6 @@ const Settings = () => {
 };
 
 export default Settings;
+
+// TODO: version:2 ---> international protection support and pricing for other countries.
+// TODO: version:2 --> claim page app block content customization

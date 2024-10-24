@@ -231,9 +231,17 @@ const OrderList = ({
 
   return (
     <div className="w-full bg-white  rounded-lg shadow-md">
-      <OrderSearchAndFilter
-        filterOption={{ inputText, setInputText, filterItems, setFilterItems }}
-      />
+      {Array.isArray(subscription?.data) && subscription.data.length > 0 && (
+        <OrderSearchAndFilter
+          filterOption={{
+            inputText,
+            setInputText,
+            filterItems,
+            setFilterItems,
+          }}
+        />
+      )}
+
       {mediaDevice}
       <IndexTable
         condensed={false}

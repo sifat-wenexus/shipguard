@@ -195,6 +195,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       message: 'Error fetching order!',
       success: false,
       data: null,
+      error: err,
     });
   }
 };

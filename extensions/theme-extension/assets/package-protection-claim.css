@@ -759,8 +759,8 @@ video {
   height: .5rem
 }
 
-.h-52 {
-  height: 13rem
+.h-60 {
+  height: 15rem
 }
 
 .h-8 {
@@ -1093,10 +1093,6 @@ video {
 
 .text-left {
   text-align: left
-}
-
-.text-\[12px\] {
-  font-size: 12px
 }
 
 .text-\[15px\] {
