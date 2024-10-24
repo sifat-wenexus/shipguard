@@ -153,25 +153,26 @@ export const loader: LoaderFunction = async ({ request }) => {
         claimStatusMessage: f.claimStatusMessage,
         imageUrls,
         fulfillClaim: f.fulfillClaim,
-        locationId: f.location.id,
+        locationId: f.location?.id,
         fulfillmentLineItems: f.fulfillmentLineItems.nodes.map((node) => {
           return {
-            lineItemId: node.id,
-            quantity: node.quantity,
-            itemId: node.lineItem.id,
-            name: node.lineItem.name,
-            originalPrice: node.lineItem.originalUnitPriceSet.shopMoney.amount,
+            lineItemId: node?.id,
+            quantity: node?.quantity,
+            itemId: node?.lineItem?.id,
+            name: node?.lineItem?.name,
+            originalPrice:
+              node?.lineItem?.originalUnitPriceSet?.shopMoney?.amount,
             discountPrice:
               node.lineItem.discountAllocations[0]?.allocatedAmountSet.shopMoney
                 .amount || 0,
-            image: node.lineItem.image.url,
-            title: node.lineItem.title,
-            sku: node.lineItem.sku,
-            taxable: node.lineItem.taxable,
-            taxRate: node.lineItem.taxLines[0].rate,
-            taxPercentage: node.lineItem.taxLines[0].ratePercentage,
-            taxTitle: node.lineItem.taxLines[0].title,
-            locationId: f.location.id,
+            image: node?.lineItem?.image?.url,
+            title: node?.lineItem?.title,
+            sku: node?.lineItem?.sku,
+            taxable: node?.lineItem?.taxable,
+            taxRate: node?.lineItem?.taxLines[0]?.rate,
+            taxPercentage: node?.lineItem?.taxLines[0]?.ratePercentage,
+            taxTitle: node?.lineItem?.taxLines[0]?.title,
+            locationId: f?.location?.id,
           };
         }),
       };
