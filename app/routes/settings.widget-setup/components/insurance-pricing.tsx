@@ -434,7 +434,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                         <Text as="p">
                           <div className="flex">
                             Percentage
-                            <Icon source={InfoIcon} tone="info" />
+                            {/*<Icon source={InfoIcon} tone="info" />*/}
                           </div>
                         </Text>
                         {/* </Tooltip> */}

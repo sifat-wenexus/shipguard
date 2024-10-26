@@ -114,7 +114,7 @@ export const reqAdminTemplate = `<!DOCTYPE html>
 
       <!-- Claim Button -->
       <div style="text-align: center;">
-        <a class="claim-button" href="{{go_to_claim}}">View Claim</a>
+        <a class="claim-button" href="{{go_to_claim}}" style="color:white;" target="_blank">View Claim</a>
       </div>
 
       <!-- Footer -->
