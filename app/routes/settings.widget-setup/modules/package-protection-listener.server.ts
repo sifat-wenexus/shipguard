@@ -65,6 +65,7 @@ onDBEvtBuffered(
       const data = payload?.newData ?? payload?.oldData;
       const session = payload?.session;
 
+
       console.log(`Package Protection Listener: Processing store ${storeId}`);
 
       if (!data || !session) {
@@ -81,23 +82,23 @@ onDBEvtBuffered(
 
       const gql = getShopifyGQLClient(session);
 
-      if (data.minimumFee >= 0 && data.maximumFee > 0) {
+      if (+data.minimumFee >= 0 && +data.maximumFee > 0) {
         percentageValueIncreaseBy = Number(
-          ((data.maximumFee - data.minimumFee) / 99).toFixed(2)
+          ((+data.maximumFee - +data.minimumFee) / 99).toFixed(2)
         );
       }
 
-      let metafields: Record<string, any> = [];
+      let metaFields: Record<string, any> = [];
 
       if (packageProtectionProductAndVariants.length > 0) {
-        metafields.push({
+        metaFields.push({
           key: 'packageProtectionProductAndVariants',
           namespace: 'package_protection',
           type: 'json',
           value: JSON.stringify(packageProtectionProductAndVariants),
         });
       } else {
-        metafields.push({
+        metaFields.push({
           key: 'packageProtectionProductAndVariants',
           namespace: 'package_protection',
           type: 'json',
@@ -106,7 +107,7 @@ onDBEvtBuffered(
       }
 
       if (data.enabled !== undefined) {
-        metafields.push({
+        metaFields.push({
           key: 'enabled',
           namespace: 'package_protection',
           type: 'boolean',
@@ -114,7 +115,7 @@ onDBEvtBuffered(
         });
       }
       if (data.insurancePriceType !== undefined) {
-        metafields.push({
+        metaFields.push({
           key: 'insurancePriceType',
           namespace: 'package_protection',
           type: 'single_line_text_field',
@@ -122,7 +123,7 @@ onDBEvtBuffered(
         });
       }
       if (data.fixedMultiplePlan !== undefined) {
-        metafields.push({
+        metaFields.push({
           key: 'fixedMultiplePlan',
           namespace: 'package_protection',
           type: 'json',
@@ -130,7 +131,7 @@ onDBEvtBuffered(
         });
       }
       if (data.price !== undefined) {
-        metafields.push({
+        metaFields.push({
           key: 'price',
           namespace: 'package_protection',
           type: 'number_decimal',
@@ -138,7 +139,7 @@ onDBEvtBuffered(
         });
       }
       if (data.percentage !== undefined) {
-        metafields.push({
+        metaFields.push({
           key: 'percentage',
           namespace: 'package_protection',
           type: 'number_decimal',
@@ -147,7 +148,7 @@ onDBEvtBuffered(
       }
 
       if (data.icon !== undefined) {
-        metafields.push({
+        metaFields.push({
           key: 'icon',
           namespace: 'package_protection',
           type: 'single_line_text_field',
@@ -155,7 +156,7 @@ onDBEvtBuffered(
         });
       }
       if (data.switchColor) {
-        metafields.push({
+        metaFields.push({
           key: 'switchColor',
           namespace: 'package_protection',
           type: 'single_line_text_field',
@@ -163,7 +164,7 @@ onDBEvtBuffered(
         });
       }
       if (data.title) {
-        metafields.push({
+        metaFields.push({
           key: 'title',
           namespace: 'package_protection',
           type: 'single_line_text_field',
@@ -172,7 +173,7 @@ onDBEvtBuffered(
       }
 
       if (data.enabledDescription) {
-        metafields.push({
+        metaFields.push({
           key: 'enabledDescription',
           namespace: 'package_protection',
           type: 'single_line_text_field',
@@ -181,7 +182,7 @@ onDBEvtBuffered(
       }
 
       if (data.disabledDescription) {
-        metafields.push({
+        metaFields.push({
           key: 'disabledDescription',
           namespace: 'package_protection',
           type: 'single_line_text_field',
@@ -189,7 +190,7 @@ onDBEvtBuffered(
         });
       }
       if (data.policyUrl) {
-        metafields.push({
+        metaFields.push({
           key: 'policyUrl',
           namespace: 'package_protection',
           type: 'single_line_text_field',
@@ -197,7 +198,7 @@ onDBEvtBuffered(
         });
       }
       if (data.insuranceDisplayButton !== undefined) {
-        metafields.push({
+        metaFields.push({
           key: 'insuranceDisplayButton',
           namespace: 'package_protection',
           type: 'boolean',
@@ -205,7 +206,7 @@ onDBEvtBuffered(
         });
       }
       if (data.insuranceFulfillmentStatus) {
-        metafields.push({
+        metaFields.push({
           key: 'insuranceFulfillmentStatus',
           namespace: 'package_protection',
           type: 'single_line_text_field',
@@ -213,7 +214,7 @@ onDBEvtBuffered(
         });
       }
       if (data.css) {
-        metafields.push({
+        metaFields.push({
           key: 'css',
           namespace: 'package_protection',
           type: 'json',
@@ -221,7 +222,7 @@ onDBEvtBuffered(
         });
       }
       if (data.cssSelector) {
-        metafields.push({
+        metaFields.push({
           key: 'cssSelector',
           namespace: 'package_protection',
           type: 'single_line_text_field',
@@ -229,7 +230,7 @@ onDBEvtBuffered(
         });
       }
       if (data.position !== undefined) {
-        metafields.push({
+        metaFields.push({
           key: 'position',
           namespace: 'package_protection',
           type: 'single_line_text_field',
@@ -237,7 +238,7 @@ onDBEvtBuffered(
         });
       }
       if (data.showOnCartPage !== undefined) {
-        metafields.push({
+        metaFields.push({
           key: 'showOnCartPage',
           namespace: 'package_protection',
           type: 'boolean',
@@ -245,7 +246,7 @@ onDBEvtBuffered(
         });
       }
       if (data.showOnMiniCart !== undefined) {
-        metafields.push({
+        metaFields.push({
           key: 'showOnMiniCart',
           namespace: 'package_protection',
           type: 'boolean',
@@ -253,7 +254,7 @@ onDBEvtBuffered(
         });
       }
       if (icon) {
-        metafields.push({
+        metaFields.push({
           key: 'iconUrl',
           namespace: 'package_protection',
           type: 'single_line_text_field',
@@ -261,7 +262,7 @@ onDBEvtBuffered(
         });
       }
       if (data.defaultSetting !== undefined) {
-        metafields.push({
+        metaFields.push({
           key: 'defaultSetting',
           namespace: 'package_protection',
           type: 'boolean',
@@ -398,7 +399,7 @@ onDBEvtBuffered(
                         optionName: option[0].name,
                       },
                     ],
-                    price: data.price,
+                    price: +data.price,
                     taxable: false,
                     inventoryItem: {
                       requiresShipping: false,
@@ -409,7 +410,7 @@ onDBEvtBuffered(
                 ],
                 gql
               );
-              await metafields.push({
+              await metaFields.push({
                 key: 'productVariants',
                 namespace: 'package_protection',
                 type: 'json',
@@ -448,7 +449,7 @@ onDBEvtBuffered(
                   }),
                   gql
                 );
-                await metafields.push({
+                await metaFields.push({
                   key: 'productVariants',
                   namespace: 'package_protection',
                   type: 'json',
@@ -500,8 +501,8 @@ onDBEvtBuffered(
               percentageProductId!,
               gql
             );
-            await prevVariants.firstPage().then(async (variants) => {
-              let price = data.minimumFee;
+            await prevVariants.firstPage().then( (variants) => {
+              let price = +data.minimumFee;
               for (let i = 0; i < variants.length; i++) {
                 productVariantsUpdate.push({
                   optionValues: [
@@ -530,7 +531,7 @@ onDBEvtBuffered(
               productVariantsUpdate,
               gql
             );
-            await metafields.push({
+            await metaFields.push({
               key: 'productVariants',
               namespace: 'package_protection',
               type: 'json',
@@ -623,7 +624,7 @@ onDBEvtBuffered(
                 gql
               );
               const productVariants: IShopifyBulkVariantUpdate[] = [];
-              let price = data.minimumFee;
+              let price = +data.minimumFee;
               for (let i = 1; i <= 100; i++) {
                 productVariants.push({
                   price: Number(price.toFixed(2)),
@@ -673,7 +674,7 @@ onDBEvtBuffered(
                           optionName: option[0].name,
                         },
                       ],
-                      price: data.price,
+                      price: +data.price,
                       taxable: false,
                       inventoryItem: {
                         sku: PRODUCT_SKU,
@@ -684,7 +685,7 @@ onDBEvtBuffered(
                   ],
                   gql
                 );
-                await metafields.push({
+                await metaFields.push({
                   key: 'productVariants',
                   namespace: 'package_protection',
                   type: 'json',
@@ -721,7 +722,7 @@ onDBEvtBuffered(
                   }),
                   gql
                 );
-                await metafields.push({
+                await metaFields.push({
                   key: 'productVariants',
                   namespace: 'package_protection',
                   type: 'json',
@@ -847,7 +848,7 @@ onDBEvtBuffered(
 
             const option = await getProductWithOption(productId!, gql);
             const productVariants: IShopifyBulkVariantUpdate[] = [];
-            let price = data.minimumFee;
+            let price = +data.minimumFee;
             for (let i = 1; i <= 100; i++) {
               productVariants.push({
                 price: price,
@@ -873,7 +874,7 @@ onDBEvtBuffered(
               gql
             );
 
-            await metafields.push({
+            await metaFields.push({
               key: 'productVariants',
               namespace: 'package_protection',
               type: 'json',
@@ -887,10 +888,10 @@ onDBEvtBuffered(
           }
         }
       } catch (error) {
-        console.error(error);
+        console.error(JSON.stringify(error));
       }
 
-      metafields = metafields.map((metafield) => ({
+      metaFields = metaFields.map((metafield) => ({
         ...metafield,
         ownerId: store.appInstallationId,
       }));
@@ -913,7 +914,7 @@ onDBEvtBuffered(
             }
             `,
             variables: {
-              metafields,
+              metafields: metaFields,
             },
           },
           tries: 20,
@@ -1081,7 +1082,7 @@ export async function shopifyProductUpdate({
   });
 
   if (getOldImage.body.data.product.media.nodes.length > 1) {
-    const deleteImage = await gql.query<any>({
+     await gql.query<any>({
       data: {
         query: `#graphql
       mutation productDeleteMedia($mediaIds: [ID!]!, $productId: ID!) {
@@ -1103,7 +1104,7 @@ export async function shopifyProductUpdate({
       },
       tries: 20,
     });
-    const imageCreate = await gql.query<any>({
+ await gql.query<any>({
       data: {
         query: `#graphql
     mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
