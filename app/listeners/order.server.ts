@@ -154,6 +154,7 @@ export const orderCreateEvent = async ({
           customerLastName: payload.customer.last_name,
           orderName: updatedOrder.body.data.orderUpdate.order.name,
           storeId: session?.storeId!,
+          orderDate: payload.created_at,
           orderAmount: Number(
             updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
               .amount,
@@ -189,6 +190,7 @@ export const orderCreateEvent = async ({
           orderName: payload.name,
           storeId: session?.storeId!,
           orderAmount: Number(payload.total_price),
+          orderDate: payload.created_at,
           protectionFee: 0,
           fulfillmentStatus:
             payload.fulfillment_status === 'partial'
@@ -499,6 +501,7 @@ export const orderUpdatedEvent = async ({
             getOrder.body.data.order.totalPriceSet.shopMoney
               .amount,
           ),
+          orderDate: payload.created_at,
         },
         where: { orderId: orderId },
       });

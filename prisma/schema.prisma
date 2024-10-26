@@ -488,6 +488,7 @@ model PackageProtectionClaimOrder {
   claimStatusMessage    String?
   fulfillClaim          Boolean         @default(false)
 
+  orderDate DateTime  @default(now()) @db.Timestamptz()
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime? @updatedAt @db.Timestamptz()
 
