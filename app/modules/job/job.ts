@@ -1,4 +1,3 @@
-import { performBulkMutation, performBulkQuery } from '~/modules/perform-bulk-operation.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import type { Job as BaseJobDetails, JobExecution } from '#prisma-client';
 import type { JobRunner } from '~/modules/job/job-runner.server';
@@ -6,6 +5,11 @@ import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
 import _ from 'lodash';
+
+import {
+  performBulkMutation,
+  performBulkQuery,
+} from '~/modules/perform-bulk-operation.server';
 
 export interface JobDetails<P = any> extends Omit<BaseJobDetails, 'payload'> {
   payload: P;
@@ -329,3 +333,4 @@ export abstract class Job<P = any> {
 export interface JobConstructor {
   new (job: JobDetails): Job;
 }
+

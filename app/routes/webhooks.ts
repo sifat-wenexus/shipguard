@@ -12,6 +12,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     name: 'handle-webhook',
     storeId: session?.storeId,
     maxRetries: 5,
+    concurrent: true,
     payload: {
       topic: ctx.topic,
       webhookId: ctx.webhookId,

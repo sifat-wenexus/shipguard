@@ -12,11 +12,16 @@ export interface JobRunnerOptions {
   scheduleAt?: Date;
   dependencies?: number[];
   paused?: boolean;
+  concurrent?: boolean;
+  priority?: number;
   payload?: (typeof jobExecutors)[JobName]['prototype']['job']['payload'];
 }
 
 class Queue {
-  constructor(private readonly batchSize = 50) {}
+  constructor(
+    private readonly batchSize = 50,
+    private readonly concurrent = false
+  ) {}
 
   public readonly items = new Set<Job>();
   public readonly timeouts: Record<number, NodeJS.Timeout> = {};
@@ -28,10 +33,19 @@ class Queue {
   }
 
   get batch() {
+    const storeIds = new Set<string>();
     const items: Job[] = [];
 
     for (const item of this.items) {
+      if (item.storeId && storeIds.has(item.storeId)) {
+        continue;
+      }
+
       items.push(item);
+
+      if (item.storeId) {
+        storeIds.add(item.storeId);
+      }
 
       if (items.length === this.batchSize) {
         break;
@@ -54,6 +68,7 @@ class Queue {
           {
             id: { notIn: Array.from(this.ids) },
             node: process.env.NODE_ID,
+            runConcurrently: this.concurrent,
             Dependencies: {
               every: {
                 DependsOn: {
@@ -83,6 +98,9 @@ class Queue {
               },
               {
                 status: 'FAILED',
+                executedAt: {
+                  lt: new Date(Date.now() - 20000), // Wait 20 seconds before retrying
+                },
                 OR: [
                   {
                     interval: {
@@ -105,6 +123,9 @@ class Queue {
       },
       orderBy: [
         {
+          priority: 'desc',
+        },
+        {
           id: 'asc',
         },
         {
@@ -115,12 +136,12 @@ class Queue {
         },
       ],
       pageSize: 1000000,
-      distinct: ['storeId'],
+      distinct: this.concurrent ? ['storeId'] : undefined,
     });
 
     return new Promise((resolve) => {
       query.addListener(async (jobs) => {
-        await Promise.all(jobs.map((job) => this.add(job)));
+        await Promise.all(jobs.map(this.add.bind(this)));
 
         if (query.hasNext) {
           query.next();
@@ -175,30 +196,36 @@ export class JobRunner {
   constructor() {
     setTimeout(() => {
       this.initialize().then(() => {
-        setInterval(this.queue.loadJobs.bind(this.queue), 1000);
-        setInterval(this.runJobs.bind(this), 1000);
-        setImmediate(this.runJobs.bind(this));
+        setInterval(() => this.sequentialQueue.loadJobs(), 1000);
+        setInterval(() => this.concurrentQueue.loadJobs(), 1000);
+
+        setInterval(() => this.runJobs(this.sequentialQueue), 1000);
+        setInterval(() => this.runJobs(this.concurrentQueue), 1000);
+
+        setImmediate(() => this.runJobs(this.sequentialQueue));
+        setImmediate(() => this.runJobs(this.concurrentQueue));
       });
     }, 10000);
   }
 
-  public readonly queue = new Queue(50);
+  public readonly concurrentQueue = new Queue(100000, true);
+  public readonly sequentialQueue = new Queue(50);
   private running = false;
 
-  private async runJobs() {
-    if (this.queue.size === 0 || this.running) {
+  private async runJobs(queue: Queue) {
+    if (queue.size === 0 || this.running) {
       return;
     }
 
     this.running = true;
 
-    const { batch } = this.queue;
+    const { batch } = queue;
 
     await Promise.allSettled(
       batch.map(async (job) => {
         try {
           await new jobExecutors[job.name](this, job).run();
-          this.queue.remove(job);
+          queue.remove(job);
         } catch (e) {
           console.error(e);
         }
@@ -238,7 +265,10 @@ export class JobRunner {
           new Promise((resolve) => {
             query.addListener((jobs) => {
               for (const job of jobs) {
-                this.queue.add(job);
+                const queue = job.runConcurrently
+                  ? this.concurrentQueue
+                  : this.sequentialQueue;
+                queue.add(job);
               }
 
               if (query.hasNext) {
@@ -305,6 +335,9 @@ export class JobRunner {
     ignoreScheduledAt?: boolean,
     lastExecution?: JobExecution
   ) {
+    const queue = job.runConcurrently
+      ? this.concurrentQueue
+      : this.sequentialQueue;
     const { scheduledAt, interval } = job;
 
     if (scheduledAt && !interval) {
@@ -312,12 +345,12 @@ export class JobRunner {
 
       if (scheduledAt.getTime() < Date.now()) {
         // Overdue job, push it to the queue immediately
-        return this.queue.add(job);
+        return queue.add(job);
       }
 
       // Schedule the job to run at the scheduled time
 
-      return this.queue.add(job, scheduledAt.getTime() - Date.now());
+      return queue.add(job, scheduledAt.getTime() - Date.now());
     }
 
     if (!interval) {
@@ -337,13 +370,13 @@ export class JobRunner {
 
     if (isOverdue) {
       // Overdue job, push it to the queue immediately
-      return this.queue.add(job);
+      return queue.add(job);
     }
 
     if (scheduledAt && !ignoreScheduledAt) {
       // The job has a scheduled time, schedule it to run at the scheduled time
 
-      return this.queue.add(job, scheduledAt.getTime() - Date.now());
+      return queue.add(job, scheduledAt.getTime() - Date.now());
     }
 
     // Schedule the job to run at the next interval
@@ -353,7 +386,7 @@ export class JobRunner {
     const timeSinceLastExecution = Date.now() - lastExecutionTime;
 
     // Subtract the time since the last execution from the interval
-    return this.queue.add(job, intervalInMs - timeSinceLastExecution);
+    return queue.add(job, intervalInMs - timeSinceLastExecution);
   }
 
   async run(options: JobRunnerOptions) {
@@ -363,7 +396,7 @@ export class JobRunner {
       data: {
         status: options.paused
           ? 'PAUSED'
-          : scheduleAt || interval
+          : scheduleAt
             ? 'SCHEDULED'
             : 'PENDING',
         node: process.env.NODE_ID!,
@@ -376,6 +409,9 @@ export class JobRunner {
             })),
           },
         },
+        priority: options.priority || 0,
+        runConcurrently:
+          typeof options.concurrent === 'boolean' ? options.concurrent : false,
         maxRetries,
         interval,
         payload,
@@ -387,10 +423,12 @@ export class JobRunner {
       return job;
     }
 
-    await this.queue.add(
-      job,
-      scheduleAt ? scheduleAt.getTime() - Date.now() : undefined
-    );
+    if (scheduleAt) {
+      const queue = job.runConcurrently
+        ? this.concurrentQueue
+        : this.sequentialQueue;
+      await queue.add(job, scheduleAt.getTime() - Date.now());
+    }
 
     return job;
   }
@@ -404,13 +442,13 @@ export class JobRunner {
         typeof filterOrId === 'number'
           ? { id: filterOrId, status: 'PAUSED' }
           : {
-            AND: [
-              filterOrId,
-              {
-                status: 'PAUSED',
-              },
-            ],
-          },
+              AND: [
+                filterOrId,
+                {
+                  status: 'PAUSED',
+                },
+              ],
+            },
       include: {
         Executions: {
           take: 1,
@@ -462,33 +500,51 @@ export class JobRunner {
 
   async cancel(filterOrIds: number[] | Prisma.JobWhereInput) {
     const jobs = await prisma.job.findMany({
-      where: Array.isArray(filterOrIds)
-        ? {
-          id: {
-            in: filterOrIds,
-          },
-          status: {
-            notIn: ['CANCELLED', 'FINISHED', 'RUNNING'],
-          },
-        }
-        : {
-          AND: [
-            filterOrIds,
-            {
-              status: {
-                notIn: ['CANCELLED', 'FINISHED', 'RUNNING'],
+      where: {
+        AND: [
+          Array.isArray(filterOrIds)
+            ? {
+                id: {
+                  in: filterOrIds,
+                },
+              }
+            : filterOrIds,
+
+          {
+            OR: [
+              {
+                status: {
+                  in: ['SCHEDULED', 'PENDING', 'PAUSED'],
+                },
               },
-            },
-          ],
-        },
+              {
+                status: 'FAILED',
+                AND: [
+                  {
+                    maxRetries: null,
+                  },
+                  {
+                    tries: {
+                      lt: queryProxy.job.fields.maxRetries,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
     });
 
     for (const job of jobs) {
-      clearTimeout(this.queue.timeouts[job.id]);
-      delete this.queue.timeouts[job.id];
-      this.queue.remove(job);
-    }
+      const queue = job.runConcurrently
+        ? this.concurrentQueue
+        : this.sequentialQueue;
 
+      clearTimeout(queue.timeouts[job.id]);
+      delete queue.timeouts[job.id];
+      queue.remove(job);
+    }
 
     return await queryProxy.job.updateMany({
       where: {

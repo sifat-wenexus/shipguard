@@ -19,13 +19,15 @@ export class HandleWebhook extends Job<Payload> {
       throw new Error(`No listeners for topic: ${payload.topic}`);
     }
 
-    emitter.emit(payload.topic, {
-      shop: payload.shop,
-      webhookId: payload.webhookId,
-      payload: payload.payload,
-      topic: payload.topic,
-      apiVersion: payload.apiVersion,
-      session: await findOfflineSession(payload.shop),
-    } as WebhookContextWithSession<any, any>);
+    findOfflineSession(payload.shop).then((session) =>
+      emitter.emitAsync(payload.topic, {
+        shop: payload.shop,
+        webhookId: payload.webhookId,
+        payload: payload.payload,
+        topic: payload.topic,
+        apiVersion: payload.apiVersion,
+        session,
+      } as WebhookContextWithSession<any, any>)
+    );
   }
 }
