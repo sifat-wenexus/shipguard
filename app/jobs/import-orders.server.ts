@@ -23,14 +23,15 @@ export class ImportOrders extends Job<Payload> {
   }
 
   async fetchOrders() {
-    const since = this.job.payload?.since ?? new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 2).toISOString();
+    // const since = this.job.payload?.since ?? new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 2).toISOString();
 
     await this.updatePayload({ since: new Date().toISOString() });
 
     await this.performShopifyBulkQuery(
         `#graphql
       {
-        orders(query: "created_at:>='${since}' OR updated_at:>='${since}'", sortKey: ORDER_NUMBER) {
+        # orders(query: "created_at:>='' OR updated_at:>=''", sortKey: ORDER_NUMBER)
+        orders(sortKey: ORDER_NUMBER) {
           edges {
             node {
               id

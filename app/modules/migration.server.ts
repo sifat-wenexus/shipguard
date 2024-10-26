@@ -223,7 +223,7 @@ export class Migration {
     await jobRunner.run({
       name: 'import-orders',
       storeId: store.id,
-      interval: 60 * 60 * 3,
+      interval: 60 * 60 * 6,
       maxRetries: 5,
     });
   }
