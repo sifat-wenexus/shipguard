@@ -136,7 +136,7 @@ class Queue {
         },
       ],
       pageSize: 1000000,
-      distinct: this.concurrent ? ['storeId'] : undefined,
+      distinct: !this.concurrent ? ['storeId'] : undefined,
     });
 
     return new Promise((resolve) => {

@@ -488,9 +488,12 @@ export const orderUpdatedEvent = async ({
         'getOrder.body.data.order.displayFulfillmentStatus',
         getOrder.body.data.order.displayFulfillmentStatus,
       );
+
       const updateOrder = await queryProxy.packageProtectionOrder.update({
         data: {
-          fulfillmentStatus: 'FULFILLED',
+          fulfillmentStatus: payload.fulfillment_status === 'partial'
+            ? 'PARTIALLY_FULFILLED' : payload.fulfillment_status === 'fulfilled'
+              ? 'FULFILLED' : 'UNFULFILLED',
           protectionFee: Number(protectionFee),
           orderAmount: Number(
             getOrder.body.data.order.totalPriceSet.shopMoney

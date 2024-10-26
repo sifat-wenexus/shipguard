@@ -24,8 +24,7 @@ export class ImportOrders extends Job<Payload> {
 
   async fetchOrders() {
     // const since = this.job.payload?.since ?? new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 2).toISOString();
-
-    await this.updatePayload({ since: new Date().toISOString() });
+    // await this.updatePayload({ since: new Date().toISOString() });
 
     await this.performShopifyBulkQuery(
         `#graphql
@@ -199,15 +198,6 @@ export class ImportOrders extends Job<Payload> {
       });
 
       for (const order of orders.body.orders) {
-        const fulfillmentStatus = order.fulfillment_status === 'partial'
-          ? 'PARTIALLY_FULFILLED' : order.fulfillment_status === 'fulfilled'
-            ? 'FULFILLED' : 'UNFULFILLED';
-        const orderInDb = ordersAvailable.find((o) => o.orderId === order.admin_graphql_api_id);
-
-        if (orderInDb?.fulfillmentStatus === fulfillmentStatus) {
-          continue;
-        }
-
         await orderUpdatedEvent({
           shop: store.domain,
           payload: order,
