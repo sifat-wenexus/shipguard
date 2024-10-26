@@ -8,14 +8,20 @@ export function useDashboardData(startDate: string, endDate: string) {
     () =>
       queryProxy.packageProtectionClaimOrder.groupBy({
         where: {
-          AND: [
-            {
-              createdAt: {
-                gte: startDate,
-                lte: endDate,
-              },
+          packageProtectionOrder: {
+            orderDate: {
+              gte: startDate,
+              lte: endDate,
             },
-          ],
+          },
+          // AND: [
+          //   {
+          //     createdAt: {
+          //       gte: startDate,
+          //       lte: endDate,
+          //     },
+          //   },
+          // ],
         },
         by: 'issue',
         _count: { id: true },
@@ -28,16 +34,16 @@ export function useDashboardData(startDate: string, endDate: string) {
   const lineDataQuery = useMemo(
     () =>
       queryProxy.packageProtectionOrder.subscribeGroupBy({
-        by: ['createdAt'],
+        by: ['orderDate'],
         _sum: { orderAmount: true, refundAmount: true },
         where: {
-          createdAt: {
+          orderDate: {
             gte: startDate,
             lte: endDate,
           },
         },
         orderBy: {
-          createdAt: 'desc', // Order by date ascending
+          orderDate: 'desc', // Order by date ascending
         },
       }),
     [endDate, startDate]
@@ -52,7 +58,8 @@ export function useDashboardData(startDate: string, endDate: string) {
         },
         _count: { id: true },
         where: {
-          createdAt: {
+          hasPackageProtection: { equals: true },
+          orderDate: {
             gte: startDate,
             lte: endDate,
           },
@@ -72,7 +79,7 @@ export function useDashboardData(startDate: string, endDate: string) {
               ],
             },
             {
-              createdAt: {
+              orderDate: {
                 gte: startDate,
                 lte: endDate,
               },
@@ -89,7 +96,7 @@ export function useDashboardData(startDate: string, endDate: string) {
           AND: [
             { hasPackageProtection: true },
             {
-              createdAt: {
+              orderDate: {
                 gte: startDate,
                 lte: endDate,
               },
@@ -106,7 +113,7 @@ export function useDashboardData(startDate: string, endDate: string) {
           AND: [
             { hasPackageProtection: false },
             {
-              createdAt: {
+              orderDate: {
                 gte: startDate,
                 lte: endDate,
               },
@@ -133,12 +140,14 @@ export function useDashboardData(startDate: string, endDate: string) {
       lineDataSubscription.data
         ?.map((e) => {
           if (
-            (e._sum.orderAmount === 0 || e._sum.orderAmount) &&
-            (e._sum.refundAmount === 0 || e._sum.refundAmount)
+            (Number(e._sum.orderAmount) === 0 || e._sum.orderAmount) &&
+            (Number(e._sum.refundAmount) === 0 || e._sum.refundAmount)
           ) {
             return {
-              value: (e?._sum?.orderAmount - e._sum.refundAmount).toFixed(2),
-              key: e.createdAt,
+              value: (
+                Number(e?._sum?.orderAmount) - Number(e._sum.refundAmount)
+              ).toFixed(2),
+              key: e.orderDate,
             };
           }
 

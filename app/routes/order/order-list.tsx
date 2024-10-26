@@ -83,14 +83,14 @@ const OrderList = ({
           },
 
           {
-            createdAt: {
+            orderDate: {
               gte: startDate,
               lte: endDate,
             },
           },
         ],
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { orderDate: 'desc' },
       include: { PackageProtectionClaimOrder: true },
     });
   }, [endDate, filterItems, searchTerm, startDate]);
@@ -106,7 +106,7 @@ const OrderList = ({
             protectionFee,
             orderAmount,
             fulfillmentStatus,
-            createdAt,
+            orderDate,
             orderId,
             hasClaimRequest,
             PackageProtectionClaimOrder,
@@ -213,7 +213,7 @@ const OrderList = ({
                   </Text>
                 )}
               </IndexTable.Cell>
-              <IndexTable.Cell>{createdAt.split('T')[0]}</IndexTable.Cell>
+              <IndexTable.Cell>{orderDate.split('T')[0]}</IndexTable.Cell>
             </IndexTable.Row>
           );
         }

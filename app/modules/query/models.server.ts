@@ -70,6 +70,7 @@ export const models = defineModels(() => {
   >([
     'storeId',
     'orderId',
+    'orderDate',
     'claimDate',
     'orderName',
     'createdAt',

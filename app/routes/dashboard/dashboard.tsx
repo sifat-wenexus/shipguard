@@ -62,11 +62,9 @@ const Dashboard = ({ guidelineVisibility }) => {
 
   const data = useDashboardData(startDate, endDate);
   const { storeInfo } = useLivePageData();
-  console.log('data::', data);
 
   let renderElement: React.ReactNode = null;
-  // TODO: pending calculations for conversion rate
-  // total protected order / total order * 100
+
   const conversionRate = useMemo(() => {
     if (data.loading) {
       return 0;
@@ -105,25 +103,27 @@ const Dashboard = ({ guidelineVisibility }) => {
         tooltip:
           'Total Revenue = Total Insurance Sale - Insurance Order Refund',
         value: i18n.formatCurrency(
-          isNaN(data.total!._sum.orderAmount! - data.total!._sum.refundAmount!)
+          isNaN(
+            +data.total!._sum.orderAmount! - +data.total!._sum.refundAmount!
+          )
             ? 0
-            : data.total!._sum.orderAmount! - data.total!._sum.refundAmount!
+            : +data.total!._sum.orderAmount! - +data.total!._sum.refundAmount!
         ),
       },
       {
         title: 'Total Insurance Earning',
         value: i18n.formatCurrency(
-          isNaN(data.total!._sum.protectionFee!)
+          isNaN(+data.total!._sum.protectionFee!)
             ? 0
-            : data.total!._sum.protectionFee!
+            : +data.total!._sum.protectionFee!
         ),
       },
       {
         title: 'Insurance Order Refund',
         value: i18n.formatCurrency(
-          isNaN(data.total!._sum.refundAmount!)
+          isNaN(+data.total!._sum.refundAmount!)
             ? 0
-            : data.total!._sum.refundAmount!
+            : +data.total!._sum.refundAmount!
         ),
       },
       {
@@ -250,7 +250,7 @@ const Dashboard = ({ guidelineVisibility }) => {
   }
   return (
     <div className="m-2 sm:m-0 dashboard">
-      <Layout.Section>
+      <>
         <Text as="h1" variant="headingXl">
           Hi 👋, Welcome to Inhouse Shipping Protection
         </Text>
@@ -311,7 +311,7 @@ const Dashboard = ({ guidelineVisibility }) => {
           </Card>
         </Box>
         {/* <Tutorial /> */}
-      </Layout.Section>
+      </>
     </div>
   );
 };

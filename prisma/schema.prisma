@@ -464,10 +464,10 @@ model PackageProtectionOrder {
   refundAmount         Decimal            @default(0.00) @db.Money()
   hasPackageProtection Boolean
 
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
-  claimDate DateTime @default(now()) @db.Timestamptz()
-
+  createdAt                   DateTime                      @default(now()) @db.Timestamptz()
+  updatedAt                   DateTime                      @updatedAt @db.Timestamptz()
+  claimDate                   DateTime                      @default(now()) @db.Timestamptz()
+  orderDate                   DateTime                      @default(now()) @db.Timestamptz()
   Store                       Store                         @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   PackageProtectionClaimOrder PackageProtectionClaimOrder[]
 }
@@ -488,7 +488,6 @@ model PackageProtectionClaimOrder {
   claimStatusMessage    String?
   fulfillClaim          Boolean         @default(false)
 
-  orderDate DateTime  @default(now()) @db.Timestamptz()
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime? @updatedAt @db.Timestamptz()
 

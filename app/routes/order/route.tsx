@@ -3,6 +3,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import DateRangePicker from '../dashboard/date-range';
 import { default30Days } from '../dashboard/dashboard';
 import { PageShell } from '~/components/page-shell';
+import { ExportIcon } from '@shopify/polaris-icons';
 import { shopify } from '~/modules/shopify.server';
 import React, { useMemo, useState } from 'react';
 import { prisma } from '~/modules/prisma.server';
@@ -10,7 +11,6 @@ import { useLoaderData } from '@remix-run/react';
 import { json } from '@remix-run/node';
 import OrderList from './order-list';
 import * as XLSX from 'xlsx';
-import { ExportIcon } from '@shopify/polaris-icons';
 
 export interface IActiveDates {
   title: string;
@@ -28,7 +28,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     select: { currencyCode: true },
   });
   const data = await prisma.packageProtectionOrder.findMany({
-    where: { storeId: session.storeId, hasClaimRequest: { equals: true } },
+    where: { storeId: session.storeId },
     select: {
       orderName: true,
       customerFirstName: true,
