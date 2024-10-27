@@ -42,7 +42,7 @@ const WarningBanner = ({ storeInfo }) => {
                         storeInfo?.theme?.id
                       }/editor?context=apps&template=index&activateAppId=${
                         storeInfo.appExtensionId
-                      }/inhouse-shipping-protection`
+                      }/shipping-protection`
                     : ''
                 }
                 target="_blank"
