@@ -12,7 +12,7 @@ RUN corepack enable pnpm
 RUN pnpm install
 RUN pnpm run build
 RUN pnpx prisma generate
-RUN pnpm deploy
+RUN pnpm run deploy
 RUN pnpm prune --prod
 RUN pnpm store prune --force
 
