@@ -3,7 +3,7 @@ import { ShadowBevelBox } from '~/components/shadow-bevel-box';
 import { ContentIcon } from '@shopify/polaris-icons';
 
 const Content = ({ formState }) => {
-  const { state } = formState;
+
   return (
     <ShadowBevelBox
       icon={<Icon source={ContentIcon} />}
@@ -12,19 +12,14 @@ const Content = ({ formState }) => {
     >
       <FormLayout>
         <FormLayout.Group>
+          { formState.messages.enabledDescription?.message }
           <Box paddingBlockStart="100" paddingBlockEnd="100">
             <TextField
               label="Add-on title (Name of the insurance)"
               autoComplete="yes"
               onChange={(title) => formState.addToStaged({ title })}
-              onBlur={(event) => {
-                const target = event?.target as HTMLInputElement;
-                if (target.value !== '') {
-                  formState.commitStaged();
-                } else {
-                  formState.addToStaged({ title: state.title });
-                }
-              }}
+              error={formState.messages.title?.message}
+              onBlur={formState.commitStaged}
               value={formState.staged.title}
               showCharacterCount
               maxLength={20}
@@ -38,17 +33,9 @@ const Content = ({ formState }) => {
               onChange={(enabledDescription) =>
                 formState.addToStaged({ enabledDescription })
               }
-              onBlur={(event) => {
-                const target = event?.target as HTMLInputElement;
-                if (target.value !== '') {
-                  formState.commitStaged();
-                } else {
-                  formState.addToStaged({
-                    enabledDescription: state.enabledDescription,
-                  });
-                }
-              }}
+              error={formState.messages.enabledDescription?.message}
               value={formState.staged.enabledDescription}
+              onBlur={formState.commitStaged}
               showCharacterCount
               maxLength={70}
               multiline={2}
@@ -61,17 +48,9 @@ const Content = ({ formState }) => {
               onChange={(disabledDescription) =>
                 formState.addToStaged({ disabledDescription })
               }
-              onBlur={(event) => {
-                const target = event?.target as HTMLInputElement;
-                if (target.value !== '') {
-                  formState.commitStaged();
-                } else {
-                  formState.addToStaged({
-                    disabledDescription: state.disabledDescription,
-                  });
-                }
-              }}
+              onBlur={formState.commitStaged}
               value={formState.staged.disabledDescription}
+              error={formState.messages.disabledDescription?.message}
               showCharacterCount
               maxLength={70}
               multiline={2}
@@ -88,17 +67,9 @@ const Content = ({ formState }) => {
                   policyUrl: policyUrl.replace('https://', ''),
                 })
               }
-              onBlur={(event) => {
-                const target = event?.target as HTMLInputElement;
-                if (target.value !== '') {
-                  formState.commitStaged();
-                } else {
-                  formState.addToStaged({
-                    policyUrl: state.policyUrl,
-                  });
-                }
-              }}
+              onBlur={formState.commitStaged}
               value={formState.staged.policyUrl}
+              error={formState.messages.policyUrl?.message}
               showCharacterCount
               maxLength={100}
             />

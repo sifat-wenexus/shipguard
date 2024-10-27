@@ -329,7 +329,52 @@ const Settings = () => {
         }
       },
     },
+    title: {
+      target: 'both',
+      validate: (value: string) => {
+        if (value === '') {
+          return {
+            type: 'error',
+            message: 'This field is required.',
+          };
+        }
+      },
+    },
+    enabledDescription: {
+      target: 'both',
+      validate: (value: string) => {
+        if (value === '') {
+          return {
+            type: 'error',
+            message: 'This field is required.',
+          };
+        }
+      },
+    },
+    disabledDescription: {
+      target: 'both',
+      validate: (value: string) => {
+        if (value === '') {
+          return {
+            type: 'error',
+            message: 'This field is required.',
+          };
+        }
+      },
+    },
+    policyUrl: {
+      target: 'both',
+      validate: (value: string) => {
+        if (value === '') {
+          return {
+            type: 'error',
+            message: 'This field is required.',
+          };
+        }
+      },
+    },
   });
+
   const [enabled] = useState(data.enabled);
   const [insurancePriceError, setInsurancePriceError] = useState(false);
   const { state } = formState;

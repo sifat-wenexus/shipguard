@@ -27,13 +27,15 @@ const Preview = ({ formState }) => {
                 <h5 className="text-[1.1rem] sm:text-lg font-bold">
                   {formState.state.title}
                 </h5>
-                <Link url={formState.state.policyUrl ?? ''} target="_blank">
-                  <Icon
-                    source={InfoIcon}
-                    tone="info"
-                    accessibilityLabel="info"
-                  />
-                </Link>
+                {formState.state.policyUrl && (
+                  <Link url={formState.state.policyUrl ?? ''} target="_blank">
+                    <Icon
+                      accessibilityLabel="info"
+                      source={InfoIcon}
+                      tone="info"
+                    />
+                  </Link>
+                )}
               </span>
 
               {formState.state.insuranceDisplayButton ? (
