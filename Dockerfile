@@ -12,9 +12,9 @@ RUN corepack enable pnpm
 RUN pnpm install
 RUN pnpm run build
 RUN pnpx prisma generate
-RUN pnpm run deploy
+RUN #pnpm run deploy
 RUN pnpm prune --prod
 RUN pnpm store prune --force
-RUN cp .env .env.prod
+RUN #cp .env .env.prod
 
 CMD ["pnpm", "start"]
