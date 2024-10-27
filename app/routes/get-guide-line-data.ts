@@ -1,9 +1,10 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/react';
-import { shopify as shopifyRemix } from '../modules/shopify.server';
-import { prisma } from '../modules/prisma.server';
-import { getConfig } from '~/modules/get-config.server';
+import { getThemeFileContent, getThemeFileInfo } from '~/modules/get-theme-file-content';
 import { makeAlphaNumeric } from '~/modules/utils/alpha-numeric-string';
+import { shopify as shopifyRemix } from '../modules/shopify.server';
+import type { LoaderFunctionArgs } from '@remix-run/node';
+import { getConfig } from '~/modules/get-config.server';
+import { prisma } from '~/modules/prisma.server';
+import { json } from '@remix-run/react';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
@@ -12,7 +13,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const restAdminApi = await ctx.admin.rest.resources;
     let ebbedBlock = false;
     let claimPage = false;
-    let appExtensionId: string = '';
+
     const install = await prisma.packageProtection.findFirst({
       where: { storeId: ctx.session.storeId },
       select: { enabled: true },
@@ -33,42 +34,28 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const appName = makeAlphaNumeric(getConfig().name);
     console.log(`App Name: ${appName}`);
     try {
-      const asset = await restAdminApi.Asset.all({
-        session: ctx.session,
-        theme_id: theme?.id,
-        asset: { key: 'config/settings_data.json' },
-      });
-      if (!asset.data[0].value) {
+      const content = await getThemeFileContent(
+        'config/settings_data.json',
+        ctx.session
+      );
+
+      if (!content) {
         return json({
           theme,
           store,
           ebbedBlock,
           install: install?.enabled,
           claimPage,
-          appExtensionId,
+          appExtensionId: process.env.SHOPIFY_SHIPPING_PROTECTION_ID,
         });
       }
 
-      const blocks = await JSON.parse(asset.data[0].value).current.blocks;
-      for (const block in blocks) {
-        if (typeof blocks[block] === 'object') {
-          if (
-            blocks[block].type.includes(`${appName}/blocks/package-protection`)
-          ) {
-            ebbedBlock = !blocks[block].disabled;
-            const splitUrl = blocks[block].type.split('/');
-            appExtensionId = splitUrl[splitUrl.length - 1];
-          }
-        }
-      }
-      const template = await restAdminApi.Asset.all({
-        session: ctx.session,
-        theme_id: theme?.id,
-        // asset: { key: 'templates/page.claim-request.json' },
-      });
-      if (
-        template.data.find((t) => t.key === 'templates/page.claim-request.json')
-      ) {
+      const templateInfo = await getThemeFileInfo(
+        'templates/page.claim-request.json',
+        ctx.session
+      );
+
+      if (templateInfo) {
         claimPage = true;
         return json({
           theme,
@@ -76,7 +63,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           ebbedBlock,
           install: install?.enabled,
           claimPage,
-          appExtensionId,
+          appExtensionId: process.env.SHOPIFY_SHIPPING_PROTECTION_ID,
         });
       }
 
@@ -86,7 +73,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ebbedBlock,
         install: install?.enabled,
         claimPage,
-        appExtensionId,
+        appExtensionId: process.env.SHOPIFY_SHIPPING_PROTECTION_ID,
       });
     } catch (err) {
       console.error(err);
@@ -96,7 +83,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ebbedBlock,
         install: install?.enabled,
         claimPage,
-        appExtensionId,
+        appExtensionId: process.env.SHOPIFY_SHIPPING_PROTECTION_ID,
       });
     }
   } catch (err) {

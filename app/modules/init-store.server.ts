@@ -2,95 +2,109 @@ import { getShopifyGQLClient } from './shopify.server';
 import type { Session } from '~/shopify-api/lib';
 import { prisma } from './prisma.server';
 
-export class InitStore {
-  constructor(private readonly session: Session) {
+export async function upsertStore(session: Session) {
+  const hasStore = await prisma.store.findFirst({
+    where: {
+      domain: session.shop,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!hasStore) {
+    console.log(`Initializing store ${session.shop}`);
+  } else {
+    console.log(`Updating store ${session.shop}`);
   }
 
-  async run() {
-    const hasStore = await prisma.store.findFirst({
-      where: {
-        domain: this.session.shop,
-      },
-      select: {
-        id: true,
-      },
-    });
+  const client = getShopifyGQLClient(session);
 
-    if (hasStore) {
-      return null;
-    }
+  const { body } = await client.query<Record<string, any>>({
+    data: `#graphql
+    query {
+      currentAppInstallation {
+        id
+      }
 
-    console.log(`Initializing store ${this.session.shop}`);
-
-    const client = getShopifyGQLClient(this.session);
-
-    const { body } = await client.query<Record<string, any>>({
-      data: `#graphql
-      query {
-        currentAppInstallation {
-          id
-        }
-
-        shop {
-          id
-          name
-          email
-          description
-          ianaTimezone
-          currencyCode
-          currencyFormats {
-            moneyFormat
-            moneyInEmailsFormat
-            moneyWithCurrencyFormat
-            moneyWithCurrencyInEmailsFormat
-          }
+      shop {
+        id
+        name
+        email
+        description
+        ianaTimezone
+        currencyCode
+        currencyFormats {
+          moneyFormat
+          moneyInEmailsFormat
+          moneyWithCurrencyFormat
+          moneyWithCurrencyInEmailsFormat
         }
       }
-      `,
-      tries: 20,
-    });
+    }
+    `,
+    tries: 20,
+  });
 
-    const store = await prisma.store.create({
-      data: {
-        id: body.data.shop.id,
-        timezoneId: body.data.shop.ianaTimezone,
-        domain: this.session.shop,
-        email: body.data.shop.email,
-        name: body.data.shop.name,
-        description: body.data.shop.description,
-        appInstallationId: body.data.currentAppInstallation.id,
-        currencyCode: body.data.shop.currencyCode,
-        moneyFormat: body.data.shop.currencyFormats.moneyFormat,
-        moneyInEmailsFormat: body.data.shop.currencyFormats.moneyInEmailsFormat,
-        moneyWithCurrencyFormat:
+  const store = await prisma.store.upsert({
+    where: {
+      domain: session.shop,
+    },
+    create: {
+      id: body.data.shop.id,
+      timezoneId: body.data.shop.ianaTimezone,
+      domain: session.shop,
+      email: body.data.shop.email,
+      name: body.data.shop.name,
+      description: body.data.shop.description,
+      appInstallationId: body.data.currentAppInstallation.id,
+      currencyCode: body.data.shop.currencyCode,
+      moneyFormat: body.data.shop.currencyFormats.moneyFormat,
+      moneyInEmailsFormat: body.data.shop.currencyFormats.moneyInEmailsFormat,
+      moneyWithCurrencyFormat:
         body.data.shop.currencyFormats.moneyWithCurrencyFormat,
-        moneyWithCurrencyInEmailsFormat:
+      moneyWithCurrencyInEmailsFormat:
         body.data.shop.currencyFormats.moneyWithCurrencyInEmailsFormat,
-      },
-    });
+    },
+    update: {
+      timezoneId: body.data.shop.ianaTimezone,
+      email: body.data.shop.email,
+      name: body.data.shop.name,
+      description: body.data.shop.description,
+      appInstallationId: body.data.currentAppInstallation.id,
+      currencyCode: body.data.shop.currencyCode,
+      moneyFormat: body.data.shop.currencyFormats.moneyFormat,
+      moneyInEmailsFormat: body.data.shop.currencyFormats.moneyInEmailsFormat,
+      moneyWithCurrencyFormat:
+        body.data.shop.currencyFormats.moneyWithCurrencyFormat,
+      moneyWithCurrencyInEmailsFormat:
+        body.data.shop.currencyFormats.moneyWithCurrencyInEmailsFormat,
+    },
+  });
 
-    this.session.storeId = store.id;
+  session.storeId = store.id;
 
-    await prisma.session.update({
-      where: {
-        id: this.session.id,
-      },
-      data: {
-        storeId: store.id,
-      },
-    });
+  await prisma.session.update({
+    where: {
+      id: session.id,
+    },
+    data: {
+      storeId: store.id,
+    },
+  });
 
+  if (!hasStore) {
     await prisma.store.update({
       where: {
-        domain: this.session.shop,
+        domain: session.shop,
       },
       data: {
         appStatus: 'READY',
       },
     });
 
-    console.log(`Initialized store ${this.session.shop}`);
-
-    return store
+    console.log(`Initialized store ${session.shop}`);
   }
+
+  return store;
 }

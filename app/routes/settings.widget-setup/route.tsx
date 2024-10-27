@@ -3,6 +3,7 @@ import type {
   LinksFunction,
   LoaderFunctionArgs,
 } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import CustomizedInsuranceStyle from './components/customized-insurance-style';
 import { hexToHsba, hsbaToHexWithAlpha } from '~/modules/utils/color-utils';
 import { shopify as shopifyRemix } from '../../modules/shopify.server';
@@ -27,7 +28,6 @@ import { SaveBar } from '~/components/save-bar';
 import Preview from './components/preview';
 import Content from './components/content';
 import style from './styles/route.css';
-import { json } from '@remix-run/node';
 import Css from './components/css';
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -230,7 +230,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     currencyCode: currencyCode,
     data: {
       insurancePriceType: settingsData?.insurancePriceType ?? 'NOT_SELECTED',
-      insuranceDisplayButton: settingsData?.insuranceDisplayButton ?? false,
+      insuranceDisplayButton: settingsData?.insuranceDisplayButton ?? true,
       disabledDescription:
         settingsData?.disabledDescription ??
         'By deselecting we are not liable for lost, damaged, or stolen items.',
@@ -368,7 +368,14 @@ const Settings = () => {
           <Layout>
             <Layout.Section variant="fullWidth">
               {insurancePriceError && (
-                <Banner title="Insurance Pricing is Required." tone="warning" />
+                <>
+                  <Banner
+                    title="Insurance Pricing is Required."
+                    tone="warning"
+                  />
+
+                  <br/>
+                </>
               )}
               {<WarningBanner storeInfo={storeInfo} />}
             </Layout.Section>

@@ -10,7 +10,7 @@ import {
 import { PrismaSessionStorage } from './prisma-session-storage.server';
 import { restResources } from '~/shopify-api/rest/admin/2024-10';
 import type { Session, WebhookHandler } from '~/shopify-api/lib';
-import { InitStore } from '~/modules/init-store.server';
+import { upsertStore } from '~/modules/init-store.server';
 import { Migration } from '~/modules/migration.server';
 import { getConfig } from './get-config.server';
 import { prisma } from './prisma.server';
@@ -49,6 +49,7 @@ export const shopify = shopifyApp({
     CUSTOMERS_REDACT: webhookHandler,
     CUSTOMERS_DATA_REQUEST: webhookHandler,
     SHOP_REDACT: webhookHandler,
+    SHOP_UPDATE: webhookHandler,
   },
   hooks: {
     afterAuth: async ({ session }) => {
@@ -61,7 +62,7 @@ export const shopify = shopifyApp({
         console.log(` - ${topic}`);
       }
 
-      await new InitStore(session).run();
+      await upsertStore(session);
       await Migration.attempt(session);
     },
   },

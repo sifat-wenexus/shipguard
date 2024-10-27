@@ -60,7 +60,7 @@ const SpecialSettings = ({ formState }) => {
               onChange={() =>
                 formState.addChange({ insuranceDisplayButton: true })
               }
-              checked={formState.staged.insuranceDisplayButton}
+              checked={formState.state.insuranceDisplayButton}
               label="Default enabled"
               id="Selected"
               type="radio"
@@ -69,7 +69,7 @@ const SpecialSettings = ({ formState }) => {
               onChange={() =>
                 formState.addChange({ insuranceDisplayButton: false })
               }
-              checked={!formState.staged.insuranceDisplayButton}
+              checked={!formState.state.insuranceDisplayButton}
               label="Default off"
               id="Unselected"
               type="radio"
