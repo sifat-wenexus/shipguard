@@ -46,7 +46,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           ebbedBlock,
           install: install?.enabled,
           claimPage,
-          appExtensionId: process.env.SHOPIFY_SHIPPING_PROTECTION_ID,
+          appExtensionId: process.env.SHOPIFY_IHSP_THEME_ID,
         });
       }
 
@@ -63,7 +63,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           ebbedBlock,
           install: install?.enabled,
           claimPage,
-          appExtensionId: process.env.SHOPIFY_SHIPPING_PROTECTION_ID,
+          appExtensionId: process.env.SHOPIFY_IHSP_THEME_ID,
         });
       }
 
@@ -73,7 +73,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ebbedBlock,
         install: install?.enabled,
         claimPage,
-        appExtensionId: process.env.SHOPIFY_SHIPPING_PROTECTION_ID,
+        appExtensionId: process.env.SHOPIFY_IHSP_THEME_ID,
       });
     } catch (err) {
       console.error(err);
@@ -83,7 +83,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ebbedBlock,
         install: install?.enabled,
         claimPage,
-        appExtensionId: process.env.SHOPIFY_SHIPPING_PROTECTION_ID,
+        appExtensionId: process.env.SHOPIFY_IHSP_THEME_ID,
       });
     }
   } catch (err) {

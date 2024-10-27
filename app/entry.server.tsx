@@ -5,6 +5,7 @@ import { shopify } from '~/modules/shopify.server';
 import { RemixServer } from '@remix-run/react';
 import { isbot } from '~/modules/isbot.server';
 import { PassThrough } from 'stream';
+import dotenv from 'dotenv';
 
 import './modules/init.server';
 import './modules/job/job-runner.server';
@@ -14,6 +15,9 @@ import '~/modules/query/token-store.server';
 import './modules/query/query.server';
 
 const ABORT_DELAY = 5000;
+
+dotenv.config({ path: '.env', override: true });
+dotenv.config({ path: '.env.prod', override: true });
 
 export default async function handleRequest(
   request: Request,

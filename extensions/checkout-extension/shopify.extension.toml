@@ -6,8 +6,8 @@
 api_version = "2024-10"
 
 [[extensions]]
-name = "Shipping Protection"
-handle = "ihp-checkout"
+name = "Inhouse Shipping Protection"
+handle = "ihsp-checkout"
 type = "ui_extension"
 
 
