@@ -74,7 +74,9 @@ export async function getThemeFileInfo(
     `,
   });
 
-  return asset.body.data.themes?.edges?.[0].node.files.edges[0].node ?? null;
+  return (
+    asset.body.data.themes?.edges?.[0]?.node?.files?.edges[0]?.node ?? null
+  );
 }
 
 export async function getThemeInfo(session: Session): Promise<{

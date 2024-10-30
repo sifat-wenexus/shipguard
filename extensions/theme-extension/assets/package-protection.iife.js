@@ -72,6 +72,18 @@ var __publicField = (obj, key, value) => {
       const cart = await window.weNexusCartApi.get();
       return cart.items.filter((item) => this.variantIds.has(item.variant_id));
     }
+    async getExcludedItems() {
+      const cart = await window.weNexusCartApi.get();
+      return cart.items.filter(
+        (item) => window.WeNexusOverallPackageProtectionSettings.packageProtectionProductAndVariants.some(
+          (product) => product.excludedPackageProtectionVariants.some(
+            (variant) => Number(
+              variant.id.replace("gid://shopify/ProductVariant/", "")
+            ) === item.variant_id
+          )
+        )
+      );
+    }
     async calculate() {
       const allVariants = await this.getNonPackageProtectionItems();
       const excludeVariants = window.WeNexusOverallPackageProtectionSettings.packageProtectionProductAndVariants.map((product) => {
@@ -203,10 +215,19 @@ var __publicField = (obj, key, value) => {
     async refresh() {
       var _a;
       const nonPackageProtectionItems = await this.getNonPackageProtectionItems();
+      console.log("refresing...", nonPackageProtectionItems);
       if (!this.enabled || nonPackageProtectionItems.length === 0) {
         return this.remove();
       }
+      const excludedItems = await this.getExcludedItems();
       const ppItems = await this.getPackageProtectionItems();
+      const finalForCart = nonPackageProtectionItems.filter(
+        (item) => !excludedItems.some((ex) => ex.id === item.id)
+      );
+      console.log("finalForCart", finalForCart);
+      if (finalForCart.length === 0) {
+        return this.remove();
+      }
       const cardItems = (await window.weNexusCartApi.get()).items;
       if (((_a = ppItems[0]) == null ? void 0 : _a.quantity) === 0 || ppItems.length === 0) {
         return this.add();
@@ -280,7 +301,9 @@ var __publicField = (obj, key, value) => {
                 <img src="${this.thumbnail}" alt="logo" />
             </div>
             <div class="wenexus-package-protection__desc">
-                <h5>${this.title} <a href="https://${this.infoPageLink}" target="_blank" style="color:blue;">ⓘ</a></h5>
+                <h5>${this.title} 
+                ${this.infoPageLink ? `<a href="https://${this.infoPageLink}" target="_blank" style="color:blue;">ⓘ</a> ` : ``}
+                </h5>
                 <p> <span class="wenexus-package-protection-description">${description} </span></p>
             </div>
         </div>
@@ -598,11 +621,13 @@ var __publicField = (obj, key, value) => {
     };
     const enabledByDefault = settings.insuranceDisplayButton ?? true;
     const enabled = () => {
+      const variants = checkExcludeVariants();
       const value = localStorage.getItem("package-protection-enabled");
       if (value === "false") {
         return false;
       }
       if (value === "true") {
+        console.log(variants.length > 0 ? "true" : "false");
         return true;
       }
       if (value === null) {
@@ -718,41 +743,40 @@ var __publicField = (obj, key, value) => {
             variants.length > 0 ? enabled() : false
           );
           if (!checkbox.checked && variants.length == 0) {
-            localStorage.setItem("package-protection-enabled", "false");
             await packageProtectionApi.remove();
             (_a2 = document.getElementsByTagName("cart-items")[0]) == null ? void 0 : _a2.onCartUpdate();
             (_b2 = document.getElementsByTagName("cart-drawer-items")[0]) == null ? void 0 : _b2.onCartUpdate();
-            continue;
+          } else {
+            switch (selector.insertPosition) {
+              case "before":
+                element.insertAdjacentElement("beforebegin", container);
+                break;
+              case "after":
+                element.insertAdjacentElement("afterend", container);
+                break;
+              case "inside":
+                element.insertAdjacentElement("afterbegin", container);
+                break;
+              case "replace":
+                element.replaceWith(container);
+                break;
+            }
+            checkbox.addEventListener("change", async () => {
+              localStorage.setItem(
+                "package-protection-enabled",
+                checkbox.checked.toString()
+              );
+              packageProtectionApi.enabled = enabled();
+              checkbox.disabled = true;
+              const checkoutButton = document.querySelectorAll(
+                'button[name="checkout"]'
+              );
+              checkoutButton.forEach((e) => e.disabled = true);
+              await refresh(true);
+              checkbox.disabled = false;
+              checkoutButton.forEach((e) => e.disabled = false);
+            });
           }
-          switch (selector.insertPosition) {
-            case "before":
-              element.insertAdjacentElement("beforebegin", container);
-              break;
-            case "after":
-              element.insertAdjacentElement("afterend", container);
-              break;
-            case "inside":
-              element.insertAdjacentElement("afterbegin", container);
-              break;
-            case "replace":
-              element.replaceWith(container);
-              break;
-          }
-          checkbox.addEventListener("change", async () => {
-            localStorage.setItem(
-              "package-protection-enabled",
-              checkbox.checked.toString()
-            );
-            packageProtectionApi.enabled = enabled();
-            checkbox.disabled = true;
-            const checkoutButton = document.querySelectorAll(
-              'button[name="checkout"]'
-            );
-            checkoutButton.forEach((e) => e.disabled = true);
-            await refresh(true);
-            checkbox.disabled = false;
-            checkoutButton.forEach((e) => e.disabled = false);
-          });
         }
       });
     }

@@ -154,7 +154,7 @@ onDBEvtBuffered(
           value: data.icon,
         });
       }
-      if (data.switchColor) {
+      if (data.switchColor !== undefined) {
         metaFields.push({
           key: 'switchColor',
           namespace: 'package_protection',
@@ -162,7 +162,7 @@ onDBEvtBuffered(
           value: data.switchColor,
         });
       }
-      if (data.title) {
+      if (data.title !== undefined) {
         metaFields.push({
           key: 'title',
           namespace: 'package_protection',
@@ -171,7 +171,7 @@ onDBEvtBuffered(
         });
       }
 
-      if (data.enabledDescription) {
+      if (data.enabledDescription !== undefined) {
         metaFields.push({
           key: 'enabledDescription',
           namespace: 'package_protection',
@@ -180,7 +180,7 @@ onDBEvtBuffered(
         });
       }
 
-      if (data.disabledDescription) {
+      if (data.disabledDescription !== undefined) {
         metaFields.push({
           key: 'disabledDescription',
           namespace: 'package_protection',
@@ -188,12 +188,12 @@ onDBEvtBuffered(
           value: data.disabledDescription,
         });
       }
-      if (data.policyUrl) {
+      if (data.policyUrl !== null) {
         metaFields.push({
           key: 'policyUrl',
           namespace: 'package_protection',
-          type: 'single_line_text_field',
-          value: data.policyUrl,
+          type: 'json',
+          value: JSON.stringify(data.policyUrl),
         });
       }
       if (data.insuranceDisplayButton !== undefined) {
