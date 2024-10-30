@@ -19615,10 +19615,11 @@ ${errorInfo.componentStack}`);
     const [data, setData] = (0, import_react16.useState)({});
     const [enabled, setEnabled] = (0, import_react16.useState)(false);
     const [loading, setLoading] = (0, import_react16.useState)(false);
+    const baseUrl = "https://shipping-protection.wenexus.io";
     const totalAmount = cartLine.filter((item) => item.merchandise.sku !== "wenexus-shipping-protection").reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
     (0, import_react16.useEffect)(() => {
       fetch(
-        `https://shipping-protection.wenexus.io/checkout-extension?total=${totalAmount}&shopUrl=${shop == null ? void 0 : shop.myshopifyDomain}`
+        `${baseUrl}/checkout-extension?total=${totalAmount}&shopUrl=${shop == null ? void 0 : shop.myshopifyDomain}&cartLine=${JSON.stringify(cartLine)}`
       ).then((response) => response.json()).then((res) => {
         setVariantId(res.variantId);
         setVariantPrice(res.variantPrice);
@@ -19655,7 +19656,7 @@ ${errorInfo.componentStack}`);
       if (lineItem) {
         setEnabled(true);
       }
-    }, [cartLine]);
+    }, [cartLine, variantId]);
     return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_jsx_runtime4.Fragment, { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(View2, { border: "base", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(InlineLayout2, { columns: ["20%", "65%", "15%"], children: [
       /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
         View2,

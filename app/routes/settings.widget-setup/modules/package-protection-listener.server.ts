@@ -1060,6 +1060,7 @@ export async function shopifyProductUpdate({
   vendor,
   tags,
 }: IShopifyProductCreateAndUpdateArgs): Promise<any> {
+  if (!productId) return;
   const getOldImage = await gql.query<any>({
     data: {
       query: `#graphql
@@ -1173,7 +1174,6 @@ async function shopifyCreateProduct({
   gql,
   vendor,
 }: IShopifyProductCreateAndUpdateArgs): Promise<any> {
-  console.log('----------product creating-----------');
   const res = await gql.query<any>({
     data: {
       query: `#graphql

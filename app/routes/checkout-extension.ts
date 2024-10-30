@@ -10,8 +10,35 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
   const data = await prisma.packageProtection.findFirst({
     where: { storeId: session.storeId },
+    include: {
+      excludedPackageProtectionProducts: {
+        include: { excludedPackageProtectionVariants: true },
+      },
+    },
   });
-  const totalAmount = queryParams.total;
+
+  let totalAmount;
+
+  const excludedItems = data?.excludedPackageProtectionProducts.flatMap(
+    (item) => item.excludedPackageProtectionVariants
+  );
+
+  if (excludedItems && excludedItems?.length > 0) {
+    const cartLine = queryParams.cartLine
+      ? JSON.parse(queryParams.cartLine)
+      : null;
+
+    const removeExclude = cartLine
+      ?.filter(
+        (line) => !excludedItems.some((item) => item.id === line.merchandise.id)
+      )
+      .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection')
+      .reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
+    totalAmount = removeExclude;
+  } else {
+    totalAmount = queryParams.total;
+  }
+
   let variantId: string = '';
   let variantPrice: any = 0.0;
   if (data?.insurancePriceType === 'FIXED_PRICE') {

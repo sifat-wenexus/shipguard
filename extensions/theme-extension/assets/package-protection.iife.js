@@ -215,7 +215,6 @@ var __publicField = (obj, key, value) => {
     async refresh() {
       var _a;
       const nonPackageProtectionItems = await this.getNonPackageProtectionItems();
-      console.log("refresing...", nonPackageProtectionItems);
       if (!this.enabled || nonPackageProtectionItems.length === 0) {
         return this.remove();
       }
@@ -224,7 +223,6 @@ var __publicField = (obj, key, value) => {
       const finalForCart = nonPackageProtectionItems.filter(
         (item) => !excludedItems.some((ex) => ex.id === item.id)
       );
-      console.log("finalForCart", finalForCart);
       if (finalForCart.length === 0) {
         return this.remove();
       }
@@ -621,13 +619,11 @@ var __publicField = (obj, key, value) => {
     };
     const enabledByDefault = settings.insuranceDisplayButton ?? true;
     const enabled = () => {
-      const variants = checkExcludeVariants();
       const value = localStorage.getItem("package-protection-enabled");
       if (value === "false") {
         return false;
       }
       if (value === "true") {
-        console.log(variants.length > 0 ? "true" : "false");
         return true;
       }
       if (value === null) {

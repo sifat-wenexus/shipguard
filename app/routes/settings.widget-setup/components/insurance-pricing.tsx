@@ -29,7 +29,6 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
   const currencySymbol = i18n.formatCurrency(0).toString().slice(0, 1)[0];
   // const currencyCode = queryProxy.store.findFirst({ where: {} });
   const { state } = formState;
-  console.log({ state }, { formState });
   const [emptyIndex, setEmptyIndex] = useState(-1);
   const [warning, setWarning] = useState(false);
   const [active, setActive] = useState(false);
@@ -194,7 +193,6 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                 formState.addToStaged({ price });
               }}
               onBlur={(price: any) => {
-                console.log(price?.target.value);
                 if (Number(price?.target.value) === 0) {
                   formState.addChange({ price: '' });
                   setSingleErrorMessage('Fixed price cannot be Zero.');

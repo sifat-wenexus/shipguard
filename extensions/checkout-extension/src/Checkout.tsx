@@ -29,13 +29,18 @@ const Extension = () => {
   const [enabled, setEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const baseUrl = 'https://shipping-protection.wenexus.io';
+  // const baseUrl = 'https://keywords-sky-imports-gdp.trycloudflare.com';
+
   const totalAmount = cartLine
     .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection')
     .reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
 
   useEffect(() => {
     fetch(
-      `https://shipping-protection.wenexus.io/checkout-extension?total=${totalAmount}&shopUrl=${shop?.myshopifyDomain}`
+      `${baseUrl}/checkout-extension?total=${totalAmount}&shopUrl=${
+        shop?.myshopifyDomain
+      }&cartLine=${JSON.stringify(cartLine)}`
     )
       .then((response) => response.json())
       .then((res) => {
@@ -76,7 +81,7 @@ const Extension = () => {
     if (lineItem) {
       setEnabled(true);
     }
-  }, [cartLine]);
+  }, [cartLine, variantId]);
 
   return (
     <>
