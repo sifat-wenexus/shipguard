@@ -280,12 +280,12 @@ var __publicField = (obj, key, value) => {
                 <img src="${this.thumbnail}" alt="logo" />
             </div>
             <div class="wenexus-package-protection__desc">
-                <h5>${this.title} ${this.infoPageLink ? `<a href="https://${this.infoPageLink}" target="_blank" style="color:blue;">ⓘ</a>` : ''}</h5>
+                <h5>${this.title} <a href="https://${this.infoPageLink}" target="_blank" style="color:blue;">ⓘ</a></h5>
                 <p> <span class="wenexus-package-protection-description">${description} </span></p>
             </div>
         </div>
         <div class="wenexus-package-protection__toggle" >
-
+        
         <div style="position:relative;">
             <input type="checkbox" ${checked ? "checked" : ""} style="position:absolute; width:100%; height:100%; left:0; z-index:99; opacity:0">
 
@@ -345,35 +345,35 @@ var __publicField = (obj, key, value) => {
             margin: ${containerMargin == null ? void 0 : containerMargin.join("px ")};
             gap: ${containerGap[0]} ${containerGap[1]}px;
          }
-
+         
          .wenexus-package-protection__content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: ${contentGap[0]} ${contentGap[1]}px;
          }
-
+         
          .wenexus-package-protection__image {
             max-width: ${imageWidth}px;
             max-height: ${imageWidth}px;
 
          }
-
+         
          .wenexus-package-protection__image img {
             width: 100%;
          }
-
+         
          .wenexus-package-protection__desc h5 {
             font-size: ${titleFontSize}rem;
             margin: 0;
          }
-
+         
          .wenexus-package-protection__desc p {
             font-size: ${descriptionFontSize}rem;
             font-weight: ${descriptionFontWeight};
             margin: ${descriptionMargin == null ? void 0 : descriptionMargin.join("px ")}px;
          }
-
+         
          .wenexus-package-protection__desc a {
             text-decoration: none;
             font-size: 1.5rem;
@@ -382,12 +382,12 @@ var __publicField = (obj, key, value) => {
             transition: .3s;
             ${hideDescriptionPage ? "display: none;" : ""}
          }
-
+         
          .wenexus-package-protection__toggle {
             accent-color: ${accentColor} !important;
             zoom: 1.55;
          }
-
+         
          ${extraStyles}
       </style>`;
     }
@@ -591,7 +591,7 @@ var __publicField = (obj, key, value) => {
       for (let i = 0; i < items.length; i++) {
         const variantId = items[i].variant_id;
         if (!excludeVariants.includes(variantId)) {
-          items[i].handle !== "package-protection" && result2.push(items[i]);
+          items[i].sku !== "wenexus-shipping-protection" && result2.push(items[i]);
         }
       }
       return result2;
@@ -709,7 +709,7 @@ var __publicField = (obj, key, value) => {
         selector.boundaryParents
       );
       liveQuery.addListener(async (elements) => {
-        var _a2;
+        var _a2, _b2;
         items = await getItems();
         const variants = checkExcludeVariants();
         for (const element of elements) {
@@ -718,8 +718,10 @@ var __publicField = (obj, key, value) => {
             variants.length > 0 ? enabled() : false
           );
           if (!checkbox.checked && variants.length == 0) {
+            localStorage.setItem("package-protection-enabled", "false");
             await packageProtectionApi.remove();
             (_a2 = document.getElementsByTagName("cart-items")[0]) == null ? void 0 : _a2.onCartUpdate();
+            (_b2 = document.getElementsByTagName("cart-drawer-items")[0]) == null ? void 0 : _b2.onCartUpdate();
             continue;
           }
           switch (selector.insertPosition) {

@@ -362,17 +362,6 @@ const Settings = () => {
         }
       },
     },
-    policyUrl: {
-      target: 'both',
-      validate: (value: string) => {
-        if (value === '') {
-          return {
-            type: 'error',
-            message: 'This field is required.',
-          };
-        }
-      },
-    },
   });
 
   const [enabled] = useState(data.enabled);
@@ -419,7 +408,7 @@ const Settings = () => {
                     tone="warning"
                   />
 
-                  <br/>
+                  <br />
                 </>
               )}
               {<WarningBanner storeInfo={storeInfo} />}

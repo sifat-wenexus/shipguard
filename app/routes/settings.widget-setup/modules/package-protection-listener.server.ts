@@ -65,7 +65,6 @@ onDBEvtBuffered(
       const data = payload?.newData ?? payload?.oldData;
       const session = payload?.session;
 
-
       console.log(`Package Protection Listener: Processing store ${storeId}`);
 
       if (!data || !session) {
@@ -213,7 +212,7 @@ onDBEvtBuffered(
           value: data.insuranceFulfillmentStatus,
         });
       }
-      if (data.css) {
+      if (data.css !== undefined) {
         metaFields.push({
           key: 'css',
           namespace: 'package_protection',
@@ -501,7 +500,7 @@ onDBEvtBuffered(
               percentageProductId!,
               gql
             );
-            await prevVariants.firstPage().then( (variants) => {
+            await prevVariants.firstPage().then((variants) => {
               let price = +data.minimumFee;
               for (let i = 0; i < variants.length; i++) {
                 productVariantsUpdate.push({
@@ -1082,7 +1081,7 @@ export async function shopifyProductUpdate({
   });
 
   if (getOldImage.body.data.product.media.nodes.length > 1) {
-     await gql.query<any>({
+    await gql.query<any>({
       data: {
         query: `#graphql
       mutation productDeleteMedia($mediaIds: [ID!]!, $productId: ID!) {
@@ -1104,7 +1103,7 @@ export async function shopifyProductUpdate({
       },
       tries: 20,
     });
- await gql.query<any>({
+    await gql.query<any>({
       data: {
         query: `#graphql
     mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {

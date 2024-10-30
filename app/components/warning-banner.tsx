@@ -35,19 +35,13 @@ const WarningBanner = ({ storeInfo }) => {
                 tone="success"
                 variant="primary"
                 url={
-                  storeInfo.store
-                    ? `https://admin.shopify.com/store/${
-                        storeInfo?.store?.domain.split('.')[0]
-                      }/themes/${
-                        storeInfo?.theme?.id
-                      }/editor?context=apps&template=index&activateAppId=${
-                        storeInfo.appExtensionId
-                      }/package-protection`
+                  storeInfo.shopName
+                    ? `https://admin.shopify.com/store/${storeInfo?.shopName}/themes/${storeInfo?.ThemeId}/editor?context=apps&template=index&activateAppId=${storeInfo.appExtensionId}/shipping-protection`
                     : ''
                 }
                 target="_blank"
               >
-                Enable Package protection
+                Enable Shipping protection
               </Button>{' '}
               <Modal
                 activator={activator}
@@ -59,7 +53,7 @@ const WarningBanner = ({ storeInfo }) => {
                   onAction: () => {
                     window.open(
                       storeInfo?.store
-                        ? `https://admin.shopify.com/store/${storeInfo?.store?.name}/themes/${storeInfo?.theme?.id}/editor?context=apps`
+                        ? `https://admin.shopify.com/store/${storeInfo?.store?.name}/themes/${storeInfo?.ThemeId}/editor?context=apps`
                         : ''
                     );
                   },

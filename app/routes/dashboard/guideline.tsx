@@ -18,7 +18,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import InstructionModal from './instruction-modal';
 
-import checkoutImg from '~/assets/images/guideline/product-reviews.svg';
+import checkoutImg from '~/assets/images/guideline/9685914.webp';
 import claimPageImg from '~/assets/images/guideline/wishlist.svg';
 import packageProtectionImg from '~/assets/images/guideline/product-reviews.svg';
 import widgetImg from '~/assets/images/guideline/wishlist (1).svg';
@@ -44,7 +44,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
     setUp: false,
     enable: false,
     claim: false,
-    checkout: false,
+    smtp: false,
   });
   // useEffect(() => {
   //   if (storeInfo?.claimPage && storeInfo?.ebbedBlock && storeInfo?.install) {
@@ -60,7 +60,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
       setUp: name === 'setUp',
       enable: name === 'enable',
       claim: name === 'claim',
-      checkout: name === 'checkout',
+      smtp: name === 'smtp',
     }));
   };
 
@@ -259,7 +259,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                           display the insurance box on the cart page.
                         </span>
                         <h2 className="font-semibold text-base">
-                          Enable Package Protection
+                          Enable Shipping Protection
                         </h2>
                       </span>
 
@@ -273,14 +273,8 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                               variant="primary"
                               tone="success"
                               url={
-                                storeInfo.store
-                                  ? `https://admin.shopify.com/store/${
-                                      storeInfo?.store?.domain.split('.')[0]
-                                    }/themes/${
-                                      storeInfo?.theme?.id
-                                    }/editor?context=apps&template=index&activateAppId=${
-                                      storeInfo.appExtensionId
-                                    }/package-protection`
+                                storeInfo.shopName
+                                  ? `https://admin.shopify.com/store/${storeInfo?.shopName}/themes/${storeInfo?.ThemeId}/editor?context=apps&template=index&activateAppId=${storeInfo.appExtensionId}/shipping-protection`
                                   : ''
                               }
                               target="_blank"
@@ -368,7 +362,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
               <div className="m-4">
                 <div className="flex gap-3">
                   <span className="guideline-icon mt-1">
-                    {storeInfo?.checkout ? (
+                    {storeInfo?.smtp ? (
                       <Icon source={CheckCircleIcon} tone="success" />
                     ) : (
                       <Icon source={MenuHorizontalIcon} tone="info" />
@@ -378,19 +372,18 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                     <div>
                       <span
                         className="cursor-pointer "
-                        onClick={() => handleClick('checkout')}
+                        onClick={() => handleClick('smtp')}
                       >
                         <span className="font-light text-xs">
-                          Set up a claim page on your frontend to allow
-                          customers to submit claims, and you will receive
-                          notifications.
+                          Set up your SMTP for email notification to your
+                          customers.
                         </span>
                         <h2 className="font-semibold text-base">
-                          Setup Checkout Extension
+                          Setup SMTP Settings
                         </h2>
                       </span>
 
-                      {toggleLine?.checkout && (
+                      {toggleLine?.smtp && (
                         <>
                           <br />
                           <br />
@@ -398,16 +391,18 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                           <div className="flex gap-4 items-center">
                             <Button
                               variant="secondary"
-                              url="/settings/checkout-extension"
+                              url="/settings/smtp-setup"
                             >
-                              Setup Checkout Extension
+                              Setup SMTP Settings
                             </Button>
                           </div>
                         </>
                       )}
                     </div>
                     <div className="text-right hidden sm:block">
-                      {toggleLine.checkout && <img src={checkoutImg} alt="i" />}
+                      {toggleLine.smtp && (
+                        <img width={'160px'} src={checkoutImg} alt="i" />
+                      )}
                     </div>
                   </div>
                 </div>

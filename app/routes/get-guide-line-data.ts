@@ -1,4 +1,9 @@
-import { getThemeFileContent, getThemeFileInfo } from '~/modules/get-theme-file-content';
+import {
+  getShopInfo,
+  getThemeFileContent,
+  getThemeFileInfo,
+  getThemeInfo,
+} from '~/modules/get-theme-file-content';
 import { makeAlphaNumeric } from '~/modules/utils/alpha-numeric-string';
 import { shopify as shopifyRemix } from '../modules/shopify.server';
 import type { LoaderFunctionArgs } from '@remix-run/node';
@@ -10,26 +15,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
   try {
     const ctx = await shopifyRemix.authenticate.admin(request);
 
-    const restAdminApi = await ctx.admin.rest.resources;
     let ebbedBlock = false;
     let claimPage = false;
+    let ThemeId = '';
+    let shopName = '';
+    let smtp: string | boolean = false;
 
     const install = await prisma.packageProtection.findFirst({
       where: { storeId: ctx.session.storeId },
       select: { enabled: true },
     });
-
-    const theme = await restAdminApi.Theme.all({
-      session: ctx.session,
-    })
-      .then((r) => r.data.find((item) => item.role === 'main'))
-      .catch((err) => console.error(err));
-
-    const store = await restAdminApi.Shop.all({
-      session: ctx.session,
-    })
-      .then((r) => r.data[0])
-      .catch((err) => console.error(err));
 
     const appName = makeAlphaNumeric(getConfig().name);
     console.log(`App Name: ${appName}`);
@@ -39,15 +34,27 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ctx.session
       );
 
-      if (!content) {
-        return json({
-          theme,
-          store,
-          ebbedBlock,
-          install: install?.enabled,
-          claimPage,
-          appExtensionId: process.env.SHOPIFY_IHSP_THEME_ID,
-        });
+      if (content) {
+        const blocks = JSON.parse(content)?.current?.blocks;
+        for (const block in blocks) {
+          if (typeof blocks[block] === 'object') {
+            if (
+              blocks[block].type.includes(
+                `${process.env.SHOPIFY_IHSP_THEME_ID}`
+              )
+            ) {
+              ebbedBlock = !blocks[block].disabled;
+            }
+          }
+        }
+      }
+      const theme = await getThemeInfo(ctx.session);
+      if (theme) {
+        ThemeId = theme.id.replace('gid://shopify/OnlineStoreTheme/', '');
+      }
+      const store = await getShopInfo(ctx.session);
+      if (store) {
+        shopName = store.host.split('.')[0];
       }
 
       const templateInfo = await getThemeFileInfo(
@@ -57,19 +64,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
       if (templateInfo) {
         claimPage = true;
-        return json({
-          theme,
-          store,
-          ebbedBlock,
-          install: install?.enabled,
-          claimPage,
-          appExtensionId: process.env.SHOPIFY_IHSP_THEME_ID,
-        });
+      }
+      const smtpSetting = await prisma.smtpSetting.findFirst({
+        where: { id: ctx.session.storeId },
+      });
+      if (smtpSetting) {
+        smtp = smtpSetting.provider ?? false;
       }
 
       return json({
-        theme,
-        store,
+        smtp,
+        ThemeId,
+        shopName,
         ebbedBlock,
         install: install?.enabled,
         claimPage,
@@ -78,8 +84,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     } catch (err) {
       console.error(err);
       return json({
-        theme,
-        store,
+        smtp,
+        ThemeId,
+        shopName,
         ebbedBlock,
         install: install?.enabled,
         claimPage,
@@ -91,28 +98,3 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return json({ error: 'Error in loader', success: false });
   }
 }
-
-// abstract class Template<C = any> {
-//   abstract variables(context?: C): Promise<Record<string, any>>;
-//   abstract id: string;
-
-//   async render(context?: C): Promise<string> {
-//     const variables = await this.variables(context);
-
-//     // Fetch - Parse - Render
-
-//     return '';
-//   }
-// }
-
-// class ClaimRequestTemplate extends Template<Record<string, any>> {
-//   id = 'claim-request';
-
-//   async variables(orderId?: Record<string, any>): Promise<Record<string, any>> {
-//     return {};
-//   }
-// }
-
-// const claimReqTemplate = new ClaimRequestTemplate();
-
-// claimReqTemplate.render({});

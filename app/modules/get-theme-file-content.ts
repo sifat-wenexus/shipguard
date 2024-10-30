@@ -13,6 +13,7 @@ export async function getThemeFileContent(
       themes(first: 1, roles: [MAIN]) {
         edges {
           node {
+            id
             files(filenames: ["${path}"], first: 1) {
               edges {
                 node {
@@ -74,4 +75,48 @@ export async function getThemeFileInfo(
   });
 
   return asset.body.data.themes?.edges?.[0].node.files.edges[0].node ?? null;
+}
+
+export async function getThemeInfo(session: Session): Promise<{
+  id: string;
+  name: string;
+}> {
+  const gql = getShopifyGQLClient(session);
+
+  const asset = await gql.query<Record<string, any>>({
+    data: `#graphql
+    query {
+      themes(first: 1, roles: [MAIN]) {
+        nodes{
+          id
+          name
+        }
+      }
+    }
+    `,
+  });
+
+  return asset.body.data.themes?.nodes[0] ?? null;
+}
+
+export async function getShopInfo(session: Session): Promise<{
+  id: string;
+  host: string;
+}> {
+  const gql = getShopifyGQLClient(session);
+
+  const asset = await gql.query<Record<string, any>>({
+    data: `#graphql
+    query {
+      shop{
+        primaryDomain{
+          id
+          host
+        }
+      }
+    }
+    `,
+  });
+
+  return asset.body.data.shop?.primaryDomain ?? null;
 }
