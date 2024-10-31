@@ -7,10 +7,8 @@
     <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="update extension name and handle">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/listeners/shop.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/listeners/shop.server.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/checkout-extension.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/checkout-extension.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/modules/init-store.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/modules/init-store.server.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,9 +16,22 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="dev" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dev" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -121,6 +132,7 @@
       <workItem from="1729999109555" duration="11585000" />
       <workItem from="1730346593641" duration="3549000" />
       <workItem from="1730353702479" duration="4208000" />
+      <workItem from="1730365392329" duration="3520000" />
     </task>
     <task id="LOCAL-00001" summary="add orderDate column at PackageProtectionOrder">
       <option name="closed" value="true" />
