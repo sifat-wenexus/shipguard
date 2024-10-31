@@ -6,7 +6,7 @@ emitter.on(
   'SHOP_UPDATE',
   async ({ session }: WebhookListenerArgs) => {
     if (session) {
-      upsertStore(session);
+     await upsertStore(session);
     }
   }
 );

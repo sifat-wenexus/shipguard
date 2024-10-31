@@ -26,11 +26,12 @@ const Extension = () => {
   const [variantId, setVariantId] = useState('');
   const [variantPrice, setVariantPrice] = useState();
   const [data, setData] = useState<any>({});
+  const [hide, setHide] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  console.log(hide);
   const baseUrl = 'https://shipping-protection.wenexus.io';
-  // const baseUrl = 'https://keywords-sky-imports-gdp.trycloudflare.com';
+  // const baseUrl = 'https://levitra-iowa-specialist-acer.trycloudflare.com';
 
   const totalAmount = cartLine
     .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection')
@@ -47,6 +48,7 @@ const Extension = () => {
         setVariantId(res.variantId);
         setVariantPrice(res.variantPrice);
         setData(res.data);
+        setHide(res.hide);
       })
       .catch((err) => console.log({ err }));
   }, []);
@@ -83,6 +85,8 @@ const Extension = () => {
     }
   }, [cartLine, variantId]);
 
+  if (hide) return null;
+
   return (
     <>
       <View border={'base'}>
@@ -96,7 +100,7 @@ const Extension = () => {
           </View>
           <View padding={'base'}>
             <InlineStack>
-              <Text size="large">Package Protection</Text>
+              <Text size="large">{data.title}</Text>
             </InlineStack>
             <Text size="small" appearance="subdued">
               {enabled ? data?.enabledDescription : data?.disabledDescription}

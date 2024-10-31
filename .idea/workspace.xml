@@ -5,17 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="update extension name and handle">
-      <change beforePath="$PROJECT_DIR$/.env.prod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env.shipping-protectiondev" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/entry.server.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/entry.server.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/get-guide-line-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/get-guide-line-data.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/shopify.extension.toml" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/shopify.extension.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extensions/theme-extension/shopify.extension.toml" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/shopify.extension.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/listeners/shop.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/listeners/shop.server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/checkout-extension.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/checkout-extension.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +25,21 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;sifat-wenexus&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/WeNexus/Inhouse-Shipping-Protection.git&quot;,
+    &quot;accountId&quot;: &quot;f9e2352d-95b4-4630-a839-4cf0a7fbdc4b&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -42,7 +52,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Shell Script.run & debug.executor": "Debug",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "dev",
     "last_opened_file_path": "/home/sifat-wenexus/sifat/Package-protection",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -51,7 +61,8 @@
     "nodejs_package_manager_path": "pnpm",
     "npm.dev.executor": "Debug",
     "prettierjs.PrettierConfiguration.Package": "/home/ibrahim/Projects/Inhouse-Shipping-Protection/node_modules/prettier",
-    "ts.external.directory.path": "/home/ibrahim/.local/share/JetBrains/Toolbox/apps/webstorm/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "settings.editor.selected.configurable": "preferences.general",
+    "ts.external.directory.path": "/snap/webstorm/413/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -108,6 +119,8 @@
       <updated>1729917766232</updated>
       <workItem from="1729917767232" duration="8492000" />
       <workItem from="1729999109555" duration="11585000" />
+      <workItem from="1730346593641" duration="3549000" />
+      <workItem from="1730353702479" duration="4208000" />
     </task>
     <task id="LOCAL-00001" summary="add orderDate column at PackageProtectionOrder">
       <option name="closed" value="true" />
