@@ -115,7 +115,10 @@ export async function sendMail<T extends EmailTemplateName>(
     const gmail = new GmailAPI(options.storeId);
     await gmail.sendEmail({
       to: options.to,
-      subject: templateInDB.subject,
+      subject: await new Liquid().parseAndRender(
+        templateInDB.subject,
+        options.variables as any
+      ),
       body: await template.render(options.variables as any),
     });
 

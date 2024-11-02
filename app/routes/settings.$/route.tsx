@@ -30,6 +30,14 @@ import {
   CheckIcon,
   InfoIcon,
 } from '@shopify/polaris-icons';
+import {
+  cancelCustomerTemplate,
+  refundCustomerTemplate,
+  reOrderCustomerTemplate,
+  reqAdminTemplate,
+  reqCustomerTemplate,
+} from '../settings.email-template/components/default-template-code';
+import { Prisma } from '#prisma-client';
 
 export async function loader({ request }) {
   const ctx = await shopify.authenticate.admin(request);
@@ -110,6 +118,48 @@ export async function loader({ request }) {
         available: true,
       },
     ];
+    // email template default create
+
+    const templates = await prisma.emailTemplate.findMany({
+      where: { storeId: ctx.session.storeId },
+    });
+    if (!templates) {
+      const defaultTemplatesPayload: Prisma.EmailTemplateCreateManyInput[] = [
+        {
+          storeId: ctx.session.storeId!,
+          body: reqAdminTemplate,
+          subject: 'New Claim Request Submitted: Order {{order_id}}',
+          name: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
+        },
+        {
+          storeId: ctx.session.storeId!,
+          body: reqCustomerTemplate,
+          subject: 'Claim Request Received: Order {{order_id}}',
+          name: 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER',
+        },
+        {
+          storeId: ctx.session.storeId!,
+          body: refundCustomerTemplate,
+          subject: 'Claim Approved: Refund Issued for Order {{order_id}}',
+          name: 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER',
+        },
+        {
+          storeId: ctx.session.storeId!,
+          body: reOrderCustomerTemplate,
+          subject: 'Claim Approved: Replacement Order Confirmed for Order',
+          name: 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER',
+        },
+        {
+          storeId: ctx.session.storeId!,
+          body: cancelCustomerTemplate,
+          subject: 'Claim Request Canceled: Order {{order_id}}',
+          name: 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER',
+        },
+      ];
+      await prisma.emailTemplate.createMany({
+        data: defaultTemplatesPayload,
+      });
+    }
 
     return json({ settingsCart, settingsCartSecond, currencyCode });
   } catch (err) {

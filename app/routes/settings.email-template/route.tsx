@@ -66,55 +66,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     where: { id: ctx.session.storeId },
     select: { currencyCode: true },
   });
-
-  if (!templates.length) {
-    const defaultTemplatesPayload: Prisma.EmailTemplateCreateManyInput[] = [
-      {
-        storeId: ctx.session.storeId!,
-        body: reqAdminTemplate,
-        subject: 'New Claim Request Submitted: Order {{order_id}}',
-        name: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
-      },
-      {
-        storeId: ctx.session.storeId!,
-        body: reqCustomerTemplate,
-        subject: 'Claim Request Received: Order {{order_id}}',
-        name: 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER',
-      },
-      {
-        storeId: ctx.session.storeId!,
-        body: refundCustomerTemplate,
-        subject: 'Claim Approved: Refund Issued for Order {{order_id}}',
-        name: 'CLAIM_REFUND_EMAIL_FOR_CUSTOMER',
-      },
-      {
-        storeId: ctx.session.storeId!,
-        body: reOrderCustomerTemplate,
-        subject: 'Claim Approved: Replacement Order Confirmed for Order',
-        name: 'CLAIM_REORDER_EMAIL_FOR_CUSTOMER',
-      },
-      {
-        storeId: ctx.session.storeId!,
-        body: cancelCustomerTemplate,
-        subject: 'Claim Request Canceled: Order {{order_id}}',
-        name: 'CLAIM_CANCEL_EMAIL_FOR_CUSTOMER',
-      },
-    ];
-    await prisma.emailTemplate.createMany({
-      data: defaultTemplatesPayload,
-    });
-    return json({
-      message: 'something is wrong',
-      data: {
-        templates: null,
-        currencyCode,
-      },
-      storeId: ctx.session.storeId,
-      appUrl,
-      // logo,
-    });
-  }
-
   return json({
     message: 'Successfully fetched templates!',
     data: {

@@ -41,11 +41,14 @@ export async function action({ request }: ActionFunctionArgs) {
     const provider = data.get('provider');
 
     if (provider === 'google') {
-      await queryProxy.googleAuthCredential.delete({
-        where: {
-          id: session.storeId,
+      await queryProxy.googleAuthCredential.delete(
+        {
+          where: {
+            id: session.storeId,
+          },
         },
-      }, { session });
+        { session }
+      );
 
       return json({
         message: 'Google account disconnected.',
@@ -54,7 +57,8 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     return json({
-      message: 'Something went wrong, please try again. If the problem persists, contact support.',
+      message:
+        'Something went wrong, please try again. If the problem persists, contact support.',
       success: false,
     });
   }
@@ -62,16 +66,19 @@ export async function action({ request }: ActionFunctionArgs) {
   if (action === 'save') {
     const payload = JSON.parse(data.get('state')! as string);
 
-    await queryProxy.smtpSetting.upsert({
-      where: {
-        id: session.storeId,
+    await queryProxy.smtpSetting.upsert(
+      {
+        where: {
+          id: session.storeId,
+        },
+        create: {
+          id: session.storeId,
+          ...payload,
+        },
+        update: payload,
       },
-      create: {
-        id: session.storeId,
-        ...payload,
-      },
-      update: payload,
-    }, { session });
+      { session }
+    );
 
     return json({
       message: 'SMTP settings saved.',
@@ -91,7 +98,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const storeEmail = settings.Store.email;
     const to = data.get('email') as string;
 
-    const subject = data.get('subject') as string || 'Test Email';
+    const subject = (data.get('subject') as string) || 'Test Email';
     const body = `
 
 
@@ -171,7 +178,8 @@ padding:0px 10px}
 
         return json({
           success: false,
-          message: 'Something went wrong, please try again. If the problem persists, contact support.',
+          message:
+            'Something went wrong, please try again. If the problem persists, contact support.',
         });
       }
 
@@ -182,7 +190,8 @@ padding:0px 10px}
 
         return json({
           success: false,
-          message: 'Something went wrong, please try again. If the problem persists, contact support.',
+          message:
+            'Something went wrong, please try again. If the problem persists, contact support.',
         });
       }
 
@@ -229,205 +238,214 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 const SMTP = () => {
   const loaderData = useLoaderData<typeof loader>();
-  const [provider, setProvider] = useState<string>(loaderData.smtpSettings?.provider || 'google');
+  const [provider, setProvider] = useState<string>(
+    loaderData.smtpSettings?.provider || 'google'
+  );
   const fetcher = useBetterFetcher();
   const reValidator = useRevalidator();
   const [viewPassword, setViewPassword] = useState(false);
 
-  const initialState: Omit<SmtpSetting, 'id' | 'createdAt'> = useMemo(() => loaderData.smtpSettings || {
-    provider: provider || 'google',
-    protocol: 'smtp',
-    from: null,
-    host: null,
-    port: 25,
-    username: null,
-    password: null,
-    timeout: 10000,
-    tlsVersion: null,
-    useProxy: false,
-    proxyHost: null,
-    proxyPort: null,
-    proxyUsername: null,
-    proxyPassword: null,
-  }, [loaderData.smtpSettings, provider]);
-  const validators: Record<string, Validator<typeof initialState>> = useMemo(() => ({
-    from: {
-      target: 'staged',
-      validate(value, state) {
-        if (state.provider !== 'custom') {
-          return;
-        }
-
-        if (!value) {
-          return {
-            message: 'Mail from is required.',
-            type: 'error',
-          };
-        }
-
-        const input = document.createElement('input');
-        input.type = 'email';
-        input.value = value;
-
-        if (!input.checkValidity()) {
-          return {
-            message: 'Invalid email address.',
-            type: 'error',
-          };
-        }
+  const initialState: Omit<SmtpSetting, 'id' | 'createdAt'> = useMemo(
+    () =>
+      loaderData.smtpSettings || {
+        provider: provider || 'google',
+        protocol: 'smtp',
+        from: null,
+        host: null,
+        port: null,
+        username: null,
+        password: null,
+        timeout: 1000,
+        tlsVersion: null,
+        useProxy: false,
+        proxyHost: null,
+        proxyPort: null,
+        proxyUsername: null,
+        proxyPassword: null,
       },
-    },
-    protocol: {
-      target: 'staged',
-      validate(value, state) {
-        if (state.provider !== 'custom') {
-          return;
-        }
+    [loaderData.smtpSettings, provider]
+  );
+  const validators: Record<string, Validator<typeof initialState>> = useMemo(
+    () => ({
+      from: {
+        target: 'staged',
+        validate(value, state) {
+          if (state.provider !== 'custom') {
+            return;
+          }
 
-        if (!value) {
-          return {
-            message: 'Protocol is required.',
-            type: 'error',
-          };
-        }
-      },
-    },
-    host: {
-      target: 'staged',
-      validate(value, state) {
-        if (state.provider !== 'custom') {
-          return;
-        }
+          if (!value) {
+            return {
+              message: 'Mail from is required.',
+              type: 'error',
+            };
+          }
 
-        if (!value) {
-          return {
-            message: 'Host is required.',
-            type: 'error',
-          };
-        }
-      },
-    },
-    port: {
-      target: 'staged',
-      validate(value, state) {
-        if (state.provider !== 'custom') {
-          return;
-        }
+          const input = document.createElement('input');
+          input.type = 'email';
+          input.value = value;
 
-        if (!value) {
-          return {
-            message: 'Port is required.',
-            type: 'error',
-          };
-        }
+          if (!input.checkValidity()) {
+            return {
+              message: 'Invalid email address.',
+              type: 'error',
+            };
+          }
+        },
       },
-    },
-    username: {
-      target: 'staged',
-      validate(value, state) {
-        if (state.provider !== 'custom') {
-          return;
-        }
+      protocol: {
+        target: 'staged',
+        validate(value, state) {
+          if (state.provider !== 'custom') {
+            return;
+          }
 
-        if (!value) {
-          return {
-            message: 'Username is required.',
-            type: 'error',
-          };
-        }
+          if (!value) {
+            return {
+              message: 'Protocol is required.',
+              type: 'error',
+            };
+          }
+        },
       },
-    },
-    password: {
-      target: 'staged',
-      validate(value, state) {
-        if (state.provider !== 'custom') {
-          return;
-        }
+      host: {
+        target: 'staged',
+        validate(value, state) {
+          if (state.provider !== 'custom') {
+            return;
+          }
 
-        if (!value) {
-          return {
-            message: 'Password is required.',
-            type: 'error',
-          };
-        }
+          if (!value) {
+            return {
+              message: 'Host is required.',
+              type: 'error',
+            };
+          }
+        },
       },
-    },
-    timeout: {
-      target: 'staged',
-      validate(value, state) {
-        if (state.provider !== 'custom') {
-          return;
-        }
+      port: {
+        target: 'staged',
+        validate(value, state) {
+          if (state.provider !== 'custom') {
+            return;
+          }
 
-        if (!value) {
-          return {
-            message: 'Timeout is required.',
-            type: 'error',
-          };
-        }
+          if (!value) {
+            return {
+              message: 'Port is required.',
+              type: 'error',
+            };
+          }
+        },
       },
-    },
-    proxyHost: {
-      target: 'staged',
-      validate(value, state) {
-        if (state.provider !== 'custom' || !state.useProxy) {
-          return;
-        }
+      username: {
+        target: 'staged',
+        validate(value, state) {
+          if (state.provider !== 'custom') {
+            return;
+          }
 
-        if (!value) {
-          return {
-            message: 'Proxy Host is required.',
-            type: 'error',
-          };
-        }
+          if (!value) {
+            return {
+              message: 'Username is required.',
+              type: 'error',
+            };
+          }
+        },
       },
-    },
-    proxyPort: {
-      target: 'staged',
-      validate(value, state) {
-        if (state.provider !== 'custom' || !state.useProxy) {
-          return;
-        }
+      password: {
+        target: 'staged',
+        validate(value, state) {
+          if (state.provider !== 'custom') {
+            return;
+          }
 
-        if (!value) {
-          return {
-            message: 'Proxy Port is required.',
-            type: 'error',
-          };
-        }
+          if (!value) {
+            return {
+              message: 'Password is required.',
+              type: 'error',
+            };
+          }
+        },
       },
-    },
-    proxyUsername: {
-      target: 'staged',
-      validate(value, state) {
-        if (state.provider !== 'custom' || !state.useProxy) {
-          return;
-        }
+      timeout: {
+        target: 'staged',
+        validate(value, state) {
+          if (state.provider !== 'custom') {
+            return;
+          }
 
-        if (!value) {
-          return {
-            message: 'Proxy Username is required.',
-            type: 'error',
-          };
-        }
+          if (!value) {
+            return {
+              message: 'Timeout is required.',
+              type: 'error',
+            };
+          }
+        },
       },
-    },
-    proxyPassword: {
-      target: 'staged',
-      validate(value, state) {
-        if (state.provider !== 'custom' || !state.useProxy) {
-          return;
-        }
+      proxyHost: {
+        target: 'staged',
+        validate(value, state) {
+          if (state.provider !== 'custom' || !state.useProxy) {
+            return;
+          }
 
-        if (!value) {
-          return {
-            message: 'Proxy Password is required.',
-            type: 'error',
-          };
-        }
+          if (!value) {
+            return {
+              message: 'Proxy Host is required.',
+              type: 'error',
+            };
+          }
+        },
       },
-    },
-  }), []);
+      proxyPort: {
+        target: 'staged',
+        validate(value, state) {
+          if (state.provider !== 'custom' || !state.useProxy) {
+            return;
+          }
+
+          if (!value) {
+            return {
+              message: 'Proxy Port is required.',
+              type: 'error',
+            };
+          }
+        },
+      },
+      proxyUsername: {
+        target: 'staged',
+        validate(value, state) {
+          if (state.provider !== 'custom' || !state.useProxy) {
+            return;
+          }
+
+          if (!value) {
+            return {
+              message: 'Proxy Username is required.',
+              type: 'error',
+            };
+          }
+        },
+      },
+      proxyPassword: {
+        target: 'staged',
+        validate(value, state) {
+          if (state.provider !== 'custom' || !state.useProxy) {
+            return;
+          }
+
+          if (!value) {
+            return {
+              message: 'Proxy Password is required.',
+              type: 'error',
+            };
+          }
+        },
+      },
+    }),
+    []
+  );
 
   const formState = useFormState(initialState, false, validators);
   const { state, staged } = formState;
@@ -447,27 +465,40 @@ const SMTP = () => {
     { label: 'Custom', value: 'custom' },
   ];
 
-  const googleAuthQuery = useMemo(() => queryProxy.googleAuthCredential.subscribeFindFirst(), []);
+  const googleAuthQuery = useMemo(
+    () => queryProxy.googleAuthCredential.subscribeFindFirst(),
+    []
+  );
   const googleAuth = useQuery(googleAuthQuery);
 
-  const isGmailConnected = useMemo(() => !!(loaderData.googleUserInfo || googleAuth.data?.payload), [googleAuth.data?.payload, loaderData.googleUserInfo]);
+  const isGmailConnected = useMemo(
+    () => !!(loaderData.googleUserInfo || googleAuth.data?.payload),
+    [googleAuth.data?.payload, loaderData.googleUserInfo]
+  );
 
   const authorize = useCallback(async () => {
-    const url = await fetch('/google-oauth-url').then(r => r.text());
+    const url = await fetch('/google-oauth-url').then((r) => r.text());
 
-    window.open(url, '_blank'/*, `height=800,width=800,toolbar=no,resizable=no,left=${window.screen.width / 2 - 400},top=${window.screen.height / 2 - 400}`*/);
+    window.open(
+      url,
+      '_blank' /*, `height=800,width=800,toolbar=no,resizable=no,left=${window.screen.width / 2 - 400},top=${window.screen.height / 2 - 400}`*/
+    );
   }, []);
 
   const disconnectGmail = useCallback(async () => {
-    await fetcher.submit({
-      toast: true,
-      loading: true,
-    }, {
-      action: 'disconnect',
-      provider: 'google',
-    }, {
-      method: 'POST',
-    });
+    await fetcher.submit(
+      {
+        toast: true,
+        loading: true,
+      },
+      {
+        action: 'disconnect',
+        provider: 'google',
+      },
+      {
+        method: 'POST',
+      }
+    );
   }, [fetcher]);
 
   const save = useCallback(async () => {
@@ -477,30 +508,40 @@ const SMTP = () => {
       return;
     }
 
-    await fetcher.submit({
-      toast: true,
-      loading: true,
-    }, {
-      action: 'save',
-      state: JSON.stringify(state),
-    }, {
-      method: 'POST',
-    });
-
+    await fetcher.submit(
+      {
+        toast: true,
+        loading: true,
+      },
+      {
+        action: 'save',
+        state: JSON.stringify(state),
+      },
+      {
+        method: 'POST',
+      }
+    );
   }, [fetcher, formState, state]);
 
-  const test = useCallback(async (email: string, subject: string) => {
-    await fetcher.submit({
-      toast: true,
-      loading: true,
-    }, {
-      action: 'test',
-      email,
-      subject,
-    }, {
-      method: 'POST',
-    });
-  }, [fetcher]);
+  const test = useCallback(
+    async (email: string, subject: string) => {
+      await fetcher.submit(
+        {
+          toast: true,
+          loading: true,
+        },
+        {
+          action: 'test',
+          email,
+          subject,
+        },
+        {
+          method: 'POST',
+        }
+      );
+    },
+    [fetcher]
+  );
 
   useEffect(() => {
     if (isGmailConnected && !loaderData.googleUserInfo) {
@@ -530,7 +571,8 @@ const SMTP = () => {
                       value={provider}
                       tone="magic"
                       onChange={() => {
-                        const provider = state.provider === 'google' ? 'custom' : 'google';
+                        const provider =
+                          state.provider === 'google' ? 'custom' : 'google';
 
                         setProvider(provider);
                         formState.addChange({ provider });
@@ -540,22 +582,42 @@ const SMTP = () => {
                   {provider === 'google' ? (
                     <Box paddingBlockStart="200" paddingBlockEnd="200">
                       <AccountConnection
-                        details={!isGmailConnected ? 'Connect with your Google account to send emails using Gmail\'s SMTP server.' : `Your Google account is connected.`}
-                        avatarUrl={loaderData.googleUserInfo?.picture || GmailLogo}
-                        title={loaderData.googleUserInfo?.email || 'Google Account'}
+                        details={
+                          !isGmailConnected
+                            ? "Connect with your Google account to send emails using Gmail's SMTP server."
+                            : `Your Google account is connected.`
+                        }
+                        avatarUrl={
+                          loaderData.googleUserInfo?.picture || GmailLogo
+                        }
+                        title={
+                          loaderData.googleUserInfo?.email || 'Google Account'
+                        }
                         connected={isGmailConnected}
                         accountName="Google"
                         action={{
                           content: isGmailConnected ? 'Disconnect' : 'Connect',
-                          onAction: isGmailConnected ? disconnectGmail : authorize,
+                          onAction: isGmailConnected
+                            ? disconnectGmail
+                            : authorize,
                           external: !isGmailConnected,
                         }}
                         termsOfService={
                           isGmailConnected ? null : (
                             <p>
-                              By connecting your Google account, you agree to accept our{' '} <Link
-                              to="/terms-of-service" className="underline">Terms of Service</Link> and{' '} <Link
-                              to="/privacy-policy" className="underline">Privacy Policy</Link>.
+                              By connecting your Google account, you agree to
+                              accept our{' '}
+                              <Link
+                                to="/terms-of-service"
+                                className="underline"
+                              >
+                                Terms of Service
+                              </Link>{' '}
+                              and{' '}
+                              <Link to="/privacy-policy" className="underline">
+                                Privacy Policy
+                              </Link>
+                              .
                             </p>
                           )
                         }
@@ -565,7 +627,9 @@ const SMTP = () => {
                     <>
                       <Box paddingBlockStart="200" paddingBlockEnd="200">
                         <TextField
-                          onChange={(value) => formState.addToStaged({ from: value })}
+                          onChange={(value) =>
+                            formState.addToStaged({ from: value })
+                          }
                           error={formState.messages.from?.message}
                           onBlur={() => formState.commitStaged()}
                           placeholder="name@company.com"
@@ -583,7 +647,9 @@ const SMTP = () => {
                           </Text>
                           <br />
                           <Select
-                            onChange={(value) => formState.addChange({ protocol: value })}
+                            onChange={(value) =>
+                              formState.addChange({ protocol: value })
+                            }
                             error={formState.messages.protocol?.message}
                             options={protocolOptions}
                             value={state.protocol!}
@@ -599,7 +665,9 @@ const SMTP = () => {
                             width="100%"
                           >
                             <TextField
-                              onChange={(value) => formState.addToStaged({ host: value })}
+                              onChange={(value) =>
+                                formState.addToStaged({ host: value })
+                              }
                               error={formState.messages.host?.message}
                               onBlur={() => formState.commitStaged()}
                               placeholder="localhost"
@@ -616,7 +684,9 @@ const SMTP = () => {
                             width="100%"
                           >
                             <TextField
-                              onChange={(value) => formState.addToStaged({ port: parseInt(value) })}
+                              onChange={(value) =>
+                                formState.addToStaged({ port: parseInt(value) })
+                              }
                               error={formState.messages.port?.message}
                               onBlur={() => formState.commitStaged()}
                               value={staged.port?.toString()}
@@ -624,11 +694,11 @@ const SMTP = () => {
                               label="SMTP Port"
                               requiredIndicator
                               placeholder="25"
+                              type="number"
                               tone="magic"
                             />
                           </Box>{' '}
                         </div>
-
                         <div className="sm:flex gap-2">
                           <Box
                             paddingBlockStart="200"
@@ -636,7 +706,9 @@ const SMTP = () => {
                             width="100%"
                           >
                             <TextField
-                              onChange={(value) => formState.addToStaged({ username: value })}
+                              onChange={(value) =>
+                                formState.addToStaged({ username: value })
+                              }
                               error={formState.messages.username?.message}
                               onBlur={() => formState.commitStaged()}
                               placeholder="Enter username"
@@ -653,7 +725,9 @@ const SMTP = () => {
                             width="100%"
                           >
                             <TextField
-                              onChange={(value) => formState.addToStaged({ password: value })}
+                              onChange={(value) =>
+                                formState.addToStaged({ password: value })
+                              }
                               onBlur={() => formState.commitStaged()}
                               error={formState.messages.password?.message}
                               suffix={
@@ -673,10 +747,13 @@ const SMTP = () => {
                             />
                           </Box>
                         </div>
-
                         <Box paddingBlockStart="200" paddingBlockEnd="200">
                           <TextField
-                            onChange={(value) => formState.addToStaged({ timeout: parseInt(value) })}
+                            onChange={(value) =>
+                              formState.addToStaged({
+                                timeout: parseInt(value),
+                              })
+                            }
                             error={formState.messages.timeout?.message}
                             onBlur={() => formState.commitStaged()}
                             value={staged.timeout?.toString()}
@@ -684,6 +761,7 @@ const SMTP = () => {
                             autoComplete="true"
                             placeholder="10000"
                             requiredIndicator
+                            type="number"
                             tone="magic"
                           />
                         </Box>{' '}
@@ -691,16 +769,21 @@ const SMTP = () => {
                           <div className="flex items-center gap-2">
                             <SwitchButton
                               on={!!state.tlsVersion}
-                              onChange={(on) => formState.addChange({
-                                tlsVersion: on ? 'TLSv1.2' : null,
-                              })}
-                            /> Enable TLS
+                              onChange={(on) =>
+                                formState.addChange({
+                                  tlsVersion: on ? 'TLSv1.2' : null,
+                                })
+                              }
+                            />{' '}
+                            Enable TLS
                           </div>
                         </Box>{' '}
                         {state.tlsVersion && (
                           <Box paddingBlockStart="200" paddingBlockEnd="200">
                             <Select
-                              onChange={(value) => formState.addChange({ tlsVersion: value })}
+                              onChange={(value) =>
+                                formState.addChange({ tlsVersion: value })
+                              }
                               options={TLSVersionOptions}
                               value={state.tlsVersion}
                               label="TLS Version"
@@ -712,9 +795,11 @@ const SMTP = () => {
                           <div className="flex items-center gap-2">
                             <SwitchButton
                               on={state.useProxy}
-                              onChange={(useProxy) => formState.addChange({ useProxy })}
-                            /> Enable
-                            Proxy
+                              onChange={(useProxy) =>
+                                formState.addChange({ useProxy })
+                              }
+                            />{' '}
+                            Enable Proxy
                           </div>
                         </Box>
                         {state.useProxy && (
@@ -727,7 +812,9 @@ const SMTP = () => {
                                 width="100%"
                               >
                                 <TextField
-                                  onChange={(value) => formState.addToStaged({ proxyHost: value })}
+                                  onChange={(value) =>
+                                    formState.addToStaged({ proxyHost: value })
+                                  }
                                   error={formState.messages.proxyHost?.message}
                                   onBlur={() => formState.commitStaged()}
                                   value={staged.proxyHost!}
@@ -743,7 +830,11 @@ const SMTP = () => {
                                 width="100%"
                               >
                                 <TextField
-                                  onChange={(value) => formState.addToStaged({ proxyPort: parseInt(value) })}
+                                  onChange={(value) =>
+                                    formState.addToStaged({
+                                      proxyPort: parseInt(value),
+                                    })
+                                  }
                                   error={formState.messages.proxyPort?.message}
                                   value={staged.proxyPort?.toString()}
                                   autoComplete="true"
@@ -760,8 +851,14 @@ const SMTP = () => {
                                 width="100%"
                               >
                                 <TextField
-                                  onChange={(value) => formState.addToStaged({ proxyUsername: value })}
-                                  error={formState.messages.proxyUsername?.message}
+                                  onChange={(value) =>
+                                    formState.addToStaged({
+                                      proxyUsername: value,
+                                    })
+                                  }
+                                  error={
+                                    formState.messages.proxyUsername?.message
+                                  }
                                   onBlur={() => formState.commitStaged()}
                                   value={staged.proxyUsername!}
                                   autoComplete="true"
@@ -775,8 +872,14 @@ const SMTP = () => {
                                 width="100%"
                               >
                                 <TextField
-                                  onChange={(value) => formState.addToStaged({ proxyPassword: value })}
-                                  error={formState.messages.proxyPassword?.message}
+                                  onChange={(value) =>
+                                    formState.addToStaged({
+                                      proxyPassword: value,
+                                    })
+                                  }
+                                  error={
+                                    formState.messages.proxyPassword?.message
+                                  }
                                   onBlur={() => formState.commitStaged()}
                                   value={staged.proxyPassword!}
                                   label="Proxy Password"
@@ -919,24 +1022,24 @@ const SMTP = () => {
 
                   <Box paddingBlockStart="200" paddingBlockEnd="200">
                     <div className="flex gap-2 justify-end">
+                      {Boolean(
+                        state.provider === 'google' && isGmailConnected
+                      ) || loaderData.smtpSettings?.id ? (
+                        <SendTestEmail onTest={test} />
+                      ) : null}
 
-                      {
-                        Boolean(state.provider === 'google' && isGmailConnected) || loaderData.smtpSettings?.id ? (
-                          <SendTestEmail onTest={test} />
-                        ) : null
-                      }
-
-                      {
-                        provider === 'custom' || loaderData.smtpSettings?.provider !== 'google' ? (
-                          <button
-                            className="px-4 py-2 bg-[#006558] text-white font-bold shadow-md rounded-md disabled:opacity-40"
-                            disabled={Boolean(state.provider === 'google' && !isGmailConnected)}
-                            onClick={save}
-                          >
-                            Save
-                          </button>
-                        ) : null
-                      }
+                      {provider === 'custom' ||
+                      loaderData.smtpSettings?.provider !== 'google' ? (
+                        <button
+                          className="px-4 py-2 bg-[#006558] text-white font-bold shadow-md rounded-md disabled:opacity-40"
+                          disabled={Boolean(
+                            state.provider === 'google' && !isGmailConnected
+                          )}
+                          onClick={save}
+                        >
+                          Save
+                        </button>
+                      ) : null}
                     </div>
                   </Box>
                 </div>

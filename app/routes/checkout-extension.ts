@@ -105,7 +105,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       (a: any, b: any) => a.price - b.price
     );
     const percentValue = (Number(totalAmount) * data.percentage) / 100;
-    console.log('percent::', percentValue, variants);
+
     if (variants && variants?.length > 0) {
       if (percentValue < Number(variants[0].price)) {
         variantId = variants[0].id!;
