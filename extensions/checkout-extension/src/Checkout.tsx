@@ -29,9 +29,10 @@ const Extension = () => {
   const [hide, setHide] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(hide);
+  // console.log(hide);
   const baseUrl = 'https://shipping-protection.wenexus.io';
-  // const baseUrl = 'https://levitra-iowa-specialist-acer.trycloudflare.com';
+  // const baseUrl = 'https://jefferson-developed-coast-livecam.trycloudflare.com';
+
 
   const totalAmount = cartLine
     .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection')

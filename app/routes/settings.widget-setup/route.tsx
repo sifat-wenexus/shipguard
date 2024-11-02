@@ -366,7 +366,7 @@ const Settings = () => {
 
   const [enabled] = useState(data.enabled);
   const [insurancePriceError, setInsurancePriceError] = useState(false);
-  const { state } = formState;
+  const { state, } = formState;
   const { storeInfo } = useLivePageData();
 
   const save = useCallback(async () => {

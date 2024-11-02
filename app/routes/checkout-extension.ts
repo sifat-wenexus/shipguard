@@ -18,7 +18,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   });
 
   let totalAmount;
-  let hide=false;
+  let hide = false;
 
   const excludedItems = data?.excludedPackageProtectionProducts.flatMap(
     (item) => item.excludedPackageProtectionVariants
@@ -30,16 +30,14 @@ export const loader: LoaderFunction = async ({ request }) => {
       : null;
 
     const removeExclude = cartLine
+      .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection')
       ?.filter(
         (line) => !excludedItems.some((item) => item.id === line.merchandise.id)
-      )
-      .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection')
-      .reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
+      ).reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
     totalAmount = removeExclude;
-    if(removeExclude===0) {
-      hide=true
+    if (removeExclude === 0) {
+      hide = true;
     }
-
   } else {
     totalAmount = queryParams.total;
   }
@@ -83,7 +81,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       data,
       variantId: variantId,
       variantPrice: variantPrice,
-      hide
+      hide,
     },
     {
       headers: {

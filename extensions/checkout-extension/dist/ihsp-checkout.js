@@ -19616,7 +19616,6 @@ ${errorInfo.componentStack}`);
     const [hide, setHide] = (0, import_react16.useState)(false);
     const [enabled, setEnabled] = (0, import_react16.useState)(false);
     const [loading, setLoading] = (0, import_react16.useState)(false);
-    console.log(hide);
     const baseUrl = "https://shipping-protection.wenexus.io";
     const totalAmount = cartLine.filter((item) => item.merchandise.sku !== "wenexus-shipping-protection").reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
     (0, import_react16.useEffect)(() => {
