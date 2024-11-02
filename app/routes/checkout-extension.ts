@@ -81,6 +81,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       data,
       variantId: variantId,
       variantPrice: variantPrice,
+      totalAmount,
       hide,
     },
     {

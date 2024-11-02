@@ -7,7 +7,6 @@
     <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="update extension name and handle">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routes/checkout-extension.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/checkout-extension.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/route.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" afterDir="false" />
@@ -33,7 +32,7 @@
     </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="dev" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -61,24 +60,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Shell Script.run &amp; debug.executor&quot;: &quot;Debug&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/sifat-wenexus/sifat/Package-protection&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
-    &quot;npm.dev.executor&quot;: &quot;Debug&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/home/ibrahim/Projects/Inhouse-Shipping-Protection/node_modules/prettier&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/snap/webstorm/413/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Shell Script.run & debug.executor": "Debug",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/sifat-wenexus/sifat/Package-protection",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "pnpm",
+    "npm.dev.executor": "Debug",
+    "prettierjs.PrettierConfiguration.Package": "/home/ibrahim/Projects/Inhouse-Shipping-Protection/node_modules/prettier",
+    "settings.editor.selected.configurable": "preferences.general",
+    "ts.external.directory.path": "/snap/webstorm/413/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration default="true" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="pnpm run dev" />

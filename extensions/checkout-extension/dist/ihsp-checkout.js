@@ -19619,8 +19619,9 @@ ${errorInfo.componentStack}`);
     const baseUrl = "https://shipping-protection.wenexus.io";
     const totalAmount = cartLine.filter((item) => item.merchandise.sku !== "wenexus-shipping-protection").reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
     (0, import_react16.useEffect)(() => {
+      const payload = cartLine.filter((line) => line.merchandise.sku !== "wenexus-shipping-protection");
       fetch(
-        `${baseUrl}/checkout-extension?total=${totalAmount}&shopUrl=${shop == null ? void 0 : shop.myshopifyDomain}&cartLine=${JSON.stringify(cartLine)}`
+        `${baseUrl}/checkout-extension?total=${totalAmount}&shopUrl=${shop == null ? void 0 : shop.myshopifyDomain}&cartLine=${JSON.stringify(payload)}`
       ).then((response) => response.json()).then((res) => {
         setVariantId(res.variantId);
         setVariantPrice(res.variantPrice);

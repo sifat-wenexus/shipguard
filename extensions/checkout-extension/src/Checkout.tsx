@@ -39,10 +39,13 @@ const Extension = () => {
     .reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
 
   useEffect(() => {
+
+    const payload=cartLine.filter(line=>line.merchandise.sku !== 'wenexus-shipping-protection');
+
     fetch(
       `${baseUrl}/checkout-extension?total=${totalAmount}&shopUrl=${
         shop?.myshopifyDomain
-      }&cartLine=${JSON.stringify(cartLine)}`
+      }&cartLine=${JSON.stringify(payload)}`
     )
       .then((response) => response.json())
       .then((res) => {
