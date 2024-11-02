@@ -33,7 +33,8 @@ export const loader: LoaderFunction = async ({ request }) => {
       .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection')
       ?.filter(
         (line) => !excludedItems.some((item) => item.id === line.merchandise.id)
-      ).reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
+      )
+      .reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
     totalAmount = removeExclude;
     if (removeExclude === 0) {
       hide = true;
@@ -51,6 +52,48 @@ export const loader: LoaderFunction = async ({ request }) => {
     });
     variantId = variant?.Variants[0].id!;
     variantPrice = variant?.Variants[0].price!;
+  }
+  if (data?.insurancePriceType === 'FIXED_MULTIPLE') {
+    function getProtectionFees(totalAmount) {
+      const fixedMultiplePlanArray = (data?.fixedMultiplePlan || []) as Array<{
+        cartMaxPrice: string;
+        cartMinPrice: string;
+        protectionFees: string;
+      }>;
+
+      const rule = fixedMultiplePlanArray?.find(
+        (rule) =>
+          totalAmount >= parseFloat(rule.cartMinPrice) &&
+          totalAmount <= parseFloat(rule.cartMaxPrice)
+      );
+
+      if (rule) {
+        return rule.protectionFees;
+      } else {
+        return null;
+        // return Math.max(
+        //   ...fixedMultiplePlanArray?.map((rule) =>
+        //     parseFloat(rule.protectionFees)
+        //   )
+        // );
+      }
+    }
+    const fixedMultipleAmount = getProtectionFees(totalAmount);
+    if (fixedMultipleAmount) {
+      const variant = await prisma.product.findFirst({
+        where: { id: data?.fixedProductId! },
+        include: {
+          Variants: {
+            where: { price: { equals: fixedMultipleAmount } },
+            select: { id: true, price: true },
+          },
+        },
+      });
+      variantId = variant?.Variants[0].id!;
+      variantPrice = fixedMultipleAmount;
+    } else {
+      hide = true;
+    }
   }
   if (data?.insurancePriceType === 'PERCENTAGE') {
     const productAndVariants = await prisma.product.findFirst({

@@ -9,7 +9,6 @@
       <change beforePath="$PROJECT_DIR$/app/routes/checkout-extension.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/checkout-extension.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +63,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Shell Script.run & debug.executor": "Debug",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "dev",
     "last_opened_file_path": "/home/sifat-wenexus/sifat/Package-protection",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
