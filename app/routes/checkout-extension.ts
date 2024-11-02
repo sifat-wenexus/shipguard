@@ -95,6 +95,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       hide = true;
     }
   }
+  let v: any = [];
   if (data?.insurancePriceType === 'PERCENTAGE') {
     const productAndVariants = await prisma.product.findFirst({
       where: { id: data.percentageProductId! },
@@ -102,8 +103,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     });
     const variants = productAndVariants?.Variants;
     const percentValue = (Number(totalAmount) * data.percentage) / 100;
-
-    if (variants) {
+    console.log('percent::', percentValue, variants);
+    if (variants && variants?.length > 0) {
       if (percentValue < Number(variants[0].price)) {
         variantId = variants[0].id!;
         variantPrice = variants[0].price!;
@@ -114,8 +115,12 @@ export const loader: LoaderFunction = async ({ request }) => {
         const variant = variants?.find((v) => Number(v.price) >= percentValue);
         variantId = variant?.id!;
         variantPrice = variant?.price!;
+        v = variant;
       }
     }
+  }
+  if (data?.insurancePriceType === 'NOT_SELECTED') {
+    hide = true;
   }
 
   return json(
@@ -126,6 +131,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       variantPrice: variantPrice,
       totalAmount,
       hide,
+      v,
     },
     {
       headers: {
