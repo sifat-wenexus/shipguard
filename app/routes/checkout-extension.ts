@@ -108,7 +108,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       if (percentValue < Number(variants[0].price)) {
         variantId = variants[0].id!;
         variantPrice = variants[0].price!;
-      } else if (percentValue > Number(variants[variants.length - 1])) {
+      } else if (percentValue > Number(variants[variants.length - 1].price)) {
         variantId = variants[variants.length - 1].id!;
         variantPrice = variants[variants.length - 1].price!;
       } else {
