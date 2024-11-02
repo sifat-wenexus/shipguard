@@ -101,7 +101,9 @@ export const loader: LoaderFunction = async ({ request }) => {
       where: { id: data.percentageProductId! },
       include: { Variants: { select: { id: true, price: true } } },
     });
-    const variants = productAndVariants?.Variants;
+    const variants = productAndVariants?.Variants.sort(
+      (a: any, b: any) => a.price - b.price
+    );
     const percentValue = (Number(totalAmount) * data.percentage) / 100;
     console.log('percent::', percentValue, variants);
     if (variants && variants?.length > 0) {
