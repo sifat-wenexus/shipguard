@@ -58,7 +58,7 @@ export function useDashboardData(startDate: string, endDate: string) {
         },
         _count: { id: true },
         where: {
-          hasPackageProtection: { equals: true },
+          //hasPackageProtection: { equals: true },
           orderDate: {
             gte: startDate,
             lte: endDate,
