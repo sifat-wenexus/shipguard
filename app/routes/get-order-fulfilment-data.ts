@@ -34,7 +34,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     if (!getPackageProtectionOrder) {
       return json({
-        error: 'No order found with the email and orderId!',
+        error: 'No order found with the email and order Id!',
         status: 404,
       });
     }
