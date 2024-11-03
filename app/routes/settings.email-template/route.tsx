@@ -124,7 +124,7 @@ const EmailTemplate = () => {
   );
   const packageProtection = useQuery(dataQuery);
   const logo = packageProtection.data?.emailTemplateLogo
-    ? `${appUrl}/api/files/${packageProtection.data?.emailTemplateLogo}`
+    ? `${appUrl}api/files/${packageProtection.data?.emailTemplateLogo}`
     : null;
 
   useEffect(() => {
