@@ -191,7 +191,7 @@ const ClaimFulfillModal = ({
     0
   );
 
-  const { taxRate, taxPercentage, taxTitle } = fulfillmentLineItems[0];
+  const { taxRate, taxPercentage, taxTitle } = fulfillmentLineItems[0]||{};
 
   const totalVat =
     fulfillmentLineItems

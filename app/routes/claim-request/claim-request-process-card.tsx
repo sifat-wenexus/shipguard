@@ -34,7 +34,7 @@ const ClaimRequestProcessCard = ({
   }
 
   const { claimStatus, fulfillmentLineItems } = data;
-  const { taxRate } = fulfillmentLineItems[0];
+  const { taxRate } = fulfillmentLineItems[0]||{};
   const totalAmount = fulfillmentLineItems.reduce(
     (a, b) =>
       a +
