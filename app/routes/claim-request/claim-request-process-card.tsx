@@ -107,6 +107,7 @@ const ClaimRequestProcessCard = ({
                 {
                   id,
                   title,
+                  compareAtPrice,
                   originalPrice,
                   discountPrice,
                   quantity,
@@ -148,13 +149,15 @@ const ClaimRequestProcessCard = ({
                       </div>
                     </IndexTable.Cell>
                     <IndexTable.Cell>
-                      <Text
-                        textDecorationLine="line-through"
-                        as="span"
-                        tone="subdued"
-                      >
-                        {i18n.formatCurrency(Number(originalPrice))}
-                      </Text>
+                      { Number(originalPrice) < Number(compareAtPrice) &&
+                        <Text
+                          textDecorationLine="line-through"
+                          as="span"
+                          tone="subdued"
+                        >
+                          {i18n.formatCurrency(Number(compareAtPrice))}
+                        </Text>
+                      }
                       &nbsp;{' '}
                       {i18n.formatCurrency(
                         Number(originalPrice) - Number(discountPrice)

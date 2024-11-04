@@ -240,6 +240,7 @@ const ClaimFulfillModal = ({
               {
                 id,
                 title,
+                compareAtPrice,
                 originalPrice,
                 discountPrice,
                 quantity,
@@ -286,13 +287,15 @@ const ClaimFulfillModal = ({
                     </div>
                   </IndexTable.Cell>
                   <IndexTable.Cell>
-                    <Text
-                      textDecorationLine="line-through"
-                      as="span"
-                      tone="subdued"
-                    >
-                      {i18n.formatCurrency(Number(originalPrice))}
-                    </Text>
+                    {Number(discountPrice) <Number(compareAtPrice)&&
+                      <Text
+                        textDecorationLine="line-through"
+                        as="span"
+                        tone="subdued"
+                      >
+                        {i18n.formatCurrency(Number(compareAtPrice))}
+                      </Text>
+                    }
                     &nbsp;{' '}
                     {i18n.formatCurrency(
                       Number(originalPrice) - Number(discountPrice)

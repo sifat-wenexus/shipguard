@@ -93,6 +93,9 @@ export const loader: LoaderFunction = async ({ request }) => {
                           ratePercentage
                           title
                         }
+                        variant{
+                          compareAtPrice
+                        }
                         discountAllocations {
                           allocatedAmountSet {
                             shopMoney {
@@ -147,19 +150,19 @@ export const loader: LoaderFunction = async ({ request }) => {
         hasClaim:
           packageProtectionOrder?.PackageProtectionClaimOrder[0]
             .hasClaimRequest,
-
         claimStatus: f.claimStatus,
         comments: f.comments,
         claimStatusMessage: f.claimStatusMessage,
         imageUrls,
         fulfillClaim: f.fulfillClaim,
         locationId: f.location?.id,
-        fulfillmentLineItems: f.fulfillmentLineItems.nodes.map((node) => {
+        fulfillmentLineItems: f.fulfillmentLineItems.nodes.filter(node=>packageProtectionOrder?.PackageProtectionClaimOrder?.every(item=>item.fulfillmentLineItemId===node.id)).map((node) => {
           return {
             lineItemId: node?.id,
             quantity: node?.quantity,
             itemId: node?.lineItem?.id,
             name: node?.lineItem?.name,
+            compareAtPrice: node?.lineItem?.variant?.compareAtPrice,
             originalPrice:
               node?.lineItem?.originalUnitPriceSet?.shopMoney?.amount,
             discountPrice:

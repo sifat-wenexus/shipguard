@@ -709,6 +709,9 @@ video {
 .w-\[16px\] {
   width: 16px;
 }
+.w-\[230px\] {
+  width: 230px;
+}
 .w-\[3\.5rem\] {
   width: 3.5rem;
 }
@@ -759,8 +762,14 @@ video {
   margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1rem * var(--tw-space-y-reverse));
 }
+.overflow-hidden {
+  overflow: hidden;
+}
 .overflow-x-auto {
   overflow-x: auto;
+}
+.text-ellipsis {
+  text-overflow: ellipsis;
 }
 .whitespace-nowrap {
   white-space: nowrap;

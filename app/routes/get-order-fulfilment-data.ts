@@ -167,6 +167,9 @@ export const loader: LoaderFunction = async ({ request }) => {
                   quantity
                   lineItem {
                     name
+                    variant {
+                      compareAtPrice
+                    }
                     discountAllocations {
                       allocatedAmountSet {
                         shopMoney {
@@ -240,6 +243,7 @@ export const loader: LoaderFunction = async ({ request }) => {
                   currencyCode:
                     item.lineItem.discountAllocations[0]?.allocatedAmountSet
                       ?.shopMoney?.currencyCode,
+                  compareAtPrice:item?.lineItem?.variant?.compareAtPrice,
                   image: item.lineItem.image?.url,
                   name: item.lineItem.name,
                   originalPrice:

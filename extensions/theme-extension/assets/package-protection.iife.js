@@ -562,7 +562,8 @@ var __publicField = (obj, key, value) => {
       Array.from(cartIcon).forEach(
         (el) => el.innerHTML = items.item_count.toString()
       );
-      const des = await this.getDescription();
+      const checkoutSwitch = localStorage.getItem("package-protection-enabled");
+      const des = checkoutSwitch === "true" ? this.enabledDescription : this.disabledDescription;
       const descriptionElements = document.getElementsByClassName(
         "wenexus-package-protection-description"
       );
