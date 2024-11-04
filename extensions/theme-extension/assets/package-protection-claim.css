@@ -273,6 +273,11 @@ progress[value]:after {
     display: none;
   }
 }
+.custom-font-size > table,
+span,
+div {
+  font-size: 13px;
+}
 *,
 :before,
 :after {
@@ -737,6 +742,9 @@ video {
 .justify-between {
   justify-content: space-between;
 }
+.gap-1 {
+  gap: 0.25rem;
+}
 .gap-2 {
   gap: 0.5rem;
 }
@@ -1029,6 +1037,12 @@ video {
   --tw-ring-color: rgb(59 130 246 / var(--tw-ring-opacity));
 }
 @media (min-width: 640px) {
+  .sm\:mb-0 {
+    margin-bottom: 0;
+  }
+  .sm\:flex {
+    display: flex;
+  }
   .sm\:rounded-lg {
     border-radius: 0.5rem;
   }
