@@ -19,6 +19,11 @@ const ABORT_DELAY = 5000;
 dotenv.config({ path: '.env', override: true });
 dotenv.config({ path: '.env.prod', override: true });
 
+
+if(process.env.NODE_ENV === 'production') {
+  console.log= ()=>{}
+}
+
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
