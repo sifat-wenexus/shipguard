@@ -8,7 +8,7 @@ import {
   InlineGrid,
   Link,
   Text,
-  Thumbnail,
+  Thumbnail, Tooltip,
 } from '@shopify/polaris';
 import { useI18n } from '@shopify/react-i18n';
 import ClaimStatusModal from './claim-status-modal';
@@ -134,9 +134,19 @@ const ClaimRequestProcessCard = ({
                       >
                         <Thumbnail source={image} size="small" alt={name} />
                         <div>
-                          <Text variant="bodyMd" fontWeight="bold" as="span">
-                            {title}
-                          </Text>
+                          <Tooltip content={title}>
+                            <div className="w-[200px] overflow-hidden text-ellipsis ">
+                              <Text
+                                variant="bodyMd"
+                                fontWeight="bold"
+                                as="span"
+                                breakWord={true}
+                              >
+                                {title}
+                              </Text>
+                            </div>
+                          </Tooltip>
+
                           <Text
                             as="span"
                             variant="bodySm"
@@ -149,7 +159,7 @@ const ClaimRequestProcessCard = ({
                       </div>
                     </IndexTable.Cell>
                     <IndexTable.Cell>
-                      { Number(originalPrice) < Number(compareAtPrice) &&
+                      {Number(originalPrice) < Number(compareAtPrice) && (
                         <Text
                           textDecorationLine="line-through"
                           as="span"
@@ -157,7 +167,7 @@ const ClaimRequestProcessCard = ({
                         >
                           {i18n.formatCurrency(Number(compareAtPrice))}
                         </Text>
-                      }
+                      )}
                       &nbsp;{' '}
                       {i18n.formatCurrency(
                         Number(originalPrice) - Number(discountPrice)

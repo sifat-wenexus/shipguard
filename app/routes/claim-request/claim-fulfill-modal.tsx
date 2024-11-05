@@ -10,7 +10,7 @@ import {
   Select,
   Text,
   TextField,
-  Thumbnail,
+  Thumbnail, Tooltip,
 } from '@shopify/polaris';
 
 export type IClaimType =
@@ -272,9 +272,19 @@ const ClaimFulfillModal = ({
                     >
                       <Thumbnail source={image} size="small" alt={name} />
                       <div>
-                        <Text variant="bodyMd" fontWeight="bold" as="span">
-                          {title}
-                        </Text>
+                        <Tooltip content={title}>
+                          <div className="w-[200px] overflow-hidden text-ellipsis ">
+                            <Text
+                              variant="bodyMd"
+                              fontWeight="bold"
+                              as="span"
+                              breakWord={true}
+                            >
+                              {title}
+                            </Text>
+                          </div>
+                        </Tooltip>
+
                         <Text
                           as="span"
                           variant="bodySm"

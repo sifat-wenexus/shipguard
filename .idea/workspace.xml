@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/claim-request/claim-fulfill-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/claim-request/claim-fulfill-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/claim-request/claim-request-process-card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/claim-request/claim-request-process-card.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection-claim.css" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection-claim.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection-claim.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection-claim.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -61,7 +64,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Shell Script.run & debug.executor": "Debug",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "dev",
     "last_opened_file_path": "/home/sifat-wenexus/sifat/Package-protection",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
