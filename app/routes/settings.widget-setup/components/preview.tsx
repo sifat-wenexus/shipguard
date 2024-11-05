@@ -71,7 +71,7 @@ const Preview = ({ formState }) => {
                   </div>
                 )}
               </div>
-              <span className="font-bold">$149.99</span>
+              <span className="font-bold">$800.00</span>
             </div>
           </div>
         </Box>
