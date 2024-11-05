@@ -71,7 +71,7 @@ const Preview = ({ formState }) => {
                   </div>
                 )}
               </div>
-              <span className="font-bold">$800.00</span>
+              <span className="font-bold">$149.99</span>
             </div>
           </div>
         </Box>
@@ -80,10 +80,7 @@ const Preview = ({ formState }) => {
           className="bg-gray-950 text-gray-300 font-semibold text-base p-3 my-3 rounded w-full hover:bg-black hover:text-gray-100 disabled:bg-slate-600 disabled:cursor-not-allowed disabled:text-gray-300"
           // disabled={!formState.staged.checked}
         >
-          Checkout $
-          {formState.state.insurancePriceType === 'PERCENTAGE'
-            ? 800 + (800 / 100) * Number(formState.state.percentage)
-            : 800 + Number(formState.state.price)}
+          Checkout {formState.state.insuranceDisplayButton? '$949.99':'$800.00'}
         </button>
       </ShadowBevelBox>
       <Box paddingBlockEnd={'200'}></Box>

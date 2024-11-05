@@ -222,7 +222,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
             {planByValues.map((item, index) => (
               <div
                 key={index}
-                className={`sm:flex gap-2 justify-center items-center my-2 ${
+                className={`sm:flex gap-2 justify-center items-center my-4 border-b-2 pb-4  ${
                   emptyIndex === index
                     ? 'ring-2 ring-red-300 rounded-md p-2'
                     : ''
@@ -230,7 +230,6 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
               >
                 <TextField
                   label="Protection Fees"
-                  placeholder="Enter Protection Fees"
                   autoComplete="off"
                   type="number"
                   onChange={(value) => {
@@ -240,46 +239,53 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                   value={item.protectionFees}
                   prefix={currencySymbol}
                 />
-                <TextField
-                  label="Cart Min Price"
-                  placeholder="Enter Cart Min Price"
-                  autoComplete="off"
-                  type="number"
-                  prefix={currencySymbol}
-                  value={item.cartMinPrice}
-                  onChange={(value) => {
-                    if (Number(value) < 0) return;
-                    handleChange(index, value, 'min-price');
-                  }}
-                />
-                <TextField
-                  label="Cart Max Price"
-                  placeholder="Enter Cart Max Price"
-                  autoComplete="off"
-                  type="number"
-                  prefix={currencySymbol}
-                  value={item.cartMaxPrice}
-                  onChange={(value) => {
-                    if (Number(value) < 0) return;
-                    handleChange(index, value, 'max-price');
-                  }}
-                />
-                <div className="mt-4">
-                  <Button
-                    onClick={() => handleRemoveItem(index)}
-                    size="large"
-                    icon={
-                      <Icon
-                        accessibilityLabel="delete-plan-item"
-                        source={DeleteIcon}
-                      />
-                    }
-                  ></Button>
+                <div className="flex gap-2 mt-2 sm:mt-0">
+                  <TextField
+                    label="Cart Min Price"
+                    autoComplete="off"
+                    type="number"
+                    prefix={currencySymbol}
+                    value={item.cartMinPrice}
+                    onChange={(value) => {
+                      if (Number(value) < 0) return;
+                      handleChange(index, value, 'min-price');
+                    }}
+                  />
+                  <TextField
+                    label="Cart Max Price"
+                    autoComplete="off"
+                    type="number"
+                    prefix={currencySymbol}
+                    value={item.cartMaxPrice}
+                    onChange={(value) => {
+                      if (Number(value) < 0) return;
+                      handleChange(index, value, 'max-price');
+                    }}
+                  />
                 </div>
+
+                {planByValues.length>1&&
+                  <div className="mt-4 text-center">
+                    <Button
+                      onClick={() => handleRemoveItem(index)}
+                      size="large"
+                      tone="critical"
+                      variant="primary"
+                      icon={
+                        <Icon
+                          accessibilityLabel="delete-plan-item"
+                          source={DeleteIcon}
+                        />
+                      }
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                }
               </div>
             ))}
             <div className="flex justify-center my-4">
-              <Button variant="primary" onClick={handleAddItem}>
+              <Button variant="primary" tone="success" onClick={handleAddItem}>
                 Add New Plan
               </Button>
             </div>
