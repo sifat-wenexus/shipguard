@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/claim-request/claim-fulfill-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/claim-request/claim-fulfill-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/claim-request/claim-request-process-card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/claim-request/claim-request-process-card.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/get-claim-order-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/get-claim-order-data.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection-claim.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection-claim.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,6 +135,7 @@
       <workItem from="1730604789991" duration="4071000" />
       <workItem from="1730691238707" duration="2000" />
       <workItem from="1730699497733" duration="992000" />
+      <workItem from="1730777761979" duration="9000" />
     </task>
     <task id="LOCAL-00001" summary="add orderDate column at PackageProtectionOrder">
       <option name="closed" value="true" />
@@ -210,17 +209,5 @@
     <MESSAGE value="update extension name and handle" />
     <MESSAGE value="added log for live debug" />
     <option name="LAST_COMMIT_MESSAGE" value="added log for live debug" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app/routes/get-claim-order-data.ts</url>
-          <line>158</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
