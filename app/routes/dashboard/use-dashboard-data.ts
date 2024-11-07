@@ -3,17 +3,27 @@ import { queryProxy } from '~/modules/query/query-proxy';
 import { useQuery } from '~/hooks/use-query';
 import { useMemo } from 'react';
 
-export function useDashboardData(startDate: string, endDate: string) {
+export function useDashboardData(
+  startDate: string,
+  endDate: string,
+  storeId: string
+) {
   const pieDataQuery = useMemo(
     () =>
       queryProxy.packageProtectionClaimOrder.groupBy({
         where: {
-          packageProtectionOrder: {
-            orderDate: {
-              gte: startDate,
-              lte: endDate,
+          AND: [
+            { storeId: { equals: storeId } },
+            {
+              packageProtectionOrder: {
+                orderDate: {
+                  gte: startDate,
+                  lte: endDate,
+                },
+              },
             },
-          },
+          ],
+
           // AND: [
           //   {
           //     createdAt: {
@@ -37,10 +47,17 @@ export function useDashboardData(startDate: string, endDate: string) {
         by: ['orderDate'],
         _sum: { orderAmount: true, refundAmount: true },
         where: {
-          orderDate: {
-            gte: startDate,
-            lte: endDate,
-          },
+          AND: [
+            {
+              storeId: { equals: storeId },
+            },
+            {
+              orderDate: {
+                gte: startDate,
+                lte: endDate,
+              },
+            },
+          ],
         },
         orderBy: {
           orderDate: 'desc', // Order by date ascending
@@ -59,10 +76,15 @@ export function useDashboardData(startDate: string, endDate: string) {
         _count: { id: true },
         where: {
           //hasPackageProtection: { equals: true },
-          orderDate: {
-            gte: startDate,
-            lte: endDate,
-          },
+          AND: [
+            { storeId: { equals: storeId } },
+            {
+              orderDate: {
+                gte: startDate,
+                lte: endDate,
+              },
+            },
+          ],
         },
       }),
     [endDate, startDate]
@@ -72,6 +94,7 @@ export function useDashboardData(startDate: string, endDate: string) {
       queryProxy.packageProtectionOrder.subscribeCount({
         where: {
           AND: [
+            { storeId: { equals: storeId } },
             {
               AND: [
                 { hasClaimRequest: true },
@@ -94,6 +117,7 @@ export function useDashboardData(startDate: string, endDate: string) {
       queryProxy.packageProtectionOrder.subscribeCount({
         where: {
           AND: [
+            { storeId: { equals: storeId } },
             { hasPackageProtection: true },
             {
               orderDate: {
@@ -111,6 +135,7 @@ export function useDashboardData(startDate: string, endDate: string) {
       queryProxy.packageProtectionOrder.subscribeCount({
         where: {
           AND: [
+            { storeId: { equals: storeId } },
             { hasPackageProtection: false },
             {
               orderDate: {

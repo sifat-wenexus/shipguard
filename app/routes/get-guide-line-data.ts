@@ -79,6 +79,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ebbedBlock,
         install: install?.enabled,
         claimPage,
+        storeId:ctx.session.storeId,
         appExtensionId: process.env.SHOPIFY_IHSP_THEME_ID,
       });
     } catch (err) {
@@ -90,6 +91,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ebbedBlock,
         install: install?.enabled,
         claimPage,
+        storeId:ctx.session.storeId,
         appExtensionId: process.env.SHOPIFY_IHSP_THEME_ID,
       });
     }

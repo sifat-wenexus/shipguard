@@ -60,8 +60,8 @@ const Dashboard = ({ guidelineVisibility }) => {
       new Date().toISOString(); //.split('T')[0];
   // let startPoint = 0;
 
-  const data = useDashboardData(startDate, endDate);
   const { storeInfo } = useLivePageData();
+  const data = useDashboardData(startDate, endDate,storeInfo?.storeId);
 
   let renderElement: React.ReactNode = null;
 
