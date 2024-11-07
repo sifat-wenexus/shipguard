@@ -40,8 +40,10 @@ var __publicField = (obj, key, value) => {
   let XHRCustom = _XHRCustom;
   const _CartApi = class _CartApi {
     constructor(fetchFn) {
+      __publicField(this, "queue", /* @__PURE__ */ new Set());
       __publicField(this, "listeners", /* @__PURE__ */ new Set());
       __publicField(this, "cart", null);
+      __publicField(this, "running", false);
       this.fetchFn = fetchFn;
       if (!_CartApi.instance) {
         _CartApi.instance = this;
@@ -69,6 +71,17 @@ var __publicField = (obj, key, value) => {
         },
         true
       );
+      const queueRaw = localStorage.getItem("wenexus-cart-queue");
+      if (queueRaw) {
+        this.queue = new Set(JSON.parse(queueRaw));
+      }
+      this.runQueue(this.queue.size > 0);
+      window.addEventListener("beforeunload", (evt) => {
+        if (this.queue.size > 0) {
+          evt.preventDefault();
+          return "Cart updates are still in progress. Are you sure you want to leave?";
+        }
+      });
     }
     getCartEndpoint(url) {
       const urlStr = typeof url === "string" ? url : url.toString();
@@ -109,14 +122,60 @@ var __publicField = (obj, key, value) => {
     removeListener(listener) {
       this.listeners.delete(listener);
     }
-    async request(type, payload, trigger = true) {
-      const response = await this.fetchFn.call(window, `/cart/${type}.js`, {
-        method: "POST",
-        headers: payload ? {
-          "Content-Type": "application/json"
-        } : void 0,
-        body: payload ? JSON.stringify(payload) : void 0
+    async runQueue(recovered = false) {
+      if (this.running) {
+        return;
+      }
+      this.running = true;
+      for (const request of this.queue) {
+        this.queue.delete(request);
+        localStorage.setItem(
+          "wenexus-cart-queue",
+          JSON.stringify(Array.from(this.queue))
+        );
+        const response = await this.fetchFn.call(
+          window,
+          `/cart/${request.type}.js`,
+          {
+            method: "POST",
+            headers: request.payload ? {
+              "Content-Type": "application/json"
+            } : void 0,
+            body: request.payload ? JSON.stringify(request.payload) : void 0
+          }
+        );
+        window.dispatchEvent(
+          new CustomEvent(`wenexus-cart-response-${request.id}`, {
+            detail: response
+          })
+        );
+      }
+      this.running = false;
+      if (recovered) {
+        alert("Recovered from lost cart updates");
+        this.notifyListeners("add");
+      }
+      if (this.queue.size > 0) {
+        setTimeout(() => this.runQueue(), 10);
+      }
+    }
+    waitForResponse(id) {
+      return new Promise((resolve) => {
+        window.addEventListener(
+          `wenexus-cart-response-${id}`,
+          (event) => resolve(event.detail)
+        );
       });
+    }
+    async request(type, payload, trigger = true) {
+      const id = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      this.queue.add({ id, type, payload, trigger });
+      localStorage.setItem(
+        "wenexus-cart-queue",
+        JSON.stringify(Array.from(this.queue))
+      );
+      this.runQueue();
+      const response = await this.waitForResponse(id);
       if (trigger) {
         return {
           cart: await this.notifyListeners(type),
@@ -211,7 +270,7 @@ var __publicField = (obj, key, value) => {
       );
     }
     async replace(items, trigger = true) {
-      await this.clear(false);
+      this.clear(false);
       return this.append(items, trigger);
     }
     async clear(trigger = true) {

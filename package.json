@@ -61,6 +61,7 @@
     "react-dom": "^18.3.1",
     "react-draft-wysiwyg": "^1.15.0",
     "remix-utils": "^7.7.0",
+    "rsuite": "^5.74.1",
     "semver": "^7.6.3",
     "tslib": "^2.7.0",
     "uuid": "^9.0.1",

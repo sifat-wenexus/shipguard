@@ -30,7 +30,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       : null;
 
     const removeExclude = cartLine
-      .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection')
+      .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection.tsx')
       ?.filter(
         (line) => !excludedItems.some((item) => item.id === line.merchandise.id)
       )

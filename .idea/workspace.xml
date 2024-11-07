@@ -5,9 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/banner.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/calim-management.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/claim-process.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/common/header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/common/subtitle.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/faq.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/footer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/how-it-works.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/nav-bar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/overview.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/pricing.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/shipping-protection.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/smtp.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/components/widget-setting.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/landing-page/route.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/insurance-pricing.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/insurance-pricing.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/preview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/preview.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/root.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/root.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/checkout-extension.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/checkout-extension.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/dashboard/dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/dashboard/dashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/privacy-policy.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/privacy-policy.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/modules/package-protection-listener.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/modules/package-protection-listener.server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/terms-of-service.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/terms-of-service.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/checkout-extension.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/checkout-extension.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihp-checkout.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihp-checkout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/cart-api.iife.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/cart-api.iife.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/payload.js" beforeDir="false" afterPath="$PROJECT_DIR$/logs/payload.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +99,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "pnpm",
     "npm.dev.executor": "Debug",
-    "prettierjs.PrettierConfiguration.Package": "/home/ibrahim/Projects/Inhouse-Shipping-Protection/node_modules/prettier",
+    "prettierjs.PrettierConfiguration.Package": "/home/sifat-wenexus/sifat/Package-protection/node_modules/prettier",
     "settings.editor.selected.configurable": "preferences.general",
     "ts.external.directory.path": "/snap/webstorm/413/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
@@ -137,6 +166,8 @@
       <workItem from="1730691238707" duration="2000" />
       <workItem from="1730699497733" duration="992000" />
       <workItem from="1730777761979" duration="9000" />
+      <workItem from="1730868044444" duration="3892000" />
+      <workItem from="1730951690721" duration="5982000" />
     </task>
     <task id="LOCAL-00001" summary="add orderDate column at PackageProtectionOrder">
       <option name="closed" value="true" />

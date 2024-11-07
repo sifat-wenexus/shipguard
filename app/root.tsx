@@ -11,6 +11,7 @@ import { Frame } from '@shopify/polaris';
 import { json } from '@remix-run/node';
 import { Nav } from './components/nav';
 import appCss from '~/styles/app.css';
+import rsuite from "rsuite/Accordion/styles/index.css";
 
 import {
   isRouteErrorResponse,
@@ -31,9 +32,10 @@ export const links = () => [
   { rel: 'stylesheet', href: polarisStyles },
   { rel: 'stylesheet', href: appCss },
   { rel: 'stylesheet', href: polarisViz },
+  {rel: 'stylesheet',href: rsuite}
 ];
 
-const skipAuthPaths = new Set(['/auth/login', '/terms-of-service', '/privacy-policy']);
+const skipAuthPaths = new Set(['/auth/login', '/terms-of-service', '/privacy-policy','/landing-page']);
 
 export async function loader() {
   return json({ apiKey: process.env.SHOPIFY_API_KEY });

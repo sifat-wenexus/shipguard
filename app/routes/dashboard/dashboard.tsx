@@ -89,7 +89,7 @@ const Dashboard = ({ guidelineVisibility }) => {
       value: number | string;
       tooltip?: string | React.ReactNode;
     }[] = [
-      // TODO: get all order filter [channel= online store and sku= wenexus-shipping-protection] to get actual order
+      // TODO: get all order filter [channel= online store and sku= wenexus-shipping-protection.tsx] to get actual order
       {
         title: 'Total Non-Protected Order',
         value: data.totalNonPackageProtect ?? 0,

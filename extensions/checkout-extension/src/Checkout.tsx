@@ -35,12 +35,12 @@ const Extension = () => {
 
 
   const totalAmount = cartLine
-    .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection')
+    .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection.tsx')
     .reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
 
   useEffect(() => {
 
-    const payload=cartLine.filter(line=>line.merchandise.sku !== 'wenexus-shipping-protection');
+    const payload=cartLine.filter(line=>line.merchandise.sku !== 'wenexus-shipping-protection.tsx');
 
     fetch(
       `${baseUrl}/checkout-extension?total=${totalAmount}&shopUrl=${

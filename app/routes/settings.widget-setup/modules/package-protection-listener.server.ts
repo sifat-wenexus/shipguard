@@ -40,7 +40,7 @@ interface IShopifyProductCreateAndUpdateArgs {
   vendor?: string;
 }
 
-export const PRODUCT_SKU: string = 'wenexus-shipping-protection';
+export const PRODUCT_SKU: string = 'wenexus-shipping-protection.tsx';
 
 const productImage = getConfig().appUrl + appLogo;
 
