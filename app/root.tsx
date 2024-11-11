@@ -35,7 +35,7 @@ export const links = () => [
   {rel: 'stylesheet',href: rsuite}
 ];
 
-const skipAuthPaths = new Set(['/auth/login', '/terms-of-service', '/privacy-policy','/landing-page']);
+const skipAuthPaths = new Set(['/auth/login', '/terms-of-service', '/privacy-policy','/']);
 
 export async function loader() {
   return json({ apiKey: process.env.SHOPIFY_API_KEY });
