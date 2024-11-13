@@ -1,6 +1,7 @@
 import { json, LoaderFunction } from '@remix-run/node';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { prisma } from '~/modules/prisma.server';
+import { PRODUCT_SKU } from '~/routes/settings.widget-setup/modules/package-protection-listener.server';
 export const loader: LoaderFunction = async ({ request }) => {
   const params = new URL(request.url);
   const queryParams = Object.fromEntries(params.searchParams.entries());
@@ -30,7 +31,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       : null;
 
     const removeExclude = cartLine
-      .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection.tsx')
+      .filter((item) => item.merchandise.sku !== PRODUCT_SKU)
       ?.filter(
         (line) => !excludedItems.some((item) => item.id === line.merchandise.id)
       )

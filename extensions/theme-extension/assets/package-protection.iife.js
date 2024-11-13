@@ -162,7 +162,7 @@ var __publicField = (obj, key, value) => {
         return;
       }
       const { variantId } = await this.calculate();
-      const cart = await window.weNexusCartApi.prepend(
+      const cart = await window.weNexusCartApi.append(
         [
           {
             id: variantId,
@@ -195,21 +195,10 @@ var __publicField = (obj, key, value) => {
       if (!item || variantId === item.variant_id) {
         return;
       }
-      const items = await this.getNonPackageProtectionItems();
-      const updates = items.map((item2) => {
-        var _a;
-        return {
-          id: item2.variant_id,
-          quantity: item2.quantity,
-          selling_plan: (_a = item2.selling_plan) == null ? void 0 : _a.id,
-          properties: item2.properties
-        };
-      }).reverse();
-      updates.unshift({
-        id: variantId,
-        quantity: 1
+      const cart = await window.weNexusCartApi.update({
+        [item.variant_id]: 0,
+        [variantId]: 1
       });
-      const cart = await window.weNexusCartApi.replace(updates, false);
       return cart.items.find((item2) => item2.variant_id === variantId);
     }
     async refresh() {
@@ -226,30 +215,24 @@ var __publicField = (obj, key, value) => {
       if (finalForCart.length === 0) {
         return this.remove();
       }
-      const cardItems = (await window.weNexusCartApi.get()).items;
       if (((_a = ppItems[0]) == null ? void 0 : _a.quantity) === 0 || ppItems.length === 0) {
         return this.add();
       }
       const { variantId } = await this.calculate();
       if (ppItems.reduce((a, b) => a + b.quantity, 0) > 1) {
-        const finalItem = cardItems.find((item) => item.id === variantId);
-        if (finalItem) {
-          await window.weNexusCartApi.update({
-            [finalItem.id]: 1
-          });
+        const updates = {};
+        for (const item of ppItems) {
+          if (item.variant_id !== variantId) {
+            updates[item.variant_id] = 0;
+          }
         }
-        await location.reload();
+        updates[variantId] = 1;
+        const cart = await window.weNexusCartApi.update(updates, false);
+        return cart.items.find((item) => item.variant_id === variantId);
       }
-      if (ppItems.some((item) => item.variant_id === variantId)) {
-        const { items } = await window.weNexusCartApi.get();
-        const index = items.findIndex((item) => item.variant_id === variantId);
-        if (index === items.length - 1) {
-          return;
-        }
-        const cart = await window.weNexusCartApi.move(variantId, 0, false);
-        return cart.items[items.length - 1];
+      if (!ppItems.some((item) => item.variant_id === variantId)) {
+        return this.change(variantId);
       }
-      return this.change(variantId);
     }
   };
   __publicField(_PackageProtectionApi, "instance");
@@ -299,14 +282,14 @@ var __publicField = (obj, key, value) => {
                 <img src="${this.thumbnail}" alt="logo" />
             </div>
             <div class="wenexus-package-protection__desc">
-                <h5>${this.title}
+                <h5>${this.title} 
                 ${this.infoPageLink ? `<a href="https://${this.infoPageLink}" target="_blank" style="color:blue;">ⓘ</a> ` : ``}
                 </h5>
                 <p> <span class="wenexus-package-protection-description">${description} </span></p>
             </div>
         </div>
         <div class="wenexus-package-protection__toggle" >
-
+        
         <div style="position:relative;">
             <input type="checkbox" ${checked ? "checked" : ""} style="position:absolute; width:100%; height:100%; left:0; z-index:99; opacity:0">
 
@@ -366,35 +349,35 @@ var __publicField = (obj, key, value) => {
             margin: ${containerMargin == null ? void 0 : containerMargin.join("px ")};
             gap: ${containerGap[0]} ${containerGap[1]}px;
          }
-
+         
          .wenexus-package-protection__content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: ${contentGap[0]} ${contentGap[1]}px;
          }
-
+         
          .wenexus-package-protection__image {
             max-width: ${imageWidth}px;
             max-height: ${imageWidth}px;
 
          }
-
+         
          .wenexus-package-protection__image img {
             width: 100%;
          }
-
+         
          .wenexus-package-protection__desc h5 {
             font-size: ${titleFontSize}rem;
             margin: 0;
          }
-
+         
          .wenexus-package-protection__desc p {
             font-size: ${descriptionFontSize}rem;
             font-weight: ${descriptionFontWeight};
             margin: ${descriptionMargin == null ? void 0 : descriptionMargin.join("px ")}px;
          }
-
+         
          .wenexus-package-protection__desc a {
             text-decoration: none;
             font-size: 1.5rem;
@@ -403,12 +386,12 @@ var __publicField = (obj, key, value) => {
             transition: .3s;
             ${hideDescriptionPage ? "display: none;" : ""}
          }
-
+         
          .wenexus-package-protection__toggle {
             accent-color: ${accentColor} !important;
             zoom: 1.55;
          }
-
+         
          ${extraStyles}
       </style>`;
     }
@@ -539,6 +522,7 @@ var __publicField = (obj, key, value) => {
     }
     // theme support
     async refreshUI() {
+      console.log("refresh");
       Array.from(document.getElementsByTagName("cart-items")).forEach(
         (i) => i.onCartUpdate()
       );
@@ -558,30 +542,13 @@ var __publicField = (obj, key, value) => {
           items.currency
         )} USD`
       );
-      let cartIcon = document.getElementsByClassName("cart-count-bubble");
-      Array.from(cartIcon).forEach(
-        (el) => el.innerHTML = items.item_count.toString()
-      );
+      document.getElementsByClassName("cart-count-bubble");
       const checkoutSwitch = localStorage.getItem("package-protection-enabled");
       const des = checkoutSwitch === "true" ? this.enabledDescription : this.disabledDescription;
       const descriptionElements = document.getElementsByClassName(
         "wenexus-package-protection-description"
       );
       Array.from(descriptionElements).forEach((el) => el.innerHTML = `${des} `);
-      setTimeout(() => {
-        const data = Array.from(document.getElementsByTagName("a")).filter(
-          (el) => {
-            var _a, _b;
-            return el.href.includes(
-              (_b = (_a = items.items[items.items.length - 1]) == null ? void 0 : _a.variant_id) == null ? void 0 : _b.toString()
-            );
-          }
-        );
-        data.forEach((el) => {
-          el.href = "#";
-          el.setAttribute("href", "#");
-        });
-      }, 1e3);
     }
   }
   async function packageProtection() {
@@ -613,7 +580,7 @@ var __publicField = (obj, key, value) => {
       for (let i = 0; i < items.length; i++) {
         const variantId = items[i].variant_id;
         if (!excludeVariants.includes(variantId)) {
-          items[i].sku !== "wenexus-shipping-protection.tsx" && result2.push(items[i]);
+          items[i].sku !== "wenexus-shipping-protection" && result2.push(items[i]);
         }
       }
       return result2;
@@ -650,21 +617,6 @@ var __publicField = (obj, key, value) => {
       )) || [];
     } else {
       selectors = ((_b = client.getInsertionPointSelectors) == null ? void 0 : _b.call(client, "before")) || [];
-    }
-    async function refresh(force = false) {
-      const item = await packageProtectionApi.refresh();
-      const oldItemId = localStorage.getItem("package-protection-item") || null;
-      const newItemId = (item == null ? void 0 : item.variant_id.toString()) || null;
-      localStorage.setItem(
-        "package-protection-item",
-        (item == null ? void 0 : item.variant_id.toString()) ?? ""
-      );
-      if (oldItemId === newItemId && item) {
-        client.refreshUI(item ?? null);
-      }
-      if (force || oldItemId !== newItemId) {
-        client.refreshUI(item ?? null);
-      }
     }
     const fixedMultiplePlan = settings.fixedMultiplePlan;
     const fixedMultipleVariants = settings.productVariants;
@@ -712,7 +664,6 @@ var __publicField = (obj, key, value) => {
     client.buttonColor = settings.switchColor;
     client.css = settings.css;
     client.infoPageLink = settings == null ? void 0 : settings.policyUrl;
-    window.weNexusCartApi.addListener(() => refresh());
     if (typeof client.getStyleMarkup === "function") {
       document.head.insertAdjacentHTML(
         "beforeend",
@@ -722,6 +673,26 @@ var __publicField = (obj, key, value) => {
         })
       );
     }
+    const cartLiveQuery = new window.WeNexusQuerySelectorLive(
+      "form[action='/cart']"
+    );
+    cartLiveQuery.addListener((element) => {
+      const v = checkExcludeVariants();
+      Array.from(element).forEach((form) => {
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (enabled() && v.length > 0) {
+            await packageProtectionApi.add();
+            console.log("adding to cart");
+          } else {
+            await packageProtectionApi.remove();
+          }
+          window.location.href = "/checkout";
+          setTimeout(() => {
+          }, 0);
+        });
+      });
+    });
     for (const selector of selectors) {
       if (selector.shouldUse && !selector.shouldUse()) {
         continue;
@@ -733,6 +704,13 @@ var __publicField = (obj, key, value) => {
       liveQuery.addListener(async (elements) => {
         var _a2, _b2;
         items = await getItems();
+        const PPItem = await items.find(
+          (item) => item.sku === "wenexus-shipping-protection"
+        );
+        if (PPItem) {
+          await packageProtectionApi.remove();
+          window.location.reload();
+        }
         const variants = checkExcludeVariants();
         for (const element of elements) {
           const { container, checkbox } = await client.getCheckboxContainer(
@@ -769,7 +747,6 @@ var __publicField = (obj, key, value) => {
                 'button[name="checkout"]'
               );
               checkoutButton.forEach((e) => e.disabled = true);
-              await refresh(true);
               checkbox.disabled = false;
               checkoutButton.forEach((e) => e.disabled = false);
             });
@@ -777,14 +754,6 @@ var __publicField = (obj, key, value) => {
         }
       });
     }
-    const data = Array.from(document.getElementsByTagName("a")).filter(
-      (el) => {
-        var _a2;
-        return el.href.includes((_a2 = items[items.length - 1]) == null ? void 0 : _a2.variant_id.toString());
-      }
-    );
-    data.forEach((el) => el.setAttribute("href", "#"));
-    await refresh();
   }
   if (document.readyState !== "complete") {
     document.addEventListener("readystatechange", () => {

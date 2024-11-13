@@ -2,15 +2,11 @@ import { SearchIcon } from '@shopify/polaris-icons';
 import useDebounce from '~/hooks/use-debounce';
 import { useEffect, useState } from 'react';
 import {
-  ResourceListProps,
-  ResourceItem,
-  ResourceList,
   TextField,
   Icon,
   Text,
   Box,
   Thumbnail,
-  Button,
   IndexTable,
   useIndexResourceState,
 } from '@shopify/polaris';
@@ -23,9 +19,6 @@ const ExclusionProductsAndVariants = ({ formState }) => {
     handleSelectionChange,
     clearSelection,
   } = useIndexResourceState(resourcesSelected);
-  const [selectedItems, setSelectedItems] = useState<
-    ResourceListProps['selectedItems']
-  >([]);
   const [resourcesSelection, setResourcesSelection] = useState<any>([]);
   const [inputText, setInputText] = useState('');
   const searchText = useDebounce(inputText, 500);

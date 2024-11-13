@@ -1,15 +1,15 @@
 import type { ActionFunctionArgs, LoaderFunction } from '@remix-run/node';
 import type { IClaimType } from './claim-request/claim-fulfill-modal';
-import { prisma } from '~/modules/prisma.server';
+import { getConfig } from '~/modules/get-config.server';
+import { sendMail } from '~/modules/send-mail.server';
 import type { ClaimStatus } from '#prisma-client';
-import { json } from '@remix-run/node';
+import { prisma } from '~/modules/prisma.server';
 
+import { json } from '@remix-run/node';
 import {
   getShopifyGQLClient,
   shopify as shopifyRemix,
 } from '../modules/shopify.server';
-import { sendMail } from '~/modules/send-mail.server';
-import { getConfig } from '~/modules/get-config.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {

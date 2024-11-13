@@ -1,6 +1,5 @@
-import React from 'react';
-import Header from '~/routes/landing-page/components/common/header';
 import Subtitle from '~/routes/landing-page/components/common/subtitle';
+import Header from '~/routes/landing-page/components/common/header';
 import pricing from '../images/procing.png'
 
 const Pricing = () => {

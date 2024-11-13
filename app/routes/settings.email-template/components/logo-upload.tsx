@@ -65,7 +65,7 @@ const LogoUpload = ({ file, setFile, logo, prevFile }) => {
     <div className="p-3 flex justify-center items-center my-3">
       <div className="text-center">
         <div className="w-[220px] m-auto">
-          <img width={'100%'} src={logo} alt="logo image" />
+          <img width={'100%'} src={logo} alt="logo-image" />
         </div>
         <div className="overflow-hidden overflow-ellipsis my-2">
           {prevFile?.name}{' '}

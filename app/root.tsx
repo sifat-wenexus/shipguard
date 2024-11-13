@@ -1,7 +1,6 @@
 import ImgLogo from '~/assets/images/inhouse-shipping-protection.png';
 import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
-import type { LoaderFunctionArgs } from '@remix-run/node';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { AppProvider } from '~/shopify-app-remix/react';
 import tailwindStyles from '~/styles/tailwind.css';
@@ -11,6 +10,7 @@ import { Frame } from '@shopify/polaris';
 import { json } from '@remix-run/node';
 import { Nav } from './components/nav';
 import appCss from '~/styles/app.css';
+
 import rsuite from "rsuite/Accordion/styles/index.css";
 
 import {

@@ -1,8 +1,7 @@
-import React from 'react';
-import widget from '../images/background.png'
-import widgetGif from '../images/gif/widget setting.gif'
-import Header from '~/routes/landing-page/components/common/header';
 import Subtitle from '~/routes/landing-page/components/common/subtitle';
+import Header from '~/routes/landing-page/components/common/header';
+import widgetGif from '../images/gif/widget setting.gif'
+import widget from '../images/background.png'
 
 
 const WidgetSetting = () => {

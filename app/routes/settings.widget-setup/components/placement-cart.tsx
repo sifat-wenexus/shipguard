@@ -6,9 +6,7 @@ import { useMemo } from 'react';
 import {
   FormLayout,
   TextField,
-  Checkbox,
   Tooltip,
-  Divider,
   Select,
   Text,
   Icon,

@@ -1,7 +1,7 @@
-import React from 'react';
-import Header from '~/routes/landing-page/components/common/header';
 import Subtitle from '~/routes/landing-page/components/common/subtitle';
+import Header from '~/routes/landing-page/components/common/header';
 import claimProcess from '../images/Claim Progress Image.png'
+
 const ClaimProcess = () => {
   return (
     <div className="flex flex-col items-center py-8 my-8">

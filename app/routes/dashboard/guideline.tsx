@@ -1,3 +1,10 @@
+import packageProtectionImg from '~/assets/images/guideline/product-reviews.svg';
+import checkoutImg from '~/assets/images/guideline/9685914.webp';
+import claimPageImg from '~/assets/images/guideline/wishlist.svg';
+import widgetImg from '~/assets/images/guideline/wishlist (1).svg';
+
+import { useCallback, useEffect,  useState } from 'react';
+import InstructionModal from './instruction-modal';
 import {
   ActionList,
   BlockStack,
@@ -15,13 +22,6 @@ import {
   ChevronUpIcon,
   MenuHorizontalIcon,
 } from '@shopify/polaris-icons';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import InstructionModal from './instruction-modal';
-
-import checkoutImg from '~/assets/images/guideline/9685914.webp';
-import claimPageImg from '~/assets/images/guideline/wishlist.svg';
-import packageProtectionImg from '~/assets/images/guideline/product-reviews.svg';
-import widgetImg from '~/assets/images/guideline/wishlist (1).svg';
 
 const GuideLine = ({ storeInfo, guidelineVisibility }) => {
   const [actionActive, toggleAction] = useState(false);

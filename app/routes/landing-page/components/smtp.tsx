@@ -1,6 +1,5 @@
-import React from 'react';
-import Header from '~/routes/landing-page/components/common/header';
 import Subtitle from '~/routes/landing-page/components/common/subtitle';
+import Header from '~/routes/landing-page/components/common/header';
 import pricing from '../images/smtp-1-jpg-removebg-preview 1.png'
 
 const Smtp = () => {

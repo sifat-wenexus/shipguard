@@ -1,8 +1,3 @@
-import type {
-  ActionFunctionArgs,
-  LinksFunction,
-  LoaderFunctionArgs,
-} from '@remix-run/node';
 import { shopify as shopifyRemix, shopify } from '../../modules/shopify.server';
 import { templateParameters } from './email-template/template-variable-params';
 import { ClaimRequestAdminTemplate } from './email-template/template';
@@ -10,15 +5,20 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ShadowBevelBox } from '~/components/shadow-bevel-box';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { getConfig } from '~/modules/get-config.server';
-import type { $Enums, Prisma } from '#prisma-client';
 import LiquidEditor from './components/text-editor';
 import LogoUpload from './components/logo-upload';
 import { prisma } from '~/modules/prisma.server';
 import { useLoaderData } from '@remix-run/react';
 import { useQuery } from '~/hooks/use-query';
+import type { $Enums } from '#prisma-client';
 import { json } from '@remix-run/node';
 import style from './styles/route.css';
 import _ from 'lodash';
+import type {
+  ActionFunctionArgs,
+  LinksFunction,
+  LoaderFunctionArgs,
+} from '@remix-run/node';
 
 import {
   TextField,

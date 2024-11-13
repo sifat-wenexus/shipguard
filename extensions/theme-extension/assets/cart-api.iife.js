@@ -204,21 +204,6 @@ var __publicField = (obj, key, value) => {
       const { cart } = await this.request("add", { items }, trigger);
       return cart;
     }
-    async prepend(items, trigger = true) {
-      const oldCart = await this.get();
-      const updates = items.concat(
-        Array.from(oldCart.items).reverse().map((item) => {
-          var _a;
-          return {
-            id: item.variant_id,
-            quantity: item.quantity,
-            selling_plan: (_a = item.selling_plan) == null ? void 0 : _a.id,
-            properties: item.properties
-          };
-        })
-      );
-      return this.replace(updates, trigger);
-    }
     async change(item, trigger = true) {
       const { cart } = await this.request("change", item, trigger);
       return cart;
@@ -246,35 +231,6 @@ var __publicField = (obj, key, value) => {
         },
         trigger
       );
-      return cart;
-    }
-    async move(id, index, trigger = true) {
-      const oldCart = await this.get();
-      const item = oldCart.items.find((item2) => item2.variant_id === id);
-      if (!item) {
-        return oldCart;
-      }
-      const items = oldCart.items.filter((item2) => item2.variant_id !== id);
-      items.splice(index, 0, item);
-      return this.replace(
-        items.map((item2) => {
-          var _a;
-          return {
-            id: item2.variant_id,
-            quantity: item2.quantity,
-            selling_plan: (_a = item2.selling_plan) == null ? void 0 : _a.id,
-            properties: item2.properties
-          };
-        }),
-        trigger
-      );
-    }
-    async replace(items, trigger = true) {
-      this.clear(false);
-      return this.append(items, trigger);
-    }
-    async clear(trigger = true) {
-      const { cart } = await this.request("clear", void 0, trigger);
       return cart;
     }
   };

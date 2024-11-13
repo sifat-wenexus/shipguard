@@ -1,5 +1,5 @@
-import { Button, Modal, Text } from '@shopify/polaris';
 import guidelineImage from '~/assets/images/guideline.png';
+import { Button, Modal, Text } from '@shopify/polaris';
 import { useCallback } from 'react';
 
 const InstructionModal = ({

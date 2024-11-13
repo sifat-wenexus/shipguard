@@ -1,3 +1,5 @@
+import { ArrowRightIcon, CalendarIcon } from '@shopify/polaris-icons';
+import { useEffect, useRef, useState } from 'react';
 import {
   BlockStack,
   Box,
@@ -14,8 +16,6 @@ import {
   TextField,
   useBreakpoints,
 } from '@shopify/polaris';
-import { ArrowRightIcon, CalendarIcon } from '@shopify/polaris-icons';
-import { useEffect, useRef, useState } from 'react';
 
 // This example is for guidance purposes. Copying it will come with caveats.
 export default function DateRangePicker({
@@ -23,7 +23,7 @@ export default function DateRangePicker({
 }: {
   setActiveDates?: Function;
 }) {
-  const { mdDown, mdUp, lgUp } = useBreakpoints();
+  const { mdDown, mdUp } = useBreakpoints();
   const shouldShowMultiMonth = mdUp;
   const today = new Date(new Date().setHours(0, 0, 0, 0));
   const yesterday = new Date(

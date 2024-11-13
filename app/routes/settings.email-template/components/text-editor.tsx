@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useBetterFetcher } from '~/hooks/use-better-fetcher';
+import { Box, Card, TextField } from '@shopify/polaris';
+import { useCallback, useEffect, useRef } from 'react';
+import { liquid } from '@codemirror/lang-liquid';
 import { EditorState } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
 import { basicSetup } from 'codemirror';
-import { liquid } from '@codemirror/lang-liquid';
-import { Box, Card, TextField } from '@shopify/polaris';
-import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 
 const LiquidEditor = ({
   templateSubject,

@@ -19606,6 +19606,7 @@ ${errorInfo.componentStack}`);
   var import_jsx_runtime4 = __toESM(require_jsx_runtime());
   var Checkout_default = reactExtension("purchase.checkout.block.render", () => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Extension, {}));
   var Extension = () => {
+    const PRODUCT_SKU = "wenexus-shipping-protection";
     const applyCartLineChange = useApplyCartLinesChange();
     const cartLine = useCartLines();
     const shop = useShop();
@@ -19617,9 +19618,9 @@ ${errorInfo.componentStack}`);
     const [enabled, setEnabled] = (0, import_react16.useState)(false);
     const [loading, setLoading] = (0, import_react16.useState)(false);
     const baseUrl = "https://shipping-protection.wenexus.io";
-    const totalAmount = cartLine.filter((item) => item.merchandise.sku !== "wenexus-shipping-protection.tsx").reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
+    const totalAmount = cartLine.filter((item) => item.merchandise.sku !== PRODUCT_SKU).reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
     (0, import_react16.useEffect)(() => {
-      const payload = cartLine.filter((line) => line.merchandise.sku !== "wenexus-shipping-protection.tsx");
+      const payload = cartLine.filter((line) => line.merchandise.sku !== PRODUCT_SKU);
       fetch(
         `${baseUrl}/checkout-extension?total=${totalAmount}&shopUrl=${shop == null ? void 0 : shop.myshopifyDomain}&cartLine=${JSON.stringify(payload)}`
       ).then((response) => response.json()).then((res) => {

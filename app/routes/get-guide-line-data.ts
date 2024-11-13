@@ -1,15 +1,15 @@
-import {
-  getShopInfo,
-  getThemeFileContent,
-  getThemeFileInfo,
-  getThemeInfo,
-} from '~/modules/get-theme-file-content';
 import { makeAlphaNumeric } from '~/modules/utils/alpha-numeric-string';
 import { shopify as shopifyRemix } from '../modules/shopify.server';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { getConfig } from '~/modules/get-config.server';
 import { prisma } from '~/modules/prisma.server';
 import { json } from '@remix-run/react';
+import {
+  getShopInfo,
+  getThemeFileContent,
+  getThemeFileInfo,
+  getThemeInfo,
+} from '~/modules/get-theme-file-content';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {

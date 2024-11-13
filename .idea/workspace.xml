@@ -6,9 +6,44 @@
   <component name="ChangeListManager">
     <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/listeners/order.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/listeners/order.server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/root.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/root.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/checkout-extension.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/checkout-extension.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/claim-request/claim-request-process-card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/claim-request/claim-request-process-card.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/claim-request/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/claim-request/route.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routes/dashboard/dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/dashboard/dashboard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/dashboard/use-dashboard-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/dashboard/use-dashboard-data.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/dashboard/date-range.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/dashboard/date-range.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/dashboard/guideline.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/dashboard/guideline.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/dashboard/instruction-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/dashboard/instruction-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/get-claim-order-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/get-claim-order-data.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routes/get-guide-line-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/get-guide-line-data.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/get-order-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/get-order-data.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/google-oauth-callback.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/google-oauth-callback.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/banner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/banner.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/calim-management.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/calim-management.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/claim-process.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/claim-process.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/footer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/how-it-works.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/how-it-works.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/nav-bar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/nav-bar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/overview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/overview.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/pricing.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/pricing.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/smtp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/smtp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/widget-setting.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/widget-setting.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/route.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/pricing/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/pricing/route.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/settings.email-template/components/logo-upload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.email-template/components/logo-upload.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/settings.email-template/components/text-editor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.email-template/components/text-editor.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/settings.email-template/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.email-template/route.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/exclusion-products-and-variants.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/exclusion-products-and-variants.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/insurance-pricing.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/insurance-pricing.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/placement-cart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/placement-cart.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/modules/package-protection-listener.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/modules/package-protection-listener.server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/route.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/cart-api.iife.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/cart-api.iife.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,24 +94,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Shell Script.run & debug.executor": "Debug",
-    "git-widget-placeholder": "dev",
-    "last_opened_file_path": "/home/sifat-wenexus/sifat/Package-protection",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "pnpm",
-    "npm.dev.executor": "Debug",
-    "prettierjs.PrettierConfiguration.Package": "/home/sifat-wenexus/sifat/Package-protection/node_modules/prettier",
-    "settings.editor.selected.configurable": "preferences.general",
-    "ts.external.directory.path": "/snap/webstorm/413/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Shell Script.run &amp; debug.executor&quot;: &quot;Debug&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/sifat-wenexus/sifat/Package-protection&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Debug&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/home/sifat-wenexus/sifat/Package-protection/node_modules/prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/snap/webstorm/413/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration default="true" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="pnpm run dev" />
@@ -105,10 +140,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.dev" />
-        <item itemvalue="npm.dev" />
-        <item itemvalue="npm.dev" />
-        <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
@@ -140,6 +171,12 @@
       <workItem from="1730777761979" duration="9000" />
       <workItem from="1730868044444" duration="3892000" />
       <workItem from="1730951690721" duration="14447000" />
+      <workItem from="1731123787456" duration="4527000" />
+      <workItem from="1731212326587" duration="7047000" />
+      <workItem from="1731295968482" duration="6529000" />
+      <workItem from="1731303536783" duration="3515000" />
+      <workItem from="1731382806156" duration="4969000" />
+      <workItem from="1731470374053" duration="359000" />
     </task>
     <task id="LOCAL-00001" summary="add orderDate column at PackageProtectionOrder">
       <option name="closed" value="true" />

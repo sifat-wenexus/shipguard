@@ -1,4 +1,8 @@
 import { ShadowBevelBox } from '~/components/shadow-bevel-box';
+import { findEmptyValues } from '../util/findEmptyValues';
+import { useI18n } from '@shopify/react-i18n';
+import Radio from '~/components/radio';
+import {  useState } from 'react';
 import {
   FormLayout,
   TextField,
@@ -6,7 +10,6 @@ import {
   Text,
   Icon,
   Box,
-  InlineStack,
   Button,
   Modal,
   Banner,
@@ -18,11 +21,6 @@ import {
   InfoIcon,
   DeleteIcon,
 } from '@shopify/polaris-icons';
-import { useEffect, useState } from 'react';
-import { queryProxy } from '~/modules/query/query-proxy';
-import Radio from '~/components/radio';
-import { useI18n } from '@shopify/react-i18n';
-import { findEmptyValues } from '../util/findEmptyValues';
 
 const InsurancePricing = ({ formState, insurancePriceError }) => {
   const [i18n] = useI18n();

@@ -1,5 +1,6 @@
-import React from 'react';
 import logo from '../images/logo.png'
+import React from 'react';
+
 const NavBar = () => {
   return (
     <nav className="bg-gradient-to-r from-purple-600 to-indigo-500 fixed w-full z-20 top-0 start-0 border-b border-gray-200">

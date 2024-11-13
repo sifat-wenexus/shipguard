@@ -1,15 +1,15 @@
-import NavBar from '~/routes/landing-page/components/nav-bar';
-import Banner from '~/routes/landing-page/components/banner';
-import HowItWorks from '~/routes/landing-page/components/how-it-works';
 import ShippingProtection from '~/routes/landing-page/components/shipping-protection';
-import Pricing from '~/routes/landing-page/components/pricing';
-import WidgetSetting from '~/routes/landing-page/components/widget-setting';
-import Smtp from '~/routes/landing-page/components/smtp';
 import ClaimsManagement from '~/routes/landing-page/components/calim-management';
+import WidgetSetting from '~/routes/landing-page/components/widget-setting';
 import ClaimProcess from '~/routes/landing-page/components/claim-process';
+import HowItWorks from '~/routes/landing-page/components/how-it-works';
 import Overview from '~/routes/landing-page/components/overview';
-import FaQ from '~/routes/landing-page/components/faq';
+import Pricing from '~/routes/landing-page/components/pricing';
+import NavBar from '~/routes/landing-page/components/nav-bar';
 import Footer from '~/routes/landing-page/components/footer';
+import Banner from '~/routes/landing-page/components/banner';
+import Smtp from '~/routes/landing-page/components/smtp';
+import FaQ from '~/routes/landing-page/components/faq';
 
 const LandingPage = () => {
   return (
@@ -22,7 +22,6 @@ const LandingPage = () => {
         <Pricing/>
         <WidgetSetting/>
         <Smtp/>
-        hello
         <ClaimsManagement/>
         <ClaimProcess/>
         <Overview/>

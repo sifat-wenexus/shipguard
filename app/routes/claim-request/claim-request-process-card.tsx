@@ -1,3 +1,6 @@
+import ClaimFulfillModal from './claim-fulfill-modal';
+import ClaimStatusModal from './claim-status-modal';
+import { useI18n } from '@shopify/react-i18n';
 import {
   Badge,
   BlockStack,
@@ -10,9 +13,6 @@ import {
   Text,
   Thumbnail, Tooltip,
 } from '@shopify/polaris';
-import { useI18n } from '@shopify/react-i18n';
-import ClaimStatusModal from './claim-status-modal';
-import ClaimFulfillModal from './claim-fulfill-modal';
 
 const ClaimRequestProcessCard = ({
   data,

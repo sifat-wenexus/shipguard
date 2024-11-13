@@ -106,12 +106,12 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
     });
     const lineData = getLineData.map((e) => {
-      if (
-        (e._sum.orderAmount === 0 || e._sum.orderAmount) &&
-        (e._sum.refundAmount === 0 || e._sum.refundAmount)
-      ) {
+      const orderAmount = e._sum.orderAmount ? Number(e._sum.orderAmount) : 0;
+      const refundAmount = e._sum.refundAmount ? Number(e._sum.refundAmount) : 0;
+
+      if (!isNaN(orderAmount) && !isNaN(refundAmount)) {
         return {
-          value: (e?._sum?.orderAmount - e._sum.refundAmount).toFixed(2),
+          value: (orderAmount - refundAmount).toFixed(2),
           key: e.createdAt,
         };
       }

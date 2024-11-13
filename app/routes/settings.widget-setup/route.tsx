@@ -1,9 +1,3 @@
-import type {
-  ActionFunctionArgs,
-  LinksFunction,
-  LoaderFunctionArgs,
-} from '@remix-run/node';
-import { json } from '@remix-run/node';
 import CustomizedInsuranceStyle from './components/customized-insurance-style';
 import { hexToHsba, hsbaToHexWithAlpha } from '~/modules/utils/color-utils';
 import { shopify as shopifyRemix } from '../../modules/shopify.server';
@@ -27,8 +21,15 @@ import { useLoaderData } from '@remix-run/react';
 import { SaveBar } from '~/components/save-bar';
 import Preview from './components/preview';
 import Content from './components/content';
-import style from './styles/route.css';
+import { json } from '@remix-run/node';
 import Css from './components/css';
+
+import type {
+  ActionFunctionArgs,
+  LinksFunction,
+  LoaderFunctionArgs,
+} from '@remix-run/node';
+import style from './styles/route.css';
 
 export async function action({ request }: ActionFunctionArgs) {
   const ctx = await shopifyRemix.authenticate.admin(request);

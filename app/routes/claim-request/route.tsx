@@ -3,6 +3,7 @@ import { shopify as shopifyRemix } from '../../modules/shopify.server';
 import ClaimRequestProcess from './calim-request-process';
 import { default30Days } from '../dashboard/dashboard';
 import DateRangePicker from '../dashboard/date-range';
+import { PageShell } from '~/components/page-shell';
 import { ExportIcon } from '@shopify/polaris-icons';
 import type { IActiveDates } from '../order/route';
 import { useLoaderData } from '@remix-run/react';
@@ -11,7 +12,6 @@ import ClaimOrderList from './claim-order-list';
 import { useMemo, useState } from 'react';
 import { json } from '@remix-run/node';
 import * as XLSX from 'xlsx';
-import { PageShell } from '~/components/page-shell';
 
 export const loader = async ({ request }) => {
   const ctx = await shopifyRemix.authenticate.admin(request);

@@ -18,6 +18,7 @@ export default reactExtension('purchase.checkout.block.render', () => (
 ));
 
 const Extension = () => {
+  const PRODUCT_SKU='wenexus-shipping-protection';
   const applyCartLineChange = useApplyCartLinesChange();
   const cartLine = useCartLines();
   const shop = useShop();
@@ -35,12 +36,12 @@ const Extension = () => {
 
 
   const totalAmount = cartLine
-    .filter((item) => item.merchandise.sku !== 'wenexus-shipping-protection.tsx')
+    .filter((item) => item.merchandise.sku !== PRODUCT_SKU)
     .reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
 
   useEffect(() => {
 
-    const payload=cartLine.filter(line=>line.merchandise.sku !== 'wenexus-shipping-protection.tsx');
+    const payload=cartLine.filter(line=>line.merchandise.sku !== PRODUCT_SKU);
 
     fetch(
       `${baseUrl}/checkout-extension?total=${totalAmount}&shopUrl=${

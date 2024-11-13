@@ -1,7 +1,7 @@
-import React from 'react';
 import shield from '../images/shield (1) 1.png'
-import paper from '../images/claim 1.png'
 import message from '../images/message 1.png'
+import paper from '../images/claim 1.png'
+
 const HowItWorks = () => {
   const steps = [
     {

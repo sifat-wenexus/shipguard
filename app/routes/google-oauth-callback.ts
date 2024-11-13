@@ -10,7 +10,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const code = url.searchParams.get('code');
 
   if (!state || !code) {
-    return new Response(`
+    return new Response(
+      `
       <html lang="en">
         <head>
           <title>Invalid request</title>
@@ -19,11 +20,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
           <h1 style="text-align: center;">Invalid request</h1>
         </body>
       </html>
-    `, {
-      headers: {
-        'Content-Type': 'text/html',
-      },
-    });
+    `,
+      {
+        headers: {
+          'Content-Type': 'text/html',
+        },
+      }
+    );
   }
 
   const [storeId, oauthState] = state.split('&').map(decodeURIComponent);
@@ -36,7 +39,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     });
   } catch (e) {
-    return new Response(`
+    return new Response(
+      `
       <html lang="en">
         <head>
           <title>Invalid request</title>
@@ -45,11 +49,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
           <h1 style="text-align: center;">Invalid request</h1>
         </body>
       </html>
-    `, {
-      headers: {
-        'Content-Type': 'text/html',
-      },
-    });
+    `,
+      {
+        headers: {
+          'Content-Type': 'text/html',
+        },
+      }
+    );
   }
 
   const client = await getGoogleAuthClient();
@@ -63,14 +69,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const session = await findOfflineSession(store.domain);
 
-  await queryProxy.googleAuthCredential.update({
-    where: {
-      id: storeId,
+  await queryProxy.googleAuthCredential.update(
+    {
+      where: {
+        id: storeId,
+      },
+      data: {
+        payload: JSON.parse(JSON.stringify(tokenResponse.tokens)),
+      },
     },
-    data: {
-      payload: JSON.parse(JSON.stringify(tokenResponse.tokens)),
-    },
-  }, { session });
+    { session: session || undefined }
+  );
 
   const smtpSetting = await queryProxy.smtpSetting.findUnique({
     where: {
@@ -79,14 +88,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 
   if (!smtpSetting) {
-    await queryProxy.smtpSetting.create({
-      data: {
-        provider: 'google',
+    await queryProxy.smtpSetting.create(
+      {
+        data: {
+          provider: 'google',
+        },
       },
-    }, { session });
+      { session: session || undefined }
+    );
   }
 
-  return new Response(`
+  return new Response(
+    `
     <html lang="en">
       <head>
         <title>Success</title>
@@ -97,9 +110,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
         </h1>
       </body>
     </html>
-  `, {
-    headers: {
-      'Content-Type': 'text/html',
-    },
-  });
+  `,
+    {
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    }
+  );
 }
