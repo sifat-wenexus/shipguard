@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/nav-bar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/nav-bar.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="bug fix on multiple shipping product add" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -186,7 +183,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731475129576</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="bug fix on multiple shipping product add">
+      <option name="closed" value="true" />
+      <created>1731486355734</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1731486355734</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -210,6 +215,7 @@
     <MESSAGE value="update extension name and handle" />
     <MESSAGE value="added log for live debug" />
     <MESSAGE value="app url update" />
-    <option name="LAST_COMMIT_MESSAGE" value="app url update" />
+    <MESSAGE value="bug fix on multiple shipping product add" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug fix on multiple shipping product add" />
   </component>
 </project>
