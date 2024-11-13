@@ -5,45 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/listeners/order.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/listeners/order.server.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/root.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/root.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/checkout-extension.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/checkout-extension.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/claim-request/claim-request-process-card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/claim-request/claim-request-process-card.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/claim-request/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/claim-request/route.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/dashboard/dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/dashboard/dashboard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/dashboard/date-range.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/dashboard/date-range.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/dashboard/guideline.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/dashboard/guideline.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/dashboard/instruction-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/dashboard/instruction-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/get-claim-order-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/get-claim-order-data.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/get-guide-line-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/get-guide-line-data.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/get-order-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/get-order-data.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/google-oauth-callback.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/google-oauth-callback.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/banner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/banner.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/calim-management.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/calim-management.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/claim-process.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/claim-process.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/footer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/how-it-works.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/how-it-works.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/nav-bar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/nav-bar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/overview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/overview.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/pricing.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/pricing.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/smtp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/smtp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/widget-setting.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/widget-setting.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/route.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/pricing/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/pricing/route.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.email-template/components/logo-upload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.email-template/components/logo-upload.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.email-template/components/text-editor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.email-template/components/text-editor.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.email-template/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.email-template/route.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/exclusion-products-and-variants.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/exclusion-products-and-variants.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/insurance-pricing.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/insurance-pricing.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/placement-cart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/components/placement-cart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/modules/package-protection-listener.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/modules/package-protection-listener.server.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/route.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/dist/ihsp-checkout.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/checkout-extension/src/Checkout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/cart-api.iife.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/cart-api.iife.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopify.app.prod.toml" beforeDir="false" afterPath="$PROJECT_DIR$/shopify.app.prod.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,19 +13,6 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <favorite-branches>
-      <branch-storage>
-        <map>
-          <entry type="LOCAL">
-            <value>
-              <list>
-                <branch-info repo="$PROJECT_DIR$" source="dev" />
-              </list>
-            </value>
-          </entry>
-        </map>
-      </branch-storage>
-    </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$" value="main" />
@@ -140,6 +89,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
