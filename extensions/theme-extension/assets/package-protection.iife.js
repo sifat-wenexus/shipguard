@@ -411,6 +411,8 @@ var __publicField = (obj, key, value) => {
         this.container.querySelector(".protection-price").textContent = await this.getPrice();
       }
     }
+    async refreshWidget() {
+    }
   }
   class PackageProtectionClientEnterprise extends PackageProtectionClientBasic {
     constructor() {
@@ -540,11 +542,44 @@ var __publicField = (obj, key, value) => {
         (el) => el.innerHTML = `${this.formatPrice(
           Number(items.total_price / 100),
           items.currency
-        )} USD`
+        )}`
       );
       document.getElementsByClassName("cart-count-bubble");
       const checkoutSwitch = localStorage.getItem("package-protection-enabled");
       const des = checkoutSwitch === "true" ? this.enabledDescription : this.disabledDescription;
+      const descriptionElements = document.getElementsByClassName(
+        "wenexus-package-protection-description"
+      );
+      Array.from(descriptionElements).forEach((el) => el.innerHTML = `${des} `);
+    }
+    async refreshWidget() {
+      let subTotal = document.getElementsByClassName("totals__total-value");
+      const items = await window.weNexusCartApi.get();
+      if (items.total_price === 0) {
+        await location.reload();
+        return;
+      }
+      const getPrice = await this.getPrice();
+      const price = Number(getPrice.replace(/[^0-9.]/g, ""));
+      const checkoutSwitch = localStorage.getItem("package-protection-enabled");
+      let des = this.disabledDescription;
+      if (checkoutSwitch === "true") {
+        des = this.enabledDescription;
+        Array.from(subTotal).forEach(
+          (el) => el.innerHTML = `${this.formatPrice(
+            Number(items.total_price / 100 + price),
+            items.currency
+          )}`
+        );
+      } else {
+        des = this.disabledDescription;
+        Array.from(subTotal).forEach(
+          (el) => el.innerHTML = `${this.formatPrice(
+            Number(items.total_price / 100 - price),
+            items.currency
+          )}`
+        );
+      }
       const descriptionElements = document.getElementsByClassName(
         "wenexus-package-protection-description"
       );
@@ -751,6 +786,7 @@ var __publicField = (obj, key, value) => {
                 'button[name="checkout"]'
               );
               checkoutButton.forEach((e) => e.disabled = true);
+              client.refreshWidget();
               checkbox.disabled = false;
               checkoutButton.forEach((e) => e.disabled = false);
             });

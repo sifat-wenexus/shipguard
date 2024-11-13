@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="bug fix on multiple shipping product add" />
+    <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="bug fix on multiple shipping product add">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -87,6 +90,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
