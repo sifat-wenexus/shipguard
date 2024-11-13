@@ -681,14 +681,15 @@ var __publicField = (obj, key, value) => {
       Array.from(element).forEach((form) => {
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
-          console.log("event", form);
-          const checkoutButton = document.querySelector(
+          const checkoutButtons = document.querySelectorAll(
             "button[type='submit'][name='checkout']"
           );
-          checkoutButton.disabled = true;
+          checkoutButtons.forEach((button) => {
+            button.disabled = true;
+          });
           if (enabled() && v.length > 0) {
             await packageProtectionApi.add();
-            console.log("adding to cart2");
+            console.log("adding to cart -");
           } else {
             await packageProtectionApi.remove();
           }
