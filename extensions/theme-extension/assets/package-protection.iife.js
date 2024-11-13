@@ -556,34 +556,43 @@ var __publicField = (obj, key, value) => {
       let subTotal = document.getElementsByClassName("totals__total-value");
       const items = await window.weNexusCartApi.get();
       if (items.total_price === 0) {
-        await location.reload();
+        location.reload();
         return;
       }
-      const getPrice = await this.getPrice();
-      const price = Number(getPrice.replace(/[^0-9.]/g, ""));
-      const checkoutSwitch = localStorage.getItem("package-protection-enabled");
-      let des = this.disabledDescription;
-      if (checkoutSwitch === "true") {
-        des = this.enabledDescription;
-        Array.from(subTotal).forEach(
-          (el) => el.innerHTML = `${this.formatPrice(
-            Number(items.total_price / 100 + price),
-            items.currency
-          )}`
+      let getPrice = "";
+      setTimeout(() => {
+        Array.from(document.getElementsByClassName("protection-price")).forEach(
+          (e) => {
+            getPrice = e.innerText;
+          }
         );
-      } else {
-        des = this.disabledDescription;
-        Array.from(subTotal).forEach(
-          (el) => el.innerHTML = `${this.formatPrice(
-            Number(items.total_price / 100 - price),
-            items.currency
-          )}`
+        const price = Number(getPrice.replace(/[^0-9.]/g, ""));
+        const checkoutSwitch = localStorage.getItem("package-protection-enabled");
+        let des = this.disabledDescription;
+        if (checkoutSwitch === "true") {
+          des = this.enabledDescription;
+          Array.from(subTotal).forEach(
+            (el) => el.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100 + price),
+              items.currency
+            )} ${items.currency}`
+          );
+        } else {
+          des = this.disabledDescription;
+          Array.from(subTotal).forEach(
+            (el) => el.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100),
+              items.currency
+            )} ${items.currency}`
+          );
+        }
+        const descriptionElements = document.getElementsByClassName(
+          "wenexus-package-protection-description"
         );
-      }
-      const descriptionElements = document.getElementsByClassName(
-        "wenexus-package-protection-description"
-      );
-      Array.from(descriptionElements).forEach((el) => el.innerHTML = `${des} `);
+        Array.from(descriptionElements).forEach(
+          (el) => el.innerHTML = `${des} `
+        );
+      }, 500);
     }
   }
   async function packageProtection() {
@@ -714,6 +723,11 @@ var __publicField = (obj, key, value) => {
     cartLiveQuery.addListener((element) => {
       const v = checkExcludeVariants();
       Array.from(element).forEach((form) => {
+        form.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+          }
+        });
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
           const checkoutButtons = document.querySelectorAll(
@@ -724,7 +738,6 @@ var __publicField = (obj, key, value) => {
           });
           if (enabled() && v.length > 0) {
             await packageProtectionApi.add();
-            console.log("adding to cart -");
           } else {
             await packageProtectionApi.remove();
           }
@@ -743,6 +756,7 @@ var __publicField = (obj, key, value) => {
       liveQuery.addListener(async (elements) => {
         var _a2, _b2;
         items = await getItems();
+        client.refreshWidget();
         const PPItem = await items.find(
           (item) => item.sku === "wenexus-shipping-protection"
         );
