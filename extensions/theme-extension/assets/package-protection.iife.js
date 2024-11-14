@@ -544,12 +544,7 @@ var __publicField = (obj, key, value) => {
         )}`
       );
       document.getElementsByClassName("cart-count-bubble");
-      const checkoutSwitch = localStorage.getItem("package-protection-enabled");
-      const des = checkoutSwitch === "true" ? this.enabledDescription : this.disabledDescription;
-      const descriptionElements = document.getElementsByClassName(
-        "wenexus-package-protection-description"
-      );
-      Array.from(descriptionElements).forEach((el) => el.innerHTML = `${des} `);
+      localStorage.getItem("package-protection-enabled");
     }
     async refreshWidget() {
       let subTotal = document.getElementsByClassName("totals__total-value");
@@ -563,7 +558,8 @@ var __publicField = (obj, key, value) => {
         );
         const price = Number(getPrice.replace(/[^0-9.]/g, ""));
         const checkoutSwitch = localStorage.getItem("package-protection-enabled");
-        let des = this.disabledDescription;
+        this.getDescription();
+        let des = "";
         if (checkoutSwitch === "true") {
           des = this.enabledDescription;
           Array.from(subTotal).forEach(
@@ -703,6 +699,7 @@ var __publicField = (obj, key, value) => {
     client.buttonColor = settings.switchColor;
     client.css = settings.css;
     client.infoPageLink = settings == null ? void 0 : settings.policyUrl;
+    client.checked = settings.insuranceDisplayButton;
     if (typeof client.getStyleMarkup === "function") {
       document.head.insertAdjacentHTML(
         "beforeend",
@@ -734,6 +731,8 @@ var __publicField = (obj, key, value) => {
           }
         });
       });
+      client.refreshWidget();
+      console.log("first");
       const v = checkExcludeVariants();
       Array.from(element).forEach((form) => {
         form.addEventListener("keydown", (e) => {
