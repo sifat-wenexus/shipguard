@@ -8,7 +8,7 @@ const Overview = () => {
         text="Manage your claims, revenue, analyze data, and control every aspect of
         your shipping protection platform."
       />
-      <div className="my-4">
+      <div className="my-4 w-full sm:w-[70%]">
         <img src={overview} alt="overview" />
       </div>
     </div>

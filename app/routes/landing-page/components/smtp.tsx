@@ -11,7 +11,7 @@ const Smtp = () => {
       <div className="md:w-2/6 text-center md:text-left my-8 md:mb-0 sm:ms:2">
         <Header text=" Automated Email Notifications" />
         <Subtitle
-          text=" Integrated with Gmail OAuth 2.0, merchants can automatically send
+          text=" Integrated with Gmail OAuth 2.0 Or Custom SMTP, merchants can automatically send
         customized email updates to customers."
         />
       </div>

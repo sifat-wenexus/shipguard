@@ -15,19 +15,19 @@ const LandingPage = () => {
   return (
     <>
       <NavBar />
-      <Banner/>
-      <HowItWorks/>
+      <Banner />
+      <HowItWorks />
       <div className="w-[95%] sm:w-[80%] mx-auto">
-        <ShippingProtection/>
-        <Pricing/>
-        <WidgetSetting/>
-        <Smtp/>
-        <ClaimsManagement/>
-        <ClaimProcess/>
-        <Overview/>
-        <FaQ/>
+        <ShippingProtection />
+        <Pricing />
+        <WidgetSetting />
+        <Smtp />
+        <ClaimsManagement />
+        <ClaimProcess />
+        <Overview />
+        <FaQ />
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };

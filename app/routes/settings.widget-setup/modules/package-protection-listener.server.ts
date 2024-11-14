@@ -43,7 +43,7 @@ interface IShopifyProductCreateAndUpdateArgs {
 export const PRODUCT_SKU: string = 'wenexus-shipping-protection';
 
 const productImage = getConfig().appUrl + appLogo;
-const appBaseUrl=getConfig().appUrl.toString().replace('/dashboard', '');
+const appBaseUrl=getConfig().appUrl.toString().replace('/dashboard', '')
 const icons: {
   id: string;
   icon: string;
@@ -151,7 +151,7 @@ onDBEvtBuffered(
           key: 'icon',
           namespace: 'package_protection',
           type: 'single_line_text_field',
-          value: data.icon,
+          value: data.icon.replace('//','/'),
         });
       }
       if (data.switchColor !== undefined) {

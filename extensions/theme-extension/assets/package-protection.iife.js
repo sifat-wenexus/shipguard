@@ -403,9 +403,6 @@ var __publicField = (obj, key, value) => {
         }
       ];
     }
-    refreshUI(_) {
-      location.reload();
-    }
     async refreshPriceUI() {
       if (this.container) {
         this.container.querySelector(".protection-price").textContent = await this.getPrice();
@@ -470,11 +467,6 @@ var __publicField = (obj, key, value) => {
         accentColor: "#2c7e3f"
       });
     }
-    async refreshUI() {
-      var _a;
-      (_a = document.getElementById("cart-items")) == null ? void 0 : _a.refresh();
-      await this.refreshPriceUI();
-    }
   }
   class PackageProtectionClientDawn extends PackageProtectionClientBasic {
     constructor() {
@@ -501,8 +493,8 @@ var __publicField = (obj, key, value) => {
       return [
         {
           selector: selector ?? ".cart__ctas",
-          insertPosition: position ?? "before",
-          boundaryParents: /* @__PURE__ */ new Set([document.body])
+          insertPosition: position ?? "before"
+          // boundaryParents: new Set([document.body]),
           // boundaryParents: new Set(
           //   Array.from(document.querySelectorAll('cart-drawer'))
           // ),
@@ -523,29 +515,6 @@ var __publicField = (obj, key, value) => {
       });
     }
     // theme support
-    async refreshUI() {
-      Array.from(document.getElementsByTagName("cart-items")).forEach(
-        (i) => i.onCartUpdate()
-      );
-      Array.from(document.getElementsByTagName("cart-drawer-items")).forEach(
-        (i) => i.onCartUpdate()
-      );
-      await this.refreshPriceUI();
-      let subTotal = document.getElementsByClassName("totals__total-value");
-      const items = await window.weNexusCartApi.get();
-      if (items.total_price === 0) {
-        await location.reload();
-        return;
-      }
-      Array.from(subTotal).forEach(
-        (el) => el.innerHTML = `${this.formatPrice(
-          Number(items.total_price / 100),
-          items.currency
-        )}`
-      );
-      document.getElementsByClassName("cart-count-bubble");
-      localStorage.getItem("package-protection-enabled");
-    }
     async refreshWidget() {
       let subTotal = document.getElementsByClassName("totals__total-value");
       const items = await window.weNexusCartApi.get();
@@ -583,6 +552,33 @@ var __publicField = (obj, key, value) => {
           (el) => el.innerHTML = `${des} `
         );
       }, 500);
+    }
+    cartUpdate() {
+      Array.from(document.getElementsByTagName("cart-items")).forEach(
+        (i) => i.onCartUpdate()
+      );
+      Array.from(document.getElementsByTagName("cart-drawer-items")).forEach(
+        (i) => i.onCartUpdate()
+      );
+    }
+    disabledCheckoutButton() {
+      const checkoutButtons = document.querySelectorAll(
+        "button[type='submit'][name='checkout']"
+      );
+      checkoutButtons.forEach((button) => {
+        button.disabled = true;
+      });
+    }
+    async cartBubble() {
+      const item_count = (await window.weNexusCartApi.get()).item_count;
+      let cartIcon = document.getElementsByClassName("cart-count-bubble");
+      Array.from(cartIcon).forEach((el) => {
+        el.childNodes.forEach((e) => {
+          if (e.innerHTML) {
+            e.innerHTML = item_count.toString();
+          }
+        });
+      });
     }
   }
   async function packageProtection() {
@@ -721,6 +717,7 @@ var __publicField = (obj, key, value) => {
       "form[action='/cart']"
     );
     cartLiveQuery.addListener(async (element) => {
+      console.log("from cart");
       const item_count = (await window.weNexusCartApi.get()).item_count;
       let cartIcon = document.getElementsByClassName("cart-count-bubble");
       Array.from(cartIcon).forEach((el) => {
@@ -731,7 +728,6 @@ var __publicField = (obj, key, value) => {
         });
       });
       client.refreshWidget();
-      console.log("first");
       const v = checkExcludeVariants();
       Array.from(element).forEach((form) => {
         form.addEventListener("keydown", (e) => {
@@ -765,9 +761,16 @@ var __publicField = (obj, key, value) => {
         selector.selector,
         selector.boundaryParents
       );
+      const cartItemLiveQuery = new window.WeNexusQuerySelectorLive(
+        ".cart-items"
+      );
+      cartItemLiveQuery.addListener(async (e) => {
+        await client.refreshPriceUI();
+        client.refreshWidget();
+      });
       liveQuery.addListener(async (elements) => {
         var _a2, _b2;
-        removeHistory();
+        console.log("from old-0", { elements });
         items = await getItems();
         client.refreshWidget();
         const PPItem = await items.find(
@@ -782,6 +785,7 @@ var __publicField = (obj, key, value) => {
             (i) => i.onCartUpdate()
           );
         }
+        removeHistory();
         const variants = checkExcludeVariants();
         for (const element of elements) {
           const { container, checkbox } = await client.getCheckboxContainer(
