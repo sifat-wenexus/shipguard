@@ -558,7 +558,6 @@ var __publicField = (obj, key, value) => {
         );
         const price = Number(getPrice.replace(/[^0-9.]/g, ""));
         const checkoutSwitch = localStorage.getItem("package-protection-enabled");
-        this.getDescription();
         let des = "";
         if (checkoutSwitch === "true") {
           des = this.enabledDescription;
@@ -699,7 +698,7 @@ var __publicField = (obj, key, value) => {
     client.buttonColor = settings.switchColor;
     client.css = settings.css;
     client.infoPageLink = settings == null ? void 0 : settings.policyUrl;
-    client.checked = settings.insuranceDisplayButton;
+    client.checked = enabled();
     if (typeof client.getStyleMarkup === "function") {
       document.head.insertAdjacentHTML(
         "beforeend",

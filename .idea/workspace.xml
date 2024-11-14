@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="update subtotal price and description">
+    <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="blink description on widget fixed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/modules/package-protection-listener.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/modules/package-protection-listener.server.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -204,7 +205,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731486355734</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="blink description on widget fixed">
+      <option name="closed" value="true" />
+      <created>1731564830250</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1731564830250</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -230,6 +239,7 @@
     <MESSAGE value="app url update" />
     <MESSAGE value="bug fix on multiple shipping product add" />
     <MESSAGE value="update subtotal price and description." />
-    <option name="LAST_COMMIT_MESSAGE" value="update subtotal price and description." />
+    <MESSAGE value="blink description on widget fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="blink description on widget fixed" />
   </component>
 </project>

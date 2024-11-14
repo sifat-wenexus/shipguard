@@ -43,15 +43,15 @@ interface IShopifyProductCreateAndUpdateArgs {
 export const PRODUCT_SKU: string = 'wenexus-shipping-protection';
 
 const productImage = getConfig().appUrl + appLogo;
-
+const appBaseUrl=getConfig().appUrl.toString().replace('/dashboard', '');
 const icons: {
   id: string;
   icon: string;
 }[] = [
-  { id: 'one', icon: `${getConfig().appUrl}${packageGreen}` },
-  { id: 'two', icon: `${getConfig().appUrl}${packageYellow}` },
-  { id: 'three', icon: `${getConfig().appUrl}${packageBlack}` },
-  { id: 'four', icon: `${getConfig().appUrl}${packageFour}` },
+  { id: 'one', icon: `${appBaseUrl}${packageGreen}` },
+  { id: 'two', icon: `${appBaseUrl}${packageYellow}` },
+  { id: 'three', icon: `${appBaseUrl}${packageBlack}` },
+  { id: 'four', icon: `${appBaseUrl}${packageFour}` },
 ];
 let percentageValueIncreaseBy = 0;
 
