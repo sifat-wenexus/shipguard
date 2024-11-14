@@ -524,7 +524,6 @@ var __publicField = (obj, key, value) => {
     }
     // theme support
     async refreshUI() {
-      console.log("refresh");
       Array.from(document.getElementsByTagName("cart-items")).forEach(
         (i) => i.onCartUpdate()
       );
@@ -555,15 +554,11 @@ var __publicField = (obj, key, value) => {
     async refreshWidget() {
       let subTotal = document.getElementsByClassName("totals__total-value");
       const items = await window.weNexusCartApi.get();
-      if (items.total_price === 0) {
-        location.reload();
-        return;
-      }
       let getPrice = "";
       setTimeout(() => {
-        Array.from(document.getElementsByClassName("protection-price")).forEach(
+        Array.from(document.querySelectorAll(".protection-price")).forEach(
           (e) => {
-            getPrice = e.innerText;
+            getPrice = e.innerHTML;
           }
         );
         const price = Number(getPrice.replace(/[^0-9.]/g, ""));
@@ -717,10 +712,28 @@ var __publicField = (obj, key, value) => {
         })
       );
     }
+    const removeHistory = () => {
+      window.addEventListener("pageshow", function(event) {
+        var historyTraversal = event.persisted || typeof window.performance != "undefined" && window.performance.navigation.type === 2;
+        if (historyTraversal) {
+          console.log(items);
+          window.location.reload();
+        }
+      });
+    };
     const cartLiveQuery = new window.WeNexusQuerySelectorLive(
       "form[action='/cart']"
     );
-    cartLiveQuery.addListener((element) => {
+    cartLiveQuery.addListener(async (element) => {
+      const item_count = (await window.weNexusCartApi.get()).item_count;
+      let cartIcon = document.getElementsByClassName("cart-count-bubble");
+      Array.from(cartIcon).forEach((el) => {
+        el.childNodes.forEach((e) => {
+          if (e.innerHTML) {
+            e.innerHTML = item_count.toString();
+          }
+        });
+      });
       const v = checkExcludeVariants();
       Array.from(element).forEach((form) => {
         form.addEventListener("keydown", (e) => {
@@ -741,6 +754,7 @@ var __publicField = (obj, key, value) => {
           } else {
             await packageProtectionApi.remove();
           }
+          removeHistory();
           window.location.href = "/checkout";
         });
       });
@@ -755,6 +769,7 @@ var __publicField = (obj, key, value) => {
       );
       liveQuery.addListener(async (elements) => {
         var _a2, _b2;
+        removeHistory();
         items = await getItems();
         client.refreshWidget();
         const PPItem = await items.find(
@@ -762,7 +777,12 @@ var __publicField = (obj, key, value) => {
         );
         if (PPItem) {
           await packageProtectionApi.remove();
-          window.location.reload();
+          Array.from(document.getElementsByTagName("cart-items")).forEach(
+            (i) => i.onCartUpdate()
+          );
+          Array.from(document.getElementsByTagName("cart-drawer-items")).forEach(
+            (i) => i.onCartUpdate()
+          );
         }
         const variants = checkExcludeVariants();
         for (const element of elements) {
