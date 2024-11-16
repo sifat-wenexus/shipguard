@@ -6,11 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="76666d30-0829-4d0c-a5b8-f8ebda005276" name="Changes" comment="blink description on widget fixed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/faq.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/faq.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/overview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/overview.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/components/smtp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/components/smtp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/landing-page/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/landing-page/route.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/settings.widget-setup/modules/package-protection-listener.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/settings.widget-setup/modules/package-protection-listener.server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/jobs/import-products.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/jobs/import-products.server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/cart-api.iife.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/cart-api.iife.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" beforeDir="false" afterPath="$PROJECT_DIR$/extensions/theme-extension/assets/package-protection.iife.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -144,6 +141,7 @@
       <workItem from="1731470374053" duration="359000" />
       <workItem from="1731493595177" duration="1949000" />
       <workItem from="1731555226210" duration="1020000" />
+      <workItem from="1731727485373" duration="4499000" />
     </task>
     <task id="LOCAL-00001" summary="add orderDate column at PackageProtectionOrder">
       <option name="closed" value="true" />

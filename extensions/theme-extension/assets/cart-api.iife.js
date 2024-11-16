@@ -204,10 +204,6 @@ var __publicField = (obj, key, value) => {
       const { cart } = await this.request("add", { items }, trigger);
       return cart;
     }
-    async change(item, trigger = true) {
-      const { cart } = await this.request("change", item, trigger);
-      return cart;
-    }
     async remove(variantIds, trigger = true) {
       const toRemove = variantIds.filter(
         (id) => {

@@ -72,18 +72,6 @@ var __publicField = (obj, key, value) => {
       const cart = await window.weNexusCartApi.get();
       return cart.items.filter((item) => this.variantIds.has(item.variant_id));
     }
-    async getExcludedItems() {
-      const cart = await window.weNexusCartApi.get();
-      return cart.items.filter(
-        (item) => window.WeNexusOverallPackageProtectionSettings.packageProtectionProductAndVariants.some(
-          (product) => product.excludedPackageProtectionVariants.some(
-            (variant) => Number(
-              variant.id.replace("gid://shopify/ProductVariant/", "")
-            ) === item.variant_id
-          )
-        )
-      );
-    }
     async calculate() {
       const allVariants = await this.getNonPackageProtectionItems();
       const excludeVariants = window.WeNexusOverallPackageProtectionSettings.packageProtectionProductAndVariants.map((product) => {
@@ -186,53 +174,6 @@ var __publicField = (obj, key, value) => {
         false
       );
       return items[0];
-    }
-    async change(variantId) {
-      if (this.prices.length === 0) {
-        throw new Error("No variants have been set");
-      }
-      const [item] = await this.getPackageProtectionItems();
-      if (!item || variantId === item.variant_id) {
-        return;
-      }
-      const cart = await window.weNexusCartApi.update({
-        [item.variant_id]: 0,
-        [variantId]: 1
-      });
-      return cart.items.find((item2) => item2.variant_id === variantId);
-    }
-    async refresh() {
-      var _a;
-      const nonPackageProtectionItems = await this.getNonPackageProtectionItems();
-      if (!this.enabled || nonPackageProtectionItems.length === 0) {
-        return this.remove();
-      }
-      const excludedItems = await this.getExcludedItems();
-      const ppItems = await this.getPackageProtectionItems();
-      const finalForCart = nonPackageProtectionItems.filter(
-        (item) => !excludedItems.some((ex) => ex.id === item.id)
-      );
-      if (finalForCart.length === 0) {
-        return this.remove();
-      }
-      if (((_a = ppItems[0]) == null ? void 0 : _a.quantity) === 0 || ppItems.length === 0) {
-        return this.add();
-      }
-      const { variantId } = await this.calculate();
-      if (ppItems.reduce((a, b) => a + b.quantity, 0) > 1) {
-        const updates = {};
-        for (const item of ppItems) {
-          if (item.variant_id !== variantId) {
-            updates[item.variant_id] = 0;
-          }
-        }
-        updates[variantId] = 1;
-        const cart = await window.weNexusCartApi.update(updates, false);
-        return cart.items.find((item) => item.variant_id === variantId);
-      }
-      if (!ppItems.some((item) => item.variant_id === variantId)) {
-        return this.change(variantId);
-      }
     }
   };
   __publicField(_PackageProtectionApi, "instance");
@@ -409,6 +350,12 @@ var __publicField = (obj, key, value) => {
       }
     }
     async refreshWidget() {
+    }
+    disabledCheckoutButton() {
+    }
+    cartUpdate() {
+    }
+    cartBubble() {
     }
   }
   class PackageProtectionClientEnterprise extends PackageProtectionClientBasic {
@@ -717,16 +664,7 @@ var __publicField = (obj, key, value) => {
       "form[action='/cart']"
     );
     cartLiveQuery.addListener(async (element) => {
-      console.log("from cart");
-      const item_count = (await window.weNexusCartApi.get()).item_count;
-      let cartIcon = document.getElementsByClassName("cart-count-bubble");
-      Array.from(cartIcon).forEach((el) => {
-        el.childNodes.forEach((e) => {
-          if (e.innerHTML) {
-            e.innerHTML = item_count.toString();
-          }
-        });
-      });
+      client.cartBubble();
       client.refreshWidget();
       const v = checkExcludeVariants();
       Array.from(element).forEach((form) => {
@@ -737,12 +675,7 @@ var __publicField = (obj, key, value) => {
         });
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
-          const checkoutButtons = document.querySelectorAll(
-            "button[type='submit'][name='checkout']"
-          );
-          checkoutButtons.forEach((button) => {
-            button.disabled = true;
-          });
+          client.disabledCheckoutButton();
           if (enabled() && v.length > 0) {
             await packageProtectionApi.add();
           } else {
@@ -753,6 +686,11 @@ var __publicField = (obj, key, value) => {
         });
       });
     });
+    console.log("new changes");
+    window.weNexusCartApi.addListener(async () => {
+      await client.refreshPriceUI();
+      client.refreshWidget();
+    });
     for (const selector of selectors) {
       if (selector.shouldUse && !selector.shouldUse()) {
         continue;
@@ -761,16 +699,8 @@ var __publicField = (obj, key, value) => {
         selector.selector,
         selector.boundaryParents
       );
-      const cartItemLiveQuery = new window.WeNexusQuerySelectorLive(
-        ".cart-items"
-      );
-      cartItemLiveQuery.addListener(async (e) => {
-        await client.refreshPriceUI();
-        client.refreshWidget();
-      });
       liveQuery.addListener(async (elements) => {
         var _a2, _b2;
-        console.log("from old-0", { elements });
         items = await getItems();
         client.refreshWidget();
         const PPItem = await items.find(
@@ -778,12 +708,7 @@ var __publicField = (obj, key, value) => {
         );
         if (PPItem) {
           await packageProtectionApi.remove();
-          Array.from(document.getElementsByTagName("cart-items")).forEach(
-            (i) => i.onCartUpdate()
-          );
-          Array.from(document.getElementsByTagName("cart-drawer-items")).forEach(
-            (i) => i.onCartUpdate()
-          );
+          client.cartUpdate();
         }
         removeHistory();
         const variants = checkExcludeVariants();

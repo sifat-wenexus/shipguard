@@ -2,7 +2,13 @@ import { prisma } from '~/modules/prisma.server';
 import { Job } from '~/modules/job/job';
 
 export class ImportProducts extends Job {
-  steps = ['validate', 'fetchCollections', 'importCollections', 'fetchProducts', 'importProducts'];
+  steps = [
+    'validate',
+    'fetchCollections',
+    'importCollections',
+    'fetchProducts',
+    'importProducts',
+  ];
 
   async validate() {
     if (!this.job.storeId) {
@@ -37,7 +43,9 @@ export class ImportProducts extends Job {
   async importCollections() {
     await this.updateProgress(20);
 
-    const collections = await this.getResult<Record<string, any>[]>('fetchCollections');
+    const collections = await this.getResult<Record<string, any>[]>(
+      'fetchCollections'
+    );
 
     if (!collections?.length) {
       return {
@@ -108,7 +116,7 @@ export class ImportProducts extends Job {
           }
         }
       }
-      `,
+      `
     );
 
     await this.updateProgress(50);
