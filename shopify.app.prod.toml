@@ -22,3 +22,6 @@ prefix = "apps"
 
 [pos]
 embedded = false
+
+[build]
+include_config_on_deploy = true
