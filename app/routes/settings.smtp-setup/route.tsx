@@ -148,7 +148,7 @@ padding:0px 10px}
 </table>
 <p>Please review the claim request and take appropriate action.</p>
 <br/>
-<p>Best regards,<br/> <strong>Inhouse Shipping Protection</strong> <strong>Team</strong></p>
+<p>Best regards,<br/> <strong>Overall: Shipping Protection</strong> <strong>Team</strong></p>
 <p>&nbsp;</p>
 </body>
 </html>

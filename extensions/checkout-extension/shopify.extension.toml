@@ -6,8 +6,8 @@
 api_version = "2024-10"
 
 [[extensions]]
-name = "Inhouse Shipping Protection"
-handle = "ihsp-checkout"
+name = "Overall: Shipping Protection"
+handle = "osp-checkout"
 type = "ui_extension"
 
 
@@ -39,7 +39,7 @@ api_access = true
 # https://shopify.dev/docs/api/checkout-ui-extensions/unstable/configuration#metafields
 
 [[extensions.metafields]]
-namespace = "inhouse_shipping_protection"
+namespace = "overall_shipping_protection"
 key = "productVariants"
 # [[extensions.metafields]]
 # namespace = "my_namespace"

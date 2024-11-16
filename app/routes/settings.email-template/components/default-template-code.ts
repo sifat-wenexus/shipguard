@@ -122,7 +122,7 @@ export const reqAdminTemplate = `<!DOCTYPE html>
       <br />
       <p>
         Best regards,<br />
-        <strong>Inhouse Shipping Protection</strong> Team
+        <strong>Overall: Shipping Protection</strong> Team
       </p>
     </div> <!-- End of Email Container -->
   </body>

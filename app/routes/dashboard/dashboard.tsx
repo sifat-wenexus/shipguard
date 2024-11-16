@@ -251,7 +251,7 @@ const Dashboard = ({ guidelineVisibility }) => {
     <div className="m-2 sm:m-0 dashboard">
       <>
         <Text as="h1" variant="headingXl">
-          Hi 👋, Welcome to Inhouse Shipping Protection
+          Hi 👋, Welcome to Overall: Shipping Protection
         </Text>
         <br />
         {<WarningBanner storeInfo={storeInfo} />}
