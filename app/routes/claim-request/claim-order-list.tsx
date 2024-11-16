@@ -308,7 +308,7 @@ const ClaimOrderList = ({
         }}
       >
         {subscription.loading ? (
-          <IndexTable.Cell colSpan={6}>
+          <IndexTable.Cell colSpan={7}>
             <div className="flex justify-center">
               <Spinner accessibilityLabel="Loading..." size="large" />
             </div>

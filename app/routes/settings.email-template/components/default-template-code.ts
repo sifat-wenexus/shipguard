@@ -78,7 +78,7 @@ export const reqAdminTemplate = `<!DOCTYPE html>
       <div class="email-header">
         <img
           src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse-Shipping-Protection_4a82e447-3fb5-48d1-b85e-7f46ab866e4a.png?v=1727505148"
-          alt="inhouse-shipping-protection"
+          alt="shipping-protection"
           width="220px"
           height="auto"
         />

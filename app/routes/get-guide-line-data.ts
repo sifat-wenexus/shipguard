@@ -40,7 +40,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           if (typeof blocks[block] === 'object') {
             if (
               blocks[block].type.includes(
-                `${process.env.SHOPIFY_IHSP_THEME_ID}`
+                `${process.env.SHOPIFY_OSP_THEME_ID}`
               )
             ) {
               ebbedBlock = !blocks[block].disabled;
@@ -80,7 +80,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         install: install?.enabled,
         claimPage,
         storeId:ctx.session.storeId,
-        appExtensionId: process.env.SHOPIFY_IHSP_THEME_ID,
+        appExtensionId: process.env.SHOPIFY_OSP_THEME_ID,
       });
     } catch (err) {
       console.error(err);
@@ -92,7 +92,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         install: install?.enabled,
         claimPage,
         storeId:ctx.session.storeId,
-        appExtensionId: process.env.SHOPIFY_IHSP_THEME_ID,
+        appExtensionId: process.env.SHOPIFY_OSP_THEME_ID,
       });
     }
   } catch (err) {
