@@ -29,12 +29,12 @@ export const MainNavContext = createContext([
     content: 'Settings',
     accessibilityLabel: 'settings',
   },
-  {
-    id: 'pricing',
-    url: '/pricing',
-    content: 'Pricing',
-    accessibilityLabel: 'pricing',
-  },
+  // {
+  //   id: 'pricing',
+  //   url: '/pricing',
+  //   content: 'Pricing',
+  //   accessibilityLabel: 'pricing',
+  // },
 ] as TabProps[]);
 
 export const MainNav: FC = () => {

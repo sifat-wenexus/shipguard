@@ -66,16 +66,16 @@ export function Nav() {
     //     </Link>
     //   ),
     // },
-    {
-      id: 'pricing',
-      content: (
-        <Link url="/pricing" removeUnderline id="wenexus-nav-link">
-          <div className="flex items-center gap-1">
-            <Icon source={PriceListIcon}></Icon> Pricing
-          </div>
-        </Link>
-      ),
-    },
+    // {
+    //   id: 'pricing',
+    //   content: (
+    //     <Link url="/pricing" removeUnderline id="wenexus-nav-link">
+    //       <div className="flex items-center gap-1">
+    //         <Icon source={PriceListIcon}></Icon> Pricing
+    //       </div>
+    //     </Link>
+    //   ),
+    // },
   ];
 
   useEffect(() => {
