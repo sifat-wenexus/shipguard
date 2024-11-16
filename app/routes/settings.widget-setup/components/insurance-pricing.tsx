@@ -128,7 +128,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
           }
           as="p"
         >
-          Select to add fixed-price protection fees
+          Select to add fixed-price or cart base protection fees
         </Text>
       </div>
     </Box>
@@ -382,7 +382,7 @@ const InsurancePricing = ({ formState, insurancePriceError }) => {
                   }
                   as="p"
                 >
-                  Select to add fixed-price protection fees
+                  Select to add fixed-price or cart value base protection fees
                 </Text>
               </div>
             </Box>
