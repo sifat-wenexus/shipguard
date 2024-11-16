@@ -1,7 +1,13 @@
+import { bulkOperationManager } from '~/modules/bulk-operation-manager.server';
 import { prisma } from '~/modules/prisma.server';
 import { Job } from '~/modules/job/job';
 
-export class ImportProducts extends Job {
+interface Payload {
+  collectionIds?: string[];
+  productIds?: string[];
+}
+
+export class ImportProducts extends Job<Payload> {
   steps = [
     'validate',
     'fetchCollections',
@@ -20,9 +26,22 @@ export class ImportProducts extends Job {
   }
 
   async fetchCollections() {
+    const ids = this.job.payload?.collectionIds;
+    let query = '';
+
+    if (ids) {
+      if (ids.length === 0) {
+        return {
+          imported: 0,
+        };
+      }
+
+      query = ids.map((id) => `id:${id}`).join(' OR ');
+    }
+
     await this.performShopifyBulkQuery(`#graphql
     {
-      collections {
+      collections(query: "${query}") {
         edges {
           node {
             id
@@ -43,9 +62,8 @@ export class ImportProducts extends Job {
   async importCollections() {
     await this.updateProgress(20);
 
-    const collections = await this.getResult<Record<string, any>[]>(
-      'fetchCollections'
-    );
+    const collections =
+      await this.getResult<Record<string, any>[]>('fetchCollections');
 
     if (!collections?.length) {
       return {
@@ -55,14 +73,24 @@ export class ImportProducts extends Job {
 
     await this.updateProgress(30);
 
-    await prisma.collection.createMany({
-      data: collections.map((c) => ({
-        id: c.id,
-        title: c.title,
-        featuredImage: c.image?.url,
-        storeId: this.job.storeId!,
-      })),
-      skipDuplicates: true,
+    await prisma.$transaction(async (trx) => {
+      for (const collection of collections) {
+        await trx.collection.upsert({
+          where: {
+            id: collection.id,
+          },
+          create: {
+            id: collection.id,
+            title: collection.title,
+            featuredImage: collection.image?.url,
+            storeId: this.job.storeId!,
+          },
+          update: {
+            title: collection.title,
+            featuredImage: collection.image?.url,
+          },
+        });
+      }
     });
 
     await this.updateProgress(40);
@@ -73,42 +101,53 @@ export class ImportProducts extends Job {
   }
 
   async fetchProducts() {
-    await this.performShopifyBulkQuery(
-      `#graphql
-      {
-        products {
-          edges {
-            node {
-              id
-              handle
-              title
-              status
-              vendor
-              tags
-              productType
-              featuredImage {
-                url
-              }
-              collections {
-                edges {
-                  node {
-                    id
-                  }
+    const ids = this.job.payload?.productIds;
+    let query = '';
+
+    if (ids) {
+      if (ids.length === 0) {
+        return {
+          imported: 0,
+        };
+      }
+
+      query = ids.map((id) => `id:${id}`).join(' OR ');
+    }
+
+    await this.performShopifyBulkQuery(`#graphql
+    {
+      products(query: "${query}") {
+        edges {
+          node {
+            id
+            handle
+            title
+            status
+            vendor
+            tags
+            productType
+            featuredImage {
+              url
+            }
+            collections {
+              edges {
+                node {
+                  id
                 }
               }
-              variants {
-                edges {
-                  node {
-                    id
-                    title
-                    sku
-                    price
-                    compareAtPrice
-                    inventoryQuantity
-                    sellableOnlineQuantity
-                    image {
-                      url
-                    }
+            }
+            variants {
+              edges {
+                node {
+                  id
+                  title
+                  sku
+                  price
+                  compareAtPrice
+                  inventoryQuantity
+                  sellableOnlineQuantity
+                  image {
+                    url
                   }
                 }
               }
@@ -116,8 +155,8 @@ export class ImportProducts extends Job {
           }
         }
       }
-      `
-    );
+    }
+    `);
 
     await this.updateProgress(50);
     this.pauseExecution();
@@ -134,70 +173,92 @@ export class ImportProducts extends Job {
       };
     }
 
+    const products = bulkOperationManager.stitchResult(nodes);
+
     await this.updateProgress(70);
 
-    const products: Record<string, any>[] = [];
-    const collections: Record<string, any>[] = [];
-    const variants: Record<string, any>[] = [];
-
-    for (const node of nodes) {
-      if (node.id.startsWith('gid://shopify/ProductVariant')) {
-        variants.push(node);
-      } else if (node.id.startsWith('gid://shopify/Product')) {
-        products.push(node);
-      } else if (node.id.startsWith('gid://shopify/Collection')) {
-        collections.push(node);
-      }
-    }
-
-    await prisma.product.createMany({
-      data: products.map((p) => ({
-        id: p.id,
-        storeId: this.job.storeId!,
-        title: p.title,
-        handle: p.handle,
-        productType: p.productType,
-        status: p.status === 'ACTIVE' ? 'PUBLISHED' : p.status,
-        vendor: p.vendor,
-        tags: p.tags,
-        featuredImage: p.featuredImage?.url,
-      })),
-      skipDuplicates: true,
-    });
-
-    await this.updateProgress(80);
-
-    for (const collection of collections) {
-      await prisma.collection.update({
-        where: {
-          id: collection.id,
-        },
-        data: {
-          Products: {
-            connect: {
-              id: collection.__parentId,
+    await prisma.$transaction(
+      async (trx) => {
+        for (const product of products) {
+          await trx.product.upsert({
+            where: {
+              id: product.id,
             },
-          },
-        },
-      });
-    }
-
-    await this.updateProgress(90);
-
-    await prisma.productVariant.createMany({
-      data: variants.map((v) => ({
-        id: v.id,
-        productId: v.__parentId,
-        title: v.title,
-        sku: v.sku === '' ? undefined : v.sku,
-        price: v.price,
-        compareAtPrice: v.compareAtPrice ?? undefined,
-        inventoryQuantity: v.inventoryQuantity,
-        sellableOnlineQuantity: v.sellableOnlineQuantity,
-        featuredImage: v.image?.url,
-      })),
-      skipDuplicates: true,
-    });
+            create: {
+              id: product.id,
+              storeId: this.job.storeId!,
+              title: product.title,
+              handle: product.handle,
+              productType: product.productType,
+              status:
+                product.status === 'ACTIVE' ? 'PUBLISHED' : product.status,
+              vendor: product.vendor,
+              tags: product.tags,
+              featuredImage: product.featuredImage?.url,
+              Collections: product.collections
+                ? {
+                  connect: product.collections.map((c) => ({ id: c.id })),
+                }
+                : undefined,
+              Variants: {
+                createMany: {
+                  data: product.productVariants.map((v) => ({
+                    id: v.id,
+                    title: v.title,
+                    sku: v.sku,
+                    price: v.price || v.compareAtPrice || 0,
+                    compareAtPrice: v.compareAtPrice || v.price || 0,
+                    inventoryQuantity: v.inventoryQuantity,
+                    sellableOnlineQuantity: v.sellableOnlineQuantity,
+                    featuredImage: v.image?.url || null,
+                  })),
+                  skipDuplicates: true,
+                },
+              },
+            },
+            update: {
+              title: product.title,
+              handle: product.handle,
+              productType: product.productType,
+              status:
+                product.status === 'ACTIVE' ? 'PUBLISHED' : product.status,
+              vendor: product.vendor,
+              tags: product.tags,
+              featuredImage: product.featuredImage?.url,
+              Collections: product.collections
+                ? {
+                  set: product.collections.map((c) => ({ id: c.id })),
+                }
+                : undefined,
+              Variants: {
+                connectOrCreate: product.productVariants.map((v) => ({
+                  where: { id: v.id },
+                  create: {
+                    id: v.id,
+                    title: v.title,
+                    sku: v.sku,
+                    price: v.price || v.compareAtPrice || 0,
+                    compareAtPrice: v.compareAtPrice || v.price || 0,
+                    inventoryQuantity: v.inventoryQuantity,
+                    sellableOnlineQuantity: v.sellableOnlineQuantity,
+                    featuredImage: v.image?.url || null,
+                  },
+                })),
+                deleteMany: {
+                  id: {
+                    notIn: product.productVariants.map((v) => v.id),
+                  },
+                },
+              },
+            },
+          });
+        }
+      },
+      {
+        timeout: 30000,
+        maxWait: 30000,
+      }
+    );
 
     return {
       imported: products.length,

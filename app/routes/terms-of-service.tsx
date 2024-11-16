@@ -9,14 +9,14 @@ export default function TermsConditions() {
         <img
           src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse-Shipping-Protection_4a82e447-3fb5-48d1-b85e-7f46ab866e4a.png?v=1727505148"
           className="w-[220px] mx-auto h-auto my-4"
-          alt="Inhouse Shipping Protection"
+          alt="Overall: Shipping Protection"
         />
       </Link>
 
       <ShadowBevelBox divider={false}>
         <BlockStack gap="400">
           <Text as="h1" variant="headingLg">
-            Inhouse Shipping Protection - Terms & Conditions
+            Overall: Shipping Protection - Terms & Conditions
           </Text>
 
           <Text variant="bodyMd" as="p">
@@ -29,7 +29,7 @@ export default function TermsConditions() {
             1. Agreement to Terms
           </Text>
           <Text variant="bodyMd" as="p">
-            By installing and using the "Inhouse Shipping Protection" Shopify
+            By installing and using the "Overall: Shipping Protection" Shopify
             app you ("Merchant" or "User") agree to comply with these Terms &
             Conditions. If you do not agree, you must uninstall the app and
             discontinue using our services.
@@ -39,7 +39,7 @@ export default function TermsConditions() {
             2. Services Provided
           </Text>
           <Text variant="bodyMd" as="p">
-            The "Inhouse Shipping Protection" app offers the following services:
+            The "Overall: Shipping Protection" app offers the following services:
           </Text>
           <List type="bullet" gap="loose">
             <List.Item>
@@ -59,7 +59,23 @@ export default function TermsConditions() {
           </List>
 
           <Text variant="headingMd" as="h2">
-            3. Merchant Responsibilities
+            3. Free Early Access
+          </Text>
+
+          <List type="bullet" gap="loose">
+            <List.Item>
+              <b>Limited-Time Offer</b>: We offer free early access to the app for a limited time to users who install during the promotional period
+            </List.Item>
+            <List.Item>
+              <b>Changes to Pricing</b>: We reserve the right to introduce new pricing plans or subscription tiers for all users, including those who initially obtained free access. Continued use of the app after the introduction of a paid plan implies acceptance of the new pricing terms.
+            </List.Item>
+            <List.Item>
+              <b>Notifications</b>: Users will be notified in advance of any pricing changes to allow for decisions regarding continued app usage.
+            </List.Item>
+          </List>
+
+          <Text variant="headingMd" as="h2">
+            4. Merchant Responsibilities
           </Text>
           <Text variant="bodyMd" as="p">
             <strong>Data Accuracy:</strong> You are responsible for ensuring the
@@ -79,7 +95,7 @@ export default function TermsConditions() {
           </Text>
 
           <Text variant="headingMd" as="h2">
-            4. Google OAuth 2.0 Integration
+            5. Google OAuth 2.0 Integration
           </Text>
           <Text variant="bodyMd" as="p">
             <strong>Authorization:</strong> By enabling Google OAuth 2.0, you
@@ -98,7 +114,7 @@ export default function TermsConditions() {
           </Text>
 
           <Text variant="headingMd" as="h2">
-            5. Data Security
+            6. Data Security
           </Text>
           <Text variant="bodyMd" as="p">
             We implement reasonable measures to protect your data, but you
@@ -108,7 +124,7 @@ export default function TermsConditions() {
           </Text>
 
           <Text variant="headingMd" as="h2">
-            6. Limitation of Liability
+            7. Limitation of Liability
           </Text>
           <Text variant="bodyMd" as="p">
             We strive to ensure that the app functions correctly, but we do not
@@ -128,7 +144,7 @@ export default function TermsConditions() {
           </List>
 
           <Text variant="headingMd" as="h2">
-            7. Termination
+            8. Termination
           </Text>
           <Text variant="bodyMd" as="p">
             We reserve the right to terminate or suspend your access to the app
@@ -137,7 +153,7 @@ export default function TermsConditions() {
           </Text>
 
           <Text variant="headingMd" as="h2">
-            8. Governing Law
+            9. Governing Law
           </Text>
           <Text variant="bodyMd" as="p">
             These Terms & Conditions are governed by the laws of [Your
@@ -146,7 +162,7 @@ export default function TermsConditions() {
           </Text>
 
           <Text variant="headingMd" as="h2">
-            9. Modifications to Terms
+            10. Modifications to Terms
           </Text>
           <Text variant="bodyMd" as="p">
             We may update these Terms & Conditions at any time. Continued use of
@@ -155,7 +171,7 @@ export default function TermsConditions() {
           </Text>
 
           <Text variant="headingMd" as="h2">
-            10. Contact Us
+            11. Contact Us
           </Text>
           <Text variant="bodyMd" as="p">
             If you have any questions or concerns about these Terms & Conditions

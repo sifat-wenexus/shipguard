@@ -40,7 +40,7 @@ export const shopify = shopifyApp({
     COLLECTIONS_UPDATE: webhookHandler,
     COLLECTIONS_CREATE: webhookHandler,
     COLLECTIONS_DELETE: webhookHandler,
-    BULK_OPERATIONS_FINISH: webhookHandler,
+    // BULK_OPERATIONS_FINISH: webhookHandler,
     ORDERS_CREATE: webhookHandler,
     ORDERS_UPDATED: webhookHandler,
     REFUNDS_CREATE: webhookHandler,

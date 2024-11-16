@@ -1,8 +1,11 @@
-import type { Job, JobExecution, Prisma } from '#prisma-client';
+import { bulkOperationManager } from '~/modules/bulk-operation-manager.server';
+import type { BulkOperation, Job, JobExecution, Prisma } from '#prisma-client';
+import { bigSetTimeout } from '~/modules/big-set-timeout';
 import { queryProxy } from '~/modules/query/query-proxy';
 import type { JobName } from '~/jobs/index.server';
 import { jobExecutors } from '~/jobs/index.server';
 import { prisma } from '~/modules/prisma.server';
+import { emitter } from '~/modules/emitter.server';
 
 export interface JobRunnerOptions {
   name: JobName;
@@ -24,7 +27,7 @@ class Queue {
   ) {}
 
   public readonly items = new Set<Job>();
-  public readonly timeouts: Record<number, NodeJS.Timeout> = {};
+  public readonly timeouts: Record<number, () => void> = {};
   public readonly ids = new Set<number>();
   public loading = false;
 
@@ -165,7 +168,7 @@ class Queue {
         },
       });
 
-      this.timeouts[job.id] = setTimeout(async () => {
+      this.timeouts[job.id] = bigSetTimeout(async () => {
         this.items.add(job);
         this.ids.add(job.id);
 
@@ -194,22 +197,72 @@ class Queue {
 
 export class JobRunner {
   constructor() {
+    emitter.on(
+      'bulk-operation.finished',
+      async (operation: BulkOperation) => {
+        const job = await prisma.job.findFirst({
+          where: {
+            bulkOperationId: operation.id,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        if (!job) {
+          return;
+        }
+
+        const data = await bulkOperationManager.fetchData(operation);
+        await jobRunner.resumeExecution(job.id, data);
+      },
+      {
+        async: true,
+      }
+    );
+
+    emitter.on(
+      'bulk-operation.failed',
+      async (operation: BulkOperation) => {
+        const job = await prisma.job.findFirst({
+          where: {
+            bulkOperationId: operation.id,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        if (!job) {
+          return;
+        }
+
+        await jobRunner.cancel([job.id]);
+      },
+      {
+        async: true,
+      }
+    );
+
     setTimeout(() => {
       this.initialize().then(() => {
-        setInterval(() => this.sequentialQueue.loadJobs(), 1000);
-        setInterval(() => this.concurrentQueue.loadJobs(), 1000);
+        setInterval(() => this.sequentialQueue.loadJobs(), 3000);
+        setInterval(() => this.concurrentQueue.loadJobs(), 4000);
 
-        setInterval(() => this.runJobs(this.sequentialQueue), 1000);
-        setInterval(() => this.runJobs(this.concurrentQueue), 1000);
+        setInterval(() => this.runJobs(this.sequentialQueue), 4000);
+        setInterval(() => this.runJobs(this.concurrentQueue), 5000);
+        setInterval(() => this.watchPausedStuckJobs(), 8000);
 
         setImmediate(() => this.runJobs(this.sequentialQueue));
         setImmediate(() => this.runJobs(this.concurrentQueue));
+        setImmediate(() => this.watchPausedStuckJobs());
       });
     }, 10000);
   }
 
   public readonly concurrentQueue = new Queue(100000, true);
   public readonly sequentialQueue = new Queue(50);
+  private watchingPausedStuckJobs = false;
   private running = false;
 
   private async runJobs(queue: Queue) {
@@ -233,6 +286,57 @@ export class JobRunner {
     );
 
     this.running = false;
+  }
+
+  private async watchPausedStuckJobs() {
+    if (this.watchingPausedStuckJobs) {
+      return;
+    }
+
+    this.watchingPausedStuckJobs = true;
+
+    const query = await queryProxy.job.findMany({
+      where: {
+        status: 'PAUSED',
+        BulkOperation: {
+          processed: true,
+          status: {
+            in: ['COMPLETED', 'CANCELLED', 'EXPIRED', 'FAILED'],
+          },
+        },
+      },
+      include: {
+        BulkOperation: true,
+      },
+    });
+
+    return new Promise((resolve) => {
+      query.addListener(async (jobs) => {
+        await Promise.all(
+          jobs.map(async (job) => {
+            const bulkOperation = job.BulkOperation;
+
+            if (!bulkOperation) {
+              return;
+            }
+
+            if (bulkOperation.status === 'COMPLETED') {
+              const data = await bulkOperationManager.fetchData(bulkOperation);
+              await this.resumeExecution(job.id, data);
+            } else {
+              await this.cancel([job.id]);
+            }
+          })
+        );
+
+        if (query.hasNext) {
+          query.next();
+        } else {
+          resolve(undefined);
+          this.watchingPausedStuckJobs = false;
+        }
+      });
+    });
   }
 
   private async initialize() {
@@ -541,7 +645,7 @@ export class JobRunner {
         ? this.concurrentQueue
         : this.sequentialQueue;
 
-      clearTimeout(queue.timeouts[job.id]);
+      queue.timeouts[job.id]?.();
       delete queue.timeouts[job.id];
       queue.remove(job);
     }

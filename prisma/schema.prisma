@@ -102,19 +102,20 @@ enum EmailTemplateName {
   CLAIM_CANCEL_EMAIL_FOR_CUSTOMER
 }
 
-enum BulkOperationType {
-  MUTATION
-  QUERY
-}
-
 enum BulkOperationStatus {
-  CANCELED
-  CENCELING
+  CANCELLED
+  CANCELING
   COMPLETED
   CREATED
   EXPIRED
   FAILED
   RUNNING
+  SCHEDULED
+}
+
+enum BulkOperationType {
+  MUTATION
+  QUERY
 }
 
 enum BulkOperationErrorCode {
@@ -201,13 +202,16 @@ model Store {
   EmailTemplates              EmailTemplate[]
   GoogleAuthCredential        GoogleAuthCredential?
   SmtpSetting                 SmtpSetting?
+  Webhooks                    Webhook[]
+  BulkOperations              BulkOperation[]
 
   @@index([appInstallationId])
 }
 
 model Job {
-  id      Int     @id @default(autoincrement())
-  storeId String?
+  id              Int     @id @default(autoincrement())
+  storeId         String?
+  bulkOperationId Int?    @unique
 
   status JobStatus
   name   String
@@ -225,14 +229,41 @@ model Job {
   createdAt  DateTime  @default(now()) @db.Timestamptz()
   updatedAt  DateTime  @updatedAt @db.Timestamptz()
 
-  Store          Store?             @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Executions     JobExecution[]
-  BulkOperations JobBulkOperation[]
-  Dependencies   JobDependency[]    @relation("jobId")
-  Dependents     JobDependency[]    @relation("dependsOnId")
+  Store         Store?          @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Executions    JobExecution[]
+  Dependencies  JobDependency[] @relation("jobId")
+  Dependents    JobDependency[] @relation("dependsOnId")
+  BulkOperation BulkOperation?  @relation(fields: [bulkOperationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([status, storeId, name])
   @@index([executedAt], type: Brin)
+}
+
+model BulkOperation {
+  id          Int     @id @default(autoincrement())
+  operationId String?
+  storeId     String
+  nodeId      String
+
+  type             BulkOperationType       @default(MUTATION)
+  status           BulkOperationStatus     @default(CREATED)
+  query            String
+  variables        Json?
+  stagedUploadPath String?
+  fileSize         Int?
+  url              String?
+  partialDataUrl   String?
+  objectCount      Int                     @default(0)
+  rootObjectCount  Int                     @default(0)
+  errorCode        BulkOperationErrorCode?
+  error            Json?
+  processed        Boolean                 @default(false)
+
+  createdAt   DateTime  @default(now()) @db.Timestamptz()
+  completedAt DateTime? @db.Timestamptz()
+
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Job   Job?
 }
 
 model JobExecution {
@@ -262,6 +293,20 @@ model JobDependency {
   DependsOn Job @relation("dependsOnId", fields: [dependsOnId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([jobId, dependsOnId])
+}
+
+model Webhook {
+  id        String  @id
+  nodeId    String
+  storeId   String
+  objectId  String?
+  topic     String
+  payload   Json
+  processed Boolean @default(false)
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model File {
@@ -547,15 +592,4 @@ model App {
   id Int @id @default(1)
 
   url String
-}
-
-model JobBulkOperation {
-  id    String @id
-  jobId Int
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-
-  Job Job? @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@index([jobId])
 }

@@ -442,5 +442,20 @@ export const models = defineModels(() => {
         },
       },
     },
+    bulkOperation: {
+      permissions: {
+        subscribe: true,
+        read: {
+          fields: true,
+          permission(session) {
+            return {
+              Job: {
+                storeId: session.storeId!,
+              },
+            };
+          },
+        },
+      },
+    },
   };
 });

@@ -85,4 +85,8 @@ export interface ModelTypes {
     model: Base.JobDependency;
     whereInput: Base.Prisma.JobDependencyWhereInput;
   };
+  bulkOperation: {
+    model: Base.BulkOperation;
+    whereInput: Base.Prisma.BulkOperationWhereInput;
+  };
 }

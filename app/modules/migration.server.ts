@@ -220,10 +220,25 @@ export class Migration {
       },
     });
 
+    const previousJob = await prisma.job.findFirst({
+      where: {
+        name: 'import-products',
+        storeId: store.id,
+      },
+    });
+
+    await jobRunner.run({
+      name: 'import-orders',
+      storeId: store.id,
+      maxRetries: 5,
+      dependencies: previousJob ? [previousJob.id] : [],
+    });
+
     await jobRunner.run({
       name: 'import-orders',
       storeId: store.id,
       interval: 60 * 60 * 6,
+      scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 6),
       maxRetries: 5,
     });
   }

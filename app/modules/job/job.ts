@@ -1,3 +1,4 @@
+import { bulkOperationManager } from '~/modules/bulk-operation-manager.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import type { Job as BaseJobDetails, JobExecution } from '#prisma-client';
 import type { JobRunner } from '~/modules/job/job-runner.server';
@@ -5,11 +6,6 @@ import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
 import _ from 'lodash';
-
-import {
-  performBulkMutation,
-  performBulkQuery,
-} from '~/modules/perform-bulk-operation.server';
 
 export interface JobDetails<P = any> extends Omit<BaseJobDetails, 'payload'> {
   payload: P;
@@ -63,12 +59,14 @@ export abstract class Job<P = any> {
       throw new Error('Session not found');
     }
 
-    const { operationId } = await performBulkQuery(session, query, false);
+    const operation = await bulkOperationManager.query(session, query, false);
 
-    await prisma.jobBulkOperation.create({
+    await queryProxy.job.update({
+      where: {
+        id: this.job.id,
+      },
       data: {
-        id: operationId,
-        jobId: this.job.id,
+        bulkOperationId: operation.id,
       },
     });
   }
@@ -98,17 +96,19 @@ export abstract class Job<P = any> {
       throw new Error('Session not found');
     }
 
-    const { operationId } = await performBulkMutation(
+    const operation = await bulkOperationManager.mutation(
       session,
       mutation,
       variables,
       false
     );
 
-    await prisma.jobBulkOperation.create({
+    await queryProxy.job.update({
+      where: {
+        id: this.job.id,
+      },
       data: {
-        id: operationId,
-        jobId: this.job.id,
+        bulkOperationId: operation.id,
       },
     });
   }
@@ -198,6 +198,14 @@ export abstract class Job<P = any> {
     }
 
     let error: any = null;
+
+    if (typeof (this as any).beforeRun === 'function') {
+      try {
+        await (this as any).beforeRun();
+      } catch (e) {
+        console.error(e);
+      }
+    }
 
     for (
       let i = this.steps.indexOf(this.execution.currentStep);
@@ -308,6 +316,14 @@ export abstract class Job<P = any> {
       emitter.emitAsync(`${eventBase}.rescheduled`, job);
       emitter.emitAsync(`${job.storeId}.${eventBase}.rescheduled`, job);
     }
+
+    if (typeof (this as any).afterRun === 'function') {
+      try {
+        await (this as any).afterRun();
+      } catch (e) {
+        console.error(e);
+      }
+    }
   }
 
   async getResult<R>(step: string): Promise<R | null> {
@@ -333,4 +349,3 @@ export abstract class Job<P = any> {
 export interface JobConstructor {
   new (job: JobDetails): Job;
 }
-
