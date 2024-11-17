@@ -15,6 +15,28 @@ redirect_urls = ["https://shipping-protection.wenexus.io/auth/callback"]
 [webhooks]
 api_version = "2024-10"
 
+[[webhooks.subscriptions]]
+topics = [
+  "app/uninstalled",
+  "products/update",
+  "products/create",
+  "products/delete",
+  "collections/update",
+  "collections/create",
+  "collections/delete",
+  "orders/create",
+  "orders/updated",
+  "refunds/create",
+  "orders/fulfilled",
+  "orders/partially_fulfilled",
+  "customers/redact",
+  "customers/data_request",
+  "shop/redact",
+  "shop/update"
+]
+compliance_topics = ["customers/redact", "customers/data_request", "shop/redact"]
+uri = "https://shipping-protection.wenexus.io/webhooks"
+
 [app_proxy]
 url = "https://shipping-protection.wenexus.io"
 subpath = "Shipping-Protection"
@@ -22,3 +44,6 @@ prefix = "apps"
 
 [pos]
 embedded = false
+
+[build]
+include_config_on_deploy = true
