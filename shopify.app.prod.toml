@@ -29,9 +29,6 @@ topics = [
   "refunds/create",
   "orders/fulfilled",
   "orders/partially_fulfilled",
-  "customers/redact",
-  "customers/data_request",
-  "shop/redact",
   "shop/update"
 ]
 compliance_topics = ["customers/redact", "customers/data_request", "shop/redact"]
