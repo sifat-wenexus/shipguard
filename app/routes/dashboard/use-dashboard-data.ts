@@ -23,15 +23,6 @@ export function useDashboardData(
               },
             },
           ],
-
-          // AND: [
-          //   {
-          //     createdAt: {
-          //       gte: startDate,
-          //       lte: endDate,
-          //     },
-          //   },
-          // ],
         },
         by: 'issue',
         _count: { id: true },
@@ -39,7 +30,7 @@ export function useDashboardData(
           issue: 'asc',
         },
       }),
-    [endDate, startDate]
+    [endDate, startDate,storeId]
   );
   const lineDataQuery = useMemo(
     () =>
@@ -63,7 +54,7 @@ export function useDashboardData(
           orderDate: 'desc', // Order by date ascending
         },
       }),
-    [endDate, startDate]
+    [endDate, startDate,storeId]
   );
   const totalQuery = useMemo(
     () =>
@@ -87,7 +78,7 @@ export function useDashboardData(
           ],
         },
       }),
-    [endDate, startDate]
+    [endDate, startDate,storeId]
   );
   const notClaimedQuery = useMemo(
     () =>
@@ -110,7 +101,7 @@ export function useDashboardData(
           ],
         },
       }),
-    [endDate, startDate]
+    [endDate, startDate,storeId]
   );
   const totalPackageProtectionQuery = useMemo(
     () =>
@@ -128,7 +119,7 @@ export function useDashboardData(
           ],
         },
       }),
-    [endDate, startDate]
+    [endDate, startDate,storeId]
   );
   const totalNonPackageProtectionQuery = useMemo(
     () =>
@@ -146,7 +137,7 @@ export function useDashboardData(
           ],
         },
       }),
-    [endDate, startDate]
+    [endDate, startDate,storeId]
   );
   const totalNonPackageProtectionSubscription = useQuery(
     totalNonPackageProtectionQuery

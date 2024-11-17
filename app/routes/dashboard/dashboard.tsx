@@ -40,7 +40,7 @@ export const default30Days = () => {
   };
 };
 
-const Dashboard = ({ guidelineVisibility }) => {
+const Dashboard = ({ guidelineVisibility ,storeId}) => {
   const defaultActiveDates = useMemo(() => default30Days(), []);
 
   const [activeDates, setActiveDates] =
@@ -60,7 +60,7 @@ const Dashboard = ({ guidelineVisibility }) => {
   // let startPoint = 0;
 
   const { storeInfo } = useLivePageData();
-  const data = useDashboardData(startDate, endDate, storeInfo?.storeId);
+  const data = useDashboardData(startDate, endDate, storeId);
 
   let renderElement: React.ReactNode = null;
 
