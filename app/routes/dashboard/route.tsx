@@ -18,17 +18,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({
     guidelineVisibility: cookieHeader,
     currencyCode,
+    storeId: ctx.session.storeId,
   });
 }
 
 const App = () => {
-  const data = useLoaderData<typeof loader>();
+  const {currencyCode,storeId} = useLoaderData<typeof loader>();
 
   const { guidelineVisibility } = useLoaderData<typeof loader>();
   return (
-    <PageShell currencyCode={data.currencyCode}>
+    <PageShell currencyCode={currencyCode}>
       <Page>
-        <Dashboard guidelineVisibility={guidelineVisibility} />
+        <Dashboard guidelineVisibility={guidelineVisibility} storeId={storeId}/>
       </Page>
     </PageShell>
   );
