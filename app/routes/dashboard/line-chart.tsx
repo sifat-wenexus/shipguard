@@ -24,7 +24,9 @@ function LineChartForDashboard({ lineData }) {
   const chartData = [
     {
       name: 'Revenue',
-      data: lineData ?? [],
+      data: lineData?.map(e=>{
+        return {...e, key:e.key.split('T')[0]}
+      }) ?? [],
     },
   ];
 

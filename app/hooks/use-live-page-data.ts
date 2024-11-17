@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-export function useLivePageData(delay: number = 100000) {
+export function useLivePageData(delay: number = 10000) {
   const [storeInfo, setStoreInfo] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
 

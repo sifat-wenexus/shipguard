@@ -77,7 +77,7 @@ const Order = () => {
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
     // Generate and download the Excel file
-    XLSX.writeFile(wb, 'data.xlsx');
+    XLSX.writeFile(wb, 'orders.xlsx');
   };
 
   return (
