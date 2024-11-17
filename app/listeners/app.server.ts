@@ -1,6 +1,5 @@
 import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
-import { gcloudStorage } from '~/modules/gcloud-storage.server';
-import { queryProxy } from '~/modules/query/query-proxy';
+import { jobRunner } from '~/modules/job/job-runner.server';
 import { getMailer } from '~/modules/get-mailer.server';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
@@ -22,31 +21,36 @@ emitter.on(
 
 emitter.on(
   'SHOP_REDACT',
-  async ({ session, shop }: WebhookListenerArgs) => {
-    // TODO: Wait 25 days before deleting the shop data
-
-    if (session) {
-      await prisma.session.deleteMany({ where: { shop } });
-    }
-
-    const filesQuery = await queryProxy.file.findMany({
-      where: { Store: { domain: shop } },
+  async ({ session }: WebhookListenerArgs) => {
+    // Delete shop data after 25 days
+    jobRunner.run({
+      name: 'shop-redact',
+      storeId: session?.storeId,
+      scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 25),
     });
 
-    const bucket = gcloudStorage.bucket(process.env.GC_STORAGE_BUCKET_NAME!);
-
-    filesQuery.addListener(async (files) => {
-      for (const file of files) {
-        await bucket.file(file.id).delete();
-      }
-
-      if (filesQuery.hasNext) {
-        return filesQuery.next();
-      }
-
-      await prisma.store.deleteMany({ where: { domain: shop } });
-      await prisma.session.deleteMany({ where: { shop } });
-    });
+    // if (session) {
+    //   await prisma.session.deleteMany({ where: { shop } });
+    // }
+    //
+    // const filesQuery = await queryProxy.file.findMany({
+    //   where: { Store: { domain: shop } },
+    // });
+    //
+    // const bucket = gcloudStorage.bucket(process.env.GC_STORAGE_BUCKET_NAME!);
+    //
+    // filesQuery.addListener(async (files) => {
+    //   for (const file of files) {
+    //     await bucket.file(file.id).delete();
+    //   }
+    //
+    //   if (filesQuery.hasNext) {
+    //     return filesQuery.next();
+    //   }
+    //
+    //   await prisma.store.deleteMany({ where: { domain: shop } });
+    //   await prisma.session.deleteMany({ where: { shop } });
+    // });
   }
 );
 
