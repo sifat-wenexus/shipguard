@@ -1,23 +1,20 @@
 import { Banner, Button, Modal, Text } from '@shopify/polaris';
 import guidelineImage from '~/assets/images/guideline.png';
 import { AlertDiamondIcon } from '@shopify/polaris-icons';
-import { useCallback, useEffect, useState } from 'react';
-import { Link } from '@remix-run/react';
+import { useCallback,  useState } from 'react';
+// import { Link } from '@remix-run/react';
 
 const WarningBanner = ({ storeInfo }) => {
   if (storeInfo.embedBlock) return null;
   const [active, setActive] = useState(false);
-  const [showBanner, setShowBanner] = useState(false);
   const handlePopUp = useCallback(() => {
     setActive(!active);
   }, [active]);
   const activator = <Button onClick={handlePopUp}>Check instructions</Button>;
-  useEffect(() => {
-    setShowBanner(storeInfo?.ebbedBlock ? false : true);
-  }, [storeInfo?.ebbedBlock]);
+
   return (
     <>
-      {showBanner && (
+      {(
         <div className="w-full mb-4">
           <Banner
             title="Package protection isn't showing up on your store yet"

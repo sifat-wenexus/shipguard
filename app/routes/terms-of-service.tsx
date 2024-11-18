@@ -7,7 +7,7 @@ export default function TermsConditions() {
     <Page>
       <Link to={'https://shipping-protection.wenexus.io/'}>
         <img
-          src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse-Shipping-Protection_4a82e447-3fb5-48d1-b85e-7f46ab866e4a.png?v=1727505148"
+          src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/over-all-shippping-protection-logo.png?v=1731747621"
           className="w-[220px] mx-auto h-auto my-4"
           alt="Overall: Shipping Protection"
         />
@@ -39,7 +39,8 @@ export default function TermsConditions() {
             2. Services Provided
           </Text>
           <Text variant="bodyMd" as="p">
-            The "Overall: Shipping Protection" app offers the following services:
+            The "Overall: Shipping Protection" app offers the following
+            services:
           </Text>
           <List type="bullet" gap="loose">
             <List.Item>
@@ -64,13 +65,21 @@ export default function TermsConditions() {
 
           <List type="bullet" gap="loose">
             <List.Item>
-              <b>Limited-Time Offer</b>: We offer free early access to the app for a limited time to users who install during the promotional period
+              <b>Limited-Time Offer</b>: We offer free early access to the app
+              for a limited time to users who install during the promotional
+              period
             </List.Item>
             <List.Item>
-              <b>Changes to Pricing</b>: We reserve the right to introduce new pricing plans or subscription tiers for all users, including those who initially obtained free access. Continued use of the app after the introduction of a paid plan implies acceptance of the new pricing terms.
+              <b>Changes to Pricing</b>: We reserve the right to introduce new
+              pricing plans or subscription tiers for all users, including those
+              who initially obtained free access. Continued use of the app after
+              the introduction of a paid plan implies acceptance of the new
+              pricing terms.
             </List.Item>
             <List.Item>
-              <b>Notifications</b>: Users will be notified in advance of any pricing changes to allow for decisions regarding continued app usage.
+              <b>Notifications</b>: Users will be notified in advance of any
+              pricing changes to allow for decisions regarding continued app
+              usage.
             </List.Item>
           </List>
 

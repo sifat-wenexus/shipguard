@@ -50,7 +50,7 @@ export async function loader({ request }) {
     {
       id: 'settings/smtp-setup',
       name: 'SMTP Setup',
-      description: 'Steps to enable Outgoing Mail Server.',
+      description: 'Configure the outgoing mail server to enable email notifications.',
       installed: smtp?.provider ?? false,
       illustration: serverIcon,
       available: true,
@@ -58,7 +58,7 @@ export async function loader({ request }) {
     {
       id: 'settings/email-template',
       name: 'Email Template Setup',
-      description: 'Steps to enable .',
+      description: 'Edit and customize email templates to match your brand.',
       installed: false,
       illustration: emailIcon,
       available: true,
@@ -96,7 +96,7 @@ export async function loader({ request }) {
       {
         id: 'settings/widget-setup',
         name: 'Widget Setup',
-        description: 'Steps to enable widget in your theme.',
+        description: 'Follow steps to activate and integrate the widget into your theme.',
         installed: installed?.enabled ?? false,
         illustration: widgetIcon,
         available: true,
@@ -104,7 +104,7 @@ export async function loader({ request }) {
       {
         id: 'settings/claim-page',
         name: 'Customer Claim Page Setup',
-        description: 'Steps to enable customer claim page in your theme.',
+        description: 'Enable the customer claim page in your theme to manage claims seamlessly.',
         installed: claimPage ?? false,
         illustration: pageIcon,
         available: true,
@@ -112,7 +112,7 @@ export async function loader({ request }) {
       {
         id: 'settings/checkout-extension',
         name: 'Checkout Extension Setup',
-        description: 'Steps to enable checkout extension in your theme.',
+        description: 'Enable the checkout extension in your theme.',
         installed: false,
         illustration: checkoutIcon,
         available: true,
@@ -260,7 +260,7 @@ const Settings = () => {
                             </Badge>
                           ) : app.name === 'Checkout Extension Setup' ? (
                             <Badge tone="critical" size="large" icon={InfoIcon}>
-                              Shopify Plus Needed
+                              Shopify Plus required
                             </Badge>
                           ) : (
                             <Badge tone="warning" size="large" icon={InfoIcon}>

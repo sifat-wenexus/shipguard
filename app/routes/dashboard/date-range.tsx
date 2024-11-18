@@ -53,7 +53,7 @@ export default function DateRangePicker({
         since: new Date(
           new Date(new Date().setDate(today.getDate() - 7)).setHours(0, 0, 0, 0)
         ),
-        until: today,
+        until: yesterday,
       },
     },
     {
@@ -68,7 +68,7 @@ export default function DateRangePicker({
             0
           )
         ),
-        until: today,
+        until: yesterday,
       },
     },
     {

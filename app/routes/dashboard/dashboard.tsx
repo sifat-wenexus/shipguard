@@ -6,7 +6,7 @@ import DashboardLoading from './dashboard-loading';
 import '@shopify/polaris-viz/build/esm/styles.css';
 import type { IActiveDates } from '../order/route';
 import LineChartForDashboard from './line-chart';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import '@shopify/polaris/build/esm/styles.css';
 import { useI18n } from '@shopify/react-i18n';
 import DateRangePicker from './date-range';
@@ -42,7 +42,7 @@ export const default30Days = () => {
 
 const Dashboard = ({ guidelineVisibility ,storeId}) => {
   const defaultActiveDates = useMemo(() => default30Days(), []);
-
+  const [showBanner, setShowBanner] = useState(false);
   const [activeDates, setActiveDates] =
     useState<IActiveDates>(defaultActiveDates);
   const [i18n] = useI18n();
@@ -79,6 +79,14 @@ const Dashboard = ({ guidelineVisibility ,storeId}) => {
       return 0;
     }
   }, [data.loading]);
+
+
+  useEffect(() => {
+    if(storeInfo.ebbedBlock === undefined || storeInfo.ebbedBlock===null)return
+    setShowBanner(!storeInfo.ebbedBlock)
+  }, [storeInfo?.ebbedBlock]);
+
+
 
   if (data.loading) {
     renderElement = <DashboardLoading />;
@@ -254,7 +262,7 @@ const Dashboard = ({ guidelineVisibility ,storeId}) => {
           Hi 👋, Welcome to Overall: Shipping Protection
         </Text>
         <br />
-        {<WarningBanner storeInfo={storeInfo} />}
+        {showBanner ? <WarningBanner storeInfo={storeInfo} />:null}
 
         {
           <GuideLine

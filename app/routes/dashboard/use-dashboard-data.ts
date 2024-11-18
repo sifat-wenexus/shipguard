@@ -24,7 +24,7 @@ export function useDashboardData(
             },
           ],
         },
-        by: 'issue',
+        by: ['issue'],
         _count: { id: true },
         orderBy: {
           issue: 'asc',
