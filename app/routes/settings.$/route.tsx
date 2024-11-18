@@ -50,7 +50,8 @@ export async function loader({ request }) {
     {
       id: 'settings/smtp-setup',
       name: 'SMTP Setup',
-      description: 'Configure the outgoing mail server to enable email notifications.',
+      description:
+        'Configure the outgoing mail server to enable email notifications.',
       installed: smtp?.provider ?? false,
       illustration: serverIcon,
       available: true,
@@ -96,7 +97,8 @@ export async function loader({ request }) {
       {
         id: 'settings/widget-setup',
         name: 'Widget Setup',
-        description: 'Follow steps to activate and integrate the widget into your theme.',
+        description:
+          'Follow steps to activate and integrate the widget into your theme.',
         installed: installed?.enabled ?? false,
         illustration: widgetIcon,
         available: true,
@@ -104,7 +106,8 @@ export async function loader({ request }) {
       {
         id: 'settings/claim-page',
         name: 'Customer Claim Page Setup',
-        description: 'Enable the customer claim page in your theme to manage claims seamlessly.',
+        description:
+          'Enable the customer claim page in your theme to manage claims seamlessly.',
         installed: claimPage ?? false,
         illustration: pageIcon,
         available: true,
@@ -123,7 +126,8 @@ export async function loader({ request }) {
     const templates = await prisma.emailTemplate.findMany({
       where: { storeId: ctx.session.storeId },
     });
-    if (!templates) {
+    console.log(templates.length);
+    if (templates.length === 0) {
       const defaultTemplatesPayload: Prisma.EmailTemplateCreateManyInput[] = [
         {
           storeId: ctx.session.storeId!,

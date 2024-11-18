@@ -11541,7 +11541,7 @@ const Tg = ({ data: e, setSelectedData: r, alreadyClaimed: t }) => {
                                         c.jsx('span', {
                                           className:
                                             'px-4 py-1 ms-2 bg-pink-500 text-white rounded font-bold',
-                                          children: 'claim',
+                                          children: 'Claimed',
                                         }),
                                     ],
                                   }),
