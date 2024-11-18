@@ -20,7 +20,7 @@ const InstructionModal = ({
         content: 'Goto Theme Editor',
         onAction: () => {
           window.open(
-            `https://admin.shopify.com/store/${storeInfo.storeName}/themes/${storeInfo.themeId}/editor?context=apps`,
+            `https://admin.shopify.com/store/${storeInfo?.shopName}/themes/${storeInfo?.ThemeId}/editor?context=apps&template=index&activateAppId=${storeInfo.appExtensionId}/shipping-protection`,
             '_blank'
           );
         },

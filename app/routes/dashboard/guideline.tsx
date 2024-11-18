@@ -1,7 +1,7 @@
-import packageProtectionImg from '~/assets/images/guideline/product-reviews.svg';
+import packageProtectionImg from '~/assets/images/guideline/embed-image.png';
 import checkoutImg from '~/assets/images/guideline/9685914.webp';
 import claimPageImg from '~/assets/images/guideline/wishlist.svg';
-import widgetImg from '~/assets/images/guideline/wishlist (1).svg';
+import widgetImg from '~/assets/images/guideline/widget-image.png';
 
 import { useCallback, useEffect,  useState } from 'react';
 import InstructionModal from './instruction-modal';
@@ -227,13 +227,13 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                             variant="secondary"
                             url="/settings/widget-setup"
                           >
-                            Open
+                           Edit Widget Setting
                           </Button>
                         </>
                       )}
                     </div>
                     <div className="text-right hidden sm:block">
-                      {toggleLine.setUp && <img src={widgetImg} alt="i" />}
+                      {toggleLine.setUp && <img src={widgetImg} alt="i" width={'270px'} />}
                     </div>
                   </div>
                 </div>
@@ -303,7 +303,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                     </div>
                     <div className="text-right hidden sm:block">
                       {toggleLine.enable && (
-                        <img src={packageProtectionImg} alt="i" />
+                        <img src={packageProtectionImg} alt="i" width={'250px'}/>
                       )}
                     </div>
                   </div>

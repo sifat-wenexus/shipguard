@@ -12,7 +12,7 @@ import {
 
 const ClaimPageSetup = () => {
   const { storeInfo } = useLivePageData();
-  console.log(storeInfo ? '=' : '-');
+  console.log(storeInfo);
   return (
     <div className="m-2 sm:m-0 ">
       <Page>
@@ -60,7 +60,7 @@ const ClaimPageSetup = () => {
                       variant="primary"
                       tone="success"
                       url={
-                        storeInfo?.store
+                        storeInfo?.shopName
                           ? `https://admin.shopify.com/store/${storeInfo?.shopName}/themes/${storeInfo?.ThemeId}/editor`
                           : ''
                       }
