@@ -243,7 +243,7 @@ export const loader: LoaderFunction = async ({ request }) => {
                   currencyCode:
                     item.lineItem.discountAllocations[0]?.allocatedAmountSet
                       ?.shopMoney?.currencyCode,
-                  compareAtPrice:item?.lineItem?.variant?.compareAtPrice,
+                  compareAtPrice: item?.lineItem?.variant?.compareAtPrice,
                   image: item.lineItem.image?.url,
                   name: item.lineItem.name,
                   originalPrice:
@@ -361,99 +361,109 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  const payload: PackageProtectionClaimOrder = jsonData?.map((e) => ({
-    storeId: session.storeId,
-    orderId: e.orderId,
-    fulfillmentLineItemId: e.lineItemId,
-    claimStatus: 'REQUESTED',
-    comments: comment,
-    hasClaimRequest: true,
-    images: images.toString(),
-    issue: issue,
-    requestedResulation: requested,
-    fulfillmentId: e.fulfillmentId,
-  }));
+  try {
+    const payload: PackageProtectionClaimOrder = jsonData?.map((e) => ({
+      storeId: session.storeId,
+      orderId: e.orderId,
+      fulfillmentLineItemId: e.lineItemId,
+      claimStatus: 'REQUESTED',
+      comments: comment,
+      hasClaimRequest: true,
+      images: images.toString(),
+      issue: issue,
+      requestedResulation: requested,
+      fulfillmentId: e.fulfillmentId,
+    }));
 
-  const result = await queryProxy.packageProtectionClaimOrder.createMany(
-    {
-      data: payload,
-    },
-    { session }
-  );
-
-  await queryProxy.packageProtectionOrder.updateMany(
-    {
-      where: { orderId: jsonData[0].orderId, storeId: session.storeId },
-      data: {
-        claimDate: new Date(),
-        hasClaimRequest: true,
-        claimStatus: 'REQUESTED',
+    const result = await queryProxy.packageProtectionClaimOrder.createMany(
+      {
+        data: payload,
       },
-    },
-    { session }
-  );
+      { session }
+    );
 
-  if ((result as any).length > 0) {
-    const data = await prisma.packageProtectionOrder.findFirst({
-      where: { orderId: jsonData[0].orderId },
-      include: {
-        PackageProtectionClaimOrder: { select: { comments: true } },
-        Store: { select: { name: true, domain: true, email: true } },
+    await queryProxy.packageProtectionOrder.updateMany(
+      {
+        where: { orderId: jsonData[0].orderId, storeId: session.storeId },
+        data: {
+          claimDate: new Date(),
+          hasClaimRequest: true,
+          claimStatus: 'REQUESTED',
+        },
       },
-    });
-    const packageProtection = await prisma.packageProtection.findFirst({
-      where: { storeId: session.storeId },
-    });
+      { session }
+    );
 
-    if (data) {
-      const orderId = data.orderId.replace('gid://shopify/Order/', '');
-      const logo = packageProtection?.emailTemplateLogo
-        ? `${getConfig().appUrl}api/files/${
-            packageProtection?.emailTemplateLogo
-          }`
-        : null;
-      const claimPage = `${getConfig().appUrl}settings/claim-request`;
-      await sendMail({
-        template: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
-        storeId: data.storeId,
-        to: data.Store.email!,
-        internal: true,
-        variables: {
-          go_to_claim: claimPage,
-          claim_date: `${data?.claimDate}`,
-          claim_reason: data.PackageProtectionClaimOrder[0].comments!,
-          order_id: data?.orderName,
-          customer_name: `${data?.customerFirstName ?? ''}  ${
-            data?.customerLastName
-          }`,
-          shop_name: data?.Store.name,
-          order_url: `https://admin.shopify.com/store/${
-            data.Store.domain.split('.')[0]
-          }/orders/${orderId}`,
+    if ((result as any).length > 0) {
+      const data = await prisma.packageProtectionOrder.findFirst({
+        where: { orderId: jsonData[0].orderId },
+        include: {
+          PackageProtectionClaimOrder: { select: { comments: true } },
+          Store: { select: { name: true, domain: true, email: true } },
         },
       });
-
-      await sendMail({
-        template: 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER',
-        storeId: session.storeId!,
-        to: data.customerEmail!,
-        variables: {
-          claim_date: `${data?.claimDate}`,
-          claim_reason: data.PackageProtectionClaimOrder[0].comments!,
-          order_id: data?.orderName,
-          customer_name: `${data?.customerFirstName ?? ''}  ${
-            data?.customerLastName
-          }`,
-          shop_name: data?.Store.name,
-          shop_logo: logo,
-        },
+      const packageProtection = await prisma.packageProtection.findFirst({
+        where: { storeId: session.storeId },
       });
+
+      if (data) {
+        const orderId = data.orderId.replace('gid://shopify/Order/', '');
+        const logo = packageProtection?.emailTemplateLogo
+          ? `${getConfig().appUrl}api/files/${
+              packageProtection?.emailTemplateLogo
+            }`
+          : null;
+        const claimPage = `${getConfig().appUrl}settings/claim-request`;
+        await sendMail({
+          template: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
+          storeId: data.storeId,
+          to: data.Store.email!,
+          internal: true,
+          variables: {
+            go_to_claim: claimPage,
+            claim_date: `${data?.claimDate}`,
+            claim_reason: data.PackageProtectionClaimOrder[0].comments!,
+            order_id: data?.orderName,
+            customer_name: `${data?.customerFirstName ?? ''}  ${
+              data?.customerLastName
+            }`,
+            shop_name: data?.Store.name,
+            order_url: `https://admin.shopify.com/store/${
+              data.Store.domain.split('.')[0]
+            }/orders/${orderId}`,
+          },
+        });
+
+        await sendMail({
+          template: 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER',
+          storeId: session.storeId!,
+          to: data.customerEmail!,
+          variables: {
+            claim_date: `${data?.claimDate}`,
+            claim_reason: data.PackageProtectionClaimOrder[0].comments!,
+            order_id: data?.orderName,
+            customer_name: `${data?.customerFirstName ?? ''}  ${
+              data?.customerLastName
+            }`,
+            shop_name: data?.Store.name,
+            shop_logo: logo,
+          },
+        });
+      }
     }
-  }
 
-  return json({
-    success: true,
-    message: 'claim request successful!',
-    data: result,
-  });
+    return json({
+      success: true,
+      message: 'claim request successful!',
+      data: result,
+    });
+  } catch (err) {
+    console.error(err);
+    return json({
+      success: false,
+      err,
+      message:
+        'Something went wrong, please try again later or contact support.',
+    });
+  }
 };
