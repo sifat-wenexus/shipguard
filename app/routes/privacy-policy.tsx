@@ -8,7 +8,7 @@ export default function PrivacyPolicy() {
       <Link to={'https://shipping-protection.wenexus.io/'}>
         {' '}
         <img
-          src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse-Shipping-Protection_4a82e447-3fb5-48d1-b85e-7f46ab866e4a.png?v=1727505148"
+          src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/over-all-shippping-protection-logo.png?v=1731747621"
           className="w-[220px] mx-auto h-auto my-4"
           alt="Overall: Shipping Protection"
         />

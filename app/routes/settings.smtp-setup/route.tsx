@@ -123,7 +123,7 @@ padding:0px 10px}
 </head>
 <body style=''>
   <div style="display:flex; justify-content:center;align-items:center; margin:50px 0px;">
-   <img src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse-Shipping-Protection_4a82e447-3fb5-48d1-b85e-7f46ab866e4a.png?v=1727505148" alt="inhouse-shipping-protection" width="220px" height="auto"></div>
+   <img src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/over-all-shippping-protection-logo.png?v=1731747621" alt="shipping-protection" width="220px" height="auto"></div>
   <p>Dear Admin,</p>
 <p>A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:</p>
 <table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>

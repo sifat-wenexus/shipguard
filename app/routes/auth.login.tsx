@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { useActionData, useLoaderData, useSubmit } from '@remix-run/react';
-import LogoImg from '~/assets/images/inhouse-shipping-protection.png';
+import LogoImg from '~/assets/images/logo-shipping-protection.png';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
 import { LoginErrorType } from '~/shopify-app-remix/server';
 import React, { useCallback, useState } from 'react';
@@ -16,7 +16,8 @@ import {
   Divider,
   FormLayout,
   Image,
-  InlineStack, Link,
+  InlineStack,
+  Link,
   Text,
   TextField,
 } from '@shopify/polaris';
@@ -135,8 +136,14 @@ export default function AuthLogin() {
               </Button>
 
               <Text as="p" variant="bodySm" alignment="center">
-                By installing this app, you agree to our <Link url="/terms-of-service" target="_blank">Terms of
-                Service</Link> and <Link url="/privacy-policy" target="_blank">Privacy Policy</Link>
+                By installing this app, you agree to our{' '}
+                <Link url="/terms-of-service" target="_blank">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link url="/privacy-policy" target="_blank">
+                  Privacy Policy
+                </Link>
               </Text>
             </FormLayout>
           </Card>

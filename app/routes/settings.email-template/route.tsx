@@ -60,7 +60,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const templates = await prisma.emailTemplate.findMany({
     where: { storeId: ctx.session.storeId },
   });
-  const appUrl = getConfig().appUrl;
+  const appUrl = getConfig().appUrl.toString().replace('/dashboard', '');
 
   const { currencyCode } = await prisma.store.findFirstOrThrow({
     where: { id: ctx.session.storeId },

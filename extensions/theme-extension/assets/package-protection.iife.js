@@ -189,6 +189,7 @@ var __publicField = (obj, key, value) => {
       __publicField(this, "buttonColor", "#22c55e");
       __publicField(this, "checked", false);
       __publicField(this, "css", "");
+      __publicField(this, "textAlign", "left");
       this.api = api;
     }
     formatPrice(price, currency) {
@@ -203,6 +204,16 @@ var __publicField = (obj, key, value) => {
       const { coercedPrice } = await this.api.calculate();
       const cart = await window.weNexusCartApi.get();
       return this.formatPrice(Number(coercedPrice), cart.currency);
+    }
+    getWidgetPrice() {
+      let getPrice = "";
+      Array.from(document.querySelectorAll(".protection-price")).forEach(
+        (e) => {
+          getPrice = e.innerHTML;
+        }
+      );
+      const price = Number(getPrice.replace(/[^0-9.]/g, ""));
+      return price;
     }
     async getDescription() {
       return `${this.checked ? this.enabledDescription : this.disabledDescription}`;
@@ -234,10 +245,10 @@ var __publicField = (obj, key, value) => {
         <div style="position:relative;">
             <input type="checkbox" ${checked ? "checked" : ""} style="position:absolute; width:100%; height:100%; left:0; z-index:99; opacity:0">
 
-            <div class="toggle-container" style="display: flex;  width: 3.5rem; height: 1.35rem; background-color: ${checked ? this.buttonColor : "#7b7b7b"}; position: relative; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border-radius: 9999px; cursor: pointer; transition: background-color 0.5s ease-out;">
-                <span class="toggle-switch" style="height: 1.10rem; width: 1.10rem; position: absolute; top: 0.13rem; left: 0.2rem; background-color: white; border-radius: 9999px; ${checked ? "transform: translateX(2rem);" : ""} transition: transform 0.3s ease-out; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); display: flex; align-items: center; justify-content: center;"></span>
+            <div class="toggle-container" style="display: flex;  width: 35px; height: 13px; background-color: ${checked ? this.buttonColor : "#7b7b7b"}; position: relative; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border-radius: 9999px; cursor: pointer; transition: background-color 0.5s ease-out;">
+                <span class="toggle-switch" style="height: 11px; width: 11px; position: absolute; top: 1.3px; left: 2px; background-color: white; border-radius: 9999px; ${checked ? "transform: translateX(20px);" : ""} transition: all 0.3s ease-out; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); display: flex; align-items: center; justify-content: center;"></span>
             </div>
-          <p style="margin:0px; font-size:0.85rem; text-align:center;"><strong class="protection-price">${price}</strong></p>
+          <p style="margin:0px; font-size:10px; text-align:center;"><strong class="protection-price">${price}</strong></p>
             </div>
         </div>
       `
@@ -258,7 +269,7 @@ var __publicField = (obj, key, value) => {
       });
       const updateToggleStyles = () => {
         toggleContainer.style.backgroundColor = checkbox.checked ? this.buttonColor : "#7b7b7b";
-        toggleSwitch.style.transform = checkbox.checked ? "translateX(2rem)" : "translateX(0)";
+        toggleSwitch.style.transform = checkbox.checked ? "translateX(20px)" : "translateX(0)";
       };
       updateToggleStyles();
       this.container = container;
@@ -279,7 +290,9 @@ var __publicField = (obj, key, value) => {
       hideDescriptionPage = true,
       containerMargin = [0, 0, 8, 0],
       containerJustify = "end",
-      extraStyles = ""
+      extraStyles = "",
+      textAlign = "left",
+      containerMaxWidth = "100%"
     }) {
       return `
       <style>
@@ -289,6 +302,7 @@ var __publicField = (obj, key, value) => {
             align-items: center;
             margin: ${containerMargin == null ? void 0 : containerMargin.join("px ")};
             gap: ${containerGap[0]} ${containerGap[1]}px;
+           
          }
          
          .wenexus-package-protection__content {
@@ -296,6 +310,7 @@ var __publicField = (obj, key, value) => {
             justify-content: space-between;
             align-items: center;
             gap: ${contentGap[0]} ${contentGap[1]}px;
+           
          }
          
          .wenexus-package-protection__image {
@@ -307,21 +322,26 @@ var __publicField = (obj, key, value) => {
          .wenexus-package-protection__image img {
             width: 100%;
          }
-         
+         .wenexus-package-protection__desc{
+            text-align: ${textAlign};
+            max-width: ${containerMaxWidth};
+         }
+
          .wenexus-package-protection__desc h5 {
-            font-size: ${titleFontSize}rem;
+            font-size:16px;
             margin: 0;
          }
          
          .wenexus-package-protection__desc p {
-            font-size: ${descriptionFontSize}rem;
+           
+            font-size: 13px;
             font-weight: ${descriptionFontWeight};
             margin: ${descriptionMargin == null ? void 0 : descriptionMargin.join("px ")}px;
          }
          
          .wenexus-package-protection__desc a {
             text-decoration: none;
-            font-size: 1.5rem;
+            font-size:inherit;
             outline: 0;
             color: #222;
             transition: .3s;
@@ -356,6 +376,108 @@ var __publicField = (obj, key, value) => {
     cartUpdate() {
     }
     cartBubble() {
+    }
+  }
+  class PackageProtectionClientMulti extends PackageProtectionClientBasic {
+    static shouldUse() {
+      var _a;
+      return ((_a = window.Shopify.theme) == null ? void 0 : _a.schema_name) === "Multi" || document.documentElement.dataset.theme === "multi";
+    }
+    getBoundaryParent(selector) {
+      if (selector.boundaryParents) {
+        return selector;
+      }
+      const elements = document.querySelectorAll(selector.selector);
+      const boundaryParents = /* @__PURE__ */ new Set();
+      for (const element of elements) {
+        let boundaryParent = element.parentElement;
+        while (true) {
+          if (!boundaryParent) {
+            break;
+          }
+          if (boundaryParent.tagName === "CART-LIVE-REGION") {
+            break;
+          }
+          boundaryParent = boundaryParent.parentElement;
+        }
+        boundaryParents.add(boundaryParent ?? document.body);
+      }
+      if (boundaryParents.size === 0) {
+        boundaryParents.add(document.body);
+      }
+      selector.boundaryParents = boundaryParents;
+      return selector;
+    }
+    getInsertionPointSelectors() {
+      const selectors = [
+        {
+          selector: 'button[name="checkout"]',
+          insertPosition: "before"
+        }
+      ];
+      return selectors.map((selector) => this.getBoundaryParent(selector));
+    }
+    // theme support
+    async refreshWidget() {
+      console.log("multi");
+      const subTotals = [];
+      let subTotal = document.getElementsByClassName("#cart-subtotal-item-price");
+      let subTotalDrawer = document.getElementsByClassName(
+        "#cart-drawer-subtotal-item-price"
+      );
+      subTotals.push(Array.from(subTotal));
+      subTotals.push(Array.from(subTotalDrawer));
+      const items = await window.weNexusCartApi.get();
+      setTimeout(() => {
+        const price = this.getWidgetPrice();
+        const checkoutSwitch = localStorage.getItem("package-protection-enabled");
+        let des = "";
+        if (checkoutSwitch === "true") {
+          des = this.enabledDescription;
+          subTotals.flat().forEach(
+            (el) => el.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100 + price),
+              items.currency
+            )} ${items.currency}`
+          );
+        } else {
+          des = this.disabledDescription;
+          subTotals.flat().forEach(
+            (el) => el.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100),
+              items.currency
+            )} ${items.currency}`
+          );
+        }
+        const descriptionElements = document.getElementsByClassName(
+          "wenexus-package-protection-description"
+        );
+        Array.from(descriptionElements).forEach(
+          (el) => el.innerHTML = `${des} `
+        );
+      }, 500);
+    }
+    cartUpdate() {
+      window.location.reload();
+    }
+    disabledCheckoutButton() {
+      const checkoutButtons = document.querySelectorAll("[name='checkout']");
+      checkoutButtons.forEach((button) => {
+        button.disabled = true;
+      });
+    }
+    async cartBubble() {
+      const item_count = (await window.weNexusCartApi.get()).item_count;
+      let cartIcon = document.getElementsByClassName(
+        "#header-toolbar-cart-counter"
+      );
+      Array.from(cartIcon).forEach((el) => {
+        el.childNodes.forEach((e) => {
+          if (e.innerHTML) {
+            e.innerHTML = item_count.toString();
+          }
+        });
+      });
     }
   }
   class PackageProtectionClientEnterprise extends PackageProtectionClientBasic {
@@ -414,8 +536,83 @@ var __publicField = (obj, key, value) => {
         accentColor: "#2c7e3f"
       });
     }
+    // theme support
+    async refreshWidget() {
+      console.log("enterprise");
+      let subTotal = document.getElementsByClassName("subtotal-cartPage");
+      const checkoutButtonPrice = Array.from(
+        document.querySelectorAll(".subtotal-cartDrawer")
+      );
+      const items = await window.weNexusCartApi.get();
+      setTimeout(() => {
+        const price = this.getWidgetPrice();
+        const checkoutSwitch = localStorage.getItem("package-protection-enabled");
+        let des = "";
+        if (checkoutSwitch === "true") {
+          des = this.enabledDescription;
+          Array.from(subTotal).forEach(
+            (el) => el.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100 + price),
+              items.currency
+            )} ${items.currency}`
+          );
+          checkoutButtonPrice.forEach((e) => {
+            e.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100 + price),
+              items.currency
+            )} ${items.currency}`;
+          });
+        } else {
+          des = this.disabledDescription;
+          Array.from(subTotal).forEach(
+            (el) => el.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100),
+              items.currency
+            )} ${items.currency}`
+          );
+          checkoutButtonPrice.forEach(
+            (e) => e.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100),
+              items.currency
+            )} ${items.currency}`
+          );
+        }
+        const descriptionElements = document.getElementsByClassName(
+          "wenexus-package-protection-description"
+        );
+        Array.from(descriptionElements).forEach(
+          (el) => el.innerHTML = `${des} `
+        );
+      }, 500);
+    }
+    cartUpdate() {
+      window.location.reload();
+      Array.from(document.getElementsByTagName("cart-items")).forEach(
+        (i) => i.onCartUpdate()
+      );
+      Array.from(document.getElementsByTagName("cart-drawer-items")).forEach(
+        (i) => i.onCartUpdate()
+      );
+    }
+    disabledCheckoutButton() {
+      const checkoutButtons = document.querySelectorAll("[name='checkout']");
+      checkoutButtons.forEach((button) => {
+        button.disabled = true;
+      });
+    }
+    async cartBubble() {
+      const item_count = (await window.weNexusCartApi.get()).item_count;
+      let cartIcon = document.getElementsByClassName("cart-count-bubble");
+      Array.from(cartIcon).forEach((el) => {
+        el.childNodes.forEach((e) => {
+          if (e.innerHTML) {
+            e.innerHTML = item_count.toString();
+          }
+        });
+      });
+    }
   }
-  class PackageProtectionClientDawn extends PackageProtectionClientBasic {
+  class PackageProtectionClientShopifyFreeTheme extends PackageProtectionClientBasic {
     constructor() {
       super(...arguments);
       __publicField(this, "thumbnail", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753");
@@ -463,16 +660,11 @@ var __publicField = (obj, key, value) => {
     }
     // theme support
     async refreshWidget() {
+      console.log("shopify free theme");
       let subTotal = document.getElementsByClassName("totals__total-value");
       const items = await window.weNexusCartApi.get();
-      let getPrice = "";
       setTimeout(() => {
-        Array.from(document.querySelectorAll(".protection-price")).forEach(
-          (e) => {
-            getPrice = e.innerHTML;
-          }
-        );
-        const price = Number(getPrice.replace(/[^0-9.]/g, ""));
+        const price = this.getWidgetPrice();
         const checkoutSwitch = localStorage.getItem("package-protection-enabled");
         let des = "";
         if (checkoutSwitch === "true") {
@@ -528,11 +720,298 @@ var __publicField = (obj, key, value) => {
       });
     }
   }
+  class PackageProtectionClientFocal extends PackageProtectionClientBasic {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "thumbnail", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753");
+    }
+    static shouldUse() {
+      var _a;
+      return ((_a = window.Shopify.theme) == null ? void 0 : _a.schema_name) === "Focal";
+    }
+    getInsertionPointSelectors() {
+      return [
+        {
+          selector: 'button[name="checkout"]',
+          insertPosition: "before"
+        }
+      ];
+    }
+    async getStyleMarkup(options) {
+      return super.getStyleMarkup({
+        imageWidth: 66,
+        containerMargin: [10, 0, 12, 0],
+        containerJustify: "space-between",
+        titleFontSize: 1.2,
+        descriptionFontSize: 0.9,
+        hideDescriptionPage: false,
+        descriptionMargin: [2, 0, 0, 0],
+        ...options,
+        accentColor: "#2c7e3f"
+      });
+    }
+    // theme support
+    async refreshWidget() {
+      console.log("focal");
+      let subTotal = document.getElementsByClassName("cart__total-container");
+      const checkoutButtonPrice = Array.from(
+        document.querySelectorAll("button[form='mini-cart-form']")
+      );
+      const items = await window.weNexusCartApi.get();
+      setTimeout(() => {
+        const price = this.getWidgetPrice();
+        const checkoutSwitch = localStorage.getItem("package-protection-enabled");
+        let des = "";
+        if (checkoutSwitch === "true") {
+          des = this.enabledDescription;
+          Array.from(subTotal).forEach(
+            (el) => el.lastElementChild && (el.lastElementChild.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100 + price),
+              items.currency
+            )} ${items.currency}`)
+          );
+          checkoutButtonPrice.forEach((e) => {
+            e.lastChild.textContent = `${this.formatPrice(
+              Number(items.total_price / 100 + price),
+              items.currency
+            )} ${items.currency}`;
+          });
+        } else {
+          des = this.disabledDescription;
+          Array.from(subTotal).forEach(
+            (el) => el.lastElementChild && (el.lastElementChild.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100),
+              items.currency
+            )} ${items.currency}`)
+          );
+          checkoutButtonPrice.forEach(
+            (e) => e.lastChild.textContent = `${this.formatPrice(
+              Number(items.total_price / 100),
+              items.currency
+            )} ${items.currency}`
+          );
+        }
+        const descriptionElements = document.getElementsByClassName(
+          "wenexus-package-protection-description"
+        );
+        Array.from(descriptionElements).forEach(
+          (el) => el.innerHTML = `${des} `
+        );
+      }, 500);
+    }
+    cartUpdate() {
+      window.location.reload();
+    }
+    disabledCheckoutButton() {
+      const checkoutButtons = document.querySelectorAll("[name='checkout']");
+      checkoutButtons.forEach((button) => {
+        button.disabled = true;
+      });
+    }
+    async cartBubble() {
+      const item_count = (await window.weNexusCartApi.get()).item_count;
+      let cartIcon = document.getElementsByClassName("header__cart-count");
+      Array.from(cartIcon).forEach((el) => {
+        el.childNodes.forEach((e) => {
+          if (e.innerHTML) {
+            e.innerHTML = item_count.toString();
+          }
+        });
+      });
+    }
+  }
+  class PackageProtectionClientMandolin extends PackageProtectionClientBasic {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "thumbnail", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753");
+    }
+    static shouldUse() {
+      var _a;
+      return ((_a = window.Shopify.theme) == null ? void 0 : _a.schema_name) === "Mandolin";
+    }
+    getInsertionPointSelectors() {
+      return [
+        {
+          selector: 'button[name="checkout"]',
+          insertPosition: "before"
+        }
+      ];
+    }
+    async getStyleMarkup(options) {
+      return super.getStyleMarkup({
+        imageWidth: 66,
+        containerMargin: [10, 0, 12, 0],
+        containerJustify: "space-between",
+        titleFontSize: 1.2,
+        descriptionFontSize: 0.8,
+        hideDescriptionPage: false,
+        descriptionMargin: [2, 0, 0, 0],
+        ...options,
+        accentColor: "#2c7e3f"
+      });
+    }
+    // theme support
+    async refreshWidget() {
+      console.log("mandolin");
+      let subTotal = document.getElementsByClassName("cart__total-count");
+      const checkoutButtonPrice = Array.from(
+        document.querySelectorAll(".Cart__Total")
+      );
+      const items = await window.weNexusCartApi.get();
+      setTimeout(() => {
+        const price = this.getWidgetPrice();
+        const checkoutSwitch = localStorage.getItem("package-protection-enabled");
+        let des = "";
+        if (checkoutSwitch === "true") {
+          des = this.enabledDescription;
+          Array.from(subTotal).forEach(
+            (el) => el.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100 + price),
+              items.currency
+            )} ${items.currency}`
+          );
+          checkoutButtonPrice.forEach((e) => {
+            e.lastChild.textContent = `${this.formatPrice(
+              Number(items.total_price / 100 + price),
+              items.currency
+            )} ${items.currency}`;
+          });
+        } else {
+          des = this.disabledDescription;
+          Array.from(subTotal).forEach(
+            (el) => el.innerHTML = `${this.formatPrice(
+              Number(items.total_price / 100),
+              items.currency
+            )} ${items.currency}`
+          );
+          checkoutButtonPrice.forEach(
+            (e) => e.lastChild.textContent = `${this.formatPrice(
+              Number(items.total_price / 100),
+              items.currency
+            )} ${items.currency}`
+          );
+        }
+        const descriptionElements = document.getElementsByClassName(
+          "wenexus-package-protection-description"
+        );
+        Array.from(descriptionElements).forEach(
+          (el) => el.innerHTML = `${des} `
+        );
+      }, 500);
+    }
+    cartUpdate() {
+      window.location.reload();
+    }
+    disabledCheckoutButton() {
+      const checkoutButtons = document.querySelectorAll("[name='checkout']");
+      checkoutButtons.forEach((button) => {
+        button.disabled = true;
+      });
+    }
+    async cartBubble() {
+      const item_count = (await window.weNexusCartApi.get()).item_count;
+      let cartIcon = document.getElementsByClassName("header__cart-count");
+      Array.from(cartIcon).forEach((el) => {
+        el.childNodes.forEach((e) => {
+          if (e.innerHTML) {
+            e.innerHTML = item_count.toString();
+          }
+        });
+      });
+    }
+  }
+  class PackageProtectionClientVenue extends PackageProtectionClientBasic {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "thumbnail", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753");
+    }
+    static shouldUse() {
+      var _a;
+      return ((_a = window.Shopify.theme) == null ? void 0 : _a.schema_name) === "Venue";
+    }
+    getInsertionPointSelectors() {
+      return [
+        {
+          selector: 'button[name="checkout"]',
+          insertPosition: "before"
+        }
+      ];
+    }
+    async getStyleMarkup(options) {
+      return super.getStyleMarkup({
+        imageWidth: 66,
+        containerMargin: [10, 0, 12, 0],
+        containerJustify: "end",
+        titleFontSize: 1,
+        descriptionFontSize: 0.8,
+        hideDescriptionPage: false,
+        descriptionMargin: [2, 0, 0, 0],
+        containerMaxWidth: "250px",
+        ...options,
+        accentColor: "#2c7e3f"
+      });
+    }
+    // theme support
+    async refreshWidget() {
+      console.log("venue");
+      let subTotal = document.getElementsByClassName("cart__footer-total");
+      let subtotalInPopup = document.getElementsByClassName(
+        "ajaxcart__footer-total"
+      );
+      const items = await window.weNexusCartApi.get();
+      const updateSubtotal = (selector, price = 0) => {
+        Array.from(selector).forEach(
+          (el) => el.lastChild.innerHTML = `${this.formatPrice(
+            Number(items.total_price / 100 + price),
+            items.currency
+          )} ${items.currency}`
+        );
+      };
+      setTimeout(() => {
+        const price = this.getWidgetPrice();
+        const checkoutSwitch = localStorage.getItem("package-protection-enabled");
+        let des = "";
+        if (checkoutSwitch === "true") {
+          des = this.enabledDescription;
+          updateSubtotal(subTotal, price);
+          updateSubtotal(subtotalInPopup, price);
+        } else {
+          des = this.disabledDescription;
+          updateSubtotal(subTotal);
+          updateSubtotal(subtotalInPopup);
+        }
+        const descriptionElements = document.getElementsByClassName(
+          "wenexus-package-protection-description"
+        );
+        Array.from(descriptionElements).forEach(
+          (el) => el.innerHTML = `${des} `
+        );
+      }, 500);
+    }
+    cartUpdate() {
+      window.location.reload();
+    }
+    disabledCheckoutButton() {
+      const checkoutButtons = document.querySelectorAll("[name='checkout']");
+      checkoutButtons.forEach((button) => {
+        button.disabled = true;
+      });
+    }
+    async cartBubble() {
+      const item_count = (await window.weNexusCartApi.get()).item_count;
+      let cartIcon = document.getElementById("CartCount");
+      cartIcon.innerHTML = item_count.toString();
+    }
+  }
   async function packageProtection() {
     var _a, _b;
     const clients = [
-      PackageProtectionClientDawn,
+      PackageProtectionClientShopifyFreeTheme,
+      PackageProtectionClientMulti,
       PackageProtectionClientEnterprise,
+      PackageProtectionClientFocal,
+      PackageProtectionClientMandolin,
+      PackageProtectionClientVenue,
       PackageProtectionClientBasic
     ];
     const ClientClass = clients.find((Client) => {
@@ -686,7 +1165,7 @@ var __publicField = (obj, key, value) => {
         });
       });
     });
-    console.log("new changes");
+    console.log("new changes-13");
     window.weNexusCartApi.addListener(async () => {
       await client.refreshPriceUI();
       client.refreshWidget();
@@ -700,7 +1179,6 @@ var __publicField = (obj, key, value) => {
         selector.boundaryParents
       );
       liveQuery.addListener(async (elements) => {
-        var _a2, _b2;
         items = await getItems();
         client.refreshWidget();
         const PPItem = await items.find(
@@ -719,8 +1197,7 @@ var __publicField = (obj, key, value) => {
           );
           if (!checkbox.checked && variants.length == 0) {
             await packageProtectionApi.remove();
-            (_a2 = document.getElementsByTagName("cart-items")[0]) == null ? void 0 : _a2.onCartUpdate();
-            (_b2 = document.getElementsByTagName("cart-drawer-items")[0]) == null ? void 0 : _b2.onCartUpdate();
+            client.cartUpdate();
           } else {
             switch (selector.insertPosition) {
               case "before":
