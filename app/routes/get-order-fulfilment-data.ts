@@ -49,7 +49,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     //   });
     // }
 
-    if (getPackageProtectionOrder.fulfillmentStatus !== 'FULFILLED') {
+    if (getPackageProtectionOrder.fulfillmentStatus === 'UNFULFILLED') {
       return json({ error: 'This order is not fulfilled yet!', status: 404 });
     }
     const gql = await getShopifyGQLClient(session);
