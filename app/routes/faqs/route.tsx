@@ -1,6 +1,45 @@
-import { Accordion } from "rsuite";
-const FaQ = () => {
-  const items = [
+import {Accordion, AccordionItem as Item} from '@szhsin/react-accordion';
+import chevron from './components/chevron-down.svg';
+import {Button, Page} from '@shopify/polaris';
+import { useNavigate } from '@remix-run/react';
+
+/**
+ * @type {React.ExoticComponent<import('@szhsin/react-accordion').AccordionItemProps>}
+ */
+const AccordionItem = ({ header, ...rest }) => (
+  <Item
+    {...rest}
+    header={({ state: { isEnter } }) => (
+      <>
+        <h1 className="text-[14px]">{header}</h1>
+        <img
+          className={`ml-auto transition-transform duration-200 ease-out ${
+            isEnter && 'rotate-180'
+          }`}
+          src={chevron}
+          alt="Chevron"
+        />
+      </>
+    )}
+    className="border-b"
+    buttonProps={{
+      className: ({ isEnter }) =>
+        `flex w-full p-4 text-left hover:bg-slate-100 ${
+          isEnter && 'bg-slate-200'
+        }`,
+    }}
+    contentProps={{
+      className: 'transition-height duration-200 ease-out',
+    }}
+    panelProps={{ className: 'p-4' }}
+  />
+);
+
+
+export default function Faqs() {
+  const navigate = useNavigate();
+
+  const faqs = [
     {
       header: "What is Overall Shipping Protection?",
       content: "Overall Shipping Protection is a customizable app that allows merchants to protect customer orders from loss, damage, or theft while managing claims directly through their dashboard.",
@@ -59,45 +98,25 @@ const FaQ = () => {
       content: "Use the built-in dashboard to view claims overview, revenue analytics, and customer behavior, helping you make data-driven decisions. ",
     },
   ];
+
   return (
-    <div className="text-center my-8">
-      <h2 className="text-green-600 font-bold text-2xl md:text-3xl mb-2">
-        Frequently Asked Questions
-      </h2>
-      {/* <div className="min-w-full bg-gray-100 py-6">
-        <h2 className="font-bold text-xl md:text-2xl mb-2">
-          What is the Benefit of Navidium?
-        </h2>
-        <div className="flex justify-center">
-          <p className="w-2/3 text-left ">
-            With the rising cost of shipping those few orders a month that get
-            "lost" have slowly become more and more expensive. Navidium gives
-            you a tool to help off-set that cost by allowing you to charge a
-            small fee from your customers in exchange for a shipping delivery
-            guarantee.
-          </p>
+      <Page
+        subtitle=""
+        filterActions
+        backAction={{ onAction: () => navigate(-1) }}
+        title="Frequently Asked Questions"
+      >
+        <div className="mx-2 my-4 border-t bg-white ">
+          {/* `transitionTimeout` prop should be equal to the transition duration in CSS */}
+          <Accordion transition transitionTimeout={200}>
+            {faqs.map((e,i)=>(
+              <AccordionItem key={i} header={e.header}>
+                {e.content}
+              </AccordionItem>
+            ))}
+
+          </Accordion>
         </div>
-      </div> */}
-      {/* accordion  */}
-      <div className="w-[95vw] sm:w-[50vw] m-auto">
-        <Accordion>
-          {items.map((item, index) => (
-            <Accordion.Panel key={index} header={item.header}>
-              <p className="text-start">{item.content}</p>
-            </Accordion.Panel>
-          ))}
-        </Accordion>
-      </div>
-    </div>
+      </Page>
   );
-};
-
-export default FaQ;
-
-// import React from 'react';
-//
-// const FaQ = () => {
-//   return <></>;
-// };
-//
-// export default FaQ;
+}

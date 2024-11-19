@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect,  useState } from 'react';
 const PieChart = ({ pieData }) => {
   const [Viz, setViz] = useState<typeof import('@shopify/polaris-viz') | null>(
     null
@@ -18,16 +18,6 @@ const PieChart = ({ pieData }) => {
     loadPolarisViz();
   }, []);
 
-  const chartData = useMemo(() => pieData.map((item) => ({
-    name: item.issue.charAt(0) + item.issue.slice(1).toLowerCase(),
-    data: [
-      {
-        key: 'total',
-        value: Number(item._count.id),
-      },
-    ],
-  })), [pieData]);
-
   if (!Viz) return <div>Loading...</div>;
 
   if (!pieData) return null;
@@ -35,10 +25,10 @@ const PieChart = ({ pieData }) => {
   return (
     <div className="h-[280px] mt-3">
       <Viz.DonutChart
-        data={chartData}
+        data={pieData}
         legendPosition="bottom"
         renderInnerValueContent={(v) => {
-          const item = chartData[v.activeIndex];
+          const item = pieData[v.activeIndex];
           if (item) {
             return (
               <div

@@ -1,6 +1,7 @@
 import { useLocation } from '@remix-run/react';
 import { Icon, Layout, Link, Page, Tabs } from '@shopify/polaris';
 import {
+  BlogIcon,
   ChartHistogramSecondLastIcon,
   ClipboardCheckIcon,
   NotificationIcon,
@@ -56,6 +57,14 @@ export function Nav() {
         </Link>
       ),
     },
+    {
+      id:'faqs',
+      content: ( <Link url="/faqs" removeUnderline id="wenexus-nav-link">
+               <div className="flex items-center gap-1">
+                <Icon source={BlogIcon}></Icon> Faqs
+            </div>
+          </Link>)
+    }
     // {
     //   id: 'notification',
     //   content: (

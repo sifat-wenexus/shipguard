@@ -10,6 +10,7 @@ import {
   getThemeFileInfo,
   getThemeInfo,
 } from '~/modules/get-theme-file-content';
+import { fixJsonString } from '~/utils/removeCommentFromJosn';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
@@ -20,32 +21,36 @@ export async function loader({ request }: LoaderFunctionArgs) {
     let ThemeId = '';
     let shopName = '';
     let smtp: string | boolean = false;
-
-    const install = await prisma.packageProtection.findFirst({
-      where: { storeId: ctx.session.storeId },
-      select: { enabled: true },
-    });
-
-    const appName = makeAlphaNumeric(getConfig().name);
-    console.log(`App Name: ${appName}`);
     try {
+      const install = await prisma.packageProtection.findFirst({
+        where: { storeId: ctx.session.storeId },
+        select: { enabled: true },
+      });
+
+      const appName = makeAlphaNumeric(getConfig().name);
+      console.log(`App Name: ${appName}`);
       const content = await getThemeFileContent(
         'config/settings_data.json',
         ctx.session
       );
 
       if (content) {
-        const blocks = JSON.parse(content)?.current?.blocks;
-        for (const block in blocks) {
-          if (typeof blocks[block] === 'object') {
-            if (
-              blocks[block].type.includes(
-                `${process.env.SHOPIFY_OSP_THEME_ID}`
-              )
-            ) {
-              ebbedBlock = !blocks[block].disabled;
+        try {
+          const validJson = fixJsonString(JSON.stringify(content));
+          const blocks = JSON.parse(validJson)?.current?.blocks;
+          for (const block in blocks) {
+            if (typeof blocks[block] === 'object') {
+              if (
+                blocks[block].type.includes(
+                  `${process.env.SHOPIFY_OSP_THEME_ID}`
+                )
+              ) {
+                ebbedBlock = !blocks[block].disabled;
+              }
             }
           }
+        } catch (error) {
+          console.error('Failed to fix JSON:', error);
         }
       }
       const theme = await getThemeInfo(ctx.session);
@@ -79,7 +84,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ebbedBlock,
         install: install?.enabled,
         claimPage,
-        storeId:ctx.session.storeId,
+        storeId: ctx.session.storeId,
         appExtensionId: process.env.SHOPIFY_OSP_THEME_ID,
       });
     } catch (err) {
@@ -89,9 +94,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ThemeId,
         shopName,
         ebbedBlock,
-        install: install?.enabled,
+        install: false,
         claimPage,
-        storeId:ctx.session.storeId,
+        storeId: ctx.session.storeId,
         appExtensionId: process.env.SHOPIFY_OSP_THEME_ID,
       });
     }

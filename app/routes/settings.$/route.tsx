@@ -126,7 +126,6 @@ export async function loader({ request }) {
     const templates = await prisma.emailTemplate.findMany({
       where: { storeId: ctx.session.storeId },
     });
-    console.log(templates.length);
     if (templates.length === 0) {
       const defaultTemplatesPayload: Prisma.EmailTemplateCreateManyInput[] = [
         {

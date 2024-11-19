@@ -8,30 +8,6 @@ export function useDashboardData(
   endDate: string,
   storeId: string
 ) {
-  const pieDataQuery = useMemo(
-    () =>
-      queryProxy.packageProtectionClaimOrder.groupBy({
-        where: {
-          AND: [
-            { storeId: { equals: storeId } },
-            {
-              packageProtectionOrder: {
-                orderDate: {
-                  gte: startDate,
-                  lte: endDate,
-                },
-              },
-            },
-          ],
-        },
-        by: ['issue'],
-        _count: { id: true },
-        orderBy: {
-          issue: 'asc',
-        },
-      }),
-    [endDate, startDate,storeId]
-  );
   const lineDataQuery = useMemo(
     () =>
       queryProxy.packageProtectionOrder.subscribeGroupBy({
@@ -54,8 +30,30 @@ export function useDashboardData(
           orderDate: 'desc', // Order by date ascending
         },
       }),
-    [endDate, startDate,storeId]
+    [endDate, startDate, storeId]
   );
+
+  const pieQuery = useMemo(
+    () =>
+      queryProxy.packageProtectionClaimOrder.findMany({
+        where: {
+          AND: [
+            { storeId: { equals: storeId } },
+            {
+              packageProtectionOrder: {
+                orderDate: {
+                  gte: startDate,
+                  lte: endDate,
+                },
+              },
+            },
+          ],
+        },
+        distinct: ['fulfillmentId'],
+      }),
+    [startDate, endDate, storeId]
+  );
+
   const totalQuery = useMemo(
     () =>
       queryProxy.packageProtectionOrder.subscribeAggregate({
@@ -78,7 +76,7 @@ export function useDashboardData(
           ],
         },
       }),
-    [endDate, startDate,storeId]
+    [endDate, startDate, storeId]
   );
   const notClaimedQuery = useMemo(
     () =>
@@ -101,7 +99,7 @@ export function useDashboardData(
           ],
         },
       }),
-    [endDate, startDate,storeId]
+    [endDate, startDate, storeId]
   );
   const totalPackageProtectionQuery = useMemo(
     () =>
@@ -119,7 +117,7 @@ export function useDashboardData(
           ],
         },
       }),
-    [endDate, startDate,storeId]
+    [endDate, startDate, storeId]
   );
   const totalNonPackageProtectionQuery = useMemo(
     () =>
@@ -137,7 +135,7 @@ export function useDashboardData(
           ],
         },
       }),
-    [endDate, startDate,storeId]
+    [endDate, startDate, storeId]
   );
   const totalNonPackageProtectionSubscription = useQuery(
     totalNonPackageProtectionQuery
@@ -147,35 +145,70 @@ export function useDashboardData(
     totalPackageProtectionQuery
   );
   const lineDataSubscription = useQueryPaginated(lineDataQuery);
-  const pieDataSubscription = useQueryPaginated(pieDataQuery);
   const notClaimedSubscription = useQuery(notClaimedQuery);
   const totalSubscription = useQuery(totalQuery);
+  const pie = useQuery(pieQuery);
 
-  const lineData = useMemo(
-    () =>
-      lineDataSubscription.data
-        ?.map((e) => {
-          if (
-            (Number(e._sum.orderAmount) === 0 || e._sum.orderAmount) &&
-            (Number(e._sum.refundAmount) === 0 || e._sum.refundAmount)
-          ) {
-            return {
-              value: (
-                Number(e?._sum?.orderAmount) - Number(e._sum.refundAmount)
-              ).toFixed(2),
-              key: e.orderDate,
-            };
-          }
+  const groupByDate = (data) => {
+    return data?.reduce((acc: Record<string, number>, item) => {
+      // Extract date and calculate net amount
+      const date = new Date(item.orderDate).toISOString().split('T')[0]; // Extract only the date part
+      const netAmount =
+        parseFloat(item._sum.orderAmount) - parseFloat(item._sum.refundAmount);
 
-          return null;
-        })
-        .filter(Boolean),
-    [lineDataSubscription.data]
-  );
+      // Group by date and sum the net amounts
+      if (!acc[date]) {
+        acc[date] = 0;
+      }
+      acc[date] += netAmount;
 
+      return acc;
+    }, {});
+  };
+
+  const lineData = useMemo(() => {
+    if (lineDataSubscription.data) {
+      const groupedTotals = groupByDate(lineDataSubscription.data);
+      const result: { key: string; value: string }[] = Object.entries(
+        groupedTotals
+      ).map(([date, total]: any) => ({
+        key: date,
+        value: total.toFixed(2),
+      }));
+      return result;
+    }
+  }, [lineDataSubscription.data]);
+
+  const groupPieData = (data) => {
+    return data.reduce((acc, curr) => {
+      const issue = curr.issue.toLowerCase(); // Normalize case
+      acc[issue] = (acc[issue] || 0) + 1;
+      return acc;
+    }, {});
+  };
+
+  const pieData = useMemo(() => {
+    if (pie.data) {
+      const grouped = groupPieData(pie.data);
+      const output = Object.entries(grouped).map(([key, value]) => ({
+        name: key?.charAt(0).toUpperCase() + key.slice(1), // Capitalize the issue name
+        data: [
+          {
+            key: 'total',
+            value: value,
+          },
+        ],
+      }));
+      return output;
+    } else {
+      return [];
+    }
+  }, [pie]);
+
+  console.log('pie data', pie.data, pieData);
   const loading =
     lineDataSubscription.loading ||
-    pieDataSubscription.loading ||
+    pie.loading ||
     notClaimedSubscription.loading ||
     totalPackageProtectionSubscription.loading ||
     totalNonPackageProtectionSubscription.loading ||
@@ -185,7 +218,7 @@ export function useDashboardData(
     lineData,
     loading,
     notClaimed: notClaimedSubscription.data,
-    pieData: pieDataSubscription.data,
+    pieData,
     totalPackageProtect: totalPackageProtectionSubscription.data,
     totalNonPackageProtect: totalNonPackageProtectionSubscription.data,
     total: totalSubscription.data,

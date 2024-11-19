@@ -40,6 +40,7 @@
     "@shopify/react-i18n": "^7.13.1",
     "@shopify/ui-extensions": "2024.7.0",
     "@shopify/ui-extensions-react": "^2024.7.0",
+    "@szhsin/react-accordion": "^1.2.6",
     "@tinymce/tinymce-react": "^5.1.1",
     "@uiw/react-codemirror": "^4.23.3",
     "codemirror": "^6.0.1",

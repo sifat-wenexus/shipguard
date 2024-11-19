@@ -29,6 +29,12 @@ export const MainNavContext = createContext([
     content: 'Settings',
     accessibilityLabel: 'settings',
   },
+  {
+    id:'faqs',
+    url: '/faqs',
+    content: 'FAQs',
+    accessibilityLabel: 'faqs',
+  }
   // {
   //   id: 'pricing',
   //   url: '/pricing',

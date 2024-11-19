@@ -109,6 +109,7 @@ const ClaimOrderList = ({
         },
         include: {
           PackageProtectionClaimOrder: {
+
             where: filterFields.length
               ? { OR: filterFields }
               : { claimStatus: { not: 'PARTIALLYAPPROVE' } },
@@ -130,8 +131,15 @@ const ClaimOrderList = ({
   );
 
   const rowMarkup = useMemo(
-    () =>
-      subscription.data?.map(
+    () =>{
+      const resultWithDistinctClaims = subscription?.data?.map((order) => {
+        const uniqueClaims = Array.from(
+          new Map(order.PackageProtectionClaimOrder.map((claim) => [claim.fulfillmentId, claim])).values()
+        );
+        return { ...order, PackageProtectionClaimOrder: uniqueClaims };
+      });
+
+     return resultWithDistinctClaims?.map(
         (
           {
             id,
@@ -154,10 +162,10 @@ const ClaimOrderList = ({
             | 'Approved' = status.every((i) => i === 'CANCEL')
             ? 'Canceled'
             : status.every((i) => i === 'REQUESTED')
-            ? 'Requested'
-            : status.every((i) => i === 'APPROVE')
-            ? 'Approved'
-            : 'Processing';
+              ? 'Requested'
+              : status.every((i) => i === 'APPROVE')
+                ? 'Approved'
+                : 'Processing';
 
           return (
             <IndexTable.Row id={id.toString()} key={id} position={index}>
@@ -169,9 +177,9 @@ const ClaimOrderList = ({
                     url={
                       shop
                         ? `https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
-                            'gid://shopify/Order/',
-                            ''
-                          )}`
+                          'gid://shopify/Order/',
+                          ''
+                        )}`
                         : ''
                     }
                   >
@@ -197,17 +205,17 @@ const ClaimOrderList = ({
                         claimStatus === 'Requested'
                           ? 'incomplete'
                           : claimStatus === 'Approved'
-                          ? 'complete'
-                          : 'partiallyComplete'
+                            ? 'complete'
+                            : 'partiallyComplete'
                       }
                       tone={
                         claimStatus === 'Approved'
                           ? 'success'
                           : claimStatus === 'Canceled'
-                          ? 'critical'
-                          : claimStatus === 'Requested'
-                          ? 'warning'
-                          : 'info'
+                            ? 'critical'
+                            : claimStatus === 'Requested'
+                              ? 'warning'
+                              : 'info'
                       }
                     >
                       {claimStatus}
@@ -217,10 +225,10 @@ const ClaimOrderList = ({
                         claimStatus === 'Approved'
                           ? 'success'
                           : claimStatus === 'Canceled'
-                          ? 'critical'
-                          : claimStatus === 'Requested'
-                          ? 'warning'
-                          : 'info'
+                            ? 'critical'
+                            : claimStatus === 'Requested'
+                              ? 'warning'
+                              : 'info'
                       }
                     >
                       {PackageProtectionClaimOrder.length.toString()}
@@ -256,7 +264,9 @@ const ClaimOrderList = ({
             </IndexTable.Row>
           );
         }
-      ),
+      )
+    },
+
     [handleProcess, i18n, shop, subscription.data]
   );
 

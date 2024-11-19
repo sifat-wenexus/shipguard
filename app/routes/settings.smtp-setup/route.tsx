@@ -39,7 +39,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (action === 'disconnect') {
     const provider = data.get('provider');
+    await queryProxy.smtpSetting.update({
+      where: { id: session.storeId },
+      data:{
+        from:null,
+        provider:''
+      }
 
+    });
     if (provider === 'google') {
       await queryProxy.googleAuthCredential.delete(
         {
@@ -65,6 +72,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (action === 'save') {
     const payload = JSON.parse(data.get('state')! as string);
+    if(!payload.host||!payload.username){
+      await queryProxy.smtpSetting.update({
+        where: { id: session.storeId },
+        data:{
+          from:null,
+          provider:''
+        }
+      });
+    }
 
     await queryProxy.smtpSetting.upsert(
       {

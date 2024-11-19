@@ -1,6 +1,6 @@
 import packageProtectionImg from '~/assets/images/guideline/embed-image.png';
 import checkoutImg from '~/assets/images/guideline/9685914.webp';
-import claimPageImg from '~/assets/images/guideline/wishlist.svg';
+import claimPageImg from '~/assets/images/guideline/claim-page-image.png';
 import widgetImg from '~/assets/images/guideline/widget-image.png';
 
 import { useCallback, useEffect,  useState } from 'react';
@@ -301,9 +301,9 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                         </>
                       )}
                     </div>
-                    <div className="text-right hidden sm:block">
+                    <div className="text-right hidden sm:block shadow-md">
                       {toggleLine.enable && (
-                        <img src={packageProtectionImg} alt="i" width={'250px'}/>
+                        <img src={packageProtectionImg} alt="i" width={'250px'} className='rounded-md'/>
                       )}
                     </div>
                   </div>
@@ -352,7 +352,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                       )}
                     </div>
                     <div className="text-right hidden sm:block">
-                      {toggleLine.claim && <img src={claimPageImg} alt="i" />}
+                      {toggleLine.claim && <img src={claimPageImg} alt="i" width={"250px"} className='rounded-md' />}
                     </div>
                   </div>
                 </div>
@@ -375,11 +375,10 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                         onClick={() => handleClick('smtp')}
                       >
                         <span className="font-light text-xs">
-                          Set up your SMTP for email notification to your
-                          customers.
+                           Ensure your SMTP settings are configured. Without setup, customers won’t receive email notifications for claims and updates.
                         </span>
                         <h2 className="font-semibold text-base">
-                          Setup SMTP Settings
+                        Set Up SMTP Now
                         </h2>
                       </span>
 

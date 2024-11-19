@@ -29,9 +29,10 @@ export async function getThemeFileContent(
         }
       }
     }
-    `,
+    `,tries:20
   });
-
+const r=asset.body.data.themes?.edges?.[0].node.files.edges[0].node.body.content
+  console.log('parants', r.presets)
   return (
     asset.body.data.themes?.edges?.[0].node.files.edges[0].node.body.content ??
     null
@@ -71,7 +72,7 @@ export async function getThemeFileInfo(
         }
       }
     }
-    `,
+    `,tries:20
   });
 
   return (
@@ -94,8 +95,8 @@ export async function getThemeInfo(session: Session): Promise<{
           name
         }
       }
-    }
-    `,
+     }
+    `,tries:20
   });
 
   return asset.body.data.themes?.nodes[0] ?? null;
@@ -117,7 +118,7 @@ export async function getShopInfo(session: Session): Promise<{
         }
       }
     }
-    `,
+    `,tries:20
   });
 
   return asset.body.data.shop?.primaryDomain ?? null;

@@ -91,10 +91,13 @@ const OrderList = ({
         ],
       },
       orderBy: { orderDate: 'desc' },
-      include: { PackageProtectionClaimOrder: true },
+      include: { PackageProtectionClaimOrder: {
+        distinct:['fulfillmentId']
+        } },
     });
   }, [endDate, filterItems, searchTerm, startDate]);
   const subscription = useQueryPaginated(query);
+  console.log(subscription);
 
   const rowMarkup = useMemo(
     () =>

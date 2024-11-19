@@ -77,6 +77,9 @@ importers:
       '@shopify/ui-extensions-react':
         specifier: ^2024.7.0
         version: 2024.7.0(@shopify/ui-extensions@2024.7.0)(react-reconciler@0.29.2(react@18.3.1))(react@18.3.1)
+      '@szhsin/react-accordion':
+        specifier: ^1.2.6
+        version: 1.2.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tinymce/tinymce-react':
         specifier: ^5.1.1
         version: 5.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1641,6 +1644,12 @@ packages:
   '@sindresorhus/is@5.6.0':
     resolution: {integrity: sha512-TV7t8GKYaJWsn00tFDqBw8+Uqmr8A0fRU1tvTQhyZzGv0sJCGRQL3JGMI3ucuKo3XIZdUP+Lx7/gh2t3lewy7g==}
     engines: {node: '>=14.16'}
+
+  '@szhsin/react-accordion@1.2.6':
+    resolution: {integrity: sha512-UCrXKzNgL2BJtyXcuQu8pHduyLPjmMfj9fuYyAJX5EFX0LIYr0LXrZ/WloM49NdgEFXjJsPwAq8DI3Uj1jbbuw==}
+    peerDependencies:
+      react: ^16.14 || ^17.0 || ^18.0
+      react-dom: ^16.14 || ^17.0 || ^18.0
 
   '@szmarczak/http-timer@5.0.1':
     resolution: {integrity: sha512-+PmQX0PiAYPMeVYe237LJAYvOMYW1j2rH5YROyS3b4CTVJum34HfRvKvAzozHAQG0TnHNdUfY9nCeUyRAs//cw==}
@@ -4996,6 +5005,12 @@ packages:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
 
+  react-transition-state@2.2.0:
+    resolution: {integrity: sha512-D3EyLku1Sdxrxq26Fo4Jh0q1BLEFQfDOxKKiSuyqWH84+hM6y0Guc0hcW2IXMXY5l5gQCgkOQ9y90xx6mNoj5w==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+
   react-use-set@1.0.0:
     resolution: {integrity: sha512-6BBbOcWc/tOKuwd9gDtdunvOr/g40S0SkCBYvrSJvpI0upzNlHmLoeDvylnoP8PrjQXItClAFxseVGGhEkk7kw==}
     peerDependencies:
@@ -7755,6 +7770,12 @@ snapshots:
   '@sideway/pinpoint@2.0.0': {}
 
   '@sindresorhus/is@5.6.0': {}
+
+  '@szhsin/react-accordion@1.2.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-transition-state: 2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   '@szmarczak/http-timer@5.0.1':
     dependencies:
@@ -11890,6 +11911,11 @@ snapshots:
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  react-transition-state@2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
