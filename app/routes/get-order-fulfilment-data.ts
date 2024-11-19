@@ -168,6 +168,7 @@ export const loader: LoaderFunction = async ({ request }) => {
                   lineItem {
                     name
                     variant {
+                      id
                       compareAtPrice
                     }
                     discountAllocations {
@@ -212,7 +213,20 @@ export const loader: LoaderFunction = async ({ request }) => {
         hasClaimRequest: true,
       },
     });
+    const excludesProduct =
+      await prisma.excludedPackageProtectionProduct.findMany({
+        where: { storeId: session.storeId },
+        include: { excludedPackageProtectionVariants: true },
+      });
+    const excludesVariants = excludesProduct
+      .map((product) => {
+        return product.excludedPackageProtectionVariants.map(
+          (variant) => variant
+        );
+      })
+      .flat();
 
+    console.log(excludesVariants);
     const finalResult = {
       createdAt: orderData.createdAt,
       customerName:
@@ -235,6 +249,9 @@ export const loader: LoaderFunction = async ({ request }) => {
             createdAt: f.createdAt,
             fulfillmentLineItems: f.fulfillmentLineItems.nodes
               .filter((item) => item.lineItem.sku !== PRODUCT_SKU)
+              .filter((item) =>
+                excludesVariants.some((v) => v.id !== item.lineItem.variant.id)
+              )
               .map((item) => {
                 return {
                   discountPrice:
