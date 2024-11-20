@@ -97,7 +97,6 @@ const OrderList = ({
     });
   }, [endDate, filterItems, searchTerm, startDate]);
   const subscription = useQueryPaginated(query);
-  console.log(subscription);
 
   const rowMarkup = useMemo(
     () =>

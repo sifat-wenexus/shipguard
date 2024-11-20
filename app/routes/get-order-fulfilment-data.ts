@@ -226,7 +226,6 @@ export const loader: LoaderFunction = async ({ request }) => {
       })
       .flat();
 
-    console.log(excludesVariants);
     const finalResult = {
       createdAt: orderData.createdAt,
       customerName:
@@ -250,7 +249,7 @@ export const loader: LoaderFunction = async ({ request }) => {
             fulfillmentLineItems: f.fulfillmentLineItems.nodes
               .filter((item) => item.lineItem.sku !== PRODUCT_SKU)
               .filter((item) =>
-                excludesVariants.some((v) => v.id !== item.lineItem.variant.id)
+                excludesVariants.every((v) => v.id !== item.lineItem.variant.id)
               )
               .map((item) => {
                 return {

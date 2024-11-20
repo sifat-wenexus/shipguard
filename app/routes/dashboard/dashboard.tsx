@@ -6,7 +6,7 @@ import DashboardLoading from './dashboard-loading';
 import '@shopify/polaris-viz/build/esm/styles.css';
 import type { IActiveDates } from '../order/route';
 import LineChartForDashboard from './line-chart';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import '@shopify/polaris/build/esm/styles.css';
 import { useI18n } from '@shopify/react-i18n';
 import DateRangePicker from './date-range';
@@ -14,35 +14,35 @@ import GuideLine from './guideline';
 import PieChart from './pie-chart';
 
 import {
-  Tooltip,
-  Divider,
+  Box,
   Button,
   Card,
+  Divider,
   Icon,
   Link,
   Text,
-  Box,
+  Tooltip,
 } from '@shopify/polaris';
 
 export const default30Days = () => {
   const till = new Date();
-  const since = new Date();
+  const since = new Date().setHours(0, 0, 0, 0);
 
-  since.setDate(till.getDate() - 30);
+  // since.setDate(till.getDate() );
 
   return {
-    title: 'Last 30 days',
-    alias: 'last30days',
+    title: 'Last 1 day',
+    alias: 'last 1 day',
     period: {
-      since: since.toISOString(),
+      since: new Date(since).toISOString(),
       until: till.toISOString(),
     },
   };
 };
 
-const Dashboard = ({ guidelineVisibility ,storeId}) => {
+const Dashboard = ({ guidelineVisibility, storeId }) => {
   const defaultActiveDates = useMemo(() => default30Days(), []);
-  const [showBanner, setShowBanner] = useState(false);
+
   const [activeDates, setActiveDates] =
     useState<IActiveDates>(defaultActiveDates);
   const [i18n] = useI18n();
@@ -79,14 +79,6 @@ const Dashboard = ({ guidelineVisibility ,storeId}) => {
       return 0;
     }
   }, [data.loading]);
-
-
-  useEffect(() => {
-    if(storeInfo.ebbedBlock === undefined || storeInfo.ebbedBlock===null)return
-    setShowBanner(!storeInfo.ebbedBlock)
-  }, [storeInfo?.ebbedBlock]);
-
-
 
   if (data.loading) {
     renderElement = <DashboardLoading />;
@@ -262,7 +254,7 @@ const Dashboard = ({ guidelineVisibility ,storeId}) => {
           Hi 👋, Welcome to Overall: Shipping Protection
         </Text>
         <br />
-        {showBanner ? <WarningBanner storeInfo={storeInfo} />:null}
+        {<WarningBanner storeInfo={storeInfo} />}
 
         {
           <GuideLine
