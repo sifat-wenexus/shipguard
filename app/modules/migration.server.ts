@@ -199,46 +199,34 @@ export class Migration {
     return this.updateAppUrl();
   }
 
-  async syncCollectionsAndProducts() {
-    const store = await prisma.store.findFirstOrThrow({
-      where: {
-        domain: this.session.shop,
-      },
-    });
-
-    await jobRunner.run({
-      name: 'import-products',
-      storeId: store.id,
-      maxRetries: 5,
-    });
-  }
-
   async importOrders() {
-    const store = await prisma.store.findFirstOrThrow({
-      where: {
-        domain: this.session.shop,
-      },
-    });
-
     const previousJob = await prisma.job.findFirst({
       where: {
         name: 'import-products',
-        storeId: store.id,
+        storeId: this.session.storeId,
       },
     });
 
     await jobRunner.run({
       name: 'import-orders',
-      storeId: store.id,
+      storeId: this.session.storeId,
       maxRetries: 5,
       dependencies: previousJob ? [previousJob.id] : [],
     });
 
     await jobRunner.run({
       name: 'import-orders',
-      storeId: store.id,
+      storeId: this.session.storeId,
       interval: 60 * 60 * 6,
       scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 6),
+      maxRetries: 5,
+    });
+  }
+
+  syncCollectionsAndProducts() {
+    return jobRunner.run({
+      name: 'import-products',
+      storeId: this.session.storeId,
       maxRetries: 5,
     });
   }

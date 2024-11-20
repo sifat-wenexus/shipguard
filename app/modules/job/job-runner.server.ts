@@ -4,8 +4,8 @@ import { bigSetTimeout } from '~/modules/big-set-timeout';
 import { queryProxy } from '~/modules/query/query-proxy';
 import type { JobName } from '~/jobs/index.server';
 import { jobExecutors } from '~/jobs/index.server';
-import { prisma } from '~/modules/prisma.server';
 import { emitter } from '~/modules/emitter.server';
+import { prisma } from '~/modules/prisma.server';
 
 export interface JobRunnerOptions {
   name: JobName;
@@ -86,18 +86,6 @@ class Queue {
             OR: [
               {
                 status: 'PENDING',
-                interval: null,
-              },
-              {
-                status: 'PENDING',
-                interval: {
-                  not: null,
-                },
-                Executions: {
-                  some: {
-                    status: 'PAUSED',
-                  },
-                },
               },
               {
                 status: 'FAILED',
@@ -169,9 +157,6 @@ class Queue {
       });
 
       this.timeouts[job.id] = bigSetTimeout(async () => {
-        this.items.add(job);
-        this.ids.add(job.id);
-
         await queryProxy.job.update({
           where: {
             id: job.id,
@@ -347,7 +332,7 @@ export class JobRunner {
         where: {
           node: process.env.NODE_ID,
           status: {
-            in: ['RUNNING', 'PENDING'],
+            in: ['RUNNING'],
           },
         },
         orderBy: [
@@ -438,7 +423,7 @@ export class JobRunner {
     job: Job,
     ignoreScheduledAt?: boolean,
     lastExecution?: JobExecution
-  ) {
+  ): Promise<any> {
     const queue = job.runConcurrently
       ? this.concurrentQueue
       : this.sequentialQueue;
@@ -448,8 +433,13 @@ export class JobRunner {
       // It's a scheduled one-time job
 
       if (scheduledAt.getTime() < Date.now()) {
-        // Overdue job, push it to the queue immediately
-        return queue.add(job);
+        // Overdue job, set the status to PENDING so it's picked up immediately
+        return queryProxy.job.update({
+          where: { id: job.id },
+          data: {
+            status: 'PENDING',
+          },
+        });
       }
 
       // Schedule the job to run at the scheduled time
@@ -473,8 +463,13 @@ export class JobRunner {
         createdAt.getTime() + intervalInMs < Date.now());
 
     if (isOverdue) {
-      // Overdue job, push it to the queue immediately
-      return queue.add(job);
+      // Overdue job, set the status to PENDING so it's picked up immediately
+      return queryProxy.job.update({
+        where: { id: job.id },
+        data: {
+          status: 'PENDING',
+        },
+      });
     }
 
     if (scheduledAt && !ignoreScheduledAt) {
@@ -501,8 +496,8 @@ export class JobRunner {
         status: options.paused
           ? 'PAUSED'
           : scheduleAt
-            ? 'SCHEDULED'
-            : 'PENDING',
+          ? 'SCHEDULED'
+          : 'PENDING',
         node: process.env.NODE_ID!,
         storeId: options.storeId,
         scheduledAt: scheduleAt,
@@ -594,8 +589,8 @@ export class JobRunner {
           job.Executions?.[0].status === 'PAUSED'
             ? 'PENDING'
             : job.scheduledAt || job.interval
-              ? 'SCHEDULED'
-              : 'PENDING',
+            ? 'SCHEDULED'
+            : 'PENDING',
       },
     });
 
@@ -664,3 +659,10 @@ export class JobRunner {
 }
 
 export const jobRunner = new JobRunner();
+
+// setTimeout(() => {
+//   jobRunner.run({
+//     name: 'analyze-current-theme',
+//     storeId: 'gid://shopify/Shop/54966026377',
+//   });
+// }, 10000);

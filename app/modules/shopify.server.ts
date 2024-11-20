@@ -53,17 +53,20 @@ export const shopify = shopifyApp({
   },
   hooks: {
     afterAuth: async ({ session }) => {
-      await shopify.registerWebhooks({ session });
-
-      console.log(`Webhooks registered for shop ${session.shop}`);
-      console.log('Topics:');
-
-      for (const topic of shopify.api.webhooks.getTopicsAdded()) {
-        console.log(` - ${topic}`);
-      }
-
       await upsertStore(session);
-      await Migration.attempt(session);
+
+      setTimeout(async () => {
+        await shopify.registerWebhooks({ session });
+
+        console.log(`Webhooks registered for shop ${session.shop}`);
+        console.log('Topics:');
+
+        for (const topic of shopify.api.webhooks.getTopicsAdded()) {
+          console.log(` - ${topic}`);
+        }
+
+        await Migration.attempt(session);
+      }, 2000);
     },
   },
   future: {

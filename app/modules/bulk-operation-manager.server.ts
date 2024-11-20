@@ -1,5 +1,5 @@
 import { findOfflineSessionByStoreId } from '~/modules/find-offline-session.server';
-import { BulkOperation, BulkOperationType } from '#prisma-client';
+import type { BulkOperation, BulkOperationType } from '#prisma-client';
 import type { RequestReturn, Session } from '~/shopify-api/lib';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { emitter } from '~/modules/emitter.server';
@@ -83,7 +83,7 @@ export class BulkOperationManager {
     }
 
     if (!session) {
-      session = await findOfflineSessionByStoreId(operation.storeId);
+      session = (await findOfflineSessionByStoreId(operation.storeId) ?? undefined);
     }
 
     if (!session) {
@@ -203,6 +203,11 @@ export class BulkOperationManager {
         }
 
         const session = await findOfflineSessionByStoreId(storeId);
+
+        if (!session) {
+          return;
+        }
+
         const client = getShopifyGQLClient(session);
 
         let response: RequestReturn<Record<string, any>>;
@@ -387,7 +392,7 @@ export class BulkOperationManager {
     }
 
     if (!session) {
-      session = await findOfflineSessionByStoreId(operation.storeId);
+      session = (await findOfflineSessionByStoreId(operation.storeId) ?? undefined);
     }
 
     if (!session) {

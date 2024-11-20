@@ -1,6 +1,6 @@
 import { orderCreateEvent, orderUpdatedEvent } from '~/listeners/order.server';
+import { bulkOperationManager } from '~/modules/bulk-operation-manager.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
-import { stitchBulkResult } from '~/modules/stitch-bulk-result';
 import { getShopifyRestClient } from '~/modules/shopify.server';
 import { prisma } from '~/modules/prisma.server';
 import { Job } from '~/modules/job/job';
@@ -134,7 +134,7 @@ export class ImportOrders extends Job<Payload> {
 
     const restClient = getShopifyRestClient(session);
 
-    const orders = stitchBulkResult(data);
+    const orders = bulkOperationManager.stitchResult(data);
 
     const ordersAvailable = await prisma.packageProtectionOrder.findMany({
       where: {
