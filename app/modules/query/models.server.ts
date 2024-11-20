@@ -393,7 +393,7 @@ export const models = defineModels(() => {
     },
     smtpSetting: {
       schema: Joi.object({
-        provider: Joi.string().valid('google', 'custom').required(),
+        provider: Joi.string().valid('google', 'custom',null).required(),
         from: Joi.string().email().optional().allow(null),
         host: Joi.string().hostname().optional().allow(null),
         port: Joi.number().integer().min(1).max(65535).optional().allow(null),
