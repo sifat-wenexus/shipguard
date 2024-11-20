@@ -1,6 +1,7 @@
 import { getGoogleAuthClient } from '~/modules/get-google-auth-client.server';
 import type { gmail_v1} from 'googleapis';
 import { google } from 'googleapis';
+import { getGoogleUserInfo } from '~/modules/get-google-user-info.server';
 
 export interface GmailSendEmailOptions {
   to: string;
@@ -37,14 +38,17 @@ export class GmailAPI {
   }
 
   async sendEmail(options: GmailSendEmailOptions) {
+    const userInfo = await getGoogleUserInfo(this.storeId);
     const client = await this.getGmailApi();
 
-    if (!client) {
+    if (!client || !userInfo) {
       return;
+
     }
 
     const message = [
       `To: ${options.to}`,
+      `From: ${userInfo.name} <${userInfo.email}>`,
       `Subject: ${options.subject}`,
       'MIME-Version: 1.0',
       'Content-type: text/html; charset=iso-8859-1',

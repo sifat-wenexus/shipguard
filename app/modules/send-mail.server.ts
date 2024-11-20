@@ -78,6 +78,7 @@ export async function sendMail<T extends EmailTemplateName>(
 
     template.name = templateInDB.name;
     template.storeId = templateInDB.storeId;
+
     await mailer.sendMail({
       from: (options as any).from ?? process.env.INTERNAL_MAILER_FROM,
       subject: await new Liquid().parseAndRender(
