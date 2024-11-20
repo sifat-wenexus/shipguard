@@ -378,7 +378,8 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                            Ensure your SMTP settings are configured. Without setup, customers won’t receive email notifications for claims and updates.
                         </span>
                         <h2 className="font-semibold text-base">
-                        Set Up SMTP Now
+                           Setup SMTP Settings
+
                         </h2>
                       </span>
 
@@ -392,7 +393,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                               variant="secondary"
                               url="/settings/smtp-setup"
                             >
-                              Setup SMTP Settings
+                              Set Up SMTP Now
                             </Button>
                           </div>
                         </>

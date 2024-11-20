@@ -566,7 +566,7 @@ model GoogleAuthCredential {
 model SmtpSetting {
   id String @id
 
-  provider   String // custom, google, etc.
+  provider   String? // custom, google, etc.
   from       String?
   protocol   String?
   host       String?

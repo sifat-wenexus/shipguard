@@ -43,9 +43,8 @@ export async function action({ request }: ActionFunctionArgs) {
       where: { id: session.storeId },
       data:{
         from:null,
-        provider:''
+        provider:null
       }
-
     });
     if (provider === 'google') {
       await queryProxy.googleAuthCredential.delete(
@@ -77,7 +76,7 @@ export async function action({ request }: ActionFunctionArgs) {
         where: { id: session.storeId },
         data:{
           from:null,
-          provider:''
+          provider:null
         }
       });
     }
