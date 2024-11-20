@@ -5,6 +5,8 @@ export const ClaimRequestAdminVariable = () => {
     { name: 'Shop Name', key: '{{shop_name}}' },
     { name: 'Order Id', key: '{{order_id}}' },
     { name: 'Customer Name', key: '{{customer_name}}' },
+    { name: 'issue', key: '{{issue}}' },
+    { name: 'Request Regulation', key: '{{request_regulation}}' },
     { name: 'Claim Reason', key: '{{claim_reason}}' },
     { name: 'Claim Date', key: '{{claim_date}}' },
     { name: 'Order url', key: '{{order_url}}' },

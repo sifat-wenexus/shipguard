@@ -11,7 +11,8 @@ import {
   InlineGrid,
   Link,
   Text,
-  Thumbnail, Tooltip,
+  Thumbnail,
+  Tooltip,
 } from '@shopify/polaris';
 
 const ClaimRequestProcessCard = ({
@@ -34,7 +35,7 @@ const ClaimRequestProcessCard = ({
   }
 
   const { claimStatus, fulfillmentLineItems } = data;
-  const { taxRate } = fulfillmentLineItems[0]||{};
+  const { taxRate } = fulfillmentLineItems[0] || {};
   const totalAmount = fulfillmentLineItems.reduce(
     (a, b) =>
       a +
@@ -54,6 +55,12 @@ const ClaimRequestProcessCard = ({
       ) * taxRate;
 
   const totalAmountWithVat = totalAmount + totalVat;
+
+  const claimDate = packageProtectionOrder?.PackageProtectionClaimOrder.find(
+    (e) =>
+      fulfillmentLineItems.some((i) => i.lineItemId === e.fulfillmentLineItemId)
+  );
+
   return (
     <div key={data.id}>
       <Card roundedAbove="sm">
@@ -86,10 +93,7 @@ const ClaimRequestProcessCard = ({
           </InlineGrid>
           <Text as="p" variant="bodyMd">
             <span className="font-bold">Date: </span>
-            {packageProtectionOrder &&
-              formatDateTime(
-                packageProtectionOrder?.PackageProtectionClaimOrder[0].createdAt
-              )}
+            {packageProtectionOrder && formatDateTime(claimDate.createdAt)}
           </Text>
 
           <IndexTable

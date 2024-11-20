@@ -7,12 +7,14 @@ export const templateParameters = (
   switch (name) {
     case 'CLAIM_REQUEST_EMAIL_FOR_ADMIN':
       return {
+        request_regulation: '{{request_regulation}}',
         customer_name: '{{customer_name}}',
         claim_reason: '{{claim_reason}}',
         claim_date: '{{claim_date}}',
         shop_name: '{{shop_name}}',
         order_url: '{{order_url}}',
         order_id: '{{order_id}}',
+        issue: '{{issue}}',
       };
 
     case 'CLAIM_REQUEST_EMAIL_FOR_CUSTOMER':

@@ -267,7 +267,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           data.customerLastName
         }`;
         const logo = packageProtection?.emailTemplateLogo
-          ? `${getConfig().appUrl}api/files/${
+          ? `${getConfig()
+              .appUrl.toString()
+              .replace('dashboard', '')}api/files/${
               packageProtection?.emailTemplateLogo
             }`
           : null;
@@ -415,7 +417,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           });
           if (data) {
             const logo = packageProtection?.emailTemplateLogo
-              ? `${getConfig().appUrl}api/files/${
+              ? `${getConfig()
+                  .appUrl.toString()
+                  .replace('dashboard', '')}api/files/${
                   packageProtection?.emailTemplateLogo
                 }`
               : null;
@@ -567,7 +571,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           });
           if (data) {
             const logo = packageProtection?.emailTemplateLogo
-              ? `${getConfig().appUrl}api/files/${
+              ? `${getConfig()
+                  .appUrl.toString()
+                  .replace('dashboard', '')}api/files/${
                   packageProtection?.emailTemplateLogo
                 }`
               : null;
@@ -728,7 +734,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           });
           if (data) {
             const logo = packageProtection?.emailTemplateLogo
-              ? `${getConfig().appUrl}api/files/${
+              ? `${getConfig()
+                  .appUrl.toString()
+                  .replace('dashboard', '')}api/files/${
                   packageProtection?.emailTemplateLogo
                 }`
               : null;

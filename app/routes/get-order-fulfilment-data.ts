@@ -415,7 +415,9 @@ export const action: ActionFunction = async ({ request }) => {
       const data = await prisma.packageProtectionOrder.findFirst({
         where: { orderId: jsonData[0].orderId },
         include: {
-          PackageProtectionClaimOrder: { select: { comments: true } },
+          PackageProtectionClaimOrder: {
+            select: { comments: true, issue: true, requestedResulation: true },
+          },
           Store: { select: { name: true, domain: true, email: true } },
         },
       });
@@ -426,7 +428,9 @@ export const action: ActionFunction = async ({ request }) => {
       if (data) {
         const orderId = data.orderId.replace('gid://shopify/Order/', '');
         const logo = packageProtection?.emailTemplateLogo
-          ? `${getConfig().appUrl}api/files/${
+          ? `${getConfig()
+              .appUrl.toString()
+              .replace('dashboard', '')}api/files/${
               packageProtection?.emailTemplateLogo
             }`
           : null;
@@ -439,8 +443,11 @@ export const action: ActionFunction = async ({ request }) => {
           variables: {
             go_to_claim: claimPage,
             claim_date: `${data?.claimDate}`,
-            claim_reason: data.PackageProtectionClaimOrder[0].comments!,
             order_id: data?.orderName,
+            issue: data.PackageProtectionClaimOrder[0].issue!,
+            request_regulation:
+              data.PackageProtectionClaimOrder[0].requestedResulation!,
+            claim_reason: data.PackageProtectionClaimOrder[0].comments!,
             customer_name: `${data?.customerFirstName ?? ''}  ${
               data?.customerLastName
             }`,
