@@ -101,6 +101,14 @@ export const reqAdminTemplate = `<!DOCTYPE html>
             <td>Customer Name</td>
             <td><strong>{{customer_name}}</strong></td>
           </tr>
+           <tr>
+            <td>Issue</td>
+            <td><strong>{{issue}}</strong></td>
+          </tr>
+           <tr>
+            <td>Request Regulation</td>
+            <td><strong>{{request_regulation}}</strong></td>
+          </tr>
           <tr>
             <td>Claim Reason</td>
             <td><strong>{{claim_reason}}</strong></td>
@@ -122,11 +130,13 @@ export const reqAdminTemplate = `<!DOCTYPE html>
       <br />
       <p>
         Best regards,<br />
-        <strong>Overall: Shipping Protection</strong> Team
+        <strong>Overall: Shipping Protection Team</strong>
       </p>
-    </div> <!-- End of Email Container -->
+    </div> <!-- End of Email Container. -->
   </body>
 </html>
+
+
 
 `;
 export const reqCustomerTemplate = `<!DOCTYPE html>

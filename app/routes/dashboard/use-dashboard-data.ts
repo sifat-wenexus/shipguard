@@ -205,7 +205,6 @@ export function useDashboardData(
     }
   }, [pie]);
 
-  console.log('pie data', pie.data, pieData);
   const loading =
     lineDataSubscription.loading ||
     pie.loading ||

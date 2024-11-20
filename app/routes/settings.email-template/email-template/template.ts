@@ -36,6 +36,8 @@ export interface ClaimRequestAdminTemplateVariables {
   claim_date: string;
   order_url: string;
   go_to_claim: string;
+  issue: string;
+  request_regulation: string;
 }
 
 export interface ClaimRequestCustomerTemplateVariables {
