@@ -56,7 +56,7 @@ export async function action({ request }: ActionFunctionArgs) {
       //   },
       //   { session }
       // );
-      await queryProxy.googleAuthCredential.update({where:{id:session.storeId},data:{connected:false}});
+      await queryProxy.googleAuthCredential.update({where:{id:session.storeId},data:{connected:false}},{ session });
 
       return json({
         message: 'Google account disconnected.',
@@ -545,6 +545,7 @@ const SMTP = () => {
                   {provider === 'google' ? (
                     <Box paddingBlockStart="200" paddingBlockEnd="200">
                       <AccountConnection
+
                         details={
                           !isGmailConnected
                             ? "Connect with your Google account to send emails using Gmail's SMTP server."
