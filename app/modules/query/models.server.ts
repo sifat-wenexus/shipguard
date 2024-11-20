@@ -382,7 +382,7 @@ export const models = defineModels(() => {
           },
         },
         update: {
-          fields: new Set(['payload']),
+          fields: new Set(['payload', 'connected']),
           permission(session) {
             return {
               id: session.storeId!,
@@ -393,7 +393,7 @@ export const models = defineModels(() => {
     },
     smtpSetting: {
       schema: Joi.object({
-        provider: Joi.string().valid('google', 'custom',null).required(),
+        provider: Joi.string().valid('google', 'custom', null).allow(null),
         from: Joi.string().email().optional().allow(null),
         host: Joi.string().hostname().optional().allow(null),
         port: Joi.number().integer().min(1).max(65535).optional().allow(null),

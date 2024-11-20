@@ -76,7 +76,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
       data: {
         payload: JSON.parse(JSON.stringify(tokenResponse.tokens)),
-connected: true,
+        connected: true,
       },
     },
     { session: session || undefined }

@@ -42,10 +42,10 @@ export async function action({ request }: ActionFunctionArgs) {
     const provider = data.get('provider');
     await queryProxy.smtpSetting.update({
       where: { id: session.storeId },
-      data:{
-        from:null,
-        provider:null
-      }
+      data: {
+        from: null,
+        provider: null,
+      },
     });
     if (provider === 'google') {
       // await queryProxy.googleAuthCredential.delete(
@@ -56,7 +56,10 @@ export async function action({ request }: ActionFunctionArgs) {
       //   },
       //   { session }
       // );
-      await queryProxy.googleAuthCredential.update({where:{id:session.storeId},data:{connected:false}},{ session });
+      await queryProxy.googleAuthCredential.update(
+        { where: { id: session.storeId }, data: { connected: false } },
+        { session }
+      );
 
       return json({
         message: 'Google account disconnected.',
@@ -73,13 +76,13 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (action === 'save') {
     const payload = JSON.parse(data.get('state')! as string);
-    if(!payload.host||!payload.username){
+    if (!payload.host || !payload.username) {
       await queryProxy.smtpSetting.update({
         where: { id: session.storeId },
-        data:{
-          from:null,
-          provider:null
-        }
+        data: {
+          from: null,
+          provider: null,
+        },
       });
     }
 
@@ -116,7 +119,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const to = data.get('email') as string;
 
     const subject = (data.get('subject') as string) || 'Test Email';
-    const body = reqAdminTemplate
+    const body = reqAdminTemplate;
 
     if (settings.provider === 'google') {
       const gmailApi = new GmailAPI(session.storeId!);
@@ -441,7 +444,12 @@ const SMTP = () => {
 
   const authorize = useCallback(async () => {
     const url = await fetch('/google-oauth-url').then((r) => r.text());
-
+    if (loaderData.smtpSettings) {
+      await queryProxy.smtpSetting.update({
+        where: { id: loaderData?.smtpSettings?.id },
+        data: { provider: 'google' },
+      });
+    }
     window.open(
       url,
       '_blank' /*, `height=800,width=800,toolbar=no,resizable=no,left=${window.screen.width / 2 - 400},top=${window.screen.height / 2 - 400}`*/
@@ -545,7 +553,6 @@ const SMTP = () => {
                   {provider === 'google' ? (
                     <Box paddingBlockStart="200" paddingBlockEnd="200">
                       <AccountConnection
-
                         details={
                           !isGmailConnected
                             ? "Connect with your Google account to send emails using Gmail's SMTP server."
