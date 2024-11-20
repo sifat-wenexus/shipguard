@@ -438,8 +438,8 @@ const SMTP = () => {
   const googleAuth = useQuery(googleAuthQuery);
 
   const isGmailConnected = useMemo(
-    () => !!(loaderData.googleUserInfo || googleAuth.data?.connected),
-    [googleAuth.data?.connected, loaderData.googleUserInfo]
+    () =>  googleAuth.data?.connected,
+    [googleAuth.data?.connected]
   );
 
   const authorize = useCallback(async () => {
