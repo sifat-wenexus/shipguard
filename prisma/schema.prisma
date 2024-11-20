@@ -557,6 +557,7 @@ model GoogleAuthCredential {
   oauthState String
   payload    Json?
   email      String?
+  connected  Boolean @default(false)
 
   createdAt DateTime @default(now()) @db.Timestamptz()
 

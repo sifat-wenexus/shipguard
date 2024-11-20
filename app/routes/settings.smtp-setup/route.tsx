@@ -30,6 +30,7 @@ import {
   Text,
   Box,
 } from '@shopify/polaris';
+import { reqAdminTemplate } from '~/routes/settings.email-template/components/default-template-code';
 
 export async function action({ request }: ActionFunctionArgs) {
   const { session } = await shopify.authenticate.admin(request);
@@ -47,14 +48,15 @@ export async function action({ request }: ActionFunctionArgs) {
       }
     });
     if (provider === 'google') {
-      await queryProxy.googleAuthCredential.delete(
-        {
-          where: {
-            id: session.storeId,
-          },
-        },
-        { session }
-      );
+      // await queryProxy.googleAuthCredential.delete(
+      //   {
+      //     where: {
+      //       id: session.storeId,
+      //     },
+      //   },
+      //   { session }
+      // );
+      await queryProxy.googleAuthCredential.update({where:{id:session.storeId},data:{connected:false}});
 
       return json({
         message: 'Google account disconnected.',
@@ -114,61 +116,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const to = data.get('email') as string;
 
     const subject = (data.get('subject') as string) || 'Test Email';
-    const body = `
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Email Title</title>
-  <style>
-  *{
-  max-width:600px;
-  margin:10px auto !important;
-}
-p{
-
-    line-height: 25px;
-}
-  td{
-padding:0px 10px}
-  </style>
-</head>
-<body style=''>
-  <div style="display:flex; justify-content:center;align-items:center; margin:50px 0px;">
-   <img src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/over-all-shippping-protection-logo.png?v=1731747621" alt="shipping-protection" width="220px" height="auto"></div>
-  <p>Dear Admin,</p>
-<p>A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:A new claim has been requested for the following order:</p>
-<table style="border-collapse: collapse; width: 100.035%; height: 144.574px;" border="1"><colgroup><col style="width: 49.9079%;"><col style="width: 49.9079%;"></colgroup>
-<tbody>
-<tr style="height: 36.1648px;">
-<td>Order Id</td>
-<td><strong>{order_id}</strong></td>
-</tr>
-<tr style="height: 36.0795px;">
-<td>Customer Name</td>
-<td><strong>{customer_name}</strong></td>
-</tr>
-<tr style="height: 36.1648px;">
-<td>Claim Reason</td>
-<td><strong>{claim_reason}</strong></td>
-</tr>
-<tr style="height: 36.1648px;">
-<td>Claim Date:</td>
-<td><strong>{claim_date}</strong></td>
-</tr>
-</tbody>
-</table>
-<p>Please review the claim request and take appropriate action.</p>
-<br/>
-<p>Best regards,<br/> <strong>Overall: Shipping Protection</strong> <strong>Team</strong></p>
-<p>&nbsp;</p>
-</body>
-</html>
-
-    `;
+    const body = reqAdminTemplate
 
     if (settings.provider === 'google') {
       const gmailApi = new GmailAPI(session.storeId!);
@@ -487,8 +435,8 @@ const SMTP = () => {
   const googleAuth = useQuery(googleAuthQuery);
 
   const isGmailConnected = useMemo(
-    () => !!(loaderData.googleUserInfo || googleAuth.data?.payload),
-    [googleAuth.data?.payload, loaderData.googleUserInfo]
+    () => !!(loaderData.googleUserInfo || googleAuth.data?.connected),
+    [googleAuth.data?.connected, loaderData.googleUserInfo]
   );
 
   const authorize = useCallback(async () => {

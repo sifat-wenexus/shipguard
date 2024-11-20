@@ -450,7 +450,7 @@ const Settings = () => {
               </div>
             </Layout.Section>
           </Layout>
-          <Tutorial />
+          {/*<Tutorial />*/}
         </Page>
       </div>
     </PageShell>

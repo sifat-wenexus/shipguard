@@ -267,48 +267,48 @@ const Dashboard = ({ guidelineVisibility, storeId }) => {
 
         {renderElement}
 
-        <Box paddingBlockStart={'400'} paddingBlockEnd={'400'}>
-          <Card roundedAbove="sm">
-            <div className="flex justify-between">
-              <Tooltip content="Frequently asked questions.">
-                <Text variant="headingLg" fontWeight="medium" as="h4">
-                  FAQ
-                </Text>
-              </Tooltip>
-              <Link target="_blank" url="#" removeUnderline>
-                <div className="flex">
-                  Learn More
-                  {<Icon source={ChevronRightIcon} />}
-                </div>
-              </Link>
-            </div>
-            <br />
+        {/*<Box paddingBlockStart={'400'} paddingBlockEnd={'400'}>*/}
+        {/*  <Card roundedAbove="sm">*/}
+        {/*    <div className="flex justify-between">*/}
+        {/*      <Tooltip content="Frequently asked questions.">*/}
+        {/*        <Text variant="headingLg" fontWeight="medium" as="h4">*/}
+        {/*          FAQ*/}
+        {/*        </Text>*/}
+        {/*      </Tooltip>*/}
+        {/*      <Link target="_blank" url="#" removeUnderline>*/}
+        {/*        <div className="flex">*/}
+        {/*          Learn More*/}
+        {/*          {<Icon source={ChevronRightIcon} />}*/}
+        {/*        </div>*/}
+        {/*      </Link>*/}
+        {/*    </div>*/}
+        {/*    <br />*/}
 
-            <div className="mb-4">
-              <h3 className="pb-1">
-                <Text fontWeight="medium" as="span">
-                  How insurance works?
-                </Text>
-              </h3>
-              <Text as="p">
-                Insurance will be fully customized by you, Insurance is a
-                digital product, and route premiums to yourself.
-              </Text>
-            </div>
-            <div className="mb-4">
-              <h3 className="pb-1">
-                <Text fontWeight="medium" as="span">
-                  Uninstall app
-                </Text>
-              </h3>
-              <Text as="p">
-                App won't add any codes to your store theme, so just remove it
-                from your app list, and remove insurance from product list,
-                that's all.
-              </Text>
-            </div>
-          </Card>
-        </Box>
+        {/*    <div className="mb-4">*/}
+        {/*      <h3 className="pb-1">*/}
+        {/*        <Text fontWeight="medium" as="span">*/}
+        {/*          How insurance works?*/}
+        {/*        </Text>*/}
+        {/*      </h3>*/}
+        {/*      <Text as="p">*/}
+        {/*        Insurance will be fully customized by you, Insurance is a*/}
+        {/*        digital product, and route premiums to yourself.*/}
+        {/*      </Text>*/}
+        {/*    </div>*/}
+        {/*    <div className="mb-4">*/}
+        {/*      <h3 className="pb-1">*/}
+        {/*        <Text fontWeight="medium" as="span">*/}
+        {/*          Uninstall app*/}
+        {/*        </Text>*/}
+        {/*      </h3>*/}
+        {/*      <Text as="p">*/}
+        {/*        App won't add any codes to your store theme, so just remove it*/}
+        {/*        from your app list, and remove insurance from product list,*/}
+        {/*        that's all.*/}
+        {/*      </Text>*/}
+        {/*    </div>*/}
+        {/*  </Card>*/}
+        {/*</Box>*/}
         {/* <Tutorial /> */}
       </>
     </div>

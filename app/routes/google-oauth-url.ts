@@ -13,9 +13,11 @@ export async function loader(args: LoaderFunctionArgs) {
     create: {
       id: session.storeId!,
       oauthState: randomState,
+      connected: true,
     },
     update: {
       oauthState: randomState,
+      connected: true,
     },
     where: {
       id: session.storeId,
@@ -25,10 +27,17 @@ export async function loader(args: LoaderFunctionArgs) {
   const client = await getGoogleAuthClient();
 
   const url = client!.generateAuthUrl({
-    scope: ['https://www.googleapis.com/auth/gmail.send', 'openid', 'email', 'profile'],
+    scope: [
+      'https://www.googleapis.com/auth/gmail.send',
+      'openid',
+      'email',
+      'profile',
+    ],
     redirect_uri: process.env.GMAIL_OAUTH_REDIRECT_URI,
     access_type: 'offline',
-    state: `${encodeURIComponent(session.storeId!)}&${encodeURIComponent(randomState)}`,
+    state: `${encodeURIComponent(session.storeId!)}&${encodeURIComponent(
+      randomState
+    )}`,
   });
 
   return new Response(url);
