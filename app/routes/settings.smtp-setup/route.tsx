@@ -1,5 +1,7 @@
+import { reqAdminTemplate } from '~/routes/settings.email-template/components/default-template-code';
 import { SendTestEmail } from '~/routes/settings.smtp-setup/components/send-test-email';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { getGoogleUserInfo } from '~/modules/get-google-user-info.server';
 import { Link, useLoaderData, useRevalidator } from '@remix-run/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -7,30 +9,28 @@ import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { getMailer } from '~/modules/get-mailer.server';
 import type { Validator } from '~/hooks/use-form-state';
+import { useFormState } from '~/hooks/use-form-state';
 import SwitchButton from './components/switch-button';
 import { GmailAPI } from '~/modules/gmail-api.server';
-import { useFormState } from '~/hooks/use-form-state';
 import { PageShell } from '~/components/page-shell';
 import { shopify } from '~/modules/shopify.server';
 import type { SmtpSetting } from '#prisma-client';
 import GmailLogo from '~/assets/images/gmail.png';
 import { prisma } from '~/modules/prisma.server';
 import * as Icons from '@shopify/polaris-icons';
-import { useQuery } from '~/hooks/use-query';
-import { json } from '@remix-run/node';
 
+import { useQuery } from '~/hooks/use-query';
 import {
   AccountConnection,
-  TextField,
+  Box,
   Button,
-  Select,
-  Layout,
   Card,
+  Layout,
   Page,
+  Select,
   Text,
-  Box, InlineStack, Thumbnail, BlockStack,
+  TextField,
 } from '@shopify/polaris';
-import { reqAdminTemplate } from '~/routes/settings.email-template/components/default-template-code';
 
 export async function action({ request }: ActionFunctionArgs) {
   const { session } = await shopify.authenticate.admin(request);
@@ -40,6 +40,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (action === 'disconnect') {
     const provider = data.get('provider');
+
     await queryProxy.smtpSetting.update({
       where: { id: session.storeId },
       data: {
@@ -47,17 +48,13 @@ export async function action({ request }: ActionFunctionArgs) {
         provider: null,
       },
     });
+
     if (provider === 'google') {
-      // await queryProxy.googleAuthCredential.delete(
-      //   {
-      //     where: {
-      //       id: session.storeId,
-      //     },
-      //   },
-      //   { session }
-      // );
       await queryProxy.googleAuthCredential.update(
-        { where: { id: session.storeId }, data: { connected: false } },
+        {
+          where: { id: session.storeId },
+          data: { connected: false },
+        },
         { session }
       );
 
@@ -76,15 +73,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (action === 'save') {
     const payload = JSON.parse(data.get('state')! as string);
-    if (!payload.host || !payload.username) {
-      await queryProxy.smtpSetting.update({
-        where: { id: session.storeId },
-        data: {
-          from: null,
-          provider: null,
-        },
-      });
-    }
 
     await queryProxy.smtpSetting.upsert(
       {
@@ -185,11 +173,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { session } = await shopify.authenticate.admin(request);
 
   const googleUserInfo = await getGoogleUserInfo(session.storeId!);
+
   const smtpSettings: SmtpSetting | null = await prisma.smtpSetting.findFirst({
     where: {
       id: session.storeId!,
     },
   });
+
   const { currencyCode } = await prisma.store.findFirstOrThrow({
     where: { id: session.storeId },
     select: { currencyCode: true },
@@ -432,34 +422,32 @@ const SMTP = () => {
   ];
 
   const googleAuthQuery = useMemo(
-    () => queryProxy.googleAuthCredential.subscribeFindFirst(),
+    () =>
+      queryProxy.googleAuthCredential.subscribeFindFirst({
+        where: {
+          connected: true,
+        },
+        select: {
+          connected: true,
+        },
+      }),
     []
   );
   const googleAuth = useQuery(googleAuthQuery);
 
   const isGmailConnected = useMemo(
-    () =>  googleAuth.data?.connected,
-    [googleAuth.data?.connected]
+    () => !!(loaderData.googleUserInfo || googleAuth.data?.connected),
+    [googleAuth.data?.connected, loaderData.googleUserInfo]
   );
-
-  console.log('loaderData',(loaderData));
-  console.log('googleAuth',(googleAuth));
-  console.log('isGmailConnected',(isGmailConnected));
-
 
   const authorize = useCallback(async () => {
     const url = await fetch('/google-oauth-url').then((r) => r.text());
-    if (loaderData.smtpSettings) {
-      await queryProxy.smtpSetting.update({
-        where: { id: loaderData?.smtpSettings?.id },
-        data: { provider: 'google' },
-      });
-    }
+
     window.open(
       url,
       '_blank' /*, `height=800,width=800,toolbar=no,resizable=no,left=${window.screen.width / 2 - 400},top=${window.screen.height / 2 - 400}`*/
     );
-  }, [loaderData.smtpSettings]);
+  }, []);
 
   const disconnectGmail = useCallback(async () => {
     await fetcher.submit(
@@ -557,7 +545,6 @@ const SMTP = () => {
                   </Box>
                   {provider === 'google' ? (
                     <Box paddingBlockStart="200" paddingBlockEnd="200">
-
                       <AccountConnection
                         details={
                           !isGmailConnected
@@ -565,10 +552,10 @@ const SMTP = () => {
                             : `Your Google account is connected.`
                         }
                         avatarUrl={
-                        (isGmailConnected&&  loaderData.googleUserInfo?.picture )|| GmailLogo
+                          loaderData.googleUserInfo?.picture || GmailLogo
                         }
                         title={
-                        (isGmailConnected&&  loaderData.googleUserInfo?.email) || 'Google Account'
+                          loaderData.googleUserInfo?.email || 'Google Account'
                         }
                         connected={isGmailConnected}
                         accountName="Google"
@@ -1001,7 +988,7 @@ const SMTP = () => {
                     <div className="flex gap-2 justify-end">
                       {Boolean(
                         state.provider === 'google' && isGmailConnected
-                      )?(
+                      ) || loaderData.smtpSettings?.id ? (
                         <SendTestEmail onTest={test} />
                       ) : null}
 
