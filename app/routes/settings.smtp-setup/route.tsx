@@ -28,7 +28,7 @@ import {
   Card,
   Page,
   Text,
-  Box,
+  Box, InlineStack, Thumbnail, BlockStack,
 } from '@shopify/polaris';
 import { reqAdminTemplate } from '~/routes/settings.email-template/components/default-template-code';
 
@@ -442,9 +442,9 @@ const SMTP = () => {
     [googleAuth.data?.connected]
   );
 
-  console.log('loaderData',JSON.stringify(loaderData));
-  console.log('googleAuth',JSON.stringify(googleAuth));
-  console.log('isGmailConnected',JSON.stringify(isGmailConnected));
+  console.log('loaderData',(loaderData));
+  console.log('googleAuth',(googleAuth));
+  console.log('isGmailConnected',(isGmailConnected));
 
 
   const authorize = useCallback(async () => {
@@ -557,6 +557,7 @@ const SMTP = () => {
                   </Box>
                   {provider === 'google' ? (
                     <Box paddingBlockStart="200" paddingBlockEnd="200">
+
                       <AccountConnection
                         details={
                           !isGmailConnected
@@ -564,10 +565,10 @@ const SMTP = () => {
                             : `Your Google account is connected.`
                         }
                         avatarUrl={
-                          loaderData.googleUserInfo?.picture || GmailLogo
+                        (isGmailConnected&&  loaderData.googleUserInfo?.picture )|| GmailLogo
                         }
                         title={
-                          loaderData.googleUserInfo?.email || 'Google Account'
+                        (isGmailConnected&&  loaderData.googleUserInfo?.email) || 'Google Account'
                         }
                         connected={isGmailConnected}
                         accountName="Google"
@@ -1000,12 +1001,12 @@ const SMTP = () => {
                     <div className="flex gap-2 justify-end">
                       {Boolean(
                         state.provider === 'google' && isGmailConnected
-                      ) || loaderData.smtpSettings?.id ? (
+                      )?(
                         <SendTestEmail onTest={test} />
                       ) : null}
 
                       {provider === 'custom' ||
-                      loaderData.smtpSettings?.provider !== 'google' ? (
+                      loaderData.smtpSettings?.provider === 'custom' ? (
                         <button
                           className="px-4 py-2 bg-[#006558] text-white font-bold shadow-md rounded-md disabled:opacity-40"
                           disabled={Boolean(

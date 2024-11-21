@@ -200,10 +200,11 @@ model Store {
   PackageProtectionOrders     PackageProtectionOrder[]
   PackageProtectionClaimOrder PackageProtectionClaimOrder[]
   EmailTemplates              EmailTemplate[]
-  GoogleAuthCredential        GoogleAuthCredential?
+  GoogleAuthCredentials       GoogleAuthCredential[]
   SmtpSetting                 SmtpSetting?
   Webhooks                    Webhook[]
   BulkOperations              BulkOperation[]
+  GoogleOAuthStates           GoogleOAuthState[]
 
   @@index([appInstallationId])
 }
@@ -552,16 +553,26 @@ model EmailTemplate {
 }
 
 model GoogleAuthCredential {
-  id String @id
+  id      Int    @id @default(autoincrement())
+  storeId String
 
-  oauthState String
-  payload    Json?
-  email      String?
-  connected  Boolean @default(false)
+  userId    String
+  payload   Json?
+  connected Boolean @default(false)
 
   createdAt DateTime @default(now()) @db.Timestamptz()
 
-  Store Store @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model GoogleOAuthState {
+  id      Int    @id @default(autoincrement())
+  storeId String
+
+  state     String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  Store Store @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model SmtpSetting {

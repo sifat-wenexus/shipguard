@@ -2,12 +2,13 @@ import type { Credentials } from 'google-auth-library';
 import { OAuth2Client } from 'google-auth-library';
 import { prisma } from '~/modules/prisma.server';
 import process from 'node:process';
+import _ from 'lodash';
 
 export async function getGoogleAuthClient(storeId?: string) {
   const client = new OAuth2Client(
     process.env.GMAIL_CLIENT_USER_ID,
     process.env.GMAIL_CLIENT_SECRET,
-    process.env.GMAIL_OAUTH_REDIRECT_URI,
+    process.env.GMAIL_OAUTH_REDIRECT_URI
   );
 
   if (!storeId) {
@@ -16,7 +17,8 @@ export async function getGoogleAuthClient(storeId?: string) {
 
   const credential = await prisma.googleAuthCredential.findFirst({
     where: {
-      id: storeId,
+      storeId: storeId,
+      connected: true,
     },
   });
 
@@ -29,19 +31,19 @@ export async function getGoogleAuthClient(storeId?: string) {
   client.on('tokens', async (tokens) => {
     const oldCredential = await prisma.googleAuthCredential.findFirstOrThrow({
       where: {
-        id: storeId,
+        storeId: storeId,
+        connected: true,
       },
     });
 
     prisma.googleAuthCredential.update({
       where: {
-        id: storeId,
+        id: oldCredential.id,
       },
       data: {
-        payload: JSON.parse(JSON.stringify({
-          ...(oldCredential.payload ?? {}) as Credentials,
-          ...tokens,
-        })),
+        payload: JSON.parse(
+          JSON.stringify(_.merge(oldCredential.payload, tokens))
+        ),
       },
     });
   });
