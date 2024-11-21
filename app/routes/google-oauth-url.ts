@@ -32,6 +32,7 @@ export async function loader(args: LoaderFunctionArgs) {
       'openid',
       'email',
       'profile',
+
     ],
     redirect_uri: process.env.GMAIL_OAUTH_REDIRECT_URI,
     access_type: 'offline',
