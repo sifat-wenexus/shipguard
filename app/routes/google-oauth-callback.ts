@@ -140,7 +140,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     await queryProxy.googleAuthCredential.create(
       {
         data: {
-          storeId: store.id,
           userId: userInfo!.id!,
           payload: JSON.parse(JSON.stringify(tokenResponse.tokens)),
           connected: true,
