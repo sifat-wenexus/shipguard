@@ -442,6 +442,11 @@ const SMTP = () => {
     [loaderData.googleUserInfo ,googleAuth.data?.connected]
   );
 
+  console.log('loaderData',JSON.stringify(loaderData));
+  console.log('googleAuth',JSON.stringify(googleAuth));
+  console.log('isGmailConnected',JSON.stringify(isGmailConnected));
+
+
   const authorize = useCallback(async () => {
     const url = await fetch('/google-oauth-url').then((r) => r.text());
     if (loaderData.smtpSettings) {
