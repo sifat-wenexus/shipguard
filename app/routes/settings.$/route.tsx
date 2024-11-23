@@ -37,7 +37,7 @@ import {
   reqAdminTemplate,
   reqCustomerTemplate,
 } from '../settings.email-template/components/default-template-code';
-import { Prisma } from '#prisma-client';
+import type { Prisma } from '#prisma-client';
 
 export async function loader({ request }) {
   const ctx = await shopify.authenticate.admin(request);

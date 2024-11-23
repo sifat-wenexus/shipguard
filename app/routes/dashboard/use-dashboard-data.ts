@@ -190,7 +190,7 @@ export function useDashboardData(
   const pieData = useMemo(() => {
     if (pie.data) {
       const grouped = groupPieData(pie.data);
-      const output = Object.entries(grouped).map(([key, value]) => ({
+      return Object.entries(grouped).map(([key, value]) => ({
         name: key?.charAt(0).toUpperCase() + key.slice(1), // Capitalize the issue name
         data: [
           {
@@ -199,7 +199,6 @@ export function useDashboardData(
           },
         ],
       }));
-      return output;
     } else {
       return [];
     }

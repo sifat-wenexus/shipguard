@@ -1,21 +1,19 @@
-import { useLocation } from '@remix-run/react';
 import { Icon, Layout, Link, Page, Tabs } from '@shopify/polaris';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useLocation } from '@remix-run/react';
 import {
   BlogIcon,
   ChartHistogramSecondLastIcon,
   ClipboardCheckIcon,
-  NotificationIcon,
   OrderIcon,
-  PriceListIcon,
   SettingsIcon,
 } from '@shopify/polaris-icons';
-import { useState, useCallback, useEffect } from 'react';
 
 export function Nav() {
   const [selected, setSelected] = useState(0);
   const urlPath = useLocation().pathname;
 
-  const tabs = [
+  const tabs = useMemo(() => [
     {
       id: 'dashboard',
       content: (
@@ -60,10 +58,10 @@ export function Nav() {
     {
       id:'faqs',
       content: ( <Link url="/faqs" removeUnderline id="wenexus-nav-link">
-               <div className="flex items-center gap-1">
-                <Icon source={BlogIcon}></Icon> Faqs
-            </div>
-          </Link>)
+        <div className="flex items-center gap-1">
+          <Icon source={BlogIcon}></Icon> Faqs
+        </div>
+      </Link>)
     }
     // {
     //   id: 'notification',
@@ -85,7 +83,7 @@ export function Nav() {
     //     </Link>
     //   ),
     // },
-  ];
+  ],[])
 
   useEffect(() => {
     const indexOfTab = tabs.findIndex((tab) => `/${tab.id}` === urlPath);
@@ -99,9 +97,9 @@ export function Nav() {
       return;
     }
     setSelected(indexOfTab === -1 ? 0 : indexOfTab);
-  }, [urlPath]);
+  }, [urlPath,tabs]);
   const switchTab = useCallback((e) => {
-    console.log(tabs[e].id);
+    // console.log(tabs[e].id);
   }, []);
 
   return (

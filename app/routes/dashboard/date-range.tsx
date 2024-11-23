@@ -158,7 +158,6 @@ export default function DateRangePicker({
     setInputValues((prevState) => {
       return { ...prevState, since: value };
     });
-    console.log('handleStartInputValueChange, validDate', value);
     if (isValidDate(value)) {
       const newSince = parseYearMonthDayDateString(value);
       setActiveDateRange((prevState) => {
@@ -222,7 +221,6 @@ export default function DateRangePicker({
   function apply() {
     setPopoverActive(false);
     setActiveDates(activeDateRange);
-    console.log(activeDateRange);
   }
   function cancel() {
     setPopoverActive(false);

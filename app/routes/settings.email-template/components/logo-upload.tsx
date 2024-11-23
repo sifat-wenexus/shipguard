@@ -3,12 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { resizeImage } from '~/modules/utils/image-process';
 
 const LogoUpload = ({ file, setFile, logo, prevFile }) => {
-  const validImageTypes = [
-    'image/gif',
-    'image/jpeg',
-    'image/png',
-    'image/webp',
-  ];
+
   const [imagePreviewUrl, setImagePreviewUrl] = useState<any>(null);
   const handleImageChange = (file) => {
     if (file) {

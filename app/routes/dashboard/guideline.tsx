@@ -68,7 +68,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
   const setCookie = async () => {
     form.append('name', 'shipping-insurance-guideline');
     form.append('value', 'true');
-    const res = await fetch('/cookie', {
+   await fetch('/cookie', {
       method: 'POST',
       body: form,
     })

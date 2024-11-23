@@ -4,7 +4,7 @@ import { ShadowBevelBox } from '~/components/shadow-bevel-box';
 import SkeletonLoading from '~/components/skeliton-loading';
 import { useI18n } from '@shopify/react-i18n';
 import { useEffect, useState } from 'react';
-import {
+import type {
   PackageProtection,
   PackageProtectionClaimOrder,
   PackageProtectionOrder,
@@ -102,6 +102,7 @@ const ClaimRequestProcess = ({ setIsProcess, orderId, shop }) => {
                   <Text as="p" variant="bodyMd">
                     <span className="font-bold">Name: </span>
                     {packageProtectionOrder?.customerFirstName ??
+                      // eslint-disable-next-line no-useless-concat
                       '' + ' ' + packageProtectionOrder?.customerLastName}
                   </Text>
                   <Text as="p" variant="bodyMd" tone="base">

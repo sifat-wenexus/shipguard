@@ -1,8 +1,7 @@
 import { useBetterFetcher } from '~/hooks/use-better-fetcher';
-import { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useI18n } from '@shopify/react-i18n';
 import {
-  Banner,
   BlockStack,
   DataTable,
   Divider, Icon,
@@ -51,7 +50,6 @@ const [fulfillError, setFulfillError] = useState('');
   };
 
   const handleSubmit = async () => {
-    console.log(fulfillmentLineItems);
     setLoading(true);
 
     if (claimType === 'REORDER') {
@@ -84,7 +82,7 @@ const [fulfillError, setFulfillError] = useState('');
         .then((e) => {
           setLoading(false);
           handleClose();
-          setRefetch((p) => p + 1);
+          setRefetch((p ) => p + 1);
         })
         .catch((err) => setLoading(false));
     } else if (claimType === 'REFOUND_BY_AMOUNT') {
@@ -166,7 +164,7 @@ const [fulfillError, setFulfillError] = useState('');
           handleClose();
           setRefetch((p) => p + 1);
         })
-        .catch((err) => setLoading(false));
+        .catch(() => setLoading(false));
     } else {
       setLoading(false);
     }
@@ -197,7 +195,7 @@ const [fulfillError, setFulfillError] = useState('');
     </>
   );
   const totalAmount = fulfillmentLineItems.reduce(
-    (a, b) =>
+    (a:any, b:any) =>
       a +
       (Number(b.originalPrice) - Number(b.discountPrice)) *
         Number(b.refundQuantity),
@@ -208,9 +206,9 @@ const [fulfillError, setFulfillError] = useState('');
 
   const totalVat =
     fulfillmentLineItems
-      .filter((e) => e.taxable)
+      .filter((e:any) => e.taxable)
       .reduce(
-        (a, b) =>
+        (a:any, b:any) =>
           a +
           (Number(b.originalPrice) - Number(b.discountPrice)) *
             Number(b.refundQuantity),
@@ -220,13 +218,12 @@ const [fulfillError, setFulfillError] = useState('');
 
   const totalAmountWithVat = totalAmount + totalVat;
 
-  let lineItemRender: React.ReactNode = null;
+  let lineItemRender: React.ReactNode | null = null;
   if (claimType === 'REFOUND_BY_AMOUNT_LINE_ITEM') {
-    const handleChange = (e: number, lineItemId) => {
-      console.log(e);
+    const handleChange = (e: number, lineItemId:any) => {
 
-      setFulfillmentLineItems((prev) =>
-        prev.map((item) => {
+      setFulfillmentLineItems((prev:any) =>
+        prev.map((item:any) => {
           if (item.lineItemId === lineItemId) {
             return { ...item, refundQuantity: e > item.quantity ? 0 : e };
           } else {
@@ -262,11 +259,9 @@ const [fulfillError, setFulfillError] = useState('');
                 sku,
                 lineItemId,
                 refundQuantity,
-                taxRate,
-                taxPercentage,
-                taxTitle,
+
               },
-              index
+              index:any
             ) => {
               return (
                 <IndexTable.Row
@@ -362,8 +357,8 @@ const [fulfillError, setFulfillError] = useState('');
                   `${i18n.formatCurrency(totalVat)}`,
                 ],
                 [
-                  <b>Total Amount:</b>,
-                  <b>{i18n.formatCurrency(totalAmountWithVat)}</b>,
+                  <b key={'amount'}>Total Amount:</b>,
+                  <b key={'total-amount'}>{i18n.formatCurrency(totalAmountWithVat)}</b>,
                 ],
               ]}
               headings={[]}
@@ -375,9 +370,9 @@ const [fulfillError, setFulfillError] = useState('');
     );
   }
   if (claimType === 'REORDER') {
-    const handleChange = (e: number, lineItemId) => {
-      setFulfillmentLineItems((prev) =>
-        prev.map((item) => {
+    const handleChange = (e: number, lineItemId:any) => {
+      setFulfillmentLineItems((prev:any) =>
+        prev.map((item:any) => {
           if (item.lineItemId === lineItemId) {
             return { ...item, reorderQuantity: e > item.quantity ? 0 : e };
           } else {
@@ -387,7 +382,7 @@ const [fulfillError, setFulfillError] = useState('');
       );
     };
     const totalAmount = fulfillmentLineItems.reduce(
-      (a, b) => a + Number(b.originalPrice) * Number(b.reorderQuantity),
+      (a:any, b:any) => a + Number(b.originalPrice) * Number(b.reorderQuantity),
       0
     );
     lineItemRender = (
@@ -416,7 +411,7 @@ const [fulfillError, setFulfillError] = useState('');
                 reorderQuantity,
                 lineItemId,
               },
-              index
+              index:any
             ) => {
               return (
                 <IndexTable.Row id={id?.toString()} key={id} position={index}>
@@ -487,7 +482,7 @@ const [fulfillError, setFulfillError] = useState('');
   }
   if (claimType === 'REFOUND_BY_AMOUNT') {
     const refundTotalAmount = fulfillmentLineItems.reduce(
-      (a, b) =>
+      (a:any, b:any) =>
         a +
         (Number(b.originalPrice) - Number(b.discountPrice)) *
           Number(b.quantity),
@@ -495,9 +490,9 @@ const [fulfillError, setFulfillError] = useState('');
     );
     const refundTotalVat =
       fulfillmentLineItems
-        .filter((e) => e.taxable)
+        .filter((e:any) => e.taxable)
         .reduce(
-          (a, b) =>
+          (a:any, b:any) =>
             a +
             (Number(b.originalPrice) - Number(b.discountPrice)) *
               Number(b.quantity),

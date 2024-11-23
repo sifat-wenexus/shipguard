@@ -95,8 +95,7 @@ const ClaimOrderSearchAndFilter = ({
         .filter((element) => element.selected)
         .concat(claimStatus.filter((element) => element.selected))
     );
-  }, [fulfillmentStatus, claimStatus]);
-  // console.log(filterItems);
+  }, [fulfillmentStatus, claimStatus,setFilterItems]);
 
   return (
     <>

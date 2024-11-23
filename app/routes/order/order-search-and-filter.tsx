@@ -103,7 +103,7 @@ const OrderSearchAndFilter = ({
         .filter((element) => element.selected)
         .concat(claimStatus.filter((element) => element.selected))
     );
-  }, [fulfillmentStatus, claimStatus]);
+  }, [fulfillmentStatus, claimStatus,setFilterItems]);
 
   return (
     <>
@@ -136,6 +136,7 @@ const OrderSearchAndFilter = ({
                   <h1 className="font-bold text-base">Fulfillment Status</h1>
                   {fulfillmentStatus.map((item, index) => (
                     <Radio
+                      key={index}
                       onChange={() => handleFulfillmentSelect(index)}
                       checked={item.selected}
                       label={item.label}
@@ -161,6 +162,7 @@ const OrderSearchAndFilter = ({
                   <h1 className="font-bold text-base">Claim Status</h1>
                   {claimStatus.map((item, index) => (
                     <Radio
+                      key={index}
                       onChange={() => handleClaimSelect(index)}
                       checked={item.selected}
                       label={item.label}

@@ -1,4 +1,4 @@
-import { AlertCircleIcon, ChevronRightIcon } from '@shopify/polaris-icons';
+import { AlertCircleIcon } from '@shopify/polaris-icons';
 import { useDashboardData } from '~/routes/dashboard/use-dashboard-data';
 import { useLivePageData } from '~/hooks/use-live-page-data';
 import WarningBanner from '~/components/warning-banner';
@@ -47,7 +47,7 @@ const Dashboard = ({ guidelineVisibility, storeId }) => {
     useState<IActiveDates>(defaultActiveDates);
   const [i18n] = useI18n();
 
-  const { period } = activeDates || {};
+  const { period } = activeDates;
   const startDate = period
     ? new Date(period?.since).toISOString() //.split('T')[0]
     : new Date().toISOString(); //.split('T')[0];
@@ -62,7 +62,7 @@ const Dashboard = ({ guidelineVisibility, storeId }) => {
   const { storeInfo } = useLivePageData();
   const data = useDashboardData(startDate, endDate, storeId);
 
-  let renderElement: React.ReactNode = null;
+  let renderElement: React.ReactNode;
 
   const conversionRate = useMemo(() => {
     if (data.loading) {
@@ -74,11 +74,11 @@ const Dashboard = ({ guidelineVisibility, storeId }) => {
       100
     ).toFixed(2);
   }, [data.totalPackageProtect, data.loading, data.total]);
-  const roi = useMemo(() => {
-    if (data.loading) {
-      return 0;
-    }
-  }, [data.loading]);
+  // const roi = useMemo(() => {
+  //   if (data.loading) {
+  //     return 0;
+  //   }
+  // }, [data.loading]);
 
   if (data.loading) {
     renderElement = <DashboardLoading />;
@@ -144,7 +144,7 @@ const Dashboard = ({ guidelineVisibility, storeId }) => {
               </mfrac>
             </math>
             &cross; <span class='text-xs'>100</span>
-            <p><b>Explanation:</b> This indicate how often customers are opting fot package protection out of all orders placed.</p>
+            <p><b>Explanation:</b> This indicates how often customers are opting fot package protection out of all orders placed.</p>
           </p> `,
             }}
           ></p>

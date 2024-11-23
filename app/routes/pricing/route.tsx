@@ -1,7 +1,7 @@
 import { shopify as shopifyRemix } from '../../modules/shopify.server';
 import { Box, Layout, Page, Text } from '@shopify/polaris';
 import PricingCard from './Pricing-card';
-import {  LoaderFunction } from '@remix-run/node';
+import type {  LoaderFunction } from '@remix-run/node';
 export const loader: LoaderFunction = async ({ request }) => {
   await shopifyRemix.authenticate.admin(request);
   return null;

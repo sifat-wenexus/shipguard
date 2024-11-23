@@ -24,7 +24,6 @@ const PublishButton = ({
     (enabled: boolean) => {
       if (enabled && state.insurancePriceType === 'NOT_SELECTED') {
         setInsurancePriceError(true);
-        console.log('true', enabled);
         return;
       }
 

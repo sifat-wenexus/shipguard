@@ -192,7 +192,6 @@ const EmailTemplate = () => {
   ];
 
   const handleLogoUpload = useCallback(() => {
-    console.log('uploading logo', file);
     if (!file) return;
     const form = new FormData();
     form.append('file', file);
@@ -204,7 +203,6 @@ const EmailTemplate = () => {
     })
       .then((response) => response.json())
       .then(async (result) => {
-        console.log(' result.response.id ', result.response.id, storeId);
         setLoading(false);
         setActive(false);
         await queryProxy.packageProtection.update({

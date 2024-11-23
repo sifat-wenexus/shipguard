@@ -22,7 +22,6 @@ const ClaimRequestProcessCard = ({
 }) => {
   const [i18n] = useI18n();
 
-  // console.log('claimStatusLabel', claimStatusLabel);
 
   function formatDateTime(input) {
     const formatTime = new Intl.DateTimeFormat('en', {
@@ -195,8 +194,8 @@ const ClaimRequestProcessCard = ({
               <DataTable
                 rows={[
                   [
-                    <b>Total Amount:</b>,
-                    <b>{i18n.formatCurrency(totalAmountWithVat)}</b>,
+                    <b key={'a'}>Total Amount:</b>,
+                    <b key={'b'}>{i18n.formatCurrency(totalAmountWithVat)}</b>,
                   ],
                 ]}
                 headings={[]}
