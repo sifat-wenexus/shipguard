@@ -429,7 +429,6 @@ var __publicField = (obj, key, value) => {
     }
     // theme support
     async refreshWidget() {
-      console.log("multi");
       const subTotals = [];
       let subTotal = document.getElementsByClassName("#cart-subtotal-item-price");
       let subTotalDrawer = document.getElementsByClassName(
@@ -542,7 +541,6 @@ var __publicField = (obj, key, value) => {
     }
     // theme support
     async refreshWidget() {
-      console.log("enterprise");
       let subTotal = document.getElementsByClassName("subtotal-cartPage");
       const checkoutButtonPrice = Array.from(
         document.querySelectorAll(".subtotal-cartDrawer")
@@ -658,7 +656,6 @@ var __publicField = (obj, key, value) => {
     }
     // theme support
     async refreshWidget() {
-      console.log("shopify free theme");
       let subTotal = document.getElementsByClassName("totals__total-value");
       const items = await window.weNexusCartApi.get();
       setTimeout(() => {
@@ -742,7 +739,6 @@ var __publicField = (obj, key, value) => {
     }
     // theme support
     async refreshWidget() {
-      console.log("focal");
       let subTotal = document.getElementsByClassName("cart__total-container");
       const checkoutButtonPrice = Array.from(
         document.querySelectorAll("button[form='mini-cart-form']")
@@ -836,7 +832,6 @@ var __publicField = (obj, key, value) => {
     }
     // theme support
     async refreshWidget() {
-      console.log("mandolin");
       let subTotal = document.getElementsByClassName("cart__total-count");
       const checkoutButtonPrice = Array.from(
         document.querySelectorAll(".Cart__Total")
@@ -931,7 +926,6 @@ var __publicField = (obj, key, value) => {
     }
     // theme support
     async refreshWidget() {
-      console.log("venue");
       let subTotal = document.getElementsByClassName("cart__footer-total");
       let subtotalInPopup = document.getElementsByClassName(
         "ajaxcart__footer-total"
@@ -1125,7 +1119,6 @@ var __publicField = (obj, key, value) => {
           }
         });
         form.addEventListener("submit", async (e) => {
-          console.log("submit", submitting);
           if (submitting)
             return;
           e.preventDefault();
@@ -1141,7 +1134,6 @@ var __publicField = (obj, key, value) => {
         });
       });
     });
-    console.log("new changes-32");
     window.weNexusCartApi.addListener(async (oldCart, _, wait) => {
       client.disabledCheckoutButton();
       await wait();

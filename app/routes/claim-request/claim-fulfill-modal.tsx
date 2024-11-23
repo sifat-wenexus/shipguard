@@ -2,9 +2,10 @@ import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import { useCallback, useMemo, useState } from 'react';
 import { useI18n } from '@shopify/react-i18n';
 import {
+  Banner,
   BlockStack,
   DataTable,
-  Divider,
+  Divider, Icon,
   IndexTable,
   Modal,
   Select,
@@ -12,6 +13,7 @@ import {
   TextField,
   Thumbnail, Tooltip,
 } from '@shopify/polaris';
+import { AlertDiamondIcon } from '@shopify/polaris-icons';
 
 export type IClaimType =
   | 'REFOUND_BY_AMOUNT_LINE_ITEM'
@@ -22,6 +24,7 @@ const ClaimFulfillModal = ({
   fulfillmentLineItems: data,
   setRefetch,
   fulfillClaim,
+                             claimStatus
 }) => {
   const [i18n] = useI18n();
   const fetcher = useBetterFetcher();
@@ -29,12 +32,19 @@ const ClaimFulfillModal = ({
   const [active, setActive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+const [fulfillError, setFulfillError] = useState('');
   const [claimType, setClaimType] = useState<IClaimType>(
     'REFOUND_BY_AMOUNT_LINE_ITEM'
   );
   const [refundAmount, setRefundAmount] = useState('');
 
-  const handleModalChange = useCallback(() => setActive(!active), [active]);
+  const handleModalChange = useCallback(() => {
+    if(claimStatus!=='APPROVE'){
+      setFulfillError('Please Change Claim Status!');
+      return;
+    }
+    setActive(!active);
+  }, [active,claimStatus]);
   const handleClose = () => {
     setFulfillmentLineItems(data);
     handleModalChange();
@@ -175,13 +185,16 @@ const ClaimFulfillModal = ({
   );
 
   const activator = (
-    <button
-      className="p-2 mt-2 rounded-md w-full font-semibold border bg-green-400 hover:bg-green-500 disabled:bg-gray-300 disabled:cursor-not-allowed"
-      onClick={handleModalChange}
-      disabled={fulfillClaim}
-    >
-      Fulfill Claim
-    </button>
+    <>
+      {fulfillError&&<p className=' font-bold p-3 rounded-md my-2 bg-yellow-400 flex gap-2 '><span><Icon source={AlertDiamondIcon}/> </span>{fulfillError}</p>}
+      <button
+        className="p-2 mt-2 rounded-md w-full font-semibold border bg-green-400 hover:bg-green-500 disabled:bg-gray-300 disabled:cursor-not-allowed"
+        onClick={handleModalChange}
+        disabled={fulfillClaim}
+      >
+        Fulfill Claim
+      </button>
+    </>
   );
   const totalAmount = fulfillmentLineItems.reduce(
     (a, b) =>
@@ -191,7 +204,7 @@ const ClaimFulfillModal = ({
     0
   );
 
-  const { taxRate, taxPercentage, taxTitle } = fulfillmentLineItems[0]||{};
+  const { taxRate, taxPercentage, taxTitle } = fulfillmentLineItems[0] || {};
 
   const totalVat =
     fulfillmentLineItems
@@ -528,7 +541,7 @@ const ClaimFulfillModal = ({
         onClose={handleClose}
         title="Fulfill Claim"
         primaryAction={{
-          content: 'submit',
+          content: 'Submit',
           onAction: handleSubmit,
           loading,
         }}

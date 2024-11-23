@@ -24,13 +24,14 @@ import {
   AccountConnection,
   Box,
   Button,
-  Card,
+  Card, Icon,
   Layout,
   Page,
   Select,
   Text,
   TextField,
 } from '@shopify/polaris';
+import { EmailIcon } from '@shopify/polaris-icons';
 
 export async function action({ request }: ActionFunctionArgs) {
   const { session } = await shopify.authenticate.admin(request);
@@ -416,8 +417,8 @@ const SMTP = () => {
     { label: 'SMTP', value: 'smtp' },
     { label: 'SMTPS', value: 'smtps' },
   ];
-  const options = [
-    { label: 'Google', value: 'google' },
+  const options:{label:any,value:string}[] = [
+    { label: <div className={'flex gap-2'}><span><Icon source={EmailIcon}></Icon></span> Google</div>, value: 'google' },
     { label: 'Custom', value: 'custom' },
   ];
 
@@ -548,14 +549,14 @@ const SMTP = () => {
                       <AccountConnection
                         details={
                           !isGmailConnected
-                            ? "Connect with your Google account to send emails using Gmail's SMTP server."
+                            ? "Connect your Google account via OAuth 2.0 to send emails using Gmail's SMTP server."
                             : `Your Google account is connected.`
                         }
                         avatarUrl={
                           loaderData.googleUserInfo?.picture || GmailLogo
                         }
                         title={
-                          loaderData.googleUserInfo?.email || 'Google Account'
+                          loaderData.googleUserInfo?.email || 'Google Account Integration'
                         }
                         connected={isGmailConnected}
                         accountName="Google"
@@ -574,11 +575,12 @@ const SMTP = () => {
                               <Link
                                 to="/terms-of-service"
                                 className="underline"
+                                target={'_blank'}
                               >
                                 Terms of Service
                               </Link>{' '}
                               and{' '}
-                              <Link to="/privacy-policy" className="underline">
+                              <Link to="/privacy-policy" className="underline" target={'_blank'}>
                                 Privacy Policy
                               </Link>
                               .

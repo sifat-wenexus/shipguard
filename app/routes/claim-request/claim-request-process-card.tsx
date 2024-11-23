@@ -230,6 +230,7 @@ const ClaimRequestProcessCard = ({
           }))}
           setRefetch={setRefetch}
           fulfillClaim={data.fulfillClaim}
+          claimStatus={claimStatus}
         />
       </Card>
 
