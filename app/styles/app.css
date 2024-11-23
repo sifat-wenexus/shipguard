@@ -129,3 +129,30 @@
 .filter-width>div {
   width: 100% !important;
 }
+
+/*chat style*/
+#zsiq_float{
+  bottom: 10%;
+}
+#zsiq_chat_wrap{
+  bottom:  calc(10% + 60px);
+}
+@media  screen and (min-width: 1500px) {
+  #zsiq_float{
+    right: 10%;
+    bottom: 10%;
+  }
+  #zsiq_chat_wrap{
+    right: 10%;
+    bottom:  calc(10% + 60px);
+  }
+}
+@media screen and (max-width: 600px) {
+  #zsiq_float{
+    bottom: 3%;
+  }
+  #zsiq_chat_wrap{
+    bottom: calc(3% + 60px);
+  }
+}
+

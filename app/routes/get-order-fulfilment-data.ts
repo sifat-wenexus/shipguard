@@ -433,7 +433,7 @@ export const action: ActionFunction = async ({ request }) => {
               packageProtection?.emailTemplateLogo
             }`
           : null;
-        const claimPage = `${getConfig().appUrl}settings/claim-request`;
+        const claimPage = `${getConfig().appUrl.toString().replace('dashboard','')}settings/claim-request`;
         await sendMail({
           template: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
           storeId: data.storeId,

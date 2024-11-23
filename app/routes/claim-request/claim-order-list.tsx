@@ -90,7 +90,7 @@ const ClaimOrderList = ({
               OR: [{ orderName: { contains: searchTerm } }],
             },
             {
-              orderDate: {
+              claimDate: {
                 gte: startDate,
                 lte: endDate,
               },
@@ -146,7 +146,7 @@ const ClaimOrderList = ({
             orderName,
             protectionFee,
             orderAmount,
-            orderDate,
+            claimDate,
             orderId,
             hasClaimRequest,
             PackageProtectionClaimOrder,
@@ -244,7 +244,7 @@ const ClaimOrderList = ({
                 {+refundAmount > 0 ? i18n.formatCurrency(+refundAmount) : '-'}
               </IndexTable.Cell>
 
-              <IndexTable.Cell>{orderDate.split('T')[0]}</IndexTable.Cell>
+              <IndexTable.Cell>{claimDate.split('T')[0]}</IndexTable.Cell>
               <IndexTable.Cell>
                 <div className="text-center">
                   <Button

@@ -209,7 +209,7 @@ var __publicField = (obj, key, value) => {
       let getPrice = "";
       Array.from(document.querySelectorAll(".protection-price")).forEach(
         (e) => {
-          getPrice = e.innerHTML;
+          getPrice = e == null ? void 0 : e.innerHTML;
         }
       );
       const price = Number(getPrice.replace(/[^0-9.]/g, ""));
@@ -372,6 +372,16 @@ var __publicField = (obj, key, value) => {
     async refreshWidget() {
     }
     disabledCheckoutButton() {
+      const checkoutButtons = document.querySelectorAll("[name='checkout']");
+      checkoutButtons.forEach((button) => {
+        button.disabled = true;
+      });
+    }
+    enabledCheckoutButton() {
+      const checkoutButtons = document.querySelectorAll("[name='checkout']");
+      checkoutButtons.forEach((button) => {
+        button.disabled = false;
+      });
     }
     cartUpdate() {
     }
@@ -460,12 +470,6 @@ var __publicField = (obj, key, value) => {
     cartUpdate() {
       window.location.reload();
     }
-    disabledCheckoutButton() {
-      const checkoutButtons = document.querySelectorAll("[name='checkout']");
-      checkoutButtons.forEach((button) => {
-        button.disabled = true;
-      });
-    }
     async cartBubble() {
       const item_count = (await window.weNexusCartApi.get()).item_count;
       let cartIcon = document.getElementsByClassName(
@@ -551,10 +555,10 @@ var __publicField = (obj, key, value) => {
         if (checkoutSwitch === "true") {
           des = this.enabledDescription;
           Array.from(subTotal).forEach(
-            (el) => el.innerHTML = `${this.formatPrice(
+            (el) => el.innerHTML && (el.innerHTML = `${this.formatPrice(
               Number(items.total_price / 100 + price),
               items.currency
-            )} ${items.currency}`
+            )} ${items.currency}`)
           );
           checkoutButtonPrice.forEach((e) => {
             e.innerHTML = `${this.formatPrice(
@@ -593,12 +597,6 @@ var __publicField = (obj, key, value) => {
       Array.from(document.getElementsByTagName("cart-drawer-items")).forEach(
         (i) => i.onCartUpdate()
       );
-    }
-    disabledCheckoutButton() {
-      const checkoutButtons = document.querySelectorAll("[name='checkout']");
-      checkoutButtons.forEach((button) => {
-        button.disabled = true;
-      });
     }
     async cartBubble() {
       const item_count = (await window.weNexusCartApi.get()).item_count;
@@ -700,14 +698,6 @@ var __publicField = (obj, key, value) => {
         (i) => i.onCartUpdate()
       );
     }
-    disabledCheckoutButton() {
-      const checkoutButtons = document.querySelectorAll(
-        "button[type='submit'][name='checkout']"
-      );
-      checkoutButtons.forEach((button) => {
-        button.disabled = true;
-      });
-    }
     async cartBubble() {
       const item_count = (await window.weNexusCartApi.get()).item_count;
       let cartIcon = document.getElementsByClassName("cart-count-bubble");
@@ -795,18 +785,12 @@ var __publicField = (obj, key, value) => {
           "wenexus-package-protection-description"
         );
         Array.from(descriptionElements).forEach(
-          (el) => el.innerHTML = `${des} `
+          (el) => el.innerHTML && (el.innerHTML = `${des} `)
         );
       }, 500);
     }
     cartUpdate() {
       window.location.reload();
-    }
-    disabledCheckoutButton() {
-      const checkoutButtons = document.querySelectorAll("[name='checkout']");
-      checkoutButtons.forEach((button) => {
-        button.disabled = true;
-      });
     }
     async cartBubble() {
       const item_count = (await window.weNexusCartApi.get()).item_count;
@@ -902,12 +886,6 @@ var __publicField = (obj, key, value) => {
     cartUpdate() {
       window.location.reload();
     }
-    disabledCheckoutButton() {
-      const checkoutButtons = document.querySelectorAll("[name='checkout']");
-      checkoutButtons.forEach((button) => {
-        button.disabled = true;
-      });
-    }
     async cartBubble() {
       const item_count = (await window.weNexusCartApi.get()).item_count;
       let cartIcon = document.getElementsByClassName("header__cart-count");
@@ -990,12 +968,6 @@ var __publicField = (obj, key, value) => {
     }
     cartUpdate() {
       window.location.reload();
-    }
-    disabledCheckoutButton() {
-      const checkoutButtons = document.querySelectorAll("[name='checkout']");
-      checkoutButtons.forEach((button) => {
-        button.disabled = true;
-      });
     }
     async cartBubble() {
       const item_count = (await window.weNexusCartApi.get()).item_count;
@@ -1134,7 +1106,6 @@ var __publicField = (obj, key, value) => {
       window.addEventListener("pageshow", function(event) {
         var historyTraversal = event.persisted || typeof window.performance != "undefined" && window.performance.navigation.type === 2;
         if (historyTraversal) {
-          console.log(items);
           window.location.reload();
         }
       });
@@ -1146,6 +1117,7 @@ var __publicField = (obj, key, value) => {
       client.cartBubble();
       client.refreshWidget();
       const v = checkExcludeVariants();
+      let submitting = false;
       Array.from(element).forEach((form) => {
         form.addEventListener("keydown", (e) => {
           if (e.key === "Enter") {
@@ -1153,8 +1125,12 @@ var __publicField = (obj, key, value) => {
           }
         });
         form.addEventListener("submit", async (e) => {
+          console.log("submit", submitting);
+          if (submitting)
+            return;
           e.preventDefault();
           client.disabledCheckoutButton();
+          submitting = true;
           if (enabled() && v.length > 0) {
             await packageProtectionApi.add();
           } else {
@@ -1165,11 +1141,14 @@ var __publicField = (obj, key, value) => {
         });
       });
     });
-    console.log("new changes-13");
-    window.weNexusCartApi.addListener(async () => {
+    console.log("new changes-32");
+    window.weNexusCartApi.addListener(async (oldCart, _, wait) => {
+      client.disabledCheckoutButton();
+      await wait();
       await client.refreshPriceUI();
-      client.refreshWidget();
-    });
+      await client.refreshWidget();
+      client.enabledCheckoutButton();
+    }, true);
     for (const selector of selectors) {
       if (selector.shouldUse && !selector.shouldUse()) {
         continue;
@@ -1184,7 +1163,7 @@ var __publicField = (obj, key, value) => {
         const PPItem = await items.find(
           (item) => item.sku === "wenexus-shipping-protection"
         );
-        if (PPItem) {
+        if (PPItem == null ? void 0 : PPItem.sku) {
           await packageProtectionApi.remove();
           client.cartUpdate();
         }
@@ -1195,10 +1174,9 @@ var __publicField = (obj, key, value) => {
             // enabled()
             variants.length > 0 ? enabled() : false
           );
-          if (!checkbox.checked && variants.length == 0) {
-            await packageProtectionApi.remove();
-            client.cartUpdate();
-          } else {
+          if (!checkbox.checked && variants.length == 0)
+            ;
+          else {
             switch (selector.insertPosition) {
               case "before":
                 element.insertAdjacentElement("beforebegin", container);

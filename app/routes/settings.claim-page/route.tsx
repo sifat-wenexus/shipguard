@@ -12,7 +12,7 @@ import {
 
 const ClaimPageSetup = () => {
   const { storeInfo } = useLivePageData();
-  console.log(storeInfo);
+
   return (
     <div className="m-2 sm:m-0 ">
       <Page>
@@ -34,9 +34,10 @@ const ClaimPageSetup = () => {
                 <ShadowBevelBox title="Watch the Tutorial" divider={false}>
                   <Box paddingBlockStart="300">
                     <HelpModal
-                      video="https://www.youtube.com/embed/rgZU5pDf6mw?si=EeaXQcg8gvEz36RV"
-                      thumbnail="https://i.ytimg.com/vi/rgZU5pDf6mw/maxresdefault.jpg"
-                      duration={60 * 9 + 29}
+                      video="https://www.youtube.com/embed/9SbnOGqS4E4?si=pKU8M416d5Y2B5ro"
+                      thumbnail='https://cdn.shopify.com/s/files/1/0550/7982/9551/files/Setup_Claim_page.jpg?v=1732335997'
+                      // thumbnail="https://i.ytimg.com/vi/rgZU5pDf6mw/maxresdefault.jpg"
+                      duration={60  + 16}
                     />
                   </Box>
                 </ShadowBevelBox>
@@ -96,9 +97,9 @@ const ClaimPageSetup = () => {
                   <ShadowBevelBox title="Watch the Tutorial" divider={false}>
                     <Box paddingBlockStart="300">
                       <HelpModal
-                        video="https://www.youtube.com/embed/rgZU5pDf6mw?si=EeaXQcg8gvEz36RV"
-                        thumbnail="https://i.ytimg.com/vi/rgZU5pDf6mw/maxresdefault.jpg"
-                        duration={60 * 9 + 29}
+                        video="https://www.youtube.com/embed/9SbnOGqS4E4?si=pKU8M416d5Y2B5ro"
+                        thumbnail='https://cdn.shopify.com/s/files/1/0550/7982/9551/files/Setup_Claim_page.jpg?v=1732335997'
+                        duration={60 + 16}
                       />
                     </Box>
                   </ShadowBevelBox>
@@ -113,9 +114,9 @@ const ClaimPageSetup = () => {
                 <ShadowBevelBox title="Watch the Tutorial" divider={false}>
                   <Box paddingBlockStart="300">
                     <HelpModal
-                      video="https://www.youtube.com/embed/rgZU5pDf6mw?si=EeaXQcg8gvEz36RV"
-                      thumbnail="https://i.ytimg.com/vi/rgZU5pDf6mw/maxresdefault.jpg"
-                      duration={60 * 9 + 29}
+                      video="https://www.youtube.com/embed/UgVr75a40wM?si=tLZV1Tns4BD2BKf_"
+                      thumbnail='https://cdn.shopify.com/s/files/1/0550/7982/9551/files/Add_claim_Page.jpg?v=1732335979'
+                      duration={ 46}
                     />
                   </Box>
                 </ShadowBevelBox>
@@ -148,9 +149,9 @@ const ClaimPageSetup = () => {
                   <ShadowBevelBox title="Watch the Tutorial" divider={false}>
                     <Box paddingBlockStart="300">
                       <HelpModal
-                        video="https://www.youtube.com/embed/rgZU5pDf6mw?si=EeaXQcg8gvEz36RV"
-                        thumbnail="https://i.ytimg.com/vi/rgZU5pDf6mw/maxresdefault.jpg"
-                        duration={60 * 9 + 29}
+                        video="https://www.youtube.com/embed/UgVr75a40wM?si=tLZV1Tns4BD2BKf_"
+                        thumbnail='https://cdn.shopify.com/s/files/1/0550/7982/9551/files/Add_claim_Page.jpg?v=1732335979'
+                        duration={46}
                       />
                     </Box>
                   </ShadowBevelBox>
@@ -167,9 +168,9 @@ const ClaimPageSetup = () => {
                 <ShadowBevelBox title="Watch the Tutorial" divider={false}>
                   <Box paddingBlockStart="300">
                     <HelpModal
-                      video="https://www.youtube.com/embed/rgZU5pDf6mw?si=EeaXQcg8gvEz36RV"
-                      thumbnail="https://i.ytimg.com/vi/rgZU5pDf6mw/maxresdefault.jpg"
-                      duration={60 * 9 + 29}
+                      video="https://www.youtube.com/embed/wSVo4vD0FyA?si=F7KmWwwhmZunHczI"
+                      thumbnail="https://cdn.shopify.com/s/files/1/0550/7982/9551/files/Add_claim_page_redirection_URL_step.jpg?v=1732335977"
+                      duration={45}
                     />
                   </Box>
                 </ShadowBevelBox>
@@ -208,9 +209,9 @@ const ClaimPageSetup = () => {
                   <ShadowBevelBox title="Watch the Tutorial" divider={false}>
                     <Box paddingBlockStart="300">
                       <HelpModal
-                        video="https://www.youtube.com/embed/rgZU5pDf6mw?si=EeaXQcg8gvEz36RV"
-                        thumbnail="https://i.ytimg.com/vi/rgZU5pDf6mw/maxresdefault.jpg"
-                        duration={60 * 9 + 29}
+                        video="https://www.youtube.com/embed/wSVo4vD0FyA?si=F7KmWwwhmZunHczI"
+                        thumbnail="https://cdn.shopify.com/s/files/1/0550/7982/9551/files/Add_claim_page_redirection_URL_step.jpg?v=1732335977"
+                        duration={45}
                       />
                     </Box>
                   </ShadowBevelBox>
