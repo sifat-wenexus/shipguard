@@ -15,6 +15,11 @@ const PublishButton = ({
 
   const [enabled, setEnabled] = useState(isEnabled);
 
+  const openChat=()=>{
+    const chat = document.getElementById('zsiq_float')
+    chat && chat?.click()
+  }
+
   const toggleEnabled = useCallback(
     (enabled: boolean) => {
       if (enabled && state.insurancePriceType === 'NOT_SELECTED') {
@@ -53,13 +58,13 @@ const PublishButton = ({
         </div>
       }
     >
-      <Text as="p">
-        Watch the 👉 <Link>tutorial</Link> to complete the setup.
-      </Text>
-      <br />
+      {/*<Text as="p">*/}
+      {/*  Watch the 👉 <Link>tutorial</Link> to complete the setup.*/}
+      {/*</Text>*/}
+      {/*<br />*/}
       <Text as="p" tone="subdued">
         If the widget doesn’t show or work in the cart after publishing, turn
-        off this switch to disable it. <Link>Contact us </Link> for a free
+        off this switch to disable it. <Link onClick={openChat}>Contact us </Link> for a free
         expert fix.
       </Text>
     </ShadowBevelBox>

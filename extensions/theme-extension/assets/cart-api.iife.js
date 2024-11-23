@@ -45,8 +45,8 @@ var __publicField = (obj, key, value) => {
         before: /* @__PURE__ */ new Set(),
         after: /* @__PURE__ */ new Set()
       });
+      __publicField(this, "running", null);
       __publicField(this, "cart", null);
-      __publicField(this, "running", false);
       this.fetchFn = fetchFn;
       if (!_CartApi.instance) {
         _CartApi.instance = this;
@@ -121,7 +121,15 @@ var __publicField = (obj, key, value) => {
           listener(
             oldCart ?? await this.get(true),
             { requestType, updatedBy: "api" },
-            () => promise.then(() => this.get(true))
+            () => new Promise((resolve) => {
+              const _resolve = () => {
+                if (this.queue.size > 0 || this.running) {
+                  return setTimeout(_resolve, 800);
+                }
+                resolve(promise.then(() => this.get(true)));
+              };
+              setTimeout(_resolve, 800);
+            })
           );
         }
         await promise;
@@ -153,8 +161,8 @@ var __publicField = (obj, key, value) => {
       if (this.running) {
         return;
       }
-      this.running = true;
       for (const request of this.queue) {
+        this.running = request;
         this.queue.delete(request);
         localStorage.setItem(
           "wenexus-cart-queue",
@@ -177,7 +185,7 @@ var __publicField = (obj, key, value) => {
           })
         );
       }
-      this.running = false;
+      this.running = null;
       if (recovered) {
         alert("Recovered from lost cart updates");
         this.notifyListeners("add");

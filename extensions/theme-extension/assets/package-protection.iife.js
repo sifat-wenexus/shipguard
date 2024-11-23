@@ -1117,6 +1117,7 @@ var __publicField = (obj, key, value) => {
       client.cartBubble();
       client.refreshWidget();
       const v = checkExcludeVariants();
+      let submitting = false;
       Array.from(element).forEach((form) => {
         form.addEventListener("keydown", (e) => {
           if (e.key === "Enter") {
@@ -1124,8 +1125,12 @@ var __publicField = (obj, key, value) => {
           }
         });
         form.addEventListener("submit", async (e) => {
+          console.log("submit", submitting);
+          if (submitting)
+            return;
           e.preventDefault();
           client.disabledCheckoutButton();
+          submitting = true;
           if (enabled() && v.length > 0) {
             await packageProtectionApi.add();
           } else {
@@ -1136,12 +1141,12 @@ var __publicField = (obj, key, value) => {
         });
       });
     });
-    console.log("new changes-18");
+    console.log("new changes-31");
     window.weNexusCartApi.addListener(async (oldCart, _, wait) => {
       client.disabledCheckoutButton();
       await wait();
       await client.refreshPriceUI();
-      client.refreshWidget();
+      await client.refreshWidget();
       client.enabledCheckoutButton();
     }, true);
     for (const selector of selectors) {
@@ -1153,7 +1158,6 @@ var __publicField = (obj, key, value) => {
         selector.boundaryParents
       );
       liveQuery.addListener(async (elements) => {
-        client.disabledCheckoutButton();
         items = await getItems();
         client.refreshWidget();
         const PPItem = await items.find(
@@ -1204,7 +1208,6 @@ var __publicField = (obj, key, value) => {
             });
           }
         }
-        client.enabledCheckoutButton();
       });
     }
   }
