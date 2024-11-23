@@ -52,7 +52,7 @@ export async function action({ request }: ActionFunctionArgs) {
     if (provider === 'google') {
       await queryProxy.googleAuthCredential.update(
         {
-          where: { id: session.storeId },
+          where: { connected: true },
           data: { connected: false },
         },
         { session }
