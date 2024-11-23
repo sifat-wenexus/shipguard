@@ -1,8 +1,10 @@
 import { getGoogleAuthClient } from '~/modules/get-google-auth-client.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
+import { getGoogleUserInfo } from '~/modules/get-google-user-info.server';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { prisma } from '~/modules/prisma.server';
+import _ from 'lodash';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -32,10 +34,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const [storeId, oauthState] = state.split('&').map(decodeURIComponent);
 
   try {
-    await prisma.googleAuthCredential.findFirstOrThrow({
+    await prisma.googleOAuthState.findFirstOrThrow({
       where: {
-        id: storeId,
-        oauthState,
+        storeId: storeId,
+        state: oauthState,
       },
     });
   } catch (e) {
@@ -59,28 +61,109 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const client = await getGoogleAuthClient();
-  const tokenResponse = await client!.getToken(code);
 
-  const store = await prisma.store.findUniqueOrThrow({
+  if (!client) {
+    return new Response(
+      `
+      <html lang="en">
+        <head>
+          <title>Invalid request</title>
+        </head>
+        <body>
+          <h1 style="text-align: center;">Invalid request</h1>
+        </body>
+      </html>
+    `,
+      {
+        headers: {
+          'Content-Type': 'text/html',
+        },
+      }
+    );
+  }
+
+  const tokenResponse = await client.getToken(code);
+  client.setCredentials(tokenResponse.tokens);
+
+  const userInfo = await getGoogleUserInfo(client);
+
+  const store = await prisma.store.findUnique({
     where: {
       id: storeId,
     },
   });
 
+  if (!store || !userInfo) {
+    return new Response(
+      `
+      <html lang="en">
+        <head>
+          <title>Invalid request</title>
+        </head>
+        <body>
+          <h1 style="text-align: center;">Invalid request</h1>
+        </body>
+      </html>
+    `,
+      {
+        headers: {
+          'Content-Type': 'text/html',
+        },
+      }
+    );
+  }
+
+  await prisma.googleOAuthState.deleteMany({
+    where: {
+      storeId: store.id,
+    },
+  });
+  await prisma.googleAuthCredential.updateMany({
+    where: {
+      storeId: store.id,
+    },
+    data: {
+      connected: false,
+    },
+  });
+
+  const credentials = await prisma.googleAuthCredential.findFirst({
+    where: {
+      storeId: store.id,
+      userId: userInfo!.id!,
+    },
+  });
+
   const session = await findOfflineSession(store.domain);
 
-  await queryProxy.googleAuthCredential.update(
-    {
-      where: {
-        id: storeId,
+  if (!credentials) {
+    await queryProxy.googleAuthCredential.create(
+      {
+        data: {
+          userId: userInfo!.id!,
+          payload: JSON.parse(JSON.stringify(tokenResponse.tokens)),
+          connected: true,
+        },
       },
-      data: {
-        payload: JSON.parse(JSON.stringify(tokenResponse.tokens)),
-        connected: true,
+      { session: session || undefined }
+    );
+  } else {
+    await queryProxy.googleAuthCredential.update(
+      {
+        where: {
+          id: credentials.id,
+        },
+        data: {
+          payload: JSON.parse(
+            JSON.stringify(_.merge(credentials.payload, tokenResponse.tokens))
+          ),
+          userId: userInfo!.id!,
+          connected: true,
+        },
       },
-    },
-    { session: session || undefined }
-  );
+      { session: session || undefined }
+    );
+  }
 
   const smtpSetting = await queryProxy.smtpSetting.findUnique({
     where: {

@@ -6,21 +6,12 @@ import crypto from 'crypto';
 
 export async function loader(args: LoaderFunctionArgs) {
   const { session } = await shopify.authenticate.admin(args.request);
+  const state = crypto.randomBytes(16).toString('hex');
 
-  const randomState = crypto.randomBytes(16).toString('hex');
-
-  await prisma.googleAuthCredential.upsert({
-    create: {
-      id: session.storeId!,
-      oauthState: randomState,
-      connected: true,
-    },
-    update: {
-      oauthState: randomState,
-      connected: true,
-    },
-    where: {
-      id: session.storeId,
+  await prisma.googleOAuthState.create({
+    data: {
+      storeId: session.storeId!,
+      state,
     },
   });
 
@@ -32,12 +23,11 @@ export async function loader(args: LoaderFunctionArgs) {
       'openid',
       'email',
       'profile',
-
     ],
     redirect_uri: process.env.GMAIL_OAUTH_REDIRECT_URI,
     access_type: 'offline',
     state: `${encodeURIComponent(session.storeId!)}&${encodeURIComponent(
-      randomState
+      state
     )}`,
   });
 

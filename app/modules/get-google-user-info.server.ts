@@ -1,8 +1,14 @@
 import { getGoogleAuthClient } from '~/modules/get-google-auth-client.server';
+import type { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
 
-export async function getGoogleUserInfo(storeId: string) {
-  const oauthClient = await getGoogleAuthClient(storeId);
+export async function getGoogleUserInfo(
+  clientOrStoreId: string | OAuth2Client
+) {
+  const oauthClient =
+    typeof clientOrStoreId === 'string'
+      ? await getGoogleAuthClient(clientOrStoreId)
+      : clientOrStoreId;
 
   if (!oauthClient) {
     return null;

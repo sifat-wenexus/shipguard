@@ -370,25 +370,33 @@ export const models = defineModels(() => {
           fields: true,
           permission(session) {
             return {
-              id: session.storeId!,
+              storeId: session.storeId!,
             };
           },
         },
         delete: {
           permission(session) {
             return {
-              id: session.storeId!,
+              storeId: session.storeId!,
             };
           },
         },
         update: {
-          fields: new Set(['payload', 'connected']),
+          fields: new Set(['payload', 'connected', 'userId']),
           permission(session) {
             return {
-              id: session.storeId!,
+              storeId: session.storeId!,
             };
           },
         },
+        create: {
+          fields: new Set(['payload', 'connected', 'userId']),
+          preset(session) {
+            return {
+              storeId: session.storeId!,
+            };
+          },
+        }
       },
     },
     smtpSetting: {
