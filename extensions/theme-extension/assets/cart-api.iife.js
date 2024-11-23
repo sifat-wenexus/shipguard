@@ -41,7 +41,10 @@ var __publicField = (obj, key, value) => {
   const _CartApi = class _CartApi {
     constructor(fetchFn) {
       __publicField(this, "queue", /* @__PURE__ */ new Set());
-      __publicField(this, "listeners", /* @__PURE__ */ new Set());
+      __publicField(this, "listeners", {
+        before: /* @__PURE__ */ new Set(),
+        after: /* @__PURE__ */ new Set()
+      });
       __publicField(this, "cart", null);
       __publicField(this, "running", false);
       this.fetchFn = fetchFn;
@@ -54,7 +57,9 @@ var __publicField = (obj, key, value) => {
         const urlStr = typeof url === "string" || url instanceof URL ? url.toString() : url.url;
         const type = this.getCartEndpoint(urlStr);
         if (type) {
-          const res = await fetchFn(url, options);
+          const promise = fetchFn(url, options);
+          this.notifyListeners(type, promise);
+          const res = await promise;
           await this.notifyListeners(type);
           return res;
         }
@@ -66,7 +71,14 @@ var __publicField = (obj, key, value) => {
         (xhr, _method, url) => {
           const type = this.getCartEndpoint(url);
           if (type) {
-            xhr.addEventListener("load", async () => this.notifyListeners(type));
+            const promise = new Promise((resolve, reject) => {
+              xhr.addEventListener("load", () => {
+                resolve(void 0);
+                this.notifyListeners(type);
+              });
+              xhr.addEventListener("error", reject);
+            });
+            this.notifyListeners(type, promise);
           }
         },
         true
@@ -102,25 +114,40 @@ var __publicField = (obj, key, value) => {
       }
       return null;
     }
-    async notifyListeners(requestType) {
+    async notifyListeners(requestType, promise) {
       const oldCart = this.cart;
+      if (promise) {
+        for (const listener of this.listeners.before) {
+          listener(
+            oldCart ?? await this.get(true),
+            { requestType, updatedBy: "api" },
+            () => promise.then(() => this.get(true))
+          );
+        }
+        await promise;
+        const newCart2 = await this.get(true);
+        if (JSON.stringify(oldCart, null, 0) === JSON.stringify(newCart2, null, 0)) {
+          return oldCart;
+        }
+        return newCart2;
+      }
       const newCart = await this.get(true);
       if (JSON.stringify(oldCart, null, 0) === JSON.stringify(newCart, null, 0)) {
         return oldCart;
       }
-      for (const listener of this.listeners) {
+      for (const listener of this.listeners.after) {
         listener(newCart, { requestType, updatedBy: "api" });
       }
       return newCart;
     }
-    addListener(listener) {
-      this.listeners.add(listener);
+    addListener(listener, before = false) {
+      this.listeners[before ? "before" : "after"].add(listener);
       return () => {
-        this.listeners.delete(listener);
+        this.removeListener(listener, before);
       };
     }
-    removeListener(listener) {
-      this.listeners.delete(listener);
+    removeListener(listener, before = false) {
+      this.listeners[before ? "before" : "after"].delete(listener);
     }
     async runQueue(recovered = false) {
       if (this.running) {
