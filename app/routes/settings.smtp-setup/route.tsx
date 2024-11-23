@@ -41,7 +41,7 @@ export async function action({ request }: ActionFunctionArgs) {
   if (action === 'disconnect') {
     const provider = data.get('provider');
 
-    await queryProxy.smtpSetting.updateMany({
+    await queryProxy.smtpSetting.update({
       where: { id: session.storeId },
       data: {
         from: null,
@@ -50,7 +50,7 @@ export async function action({ request }: ActionFunctionArgs) {
     });
 
     if (provider === 'google') {
-      await queryProxy.googleAuthCredential.update(
+      await queryProxy.googleAuthCredential.updateMany(
         {
           where: { connected: true },
           data: { connected: false },
