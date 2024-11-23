@@ -41,7 +41,7 @@ export async function action({ request }: ActionFunctionArgs) {
   if (action === 'disconnect') {
     const provider = data.get('provider');
 
-    await queryProxy.smtpSetting.update({
+    await queryProxy.smtpSetting.updateMany({
       where: { id: session.storeId },
       data: {
         from: null,
