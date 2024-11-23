@@ -180,6 +180,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
       { session: session || undefined }
     );
+  } else if (smtpSetting.provider === null) {
+    await queryProxy.smtpSetting.update(
+      {
+        where: {
+          id: storeId,
+        },
+        data: {
+          provider: 'google',
+        },
+      },
+      { session: session || undefined }
+    );
   }
 
   return new Response(
