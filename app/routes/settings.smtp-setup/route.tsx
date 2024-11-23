@@ -18,6 +18,7 @@ import type { SmtpSetting } from '#prisma-client';
 import GmailLogo from '~/assets/images/gmail.png';
 import { prisma } from '~/modules/prisma.server';
 import * as Icons from '@shopify/polaris-icons';
+import GoogleLogo from '~/assets/images/Logo-google-icon-PNG.png'
 
 import { useQuery } from '~/hooks/use-query';
 import {
@@ -418,7 +419,7 @@ const SMTP = () => {
     { label: 'SMTPS', value: 'smtps' },
   ];
   const options:{label:any,value:string}[] = [
-    { label: <div className={'flex gap-2'}><span><Icon source={EmailIcon}></Icon></span> Google</div>, value: 'google' },
+    { label: <div className={'flex gap-2 items-center '}><span><img src={GoogleLogo} alt="" width={'15px'}/></span> Google</div>, value: 'google' },
     { label: 'Custom', value: 'custom' },
   ];
 
