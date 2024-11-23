@@ -28,7 +28,7 @@ const CheckoutExtension = () => {
                   <Box paddingBlockStart="300">
                     <HelpModal
                       video="https://www.youtube.com/embed/rgZU5pDf6mw?si=EeaXQcg8gvEz36RV"
-                      thumbnail="https://i.ytimg.com/vi/rgZU5pDf6mw/maxresdefault.jpg"
+                      thumbnail="https://cdn.shopify.com/s/files/1/0550/7982/9551/files/Checkout_extension_setup.jpg?v=1732335975"
                       duration={60 * 9 + 29}
                     />
                   </Box>
@@ -83,7 +83,7 @@ const CheckoutExtension = () => {
                     <Box paddingBlockStart="300">
                       <HelpModal
                         video="https://www.youtube.com/embed/rgZU5pDf6mw?si=EeaXQcg8gvEz36RV"
-                        thumbnail="https://i.ytimg.com/vi/rgZU5pDf6mw/maxresdefault.jpg"
+                        thumbnail="https://cdn.shopify.com/s/files/1/0550/7982/9551/files/Checkout_extension_setup.jpg?v=1732335975"
                         duration={60 * 9 + 29}
                       />
                     </Box>

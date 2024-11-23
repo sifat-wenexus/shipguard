@@ -28,7 +28,7 @@ import {
   Card,
   Page,
   Text,
-  Box, InlineStack, Thumbnail, BlockStack,
+  Box,
 } from '@shopify/polaris';
 import { reqAdminTemplate } from '~/routes/settings.email-template/components/default-template-code';
 
