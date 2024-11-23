@@ -1141,7 +1141,7 @@ var __publicField = (obj, key, value) => {
         });
       });
     });
-    console.log("new changes-31");
+    console.log("new changes-32");
     window.weNexusCartApi.addListener(async (oldCart, _, wait) => {
       client.disabledCheckoutButton();
       await wait();

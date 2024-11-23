@@ -90,7 +90,7 @@ const ClaimOrderList = ({
               OR: [{ orderName: { contains: searchTerm } }],
             },
             {
-              orderDate: {
+              claimDate: {
                 gte: startDate,
                 lte: endDate,
               },
