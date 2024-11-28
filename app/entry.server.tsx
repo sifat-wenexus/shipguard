@@ -8,10 +8,10 @@ import { PassThrough } from 'stream';
 import dotenv from 'dotenv';
 
 import './routes/settings.widget-setup/modules/package-protection-listener.server';
+import { webhookManager } from './modules/webhook-manager.server';
 import './modules/bulk-operation-manager.server';
 import './modules/find-offline-session.server';
 import '~/modules/query/token-store.server';
-import './modules/webhook-manager.server';
 import './modules/job/job-runner.server';
 import './modules/query/query.server';
 import './listeners/index.server';
@@ -22,10 +22,7 @@ const ABORT_DELAY = 5000;
 dotenv.config({ path: '.env', override: true });
 dotenv.config({ path: '.env.prod', override: true });
 
-
-if(process.env.NODE_ENV === 'production') {
-  console.log= ()=>{}
-}
+setInterval(() => console.log(webhookManager), 1000 * 60 * 60 * 24);
 
 export default async function handleRequest(
   request: Request,
