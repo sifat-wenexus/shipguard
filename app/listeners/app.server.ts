@@ -13,12 +13,6 @@ emitter.on(
       storeId,
     });
 
-    await prisma.webhook.deleteMany({
-      where: {
-        storeId,
-      },
-    });
-
     try {
       await prisma.session.deleteMany({
         where: { storeId },
