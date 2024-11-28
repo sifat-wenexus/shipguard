@@ -229,10 +229,9 @@ export class WebhookManager {
       update: data,
     });
 
-    return new Promise((resolve) => {
-      resolve(new Response('OK', { status: 200 }));
-      this.handleWebhook(webhook, ctx.session, true, true);
-    });
+    await this.handleWebhook(webhook, ctx.session, true, true);
+
+    return new Response('OK', { status: 200 });
   }
 
   private async handleWebhook(webhook: Webhook, session?: Session, checkReady = true, update = true) {

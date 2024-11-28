@@ -58,8 +58,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     const res = await gql.query<any>({
       data: {
         query: `#graphql
-        query{
-          order(id:"${getPackageProtectionOrder.orderId}") {
+        query ($orderId: ID!) {
+          order(id: $orderId) {
             email
             displayFulfillmentStatus
             customer {
@@ -119,14 +119,13 @@ export const loader: LoaderFunction = async ({ request }) => {
             }
           }
         }
-
         `,
-        // variables: { orderId: orderId },
+        variables: { orderId: orderId },
       },
       tries: 20,
     });
 
-    console.log(JSON.stringify(res.body.data));
+    console.log(res.body);
 
     if (params.email !== res.body.data.order.email) {
       return json({
