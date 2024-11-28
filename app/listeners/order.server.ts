@@ -4,6 +4,7 @@ import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
+import { prisma } from '~/modules/prisma.server';
 
 const makePackageProtectionFulfill = async (
   data: Record<string, any>[],
@@ -145,29 +146,33 @@ export const orderCreateEvent = async ({
           })
           .join('');
 
-      await queryProxy.packageProtectionOrder.create({
-        data: {
-          storeId,
-          hasPackageProtection: true,
-          orderId: orderId,
-          customerId: payload.customer.id.toString(),
-          customerEmail: payload.customer.email,
-          customerFirstName: payload.customer.first_name,
-          customerLastName: payload.customer.last_name,
-          orderName: updatedOrder.body.data.orderUpdate.order.name,
-          orderDate: payload.created_at,
-          orderAmount: Number(
-            updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
-              .amount
-          ),
-          protectionFee: Number(protectionFee),
-          fulfillmentStatus:
-            payload.fulfillment_status === 'partial'
-              ? 'PARTIALLY_FULFILLED'
-              : payload.fulfillment_status === 'fulfilled'
+      const data = {
+        storeId,
+        hasPackageProtection: true,
+        orderId: orderId,
+        customerId: payload.customer.id.toString(),
+        customerEmail: payload.customer.email,
+        customerFirstName: payload.customer.first_name,
+        customerLastName: payload.customer.last_name,
+        orderName: updatedOrder.body.data.orderUpdate.order.name,
+        orderDate: payload.created_at,
+        orderAmount: Number(
+          updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
+            .amount
+        ),
+        protectionFee: Number(protectionFee),
+        fulfillmentStatus:
+          payload.fulfillment_status === 'partial'
+            ? 'PARTIALLY_FULFILLED'
+            : payload.fulfillment_status === 'fulfilled'
               ? 'FULFILLED'
               : 'UNFULFILLED',
-        },
+      };
+
+      await queryProxy.packageProtectionOrder.upsert({
+        where: { orderId: orderId },
+        create: data,
+        udpate: data,
       });
 
       if (
@@ -180,26 +185,30 @@ export const orderCreateEvent = async ({
         );
       }
     } else {
-      await queryProxy.packageProtectionOrder.create({
-        data: {
-          storeId,
-          hasPackageProtection: false,
-          orderId: orderId,
-          customerId: payload.customer.id.toString(),
-          customerEmail: payload.customer.email,
-          customerFirstName: payload.customer.first_name,
-          customerLastName: payload.customer.last_name,
-          orderName: payload.name,
-          orderAmount: Number(payload.total_price),
-          orderDate: payload.created_at,
-          protectionFee: 0,
-          fulfillmentStatus:
-            payload.fulfillment_status === 'partial'
-              ? 'PARTIALLY_FULFILLED'
-              : payload.fulfillment_status === 'fulfilled'
+      const data = {
+        storeId,
+        orderId,
+        hasPackageProtection: false,
+        customerId: payload.customer.id.toString(),
+        customerEmail: payload.customer.email,
+        customerFirstName: payload.customer.first_name,
+        customerLastName: payload.customer.last_name,
+        orderName: payload.name,
+        orderAmount: Number(payload.total_price),
+        orderDate: payload.created_at,
+        protectionFee: 0,
+        fulfillmentStatus:
+          payload.fulfillment_status === 'partial'
+            ? 'PARTIALLY_FULFILLED'
+            : payload.fulfillment_status === 'fulfilled'
               ? 'FULFILLED'
               : 'UNFULFILLED',
-        },
+      };
+
+      await queryProxy.packageProtectionOrder.upsert({
+        where: { orderId },
+        create: data,
+        update: data,
       });
     }
   } catch (err) {
