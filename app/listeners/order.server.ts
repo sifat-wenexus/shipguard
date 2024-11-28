@@ -4,6 +4,7 @@ import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
+import type { Session } from '~/shopify-api/lib';
 
 const makePackageProtectionFulfill = async (
   data: Record<string, any>[],
@@ -57,6 +58,24 @@ const makePackageProtectionFulfill = async (
   return result;
 };
 
+async function fetchOrderStatus(id: string, session: Session) {
+  const gqlClient = getShopifyGQLClient(session);
+
+  const order = await gqlClient.query<any>({
+    data: `#graphql
+    query {
+      order(id: "${id}") {
+        id
+        displayFulfillmentStatus
+      }
+    }
+    `,
+    tries: 20,
+  });
+
+  return order.body.data.order.displayFulfillmentStatus;
+}
+
 export const orderCreateEvent = async ({
   payload: _payload,
   session,
@@ -97,6 +116,7 @@ export const orderCreateEvent = async ({
                   amount
                 }
               }
+              displayFulfillmentStatus
               lineItems(first:250){
                 nodes{
                   sku
@@ -162,12 +182,7 @@ export const orderCreateEvent = async ({
             .amount
         ),
         protectionFee: Number(protectionFee),
-        fulfillmentStatus:
-          payload.fulfillment_status === 'partial'
-            ? 'PARTIALLY_FULFILLED'
-            : payload.fulfillment_status === 'fulfilled'
-              ? 'FULFILLED'
-              : 'UNFULFILLED',
+        fulfillmentStatus: updatedOrder.body.data.orderUpdate.order.displayFulfillmentStatus,
       };
 
       await queryProxy.packageProtectionOrder.upsert({
@@ -198,12 +213,7 @@ export const orderCreateEvent = async ({
         orderAmount: Number(payload.total_price),
         orderDate: payload.created_at,
         protectionFee: 0,
-        fulfillmentStatus:
-          payload.fulfillment_status === 'partial'
-            ? 'PARTIALLY_FULFILLED'
-            : payload.fulfillment_status === 'fulfilled'
-              ? 'FULFILLED'
-              : 'UNFULFILLED',
+        fulfillmentStatus: await fetchOrderStatus(orderId, session),
       };
 
       await queryProxy.packageProtectionOrder.upsert({
@@ -511,12 +521,7 @@ export const orderUpdatedEvent = async ({
 
       const updateOrder = await queryProxy.packageProtectionOrder.update({
         data: {
-          fulfillmentStatus:
-            payload.fulfillment_status === 'partial'
-              ? 'PARTIALLY_FULFILLED'
-              : payload.fulfillment_status === 'fulfilled'
-              ? 'FULFILLED'
-              : 'UNFULFILLED',
+          fulfillmentStatus: getOrder.body.data.order.displayFulfillmentStatus,
           protectionFee: Number(protectionFee),
           orderAmount: Number(
             getOrder.body.data.order.totalPriceSet.shopMoney.amount

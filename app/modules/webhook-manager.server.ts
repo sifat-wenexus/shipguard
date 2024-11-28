@@ -49,6 +49,9 @@ export class WebhookManager {
             processed: false,
             nodeId: process.env.NODE_ID || '',
           },
+          orderBy: {
+            createdAt: 'asc',
+          },
         });
 
         console.log(`Found ${webhooks.length} webhooks to process`);
@@ -87,7 +90,7 @@ export class WebhookManager {
 
           const pendingWebhooks = Array.from(
             this.stores[storeId].pendingWebhooks
-          );
+          ).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
           this.stores[storeId].pendingWebhooks.clear();
 
           while (pendingWebhooks.length > 0) {
@@ -107,8 +110,12 @@ export class WebhookManager {
           for (const storeId in this.stores) {
             console.log(`Checking for pending webhooks: ${storeId}`);
 
-            if (this.stores[storeId].pendingWebhooks.size > 0) {
-              for (const webhook of this.stores[storeId].pendingWebhooks) {
+            const pendingWebhooks = Array.from(
+              this.stores[storeId].pendingWebhooks
+            ).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+
+            if (pendingWebhooks.length > 0) {
+              for (const webhook of pendingWebhooks) {
                 await this.handleWebhook(webhook, true, true);
               }
             }
@@ -118,6 +125,9 @@ export class WebhookManager {
                 processed: false,
                 nodeId: process.env.NODE_ID || '',
                 storeId,
+              },
+              orderBy: {
+                createdAt: 'asc',
               },
             });
 
