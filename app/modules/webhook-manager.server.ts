@@ -105,7 +105,7 @@ export class WebhookManager {
           console.log(`Store ready to process webhooks: ${storeId}`);
         }
       })
-      .then(() => {
+      /*.then(() => {
         setInterval(async () => {
           for (const storeId in this.stores) {
             console.log(`Checking for pending webhooks: ${storeId}`);
@@ -144,7 +144,7 @@ export class WebhookManager {
             }
           }
         }, 10000);
-      });
+      })*/;
 
     emitter.on('store.create', (store: Store) => {
       this.stores[store.id] = {
