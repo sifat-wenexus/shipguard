@@ -3,19 +3,19 @@ import { jobRunner } from '~/modules/job/job-runner.server';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
 
-async function upsert({ shop, payload: _payload }: WebhookListenerArgs) {
+async function upsert({ storeId, payload: _payload }: WebhookListenerArgs) {
   if (!_payload) {
     return;
   }
 
-  const store = await prisma.store.findFirst({
+  const store = await prisma.store.findUnique({
     where: {
-      domain: shop,
+      id: storeId,
     },
   });
 
   if (!store) {
-    return console.error(`Store not found for ${shop}`);
+    return console.error(`Store not found for ${storeId}`);
   }
 
   const payload = _payload as Record<string, any>;
@@ -38,17 +38,17 @@ async function upsert({ shop, payload: _payload }: WebhookListenerArgs) {
 }
 
 emitter.on('COLLECTIONS_UPDATE', async (ctx: WebhookListenerArgs) => {
-  await upsert(ctx);
-
   const payload = ctx.payload as Record<string, any>;
 
   if (!payload || !ctx.session) {
     return;
   }
 
-  const store = await prisma.store.findFirst({
+  await upsert(ctx);
+
+  const store = await prisma.store.findUnique({
     where: {
-      domain: ctx.shop,
+      id: ctx.storeId,
     },
   });
 

@@ -1,11 +1,11 @@
-import type { WebhookContextWithSession } from '~/shopify-app-remix/server/authenticate/webhooks/types';
 import { findOfflineSession, findOfflineSessionByStoreId } from '~/modules/find-offline-session.server';
+import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { jobRunner } from '~/modules/job/job-runner.server';
-import type { Store, Webhook } from '#prisma-client';
 import { emitter } from '~/modules/emitter.server';
 import { shopify } from '~/modules/shopify.server';
-import type { JobName } from '~/jobs/index.server';
+import type { Store, Webhook } from '#prisma-client';
 import { prisma } from '~/modules/prisma.server';
+import type { JobName } from '~/jobs/index.server';
 import type { Session } from '~/shopify-api/lib';
 import _ from 'lodash';
 
@@ -209,13 +209,14 @@ export class WebhookManager {
       }
 
       emitter.emitAsync(webhook.topic, {
+        storeId: webhook.storeId,
         shop: session?.shop,
         webhookId: webhook.id,
         payload: webhook.payload,
         topic: webhook.topic,
         apiVersion: '2024-01',
         session,
-      } as WebhookContextWithSession<any, any>);
+      } as WebhookListenerArgs);
 
       return prisma.webhook.update({
         where: {
