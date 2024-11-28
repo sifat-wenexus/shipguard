@@ -19,77 +19,83 @@ async function handleWebhook({ storeId, payload: _payload }: WebhookListenerArgs
 
   const payload = _payload as Record<string, any>;
 
-  await prisma.product.upsert({
-    where: {
-      id: payload.admin_graphql_api_id,
-    },
-    create: {
-      id: payload.admin_graphql_api_id,
-      storeId: store.id,
-      title: payload.title,
-      featuredImage: payload.images?.[0]?.src,
-      handle: payload.handle,
-      productType: payload.product_type,
-      tags: payload.tags.split(', '),
-      status:
-        payload.status === 'active'
-          ? 'PUBLISHED'
-          : payload.status.toUpperCase(),
-      vendor: payload.vendor,
-    },
-    update: {
-      featuredImage: payload.images?.src,
-      title: payload.title,
-      handle: payload.handle,
-      productType: payload.product_type,
-      tags: payload.tags.split(', '),
-      status:
-        payload.status === 'active'
-          ? 'PUBLISHED'
-          : payload.status.toUpperCase(),
-      vendor: payload.vendor,
-      Variants: {
-        deleteMany: {
-          id: {
-            notIn: payload.variants.map(
-              (variant) => variant.admin_graphql_api_id
-            ),
+  try {
+    await prisma.$transaction(async (trx) => {
+      await trx.product.upsert({
+        where: {
+          id: payload.admin_graphql_api_id,
+        },
+        create: {
+          id: payload.admin_graphql_api_id,
+          storeId: store.id,
+          title: payload.title,
+          featuredImage: payload.images?.[0]?.src,
+          handle: payload.handle,
+          productType: payload.product_type,
+          tags: payload.tags.split(', '),
+          status:
+            payload.status === 'active'
+              ? 'PUBLISHED'
+              : payload.status.toUpperCase(),
+          vendor: payload.vendor,
+        },
+        update: {
+          featuredImage: payload.images?.src,
+          title: payload.title,
+          handle: payload.handle,
+          productType: payload.product_type,
+          tags: payload.tags.split(', '),
+          status:
+            payload.status === 'active'
+              ? 'PUBLISHED'
+              : payload.status.toUpperCase(),
+          vendor: payload.vendor,
+          Variants: {
+            deleteMany: {
+              id: {
+                notIn: payload.variants.map(
+                  (variant) => variant.admin_graphql_api_id
+                ),
+              },
+            },
           },
         },
-      },
-    },
-  });
+      });
 
-  for (const variant of payload.variants) {
-    await prisma.productVariant.upsert({
-      where: {
-        id: variant.admin_graphql_api_id,
-      },
-      create: {
-        id: variant.admin_graphql_api_id,
-        productId: payload.admin_graphql_api_id,
-        title: variant.title,
-        price: variant.price,
-        sku: variant.sku ?? undefined,
-        compareAtPrice: variant.compare_at_price ?? undefined,
-        inventoryQuantity: variant.inventory_quantity,
-        sellableOnlineQuantity: variant.inventory_quantity,
-        featuredImage: variant.image_id
-          ? payload.images.find((image) => image.id === variant.image_id)?.src
-          : undefined,
-      },
-      update: {
-        title: variant.title,
-        price: variant.price,
-        sku: variant.sku ?? undefined,
-        compareAtPrice: variant.compare_at_price ?? undefined,
-        inventoryQuantity: variant.inventory_quantity,
-        sellableOnlineQuantity: variant.inventory_quantity,
-        featuredImage: variant.image_id
-          ? payload.images.find((image) => image.id === variant.image_id)?.src
-          : undefined,
-      },
+      for (const variant of payload.variants) {
+        await trx.productVariant.upsert({
+          where: {
+            id: variant.admin_graphql_api_id,
+          },
+          create: {
+            id: variant.admin_graphql_api_id,
+            productId: payload.admin_graphql_api_id,
+            title: variant.title,
+            price: variant.price,
+            sku: variant.sku ?? undefined,
+            compareAtPrice: variant.compare_at_price ?? undefined,
+            inventoryQuantity: variant.inventory_quantity,
+            sellableOnlineQuantity: variant.inventory_quantity,
+            featuredImage: variant.image_id
+              ? payload.images.find((image) => image.id === variant.image_id)?.src
+              : undefined,
+          },
+          update: {
+            title: variant.title,
+            price: variant.price,
+            sku: variant.sku ?? undefined,
+            compareAtPrice: variant.compare_at_price ?? undefined,
+            inventoryQuantity: variant.inventory_quantity,
+            sellableOnlineQuantity: variant.inventory_quantity,
+            featuredImage: variant.image_id
+              ? payload.images.find((image) => image.id === variant.image_id)?.src
+              : undefined,
+          },
+        });
+      }
     });
+  } catch (e) {
+    console.error('Error while creating/updating product', e);
   }
 }
 
@@ -100,12 +106,12 @@ emitter.on('PRODUCTS_DELETE', async ({ payload }) => {
     return;
   }
   try {
-    const res = await prisma.product.delete({
+    const res = await prisma.product.deleteMany({
       where: {
         id: `gid://shopify/Product/${payload.id}`,
       },
     });
-    console.log(`product deleted successfully Id: ${res.id}`);
+    console.log(`product deleted successfully: ${res.count}`);
   } catch (err) {
     console.error('Error while deleting product', err);
   }
