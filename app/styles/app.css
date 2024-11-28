@@ -156,3 +156,23 @@
   }
 }
 
+
+/* logo animation */
+.logo-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.logo-image img{
+  animation: Logo-animation 2s linear infinite;
+}
+@keyframes Logo-animation {
+  0%{
+    transform: scale(1);
+  }50%{
+     transform: scale(1.2);
+   }
+}
+
+

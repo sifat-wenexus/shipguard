@@ -58,24 +58,25 @@ export class WebhookManager {
         for (const topic in webhooksByTopics) {
           if (this.lazyTopics.hasOwnProperty(topic)) {
             this.lazyTopics[topic].runJob(webhooksByTopics[topic]);
+
+            await prisma.webhook.updateMany({
+              where: {
+                id: {
+                  in: webhooksByTopics[topic].map((webhook) => webhook.id),
+                },
+              },
+              data: {
+                processed: true,
+              },
+            });
+
             continue;
           }
 
           for (const webhook of webhooksByTopics[topic]) {
-            await this.handleWebhook(webhook, undefined, false, false);
+            await this.handleWebhook(webhook, false, true);
           }
         }
-
-        await prisma.webhook.updateMany({
-          where: {
-            id: {
-              in: webhooksByStores[storeId].map((webhook) => webhook.id),
-            },
-          },
-          data: {
-            processed: true,
-          },
-        });
 
         this.stores[storeId].readyToRun = true;
 
@@ -86,20 +87,9 @@ export class WebhookManager {
 
         while (pendingWebhooks.length > 0) {
           for (const webhook of pendingWebhooks) {
-            await this.handleWebhook(webhook, undefined, false, false);
+            await this.handleWebhook(webhook, false, true);
           }
         }
-
-        await prisma.webhook.updateMany({
-          where: {
-            id: {
-              in: pendingWebhooks.map((webhook) => webhook.id),
-            },
-          },
-          data: {
-            processed: true,
-          },
-        });
       }
     });
 
@@ -232,7 +222,7 @@ export class WebhookManager {
     });
 
     setImmediate(async () => {
-      await this.handleWebhook(webhook, ctx.session, true, true);
+      await this.handleWebhook(webhook, true, true, ctx.session);
     });
 
     return new Response('OK', { status: 200 });
@@ -240,9 +230,9 @@ export class WebhookManager {
 
   private async handleWebhook(
     webhook: Webhook,
+    checkReady: boolean,
+    update: boolean,
     session?: Session,
-    checkReady = true,
-    update = true
   ) {
     const storeInfo = this.stores[webhook.storeId];
 
