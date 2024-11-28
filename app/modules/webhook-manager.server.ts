@@ -1,4 +1,7 @@
-import { findOfflineSession, findOfflineSessionByStoreId } from '~/modules/find-offline-session.server';
+import {
+  findOfflineSession,
+  findOfflineSessionByStoreId,
+} from '~/modules/find-offline-session.server';
 import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { jobRunner } from '~/modules/job/job-runner.server';
 import { emitter } from '~/modules/emitter.server';
@@ -76,7 +79,9 @@ export class WebhookManager {
 
         this.stores[storeId].readyToRun = true;
 
-        const pendingWebhooks = Array.from(this.stores[storeId].pendingWebhooks);
+        const pendingWebhooks = Array.from(
+          this.stores[storeId].pendingWebhooks
+        );
         this.stores[storeId].pendingWebhooks.clear();
 
         while (pendingWebhooks.length > 0) {
@@ -164,13 +169,10 @@ export class WebhookManager {
       clearTimeout(storeInfo.lazyTimeout);
     }
 
-    storeInfo.lazyTimeout = setTimeout(
-      () => {
-        storeInfo.lazyReferences.clear();
-        this.stopLazyWebhookProcessing(storeId, reference);
-      },
-      1000 * 60 * 15
-    );
+    storeInfo.lazyTimeout = setTimeout(() => {
+      storeInfo.lazyReferences.clear();
+      this.stopLazyWebhookProcessing(storeId, reference);
+    }, 1000 * 60 * 15);
   }
 
   async handleRequest(request: Request) {
@@ -199,7 +201,7 @@ export class WebhookManager {
           },
           select: {
             id: true,
-          }
+          },
         });
 
         storeId = store?.id;
@@ -229,12 +231,19 @@ export class WebhookManager {
       update: data,
     });
 
-    await this.handleWebhook(webhook, ctx.session, true, true);
+    setImmediate(async () => {
+      await this.handleWebhook(webhook, ctx.session, true, true);
+    });
 
     return new Response('OK', { status: 200 });
   }
 
-  private async handleWebhook(webhook: Webhook, session?: Session, checkReady = true, update = true) {
+  private async handleWebhook(
+    webhook: Webhook,
+    session?: Session,
+    checkReady = true,
+    update = true
+  ) {
     const storeInfo = this.stores[webhook.storeId];
 
     if (!storeInfo.readyToRun && checkReady) {
@@ -254,15 +263,19 @@ export class WebhookManager {
         }
       }
 
-      emitter.emitAsync(webhook.topic, {
-        storeId: webhook.storeId,
-        shop: session?.shop,
-        webhookId: webhook.id,
-        payload: webhook.payload,
-        topic: webhook.topic,
-        apiVersion: '2024-01',
-        session,
-      } as WebhookListenerArgs);
+      try {
+        emitter.emit(webhook.topic, {
+          storeId: webhook.storeId,
+          shop: session?.shop,
+          webhookId: webhook.id,
+          payload: webhook.payload,
+          topic: webhook.topic,
+          apiVersion: '2024-01',
+          session,
+        } as WebhookListenerArgs);
+      } catch (e) {
+        console.error(e);
+      }
 
       if (update) {
         await prisma.webhook.update({
@@ -307,8 +320,8 @@ export class WebhookManager {
 
     const secondsSinceLastWebhook = storeInfo.lastLazyWebhook
       ? Math.floor(
-        (Date.now() - storeInfo.lastLazyWebhook.createdAt.getTime()) / 1000
-      )
+          (Date.now() - storeInfo.lastLazyWebhook.createdAt.getTime()) / 1000
+        )
       : 0;
 
     if (storeInfo.pendingWebhooks.size < 1500 && secondsSinceLastWebhook < 30) {
@@ -326,20 +339,20 @@ export class WebhookManager {
 
     const collectionIds = groupedWebhooks.COLLECTIONS_UPDATE
       ? Array.from(
-        new Set(
-          groupedWebhooks.COLLECTIONS_UPDATE.map(
-            (webhook) => webhook.objectId
+          new Set(
+            groupedWebhooks.COLLECTIONS_UPDATE.map(
+              (webhook) => webhook.objectId
+            )
           )
         )
-      )
       : [];
 
     const productIds = groupedWebhooks.PRODUCTS_UPDATE
       ? Array.from(
-        new Set(
-          groupedWebhooks.PRODUCTS_UPDATE.map((webhook) => webhook.objectId)
+          new Set(
+            groupedWebhooks.PRODUCTS_UPDATE.map((webhook) => webhook.objectId)
+          )
         )
-      )
       : [];
 
     jobRunner.run({

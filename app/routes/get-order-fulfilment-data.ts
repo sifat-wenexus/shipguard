@@ -129,8 +129,6 @@ export const loader: LoaderFunction = async ({ request }) => {
       tries: 20,
     });
 
-    console.log(res.body.data, res.body);
-
     if (params.email !== res.body.data.order.email) {
       return json({
         error: 'Email does not match with the order!',
