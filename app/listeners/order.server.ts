@@ -4,7 +4,6 @@ import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
-import { prisma } from '~/modules/prisma.server';
 
 const makePackageProtectionFulfill = async (
   data: Record<string, any>[],
@@ -64,7 +63,7 @@ export const orderCreateEvent = async ({
   storeId,
 }: WebhookListenerArgs) => {
   if (!_payload || !session) {
-    return;
+    return console.log('OrderCreateEvent: No payload or session');
   }
 
   const gqlClient = getShopifyGQLClient(session!);
@@ -74,6 +73,8 @@ export const orderCreateEvent = async ({
     (lineItem) => lineItem.sku === PRODUCT_SKU
   );
   const orderId = payload.admin_graphql_api_id;
+
+  console.log(`OrderCreateEvent: ${payload.name}`);
 
   try {
     if (existPackageProtection) {
@@ -221,12 +222,14 @@ const orderRefundEvent = async ({
   session,
 }: WebhookListenerArgs) => {
   if (!_payload || !session) {
-    return;
+    return console.log('OrderRefundEvent: No payload or session');
   }
 
   const gqlClient = getShopifyGQLClient(session!);
 
   const payload = _payload as Record<string, any>;
+
+  console.log(`OrderRefundEvent: ${payload.name}`);
 
   const orderId = 'gid://shopify/Order/' + payload.order_id;
 
@@ -254,10 +257,11 @@ const orderRefundEvent = async ({
 const orderFulfilledEvent = async ({
   payload: _payload,
 }: WebhookListenerArgs) => {
-  console.log('orderFulfilledEvent');
   if (!_payload) {
     return;
   }
+
+  console.log(`OrderFulfilledEvent: ${(_payload as any).name}`);
 };
 
 const orderPartiallyFulfilledEvent = async ({
@@ -265,7 +269,7 @@ const orderPartiallyFulfilledEvent = async ({
   session,
 }: WebhookListenerArgs) => {
   if (!_payload || !session) {
-    return;
+    return console.log('OrderPartiallyFulfilledEvent: No payload or session');
   }
 
   try {
@@ -278,6 +282,8 @@ const orderPartiallyFulfilledEvent = async ({
 
     const gqlClient = getShopifyGQLClient(session!);
     const payload = _payload as Record<string, any>;
+
+    console.log(`OrderPartiallyFulfilledEvent: ${payload.name}`);
 
     const existPackageProtection = payload.line_items.find(
       (line) => line.sku === PRODUCT_SKU
@@ -405,6 +411,8 @@ const orderPartiallyFulfilledEvent = async ({
           gqlClient
         );
       }
+    } else {
+      console.log(`OrderPartiallyFulfilledEvent: No package protection, ${(_payload as any).name}`);
     }
   } catch (error) {
     console.error('Error in orderPartiallyFulfilledEvent', error);
@@ -419,7 +427,7 @@ export const orderUpdatedEvent = async ({
     '-------------------------orderUpdated-----------------------------'
   );
   if (!_payload || !session) {
-    return;
+    return console.log('OrderUpdatedEvent: No payload or session');
   }
   const gqlClient = getShopifyGQLClient(session!);
   const payload = _payload as Record<string, any>;
@@ -518,6 +526,8 @@ export const orderUpdatedEvent = async ({
         where: { orderId: orderId },
       });
       console.log(updateOrder);
+    } else {
+      console.log(`OrderUpdatedEvent: No package protection, ${(_payload as any).name}`);
     }
   } catch (error) {
     console.error('Error on OrderUpdateEvent', error);
