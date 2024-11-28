@@ -55,6 +55,16 @@ export class WebhookManager {
         for (const topic in webhooksByTopics) {
           if (this.lazyTopics.hasOwnProperty(topic)) {
             this.lazyTopics[topic].runJob(webhooksByTopics[topic]);
+            await prisma.webhook.updateMany({
+              where: {
+                id: {
+                  in: _.uniq(webhooksByTopics[topic].map((webhook) => webhook.id)),
+                },
+              },
+              data: {
+                processed: true,
+              },
+            });
             continue;
           }
 
