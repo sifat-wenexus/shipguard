@@ -1,7 +1,3 @@
-import {
-  findOfflineSession,
-  findOfflineSessionByStoreId,
-} from '~/modules/find-offline-session.server';
 import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { jobRunner } from '~/modules/job/job-runner.server';
 import { emitter } from '~/modules/emitter.server';
@@ -11,6 +7,11 @@ import { prisma } from '~/modules/prisma.server';
 import type { JobName } from '~/jobs/index.server';
 import type { Session } from '~/shopify-api/lib';
 import _ from 'lodash';
+
+import {
+  findOfflineSession,
+  findOfflineSessionByStoreId,
+} from '~/modules/find-offline-session.server';
 
 interface LazyTopics {
   [key: string]: {
@@ -84,8 +85,6 @@ export class WebhookManager {
             }
           }
 
-          this.stores[storeId].readyToRun = true;
-
           const pendingWebhooks = Array.from(
             this.stores[storeId].pendingWebhooks
           );
@@ -96,6 +95,11 @@ export class WebhookManager {
               await this.handleWebhook(webhook, false, true);
             }
           }
+        }
+
+        for (const storeId in this.stores) {
+          this.stores[storeId].readyToRun = true;
+          console.log(`Store ready to process webhooks: ${storeId}`);
         }
       })
       .then(() => {
@@ -121,7 +125,9 @@ export class WebhookManager {
               continue;
             }
 
-            console.log(`Found ${webhooks.length} webhooks to process: ${storeId}`);
+            console.log(
+              `Found ${webhooks.length} webhooks to process: ${storeId}`
+            );
 
             for (const webhook of webhooks) {
               await this.handleWebhook(webhook, true, true);
@@ -281,7 +287,7 @@ export class WebhookManager {
   ) {
     const storeInfo = this.stores[webhook.storeId];
 
-    if (!storeInfo.readyToRun && checkReady) {
+    if (checkReady && !storeInfo.readyToRun) {
       console.log(`Store not ready to run: ${webhook.topic}, ${webhook.id}`);
       return storeInfo.pendingWebhooks.add(webhook);
     }
