@@ -1,18 +1,18 @@
 import { PRODUCT_SKU } from '~/routes/settings.widget-setup/modules/package-protection-listener.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { getConfig } from '~/modules/get-config.server';
 import { sendMail } from '~/modules/send-mail.server';
 import { prisma } from '~/modules/prisma.server';
-import { json } from '@remix-run/node';
 
 import type {
-  PackageProtectionClaimOrder,
-  ClaimRequested,
   ClaimIssue,
+  ClaimRequested,
+  PackageProtectionClaimOrder,
 } from '#prisma-client';
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -28,7 +28,11 @@ export const loader: LoaderFunction = async ({ request }) => {
     const orderId = `#${params.orderId}`;
     const getPackageProtectionOrder =
       await prisma.packageProtectionOrder.findFirst({
-        where: { orderName: orderId, hasPackageProtection: { equals: true } },
+        where: {
+          storeId: session.storeId,
+          orderName: orderId,
+          hasPackageProtection: { equals: true },
+        },
         include: { PackageProtectionClaimOrder: true },
       });
 
@@ -433,7 +437,9 @@ export const action: ActionFunction = async ({ request }) => {
               packageProtection?.emailTemplateLogo
             }`
           : null;
-        const claimPage = `${getConfig().appUrl.toString().replace('dashboard','')}settings/claim-request`;
+        const claimPage = `${getConfig()
+          .appUrl.toString()
+          .replace('dashboard', '')}settings/claim-request`;
         await sendMail({
           template: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
           storeId: data.storeId,
