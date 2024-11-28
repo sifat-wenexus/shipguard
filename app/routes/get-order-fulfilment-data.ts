@@ -289,6 +289,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     };
     // ----------------------------------------------------------------
 
+    if (finalResult.fulfillments.length === 0) {
+      return json({ error: 'No items in this order have been fulfilled yet.', status: 404 });
+    }
+
     return json({
       message: 'request successful.',
       data: finalResult,
