@@ -42,11 +42,10 @@ export class WebhookManager {
         where: {
           processed: false,
           nodeId: process.env.NODE_ID || '',
-          topic: {
-            in: Object.keys(this.lazyTopics),
-          },
         },
       });
+
+      console.log(`Found ${webhooks.length} webhooks to process`);
 
       const webhooksByStores = _.groupBy(webhooks, 'storeId');
 
