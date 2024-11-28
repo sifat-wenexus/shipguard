@@ -172,7 +172,7 @@ export const orderCreateEvent = async ({
       await queryProxy.packageProtectionOrder.upsert({
         where: { orderId: orderId },
         create: data,
-        udpate: data,
+        update: data,
       });
 
       if (
