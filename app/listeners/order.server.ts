@@ -60,8 +60,9 @@ const makePackageProtectionFulfill = async (
 export const orderCreateEvent = async ({
   payload: _payload,
   session,
+  storeId,
 }: WebhookListenerArgs) => {
-  if (!_payload) {
+  if (!_payload || !session) {
     return;
   }
 
@@ -146,6 +147,7 @@ export const orderCreateEvent = async ({
 
       await queryProxy.packageProtectionOrder.create({
         data: {
+          storeId,
           hasPackageProtection: true,
           orderId: orderId,
           customerId: payload.customer.id.toString(),
@@ -153,7 +155,6 @@ export const orderCreateEvent = async ({
           customerFirstName: payload.customer.first_name,
           customerLastName: payload.customer.last_name,
           orderName: updatedOrder.body.data.orderUpdate.order.name,
-          storeId: session?.storeId!,
           orderDate: payload.created_at,
           orderAmount: Number(
             updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
@@ -181,6 +182,7 @@ export const orderCreateEvent = async ({
     } else {
       await queryProxy.packageProtectionOrder.create({
         data: {
+          storeId,
           hasPackageProtection: false,
           orderId: orderId,
           customerId: payload.customer.id.toString(),
@@ -188,7 +190,6 @@ export const orderCreateEvent = async ({
           customerFirstName: payload.customer.first_name,
           customerLastName: payload.customer.last_name,
           orderName: payload.name,
-          storeId: session?.storeId!,
           orderAmount: Number(payload.total_price),
           orderDate: payload.created_at,
           protectionFee: 0,
@@ -210,9 +211,10 @@ const orderRefundEvent = async ({
   payload: _payload,
   session,
 }: WebhookListenerArgs) => {
-  if (!_payload) {
+  if (!_payload || !session) {
     return;
   }
+
   const gqlClient = getShopifyGQLClient(session!);
 
   const payload = _payload as Record<string, any>;
@@ -253,7 +255,7 @@ const orderPartiallyFulfilledEvent = async ({
   payload: _payload,
   session,
 }: WebhookListenerArgs) => {
-  if (!_payload) {
+  if (!_payload || !session) {
     return;
   }
 
@@ -407,7 +409,7 @@ export const orderUpdatedEvent = async ({
   console.log(
     '-------------------------orderUpdated-----------------------------'
   );
-  if (!_payload) {
+  if (!_payload || !session) {
     return;
   }
   const gqlClient = getShopifyGQLClient(session!);

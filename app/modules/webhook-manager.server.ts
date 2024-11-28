@@ -1,11 +1,11 @@
-import type { WebhookContextWithSession } from '~/shopify-app-remix/server/authenticate/webhooks/types';
-import { findOfflineSessionByStoreId } from '~/modules/find-offline-session.server';
+import { findOfflineSession, findOfflineSessionByStoreId } from '~/modules/find-offline-session.server';
+import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { jobRunner } from '~/modules/job/job-runner.server';
-import type { Store, Webhook } from '#prisma-client';
 import { emitter } from '~/modules/emitter.server';
 import { shopify } from '~/modules/shopify.server';
-import type { JobName } from '~/jobs/index.server';
+import type { Store, Webhook } from '#prisma-client';
 import { prisma } from '~/modules/prisma.server';
+import type { JobName } from '~/jobs/index.server';
 import type { Session } from '~/shopify-api/lib';
 import _ from 'lodash';
 
@@ -162,9 +162,15 @@ export class WebhookManager {
       return new Response('OK', { status: 200 });
     }
 
+    const storeId = (ctx.session ?? await findOfflineSession(ctx.shop))?.storeId;
+
+    if (!storeId) {
+      return new Response('Unauthorized', { status: 401 });
+    }
+
     const data = {
+      storeId,
       id: ctx.webhookId,
-      storeId: ctx.session!.storeId!,
       nodeId: process.env.NODE_ID || '',
       topic: ctx.topic,
       objectId:
@@ -203,13 +209,14 @@ export class WebhookManager {
       }
 
       emitter.emitAsync(webhook.topic, {
+        storeId: webhook.storeId,
         shop: session?.shop,
         webhookId: webhook.id,
         payload: webhook.payload,
         topic: webhook.topic,
         apiVersion: '2024-01',
         session,
-      } as WebhookContextWithSession<any, any>);
+      } as WebhookListenerArgs);
 
       return prisma.webhook.update({
         where: {

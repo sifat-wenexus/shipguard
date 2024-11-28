@@ -2,19 +2,19 @@ import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { emitter } from '~/modules/emitter.server';
 import { prisma } from '~/modules/prisma.server';
 
-async function handleWebhook({ shop, payload: _payload }: WebhookListenerArgs) {
+async function handleWebhook({ storeId, payload: _payload }: WebhookListenerArgs) {
   if (!_payload) {
     return;
   }
 
-  const store = await prisma.store.findFirst({
+  const store = await prisma.store.findUnique({
     where: {
-      domain: shop,
+      id: storeId,
     },
   });
 
   if (!store) {
-    return console.error(`Store not found for ${shop}`);
+    return console.error(`Store not found for ${storeId}`);
   }
 
   const payload = _payload as Record<string, any>;

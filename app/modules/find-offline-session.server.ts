@@ -26,7 +26,7 @@ export async function findOfflineSession(shop: string) {
     return cached.session;
   }
 
-  const row = await prisma.session.findFirst({
+  const row = await prisma.session.findFirstOrThrow({
     where: {
       shop,
       isOnline: false,
@@ -46,10 +46,6 @@ export async function findOfflineSession(shop: string) {
     },
   });
 
-  if (!row) {
-    return null;
-  }
-
   const session = shopify.sessionStorage.rowToSession(row);
 
   cache.byShop.set(shop, {
@@ -67,7 +63,7 @@ export async function findOfflineSessionByStoreId(storeId: string) {
     return cached.session;
   }
 
-  const row = await prisma.session.findFirst({
+  const row = await prisma.session.findFirstOrThrow({
     where: {
       storeId,
       isOnline: false,
@@ -87,10 +83,6 @@ export async function findOfflineSessionByStoreId(storeId: string) {
     },
   });
 
-  if (!row) {
-    return null;
-  }
-
   const session = shopify.sessionStorage.rowToSession(row);
 
   cache.byStoreId.set(storeId, {
@@ -105,11 +97,7 @@ export async function findOfflineSessionsByIds(storeIds: string[]) {
   const sessions: Record<string, Session> = {};
 
   for (const storeId of storeIds) {
-    const session = await findOfflineSessionByStoreId(storeId);
-
-    if (session) {
-      sessions[storeId] = session;
-    }
+    sessions[storeId] = await findOfflineSessionByStoreId(storeId);
   }
 
   return sessions;
