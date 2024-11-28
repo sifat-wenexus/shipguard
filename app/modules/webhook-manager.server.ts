@@ -186,19 +186,24 @@ export class WebhookManager {
       return new Response('OK', { status: 200 });
     }
 
-    let storeId = (ctx.session ?? await findOfflineSession(ctx.shop))?.storeId;
+    let storeId = ctx.session?.storeId;
 
     if (!storeId) {
-      const store = await prisma.store.findFirst({
-        where: {
-          domain: ctx.shop,
-        },
-        select: {
-          id: true,
-        }
-      });
+      try {
+        const session = await findOfflineSession(ctx.shop);
+        storeId = session?.storeId;
+      } catch (e) {
+        const store = await prisma.store.findFirst({
+          where: {
+            domain: ctx.shop,
+          },
+          select: {
+            id: true,
+          }
+        });
 
-      storeId = store?.id;
+        storeId = store?.id;
+      }
     }
 
     if (!storeId) {
