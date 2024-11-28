@@ -32,66 +32,98 @@ interface StoreInfo {
 
 export class WebhookManager {
   constructor() {
-    prisma.store.findMany().then(async (stores) => {
-      for (const store of stores) {
-        this.stores[store.id] = {
-          lazyReferences: new Set(),
-          pendingWebhooks: new Set(),
-          readyToRun: false,
-        };
-      }
+    prisma.store
+      .findMany()
+      .then(async (stores) => {
+        for (const store of stores) {
+          this.stores[store.id] = {
+            lazyReferences: new Set(),
+            pendingWebhooks: new Set(),
+            readyToRun: false,
+          };
+        }
 
-      const webhooks = await prisma.webhook.findMany({
-        where: {
-          processed: false,
-          nodeId: process.env.NODE_ID || '',
-        },
-      });
+        const webhooks = await prisma.webhook.findMany({
+          where: {
+            processed: false,
+            nodeId: process.env.NODE_ID || '',
+          },
+        });
 
-      console.log(`Found ${webhooks.length} webhooks to process`);
+        console.log(`Found ${webhooks.length} webhooks to process`);
 
-      const webhooksByStores = _.groupBy(webhooks, 'storeId');
+        const webhooksByStores = _.groupBy(webhooks, 'storeId');
 
-      for (const storeId in webhooksByStores) {
-        const webhooksByTopics = _.groupBy(webhooksByStores[storeId], 'topic');
+        for (const storeId in webhooksByStores) {
+          const webhooksByTopics = _.groupBy(
+            webhooksByStores[storeId],
+            'topic'
+          );
 
-        for (const topic in webhooksByTopics) {
-          if (this.lazyTopics.hasOwnProperty(topic)) {
-            this.lazyTopics[topic].runJob(webhooksByTopics[topic]);
+          for (const topic in webhooksByTopics) {
+            if (this.lazyTopics.hasOwnProperty(topic)) {
+              this.lazyTopics[topic].runJob(webhooksByTopics[topic]);
 
-            await prisma.webhook.updateMany({
-              where: {
-                id: {
-                  in: webhooksByTopics[topic].map((webhook) => webhook.id),
+              await prisma.webhook.updateMany({
+                where: {
+                  id: {
+                    in: webhooksByTopics[topic].map((webhook) => webhook.id),
+                  },
                 },
-              },
-              data: {
-                processed: true,
+                data: {
+                  processed: true,
+                },
+              });
+
+              continue;
+            }
+
+            for (const webhook of webhooksByTopics[topic]) {
+              await this.handleWebhook(webhook, false, true);
+            }
+          }
+
+          this.stores[storeId].readyToRun = true;
+
+          const pendingWebhooks = Array.from(
+            this.stores[storeId].pendingWebhooks
+          );
+          this.stores[storeId].pendingWebhooks.clear();
+
+          while (pendingWebhooks.length > 0) {
+            for (const webhook of pendingWebhooks) {
+              await this.handleWebhook(webhook, false, true);
+            }
+          }
+        }
+      })
+      .then(() => {
+        setInterval(async () => {
+          for (const storeId in this.stores) {
+            if (this.stores[storeId].pendingWebhooks.size > 0) {
+              for (const webhook of this.stores[storeId].pendingWebhooks) {
+                await this.handleWebhook(webhook, true, true);
+              }
+            }
+
+            const webhooks = await prisma.webhook.findMany({
+              where: {
+                processed: false,
+                nodeId: process.env.NODE_ID || '',
+                storeId,
               },
             });
 
-            continue;
+            if (webhooks.length === 0) {
+              continue;
+            }
+
+            for (const webhook of webhooks) {
+              await this.handleWebhook(webhook, true, true);
+            }
           }
-
-          for (const webhook of webhooksByTopics[topic]) {
-            await this.handleWebhook(webhook, false, true);
-          }
-        }
-
-        this.stores[storeId].readyToRun = true;
-
-        const pendingWebhooks = Array.from(
-          this.stores[storeId].pendingWebhooks
-        );
-        this.stores[storeId].pendingWebhooks.clear();
-
-        while (pendingWebhooks.length > 0) {
-          for (const webhook of pendingWebhooks) {
-            await this.handleWebhook(webhook, false, true);
-          }
-        }
-      }
-    });
+        }, 1000 * 60 * 2);
+      });
 
     emitter.on('store.create', (store: Store) => {
       this.stores[store.id] = {
@@ -232,7 +264,7 @@ export class WebhookManager {
     webhook: Webhook,
     checkReady: boolean,
     update: boolean,
-    session?: Session,
+    session?: Session
   ) {
     const storeInfo = this.stores[webhook.storeId];
 
