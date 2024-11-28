@@ -60,7 +60,6 @@ export const loader: LoaderFunction = async ({ request }) => {
         query: `#graphql
         query{
           order(id:"${getPackageProtectionOrder.orderId}") {
-
             email
             displayFulfillmentStatus
             customer {
@@ -126,6 +125,8 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
       tries: 20,
     });
+
+    console.log(JSON.stringify(res.body.data));
 
     if (params.email !== res.body.data.order.email) {
       return json({
