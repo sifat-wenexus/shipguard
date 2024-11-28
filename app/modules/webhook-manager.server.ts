@@ -231,7 +231,7 @@ export class WebhookManager {
 
     return new Promise((resolve) => {
       resolve(new Response('OK', { status: 200 }));
-      this.handleWebhook(webhook, ctx.session);
+      this.handleWebhook(webhook, ctx.session, true, true);
     });
   }
 
@@ -239,6 +239,7 @@ export class WebhookManager {
     const storeInfo = this.stores[webhook.storeId];
 
     if (!storeInfo.readyToRun && checkReady) {
+      console.log(`Store ${webhook.storeId} not ready for webhooks`);
       return storeInfo.pendingWebhooks.add(webhook);
     }
 
@@ -247,7 +248,11 @@ export class WebhookManager {
       storeInfo.lazyReferences.size === 0
     ) {
       if (!session) {
-        session = (await findOfflineSessionByStoreId(webhook.storeId)) ?? undefined;
+        try {
+          session = await findOfflineSessionByStoreId(webhook.storeId);
+        } catch (e) {
+          console.error(e);
+        }
       }
 
       emitter.emitAsync(webhook.topic, {
@@ -261,7 +266,7 @@ export class WebhookManager {
       } as WebhookListenerArgs);
 
       if (update) {
-        prisma.webhook.update({
+        await prisma.webhook.update({
           where: {
             id: webhook.id,
           },
