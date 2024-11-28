@@ -55,31 +55,46 @@ export class WebhookManager {
         for (const topic in webhooksByTopics) {
           if (this.lazyTopics.hasOwnProperty(topic)) {
             this.lazyTopics[topic].runJob(webhooksByTopics[topic]);
-            await prisma.webhook.updateMany({
-              where: {
-                id: {
-                  in: _.uniq(webhooksByTopics[topic].map((webhook) => webhook.id)),
-                },
-              },
-              data: {
-                processed: true,
-              },
-            });
             continue;
           }
 
           for (const webhook of webhooksByTopics[topic]) {
-            await this.handleWebhook(webhook);
+            await this.handleWebhook(webhook, undefined, false, false);
           }
         }
+
+        await prisma.webhook.updateMany({
+          where: {
+            id: {
+              in: webhooksByStores[storeId].map((webhook) => webhook.id),
+            },
+          },
+          data: {
+            processed: true,
+          },
+        });
 
         this.stores[storeId].readyToRun = true;
 
-        while (this.stores[storeId].pendingWebhooks.size > 0) {
-          for (const webhook of this.stores[storeId].pendingWebhooks) {
-            await this.handleWebhook(webhook);
+        const pendingWebhooks = Array.from(this.stores[storeId].pendingWebhooks);
+        this.stores[storeId].pendingWebhooks.clear();
+
+        while (pendingWebhooks.length > 0) {
+          for (const webhook of pendingWebhooks) {
+            await this.handleWebhook(webhook, undefined, false, false);
           }
         }
+
+        await prisma.webhook.updateMany({
+          where: {
+            id: {
+              in: pendingWebhooks.map((webhook) => webhook.id),
+            },
+          },
+          data: {
+            processed: true,
+          },
+        });
       }
     });
 
@@ -215,10 +230,10 @@ export class WebhookManager {
     });
   }
 
-  private async handleWebhook(webhook: Webhook, session?: Session) {
+  private async handleWebhook(webhook: Webhook, session?: Session, checkReady = true, update = true) {
     const storeInfo = this.stores[webhook.storeId];
 
-    if (!storeInfo.readyToRun) {
+    if (!storeInfo.readyToRun && checkReady) {
       return storeInfo.pendingWebhooks.add(webhook);
     }
 
@@ -240,14 +255,16 @@ export class WebhookManager {
         session,
       } as WebhookListenerArgs);
 
-      return prisma.webhook.update({
-        where: {
-          id: webhook.id,
-        },
-        data: {
-          processed: true,
-        },
-      });
+      if (update) {
+        prisma.webhook.update({
+          where: {
+            id: webhook.id,
+          },
+          data: {
+            processed: true,
+          },
+        });
+      }
     }
 
     if (storeInfo.jobTimeout) {
