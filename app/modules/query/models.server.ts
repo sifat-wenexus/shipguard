@@ -82,6 +82,10 @@ export const models = defineModels(() => {
     'hasClaimRequest',
     'fulfillmentStatus',
     'hasPackageProtection',
+    'customerId',
+    'customerEmail',
+    'customerFirstName',
+    'customerLastName',
   ]);
 
   const packageProtectionClaimOrderMultipleFields = new Set<
