@@ -88,6 +88,17 @@ export async function upsertStore(session: Session, afterAuth = false) {
             orderIds: orderIds.map((order) => order.id),
           }
         });
+
+        await jobRunner.run({
+          name: 'import-orders',
+          storeId: hasStore.id,
+          interval: 60 * 60 * 24,
+          scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+          maxRetries: 5,
+          payload: {
+            since: new Date(),
+          },
+        });
       }
     }
 
