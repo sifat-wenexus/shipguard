@@ -7,7 +7,7 @@ import { ExportIcon } from '@shopify/polaris-icons';
 import { shopify } from '~/modules/shopify.server';
 import React, { useMemo, useState } from 'react';
 import { prisma } from '~/modules/prisma.server';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useNavigate } from '@remix-run/react';
 import { json } from '@remix-run/node';
 import OrderList from './order-list';
 import * as XLSX from 'xlsx';
@@ -64,6 +64,7 @@ const Order = () => {
   const defaultActiveDates = useMemo(() => default30Days(), []);
   const [activeDates, setActiveDates] =
     useState<IActiveDates>(defaultActiveDates);
+  const navigate = useNavigate();
   const { currencyCode, shop, data } = useLoaderData<typeof loader>();
 
   const handleExport = () => {
@@ -84,13 +85,13 @@ const Order = () => {
     <PageShell currencyCode={currencyCode}>
       <div className="m-4 sm:m-0 mt-10 sm:mt-4">
         {' '}
-        <Page>
+        <Page title={'Order'} backAction={{ onAction: () => navigate(-1) }}>
           <Layout>
             <div className="w-full ms-4">
               {/* <MainNav /> */}
-              <Text as="h1" variant="headingLg" alignment="start">
-                Order
-              </Text>
+              {/*<Text as="h1" variant="headingLg" alignment="start">*/}
+              {/*  Order*/}
+              {/*</Text>*/}
               <br />
               <Box paddingBlockEnd={'400'}>
                 <div className="flex justify-between">

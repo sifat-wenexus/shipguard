@@ -436,7 +436,7 @@ const Settings = () => {
               <CustomizedInsuranceStyle formState={formState} />
               <Content formState={formState} />
               <SpecialSettings formState={formState} />
-              <Location formState={formState} />
+              {/*<Location formState={formState} />*/}
               <Css formState={formState} />
               {/* <Box paddingBlockEnd={'1200'}></Box> */}
             </Layout.Section>
