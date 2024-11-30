@@ -78,15 +78,15 @@ export async function upsertStore(session: Session, afterAuth = false) {
           },
           select: {
             orderId: true,
-          }
+          },
         });
 
         await jobRunner.run({
           name: 'import-orders',
           storeId: hasStore.id,
           payload: {
-            orderIds: orderIds.map((order) => order.orderId),
-          }
+            orderIds: orderIds.map((order) => order.orderId.split('/').pop()),
+          },
         });
 
         await jobRunner.run({
