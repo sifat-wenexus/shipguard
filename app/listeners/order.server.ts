@@ -182,14 +182,18 @@ export const orderCreateEvent = async ({
             .amount
         ),
         protectionFee: Number(protectionFee),
-        fulfillmentStatus: updatedOrder.body.data.orderUpdate.order.displayFulfillmentStatus,
+        fulfillmentStatus:
+          updatedOrder.body.data.orderUpdate.order.displayFulfillmentStatus,
       };
 
-      await queryProxy.packageProtectionOrder.upsert({
-        where: { orderId: orderId },
-        create: data,
-        update: data,
-      });
+      await queryProxy.packageProtectionOrder.upsert(
+        {
+          where: { orderId: orderId },
+          create: data,
+          update: data,
+        },
+        { session }
+      );
 
       if (
         fulfillmentStatus?.insuranceFulfillmentStatus ===
@@ -216,11 +220,14 @@ export const orderCreateEvent = async ({
         fulfillmentStatus: await fetchOrderStatus(orderId, session),
       };
 
-      await queryProxy.packageProtectionOrder.upsert({
-        where: { orderId },
-        create: data,
-        update: data,
-      });
+      await queryProxy.packageProtectionOrder.upsert(
+        {
+          where: { orderId },
+          create: data,
+          update: data,
+        },
+        { session }
+      );
     }
   } catch (err) {
     console.error('Error in OrderCreateEvent', err);
@@ -339,12 +346,16 @@ const orderPartiallyFulfilledEvent = async ({
         tries: 20,
       });
 
-      await queryProxy.packageProtectionOrder.update({
-        data: {
-          fulfillmentStatus: getOrder.body.data.order.displayFulfillmentStatus,
+      await queryProxy.packageProtectionOrder.update(
+        {
+          data: {
+            fulfillmentStatus:
+              getOrder.body.data.order.displayFulfillmentStatus,
+          },
+          where: { orderId: orderId },
         },
-        where: { orderId: orderId },
-      });
+        { session }
+      );
 
       if (
         fulfillmentStatus?.insuranceFulfillmentStatus ===
@@ -422,7 +433,11 @@ const orderPartiallyFulfilledEvent = async ({
         );
       }
     } else {
-      console.log(`OrderPartiallyFulfilledEvent: No package protection, ${(_payload as any).name}`);
+      console.log(
+        `OrderPartiallyFulfilledEvent: No package protection, ${
+          (_payload as any).name
+        }`
+      );
     }
   } catch (error) {
     console.error('Error in orderPartiallyFulfilledEvent', error);
@@ -519,20 +534,26 @@ export const orderUpdatedEvent = async ({
         getOrder.body.data.order.displayFulfillmentStatus
       );
 
-      const updateOrder = await queryProxy.packageProtectionOrder.update({
-        data: {
-          fulfillmentStatus: getOrder.body.data.order.displayFulfillmentStatus,
-          protectionFee: Number(protectionFee),
-          orderAmount: Number(
-            getOrder.body.data.order.totalPriceSet.shopMoney.amount
-          ),
-          orderDate: payload.created_at,
+      const updateOrder = await queryProxy.packageProtectionOrder.update(
+        {
+          data: {
+            fulfillmentStatus:
+              getOrder.body.data.order.displayFulfillmentStatus,
+            protectionFee: Number(protectionFee),
+            orderAmount: Number(
+              getOrder.body.data.order.totalPriceSet.shopMoney.amount
+            ),
+            orderDate: payload.created_at,
+          },
+          where: { orderId: orderId },
         },
-        where: { orderId: orderId },
-      });
+        { session }
+      );
       console.log(updateOrder);
     } else {
-      console.log(`OrderUpdatedEvent: No package protection, ${(_payload as any).name}`);
+      console.log(
+        `OrderUpdatedEvent: No package protection, ${(_payload as any).name}`
+      );
     }
   } catch (error) {
     console.error('Error on OrderUpdateEvent', error);
