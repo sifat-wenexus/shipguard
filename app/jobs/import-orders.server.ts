@@ -8,6 +8,7 @@ import _ from 'lodash';
 
 interface Payload {
   since?: string;
+  orderIds?: string[];
 }
 
 export class ImportOrders extends Job<Payload> {
@@ -23,14 +24,19 @@ export class ImportOrders extends Job<Payload> {
   }
 
   async fetchOrders() {
-    // const since = this.job.payload?.since ?? new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 2).toISOString();
-    // await this.updatePayload({ since: new Date().toISOString() });
+    let query = '';
+
+    if (this.job.payload.since) {
+      const since = new Date(this.job.payload.since);
+      query = `created_at:>='${since.toISOString()}' OR updated_at:>='${since.toISOString()}'`;
+    } else if (this.job.payload.orderIds) {
+      query = `id:${this.job.payload.orderIds.join(' OR id:')}`;
+    }
 
     await this.performShopifyBulkQuery(
-        `#graphql
+      `#graphql
       {
-        # orders(query: "created_at:>='' OR updated_at:>=''", sortKey: ORDER_NUMBER)
-        orders(sortKey: ORDER_NUMBER) {
+        orders(query: "${query}", sortKey: ORDER_NUMBER){
           edges {
             node {
               id
@@ -91,7 +97,7 @@ export class ImportOrders extends Job<Payload> {
           }
         }
       }
-      `,
+      `
     );
     await this.updateProgress(10);
 
@@ -148,14 +154,15 @@ export class ImportOrders extends Job<Payload> {
         fulfillmentStatus: true,
       },
     });
-    const availableOrderIds = new Set(ordersAvailable.map((order) => order.orderId));
+    const availableOrderIds = new Set(
+      ordersAvailable.map((order) => order.orderId)
+    );
 
     const orderIdsToImport = _.chunk(
-      orders.filter(
-        (order) => !availableOrderIds.has(order.id),
-      )
+      orders
+        .filter((order) => !availableOrderIds.has(order.id))
         .map((order) => order.id.split('/').pop()),
-      50,
+      50
     );
 
     const importedOrders: any[] = [];
@@ -180,9 +187,10 @@ export class ImportOrders extends Job<Payload> {
     }
 
     const orderIdsToUpdate = _.chunk(
-      orders.filter((order) => availableOrderIds.has(order.id))
+      orders
+        .filter((order) => availableOrderIds.has(order.id))
         .map((order) => order.id.split('/').pop()),
-      50,
+      50
     );
 
     await this.updateProgress(80);
@@ -215,4 +223,3 @@ export class ImportOrders extends Job<Payload> {
     };
   }
 }
-

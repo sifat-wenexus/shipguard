@@ -53,9 +53,9 @@ export const shopify = shopifyApp({
   },
   hooks: {
     afterAuth: async ({ session }) => {
-      await upsertStore(session);
+      await upsertStore(session, true);
 
-      setTimeout(async () => {
+      setImmediate(async () => {
         await shopify.registerWebhooks({ session });
 
         console.log(`Webhooks registered for shop ${session.shop}`);
@@ -66,7 +66,7 @@ export const shopify = shopifyApp({
         }
 
         await Migration.attempt(session);
-      }, 2000);
+      });
     },
   },
   future: {

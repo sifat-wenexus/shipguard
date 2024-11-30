@@ -184,8 +184,10 @@ model Store {
   moneyWithCurrencyInEmailsFormat String
   lastMigrationId                 String?
 
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
+  installedAt   DateTime  @default(now()) @db.Timestamptz()
+  uninstalledAt DateTime? @db.Timestamptz()
+  createdAt     DateTime  @default(now()) @db.Timestamptz()
+  updatedAt     DateTime  @updatedAt @db.Timestamptz()
 
   File                        File[]
   Products                    Product[]

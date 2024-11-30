@@ -33,118 +33,78 @@ interface StoreInfo {
 
 export class WebhookManager {
   constructor() {
-    prisma.store
-      .findMany()
-      .then(async (stores) => {
-        for (const store of stores) {
-          this.stores[store.id] = {
-            lazyReferences: new Set(),
-            pendingWebhooks: new Set(),
-            readyToRun: false,
-          };
-        }
+    prisma.store.findMany().then(async (stores) => {
+      for (const store of stores) {
+        this.stores[store.id] = {
+          lazyReferences: new Set(),
+          pendingWebhooks: new Set(),
+          readyToRun: false,
+        };
+      }
 
-        const webhooks = await prisma.webhook.findMany({
-          where: {
-            processed: false,
-            nodeId: process.env.NODE_ID || '',
-          },
-          orderBy: {
-            createdAt: 'asc',
-          },
-        });
+      const webhooks = await prisma.webhook.findMany({
+        where: {
+          processed: false,
+          nodeId: process.env.NODE_ID || '',
+        },
+        orderBy: {
+          createdAt: 'asc',
+        },
+      });
 
-        console.log(`Found ${webhooks.length} webhooks to process`);
+      console.log(`Found ${webhooks.length} webhooks to process`);
 
-        const webhooksByStores = _.groupBy(webhooks, 'storeId');
+      const webhooksByStores = _.groupBy(webhooks, 'storeId');
 
-        for (const storeId in webhooksByStores) {
-          const webhooksByTopics = _.groupBy(
-            webhooksByStores[storeId],
-            'topic'
-          );
+      for (const storeId in webhooksByStores) {
+        const webhooksByTopics = _.groupBy(webhooksByStores[storeId], 'topic');
 
-          for (const topic in webhooksByTopics) {
-            if (this.lazyTopics.hasOwnProperty(topic)) {
-              console.log(`Running lazy topic: ${topic}`);
-              this.lazyTopics[topic].runJob(webhooksByTopics[topic]);
+        for (const topic in webhooksByTopics) {
+          if (this.lazyTopics.hasOwnProperty(topic)) {
+            console.log(`Running lazy topic: ${topic}`);
+            this.lazyTopics[topic].runJob(webhooksByTopics[topic]);
 
-              await prisma.webhook.updateMany({
-                where: {
-                  id: {
-                    in: webhooksByTopics[topic].map((webhook) => webhook.id),
-                  },
-                },
-                data: {
-                  processed: true,
-                },
-              });
-
-              continue;
-            }
-
-            for (const webhook of webhooksByTopics[topic]) {
-              await this.handleWebhook(webhook, false, true);
-            }
-          }
-
-          const pendingWebhooks = Array.from(
-            this.stores[storeId].pendingWebhooks
-          ).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-          this.stores[storeId].pendingWebhooks.clear();
-
-          while (pendingWebhooks.length > 0) {
-            for (const webhook of pendingWebhooks) {
-              await this.handleWebhook(webhook, false, true);
-            }
-          }
-        }
-
-        for (const storeId in this.stores) {
-          this.stores[storeId].readyToRun = true;
-          console.log(`Store ready to process webhooks: ${storeId}`);
-        }
-      })
-      /*.then(() => {
-        setInterval(async () => {
-          for (const storeId in this.stores) {
-            console.log(`Checking for pending webhooks: ${storeId}`);
-
-            const pendingWebhooks = Array.from(
-              this.stores[storeId].pendingWebhooks
-            ).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-
-            if (pendingWebhooks.length > 0) {
-              for (const webhook of pendingWebhooks) {
-                await this.handleWebhook(webhook, true, true);
-              }
-            }
-
-            const webhooks = await prisma.webhook.findMany({
+            await prisma.webhook.updateMany({
               where: {
-                processed: false,
-                nodeId: process.env.NODE_ID || '',
-                storeId,
+                id: {
+                  in: webhooksByTopics[topic].map((webhook) => webhook.id),
+                },
               },
-              orderBy: {
-                createdAt: 'asc',
+              data: {
+                processed: true,
               },
             });
 
-            if (webhooks.length === 0) {
-              continue;
-            }
-
-            console.log(
-              `Found ${webhooks.length} webhooks to process: ${storeId}`
-            );
-
-            for (const webhook of webhooks) {
-              await this.handleWebhook(webhook, true, true);
-            }
+            continue;
           }
-        }, 10000);
-      })*/;
+
+          for (const webhook of webhooksByTopics[topic]) {
+            await this.handleWebhook(webhook, false, true);
+          }
+        }
+
+        while (this.stores[storeId].pendingWebhooks.size > 0) {
+          const pendingWebhooks = Array.from(
+            this.stores[storeId].pendingWebhooks
+          );
+
+          pendingWebhooks.sort(
+            (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+          );
+
+          this.stores[storeId].pendingWebhooks.clear();
+
+          for (const webhook of pendingWebhooks) {
+            await this.handleWebhook(webhook, false, true);
+          }
+        }
+      }
+
+      for (const storeId in this.stores) {
+        this.stores[storeId].readyToRun = true;
+        console.log(`Store ready to process webhooks: ${storeId}`);
+      }
+    });
 
     emitter.on('store.create', (store: Store) => {
       this.stores[store.id] = {
@@ -395,33 +355,11 @@ export class WebhookManager {
   private runJob(webhooks: Webhook[]) {
     const groupedWebhooks = _.groupBy(webhooks, 'topic');
 
-    const collectionIds = groupedWebhooks.COLLECTIONS_UPDATE
-      ? Array.from(
-          new Set(
-            groupedWebhooks.COLLECTIONS_UPDATE.map(
-              (webhook) => webhook.objectId
-            )
-          )
-        )
-      : [];
-
-    const productIds = groupedWebhooks.PRODUCTS_UPDATE
-      ? Array.from(
-          new Set(
-            groupedWebhooks.PRODUCTS_UPDATE.map((webhook) => webhook.objectId)
-          )
-        )
-      : [];
-
-    jobRunner.run({
-      name: 'import-products',
-      storeId: webhooks[0].storeId,
-      maxRetries: 5,
-      payload: {
-        collectionIds,
-        productIds,
-      },
-    });
+    for (const topic in groupedWebhooks) {
+      if (this.lazyTopics.hasOwnProperty(topic)) {
+        this.lazyTopics[topic].runJob(groupedWebhooks[topic]);
+      }
+    }
   }
 }
 

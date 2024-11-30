@@ -200,26 +200,24 @@ export class Migration {
   }
 
   async importOrders() {
-    const previousJob = await prisma.job.findFirst({
+    const store = await prisma.store.findUniqueOrThrow({
       where: {
-        name: 'import-products',
-        storeId: this.session.storeId,
+        id: this.session.storeId,
       },
+      select: {
+        installedAt: true,
+      }
     });
 
     await jobRunner.run({
       name: 'import-orders',
       storeId: this.session.storeId,
+      interval: 60 * 60 * 24,
+      scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
       maxRetries: 5,
-      dependencies: previousJob ? [previousJob.id] : [],
-    });
-
-    await jobRunner.run({
-      name: 'import-orders',
-      storeId: this.session.storeId,
-      interval: 60 * 60 * 6,
-      scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 6),
-      maxRetries: 5,
+      payload: {
+        since: store.installedAt,
+      },
     });
   }
 
