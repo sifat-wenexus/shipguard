@@ -1,9 +1,8 @@
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { Migration } from '~/modules/migration.server';
-import { shopify } from '~/modules/shopify.server';
+import { getShopifyGQLClient, shopify } from '~/modules/shopify.server';
 import { prisma } from '~/modules/prisma.server';
-import _ from 'lodash';
 
 async function init() {
   const app = await prisma.app.findFirst();
@@ -38,34 +37,11 @@ async function init() {
     });
   }
 
-  const aStore = await prisma.store.findFirst({
-    where: {
-      uninstalledAt: null,
-    },
-  });
-
-  if (!aStore) {
-    return;
-  }
-
   try {
-    const aSession = await findOfflineSession(aStore.domain);
-
-    const lastMigrationId = _.last(new Migration(aSession).order)?.id;
-
     const query = await queryProxy.store.findMany({
       select: { id: true, domain: true },
       where: {
-        OR: [
-          {
-            lastMigrationId: {
-              not: lastMigrationId,
-            },
-          },
-          {
-            lastMigrationId: null,
-          },
-        ],
+        uninstalledAt: null,
       },
       orderBy: [{ id: 'asc' }],
     });
@@ -76,6 +52,76 @@ async function init() {
           const session = await findOfflineSession(domain);
 
           await Migration.attempt(session);
+
+          const productImage =
+            'https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse_Shipping_Protection.png?v=1728361462';
+          const gqlClient = getShopifyGQLClient(session);
+
+          const existingProduct = await gqlClient.query<any>({
+            data: {
+              query: `#graphql
+              query Product {
+                products(first: 100 ,query:"tag:wenexus-insurance OR sku:wenexus-shipping-protection"){
+                  nodes{
+                    id
+                    title
+                    media(first: 200){
+                      nodes{
+                        preview{
+                          image{
+                            url
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              `,
+            },
+          });
+
+          for (const node of existingProduct.body.data.products.nodes) {
+            const mediaNodes = node.media?.nodes || [];
+
+            if (node.media.nodes.length === 0) {
+              await gqlClient.query<any>({
+                data: {
+                  query: `#graphql
+                  mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
+                    productCreateMedia(media: $media, productId: $productId) {
+
+                      mediaUserErrors {
+                        field
+                        message
+                      }
+
+                    }
+                  }`,
+                  variables: {
+                    media: [
+                      {
+                        alt: 'package-protection',
+                        mediaContentType: 'IMAGE',
+                        originalSource: productImage,
+                      },
+                    ],
+                    productId: node.id,
+                  },
+                },
+                tries: 20,
+              });
+            }
+
+            for (const media of mediaNodes) {
+              if (media.preview?.image?.url) {
+                console.log('product id----> ', node.id);
+                console.log('found:', media.preview.image.url);
+              } else {
+                console.log('not-found');
+              }
+            }
+          }
         } catch (e) {
           console.error(e);
         }
