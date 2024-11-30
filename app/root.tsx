@@ -3,29 +3,29 @@ import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { AppProvider } from '~/shopify-app-remix/react';
+import LogoAnimation from '~/components/page-loader';
 import tailwindStyles from '~/styles/tailwind.css';
 import { MainNav } from './components/main-nav';
 import { useEffect, useMemo, useState } from 'react';
 import { Frame } from '@shopify/polaris';
 import { json } from '@remix-run/node';
 import { Nav } from './components/nav';
-import appCss from '~/styles/app.css';
 
+import appCss from '~/styles/app.css';
 import rsuite from 'rsuite/Accordion/styles/index.css';
 
 import {
   isRouteErrorResponse,
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
   ScrollRestoration,
   useLoaderData,
-  useRouteError,
   useLocation,
-  LiveReload,
-  Scripts,
-  Outlet,
-  Links,
-  Meta,
+  useRouteError,
 } from '@remix-run/react';
-import LogoAnimation from '~/components/logo-animation';
 
 export const links = () => [
   { rel: 'icon', href: '/favicon.png', type: 'image/png' },
@@ -100,7 +100,6 @@ export default function Root() {
         <Links />
       </head>
       <body>
-        {/*{loading?<LogoAnimation/>:*/}
         <AppProvider isEmbeddedApp apiKey={data.apiKey!}>
           <Frame
             logo={{
@@ -126,7 +125,6 @@ export default function Root() {
             )}
           </Frame>
         </AppProvider>
-        {/*}*/}
 
         <ScrollRestoration />
         <LiveReload />

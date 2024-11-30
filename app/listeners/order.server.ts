@@ -4,6 +4,7 @@ import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
+import type { Session } from '~/shopify-api/lib';
 
 const makePackageProtectionFulfill = async (
   data: Record<string, any>[],
@@ -57,12 +58,31 @@ const makePackageProtectionFulfill = async (
   return result;
 };
 
+async function fetchOrderStatus(id: string, session: Session) {
+  const gqlClient = getShopifyGQLClient(session);
+
+  const order = await gqlClient.query<any>({
+    data: `#graphql
+    query {
+      order(id: "${id}") {
+        id
+        displayFulfillmentStatus
+      }
+    }
+    `,
+    tries: 20,
+  });
+
+  return order.body.data.order.displayFulfillmentStatus;
+}
+
 export const orderCreateEvent = async ({
   payload: _payload,
   session,
+  storeId,
 }: WebhookListenerArgs) => {
-  if (!_payload) {
-    return;
+  if (!_payload || !session) {
+    return console.log('OrderCreateEvent: No payload or session');
   }
 
   const gqlClient = getShopifyGQLClient(session!);
@@ -72,6 +92,8 @@ export const orderCreateEvent = async ({
     (lineItem) => lineItem.sku === PRODUCT_SKU
   );
   const orderId = payload.admin_graphql_api_id;
+
+  console.log(`OrderCreateEvent: ${payload.name}`);
 
   try {
     if (existPackageProtection) {
@@ -94,6 +116,7 @@ export const orderCreateEvent = async ({
                   amount
                 }
               }
+              displayFulfillmentStatus
               lineItems(first:250){
                 nodes{
                   sku
@@ -144,29 +167,28 @@ export const orderCreateEvent = async ({
           })
           .join('');
 
-      await queryProxy.packageProtectionOrder.create({
-        data: {
-          hasPackageProtection: true,
-          orderId: orderId,
-          customerId: payload.customer.id.toString(),
-          customerEmail: payload.customer.email,
-          customerFirstName: payload.customer.first_name,
-          customerLastName: payload.customer.last_name,
-          orderName: updatedOrder.body.data.orderUpdate.order.name,
-          storeId: session?.storeId,
-          orderDate: payload.created_at,
-          orderAmount: Number(
-            updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
-              .amount
-          ),
-          protectionFee: Number(protectionFee),
-          fulfillmentStatus:
-            payload.fulfillment_status === 'partial'
-              ? 'PARTIALLY_FULFILLED'
-              : payload.fulfillment_status === 'fulfilled'
-              ? 'FULFILLED'
-              : 'UNFULFILLED',
-        },
+      const data = {
+        storeId,
+        hasPackageProtection: true,
+        orderId: orderId,
+        customerId: payload.customer.id.toString(),
+        customerEmail: payload.customer.email,
+        customerFirstName: payload.customer.first_name,
+        customerLastName: payload.customer.last_name,
+        orderName: updatedOrder.body.data.orderUpdate.order.name,
+        orderDate: payload.created_at,
+        orderAmount: Number(
+          updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
+            .amount
+        ),
+        protectionFee: Number(protectionFee),
+        fulfillmentStatus: updatedOrder.body.data.orderUpdate.order.displayFulfillmentStatus,
+      };
+
+      await queryProxy.packageProtectionOrder.upsert({
+        where: { orderId: orderId },
+        create: data,
+        update: data,
       });
 
       if (
@@ -179,26 +201,25 @@ export const orderCreateEvent = async ({
         );
       }
     } else {
-      await queryProxy.packageProtectionOrder.create({
-        data: {
-          hasPackageProtection: false,
-          orderId: orderId,
-          customerId: payload.customer.id.toString(),
-          customerEmail: payload.customer.email,
-          customerFirstName: payload.customer.first_name,
-          customerLastName: payload.customer.last_name,
-          orderName: payload.name,
-          storeId: session?.storeId,
-          orderAmount: Number(payload.total_price),
-          orderDate: payload.created_at,
-          protectionFee: 0,
-          fulfillmentStatus:
-            payload.fulfillment_status === 'partial'
-              ? 'PARTIALLY_FULFILLED'
-              : payload.fulfillment_status === 'fulfilled'
-              ? 'FULFILLED'
-              : 'UNFULFILLED',
-        },
+      const data = {
+        storeId,
+        orderId,
+        hasPackageProtection: false,
+        customerId: payload.customer.id.toString(),
+        customerEmail: payload.customer.email,
+        customerFirstName: payload.customer.first_name,
+        customerLastName: payload.customer.last_name,
+        orderName: payload.name,
+        orderAmount: Number(payload.total_price),
+        orderDate: payload.created_at,
+        protectionFee: 0,
+        fulfillmentStatus: await fetchOrderStatus(orderId, session),
+      };
+
+      await queryProxy.packageProtectionOrder.upsert({
+        where: { orderId },
+        create: data,
+        update: data,
       });
     }
   } catch (err) {
@@ -210,12 +231,15 @@ const orderRefundEvent = async ({
   payload: _payload,
   session,
 }: WebhookListenerArgs) => {
-  if (!_payload) {
-    return;
+  if (!_payload || !session) {
+    return console.log('OrderRefundEvent: No payload or session');
   }
+
   const gqlClient = getShopifyGQLClient(session!);
 
   const payload = _payload as Record<string, any>;
+
+  console.log(`OrderRefundEvent: ${payload.name}`);
 
   const orderId = 'gid://shopify/Order/' + payload.order_id;
 
@@ -243,18 +267,19 @@ const orderRefundEvent = async ({
 const orderFulfilledEvent = async ({
   payload: _payload,
 }: WebhookListenerArgs) => {
-  console.log('orderFulfilledEvent');
   if (!_payload) {
     return;
   }
+
+  console.log(`OrderFulfilledEvent: ${(_payload as any).name}`);
 };
 
 const orderPartiallyFulfilledEvent = async ({
   payload: _payload,
   session,
 }: WebhookListenerArgs) => {
-  if (!_payload) {
-    return;
+  if (!_payload || !session) {
+    return console.log('OrderPartiallyFulfilledEvent: No payload or session');
   }
 
   try {
@@ -267,6 +292,8 @@ const orderPartiallyFulfilledEvent = async ({
 
     const gqlClient = getShopifyGQLClient(session!);
     const payload = _payload as Record<string, any>;
+
+    console.log(`OrderPartiallyFulfilledEvent: ${payload.name}`);
 
     const existPackageProtection = payload.line_items.find(
       (line) => line.sku === PRODUCT_SKU
@@ -358,7 +385,7 @@ const orderPartiallyFulfilledEvent = async ({
           .filter((item) => item.sku === PRODUCT_SKU);
 
         if (isExistFulfillmentPackageItem.length) {
-          for (const item of isExistFulfillmentPackageItem) {
+          isExistFulfillmentPackageItem.forEach(async (item) => {
             await gqlClient.query<any>({
               data: `#graphql
               mutation {
@@ -381,7 +408,7 @@ const orderPartiallyFulfilledEvent = async ({
               }`,
               tries: 20,
             });
-          }
+          });
         }
       }
 
@@ -394,6 +421,8 @@ const orderPartiallyFulfilledEvent = async ({
           gqlClient
         );
       }
+    } else {
+      console.log(`OrderPartiallyFulfilledEvent: No package protection, ${(_payload as any).name}`);
     }
   } catch (error) {
     console.error('Error in orderPartiallyFulfilledEvent', error);
@@ -407,8 +436,8 @@ export const orderUpdatedEvent = async ({
   console.log(
     '-------------------------orderUpdated-----------------------------'
   );
-  if (!_payload) {
-    return;
+  if (!_payload || !session) {
+    return console.log('OrderUpdatedEvent: No payload or session');
   }
   const gqlClient = getShopifyGQLClient(session!);
   const payload = _payload as Record<string, any>;
@@ -492,12 +521,7 @@ export const orderUpdatedEvent = async ({
 
       const updateOrder = await queryProxy.packageProtectionOrder.update({
         data: {
-          fulfillmentStatus:
-            payload.fulfillment_status === 'partial'
-              ? 'PARTIALLY_FULFILLED'
-              : payload.fulfillment_status === 'fulfilled'
-              ? 'FULFILLED'
-              : 'UNFULFILLED',
+          fulfillmentStatus: getOrder.body.data.order.displayFulfillmentStatus,
           protectionFee: Number(protectionFee),
           orderAmount: Number(
             getOrder.body.data.order.totalPriceSet.shopMoney.amount
@@ -507,6 +531,8 @@ export const orderUpdatedEvent = async ({
         where: { orderId: orderId },
       });
       console.log(updateOrder);
+    } else {
+      console.log(`OrderUpdatedEvent: No package protection, ${(_payload as any).name}`);
     }
   } catch (error) {
     console.error('Error on OrderUpdateEvent', error);

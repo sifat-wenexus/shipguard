@@ -6,12 +6,16 @@ import { prisma } from '~/modules/prisma.server';
 
 emitter.on(
   'APP_UNINSTALLED',
-  async ({ session, shop }: WebhookListenerArgs) => {
+  async ({ shop, storeId }: WebhookListenerArgs) => {
     console.log(`App uninstalled for shop: ${shop}`);
-    // console.log('session :', session);
+
+    await jobRunner.cancel({
+      storeId,
+    });
+
     try {
       await prisma.session.deleteMany({
-        where: { storeId: session?.storeId },
+        where: { storeId },
       });
     } catch (err) {
       console.error('Error while deleting session', err);
@@ -21,49 +25,26 @@ emitter.on(
 
 emitter.on(
   'SHOP_REDACT',
-  async ({ session }: WebhookListenerArgs) => {
+  async ({ storeId }: WebhookListenerArgs) => {
     // Delete shop data after 25 days
     jobRunner.run({
+      storeId,
       name: 'shop-redact',
-      storeId: session?.storeId,
       scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 25),
     });
-
-    // if (session) {
-    //   await prisma.session.deleteMany({ where: { shop } });
-    // }
-    //
-    // const filesQuery = await queryProxy.file.findMany({
-    //   where: { Store: { domain: shop } },
-    // });
-    //
-    // const bucket = gcloudStorage.bucket(process.env.GC_STORAGE_BUCKET_NAME!);
-    //
-    // filesQuery.addListener(async (files) => {
-    //   for (const file of files) {
-    //     await bucket.file(file.id).delete();
-    //   }
-    //
-    //   if (filesQuery.hasNext) {
-    //     return filesQuery.next();
-    //   }
-    //
-    //   await prisma.store.deleteMany({ where: { domain: shop } });
-    //   await prisma.session.deleteMany({ where: { shop } });
-    // });
   }
 );
 
 emitter.on(
   'CUSTOMERS_DATA_REQUEST',
-  async ({ payload, session }: WebhookListenerArgs) => {
+  async ({ payload, storeId }: WebhookListenerArgs) => {
     const customerId = (payload as any).customer.id;
     const ordersRequested = (payload as any).orders_requested as
       | string[]
       | undefined;
 
     const store = await prisma.store.findUniqueOrThrow({
-      where: { id: session!.storeId },
+      where: { id: storeId },
       include: {
         PackageProtectionOrders: {
           where: {
@@ -102,7 +83,7 @@ emitter.on(
 
 emitter.on(
   'CUSTOMERS_REDACT',
-  async ({ payload, session }: WebhookListenerArgs) => {
+  async ({ payload, storeId }: WebhookListenerArgs) => {
     const ordersToRedact = (payload as any)?.orders_to_redact as
       | string[]
       | undefined;
@@ -115,7 +96,7 @@ emitter.on(
     await prisma.packageProtectionOrder.deleteMany({
       where: {
         customerId,
-        storeId: session!.storeId,
+        storeId,
         orderId: {
           in: ordersToRedact.map((id) => `gid://shopify/Order/${id}`),
         },

@@ -14,6 +14,10 @@ emitter.on('BULK_OPERATIONS_FINISH', async (ctx: WebhookListenerArgs) => {
     return;
   }
 
+  if (!ctx.session) {
+    return;
+  }
+
   await bulkOperationManager.updateOperationInfo(operation, ctx.session);
   await bulkOperationManager.complete(operation);
 });

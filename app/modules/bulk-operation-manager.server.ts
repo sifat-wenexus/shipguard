@@ -86,10 +86,6 @@ export class BulkOperationManager {
       session = (await findOfflineSessionByStoreId(operation.storeId) ?? undefined);
     }
 
-    if (!session) {
-      throw new Error('Session not found');
-    }
-
     const client = getShopifyGQLClient(session);
 
     let response: RequestReturn<Record<string, any>>;
@@ -393,10 +389,6 @@ export class BulkOperationManager {
 
     if (!session) {
       session = (await findOfflineSessionByStoreId(operation.storeId) ?? undefined);
-    }
-
-    if (!session) {
-      throw new Error('Session not found');
     }
 
     const client = getShopifyGQLClient(session);

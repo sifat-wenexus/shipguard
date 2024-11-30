@@ -92,10 +92,6 @@ export abstract class Job<P = any> {
 
     const session = await findOfflineSession(store.domain);
 
-    if (!session) {
-      throw new Error('Session not found');
-    }
-
     const operation = await bulkOperationManager.mutation(
       session,
       mutation,

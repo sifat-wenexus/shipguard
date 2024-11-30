@@ -10,9 +10,9 @@ import { prisma } from '~/modules/prisma.server';
 import { json } from '@remix-run/node';
 
 import type {
-  PackageProtectionClaimOrder,
-  ClaimRequested,
   ClaimIssue,
+  ClaimRequested,
+  PackageProtectionClaimOrder,
 } from '#prisma-client';
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -29,14 +29,12 @@ export const loader: LoaderFunction = async ({ request }) => {
     const getPackageProtectionOrder =
       await prisma.packageProtectionOrder.findFirst({
         where: {
+          storeId: session.storeId,
           orderName: orderId,
           hasPackageProtection: { equals: true },
-          storeId: session.storeId,
         },
         include: { PackageProtectionClaimOrder: true },
       });
-
-    console.log(getPackageProtectionOrder);
 
     if (!getPackageProtectionOrder) {
       return json({
@@ -58,15 +56,14 @@ export const loader: LoaderFunction = async ({ request }) => {
     if (getPackageProtectionOrder.fulfillmentStatus === 'UNFULFILLED') {
       return json({ error: 'This order is not fulfilled yet!', status: 404 });
     }
-    const gql = await getShopifyGQLClient(session);
+    const gql = getShopifyGQLClient(session);
 
     // getPackageProtectionOrder.orderId;
     const res = await gql.query<any>({
       data: {
         query: `#graphql
-        query{
-          order(id:"${getPackageProtectionOrder.orderId}") {
-
+        query ($orderId: ID!) {
+          order(id: $orderId) {
             email
             displayFulfillmentStatus
             customer {
@@ -126,9 +123,8 @@ export const loader: LoaderFunction = async ({ request }) => {
             }
           }
         }
-
         `,
-        // variables: { orderId: orderId },
+        variables: { orderId: getPackageProtectionOrder.orderId },
       },
       tries: 20,
     });
@@ -292,9 +288,11 @@ export const loader: LoaderFunction = async ({ request }) => {
         .filter((item) => item.fulfillmentLineItems.length > 0),
     };
     // ----------------------------------------------------------------
+
     if (finalResult.fulfillments.length === 0) {
       return json({ error: 'No items in this order have been fulfilled yet.', status: 404 });
     }
+
     return json({
       message: 'request successful.',
       data: finalResult,

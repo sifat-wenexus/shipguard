@@ -1,3 +1,5 @@
 import type { shopify } from '~/modules/shopify.server';
 
-export type WebhookListenerArgs = Awaited<ReturnType<typeof shopify.authenticate.webhook>>;
+export type WebhookListenerArgs = Awaited<ReturnType<typeof shopify.authenticate.webhook>> & {
+  storeId: string;
+};

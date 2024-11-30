@@ -155,6 +155,8 @@
     bottom: calc(3% + 60px);
   }
 }
+
+
 /* logo animation */
 .logo-image {
   display: flex;
@@ -172,3 +174,5 @@
      transform: scale(1.2);
    }
 }
+
+
