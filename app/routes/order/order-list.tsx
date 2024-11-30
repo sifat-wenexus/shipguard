@@ -91,9 +91,11 @@ const OrderList = ({
         ],
       },
       orderBy: { orderDate: 'desc' },
-      include: { PackageProtectionClaimOrder: {
-        distinct:['fulfillmentId']
-        } },
+      include: {
+        PackageProtectionClaimOrder: {
+          distinct: ['fulfillmentId'],
+        },
+      },
     });
   }, [endDate, filterItems, searchTerm, startDate]);
   const subscription = useQueryPaginated(query);
@@ -272,11 +274,13 @@ const OrderList = ({
         }}
       >
         {subscription.loading ? (
-          <IndexTable.Cell colSpan={6}>
-            <div className="flex justify-center">
-              <Spinner accessibilityLabel="Loading..." size="large" />
-            </div>
-          </IndexTable.Cell>
+          <IndexTable.Row id={'loading'} position={1}>
+            <IndexTable.Cell colSpan={6}>
+              <div className="flex justify-center">
+                <Spinner accessibilityLabel="Loading..." size="large" />
+              </div>
+            </IndexTable.Cell>
+          </IndexTable.Row>
         ) : (
           <>{rowMarkup}</>
         )}

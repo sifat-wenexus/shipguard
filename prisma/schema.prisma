@@ -443,6 +443,7 @@ model PackageProtection {
   packageProtectionDefaultSetting Boolean                  @default(true)
   emailTemplateLogo               String?
   fixedMultiplePlan               Json?
+  geoLocation                     Json?
   isSingle                        Boolean                  @default(true)
 
   // ExcludedVariants ExcludedPackageProtectionVariant[]

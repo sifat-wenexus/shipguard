@@ -29,6 +29,10 @@ export interface ModelTypes {
     model: Base.File;
     whereInput: Base.Prisma.FileWhereInput;
   };
+  country:{
+    model: Base.Country;
+    whereInput: Base.Prisma.CountryWhereInput;
+  }
   collection: {
     model: Base.Collection;
     whereInput: Base.Prisma.CollectionWhereInput;

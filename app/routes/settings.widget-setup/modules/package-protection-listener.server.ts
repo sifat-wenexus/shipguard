@@ -42,8 +42,8 @@ interface IShopifyProductCreateAndUpdateArgs {
 
 export const PRODUCT_SKU: string = 'wenexus-shipping-protection';
 
-const productImage = getConfig().appUrl + appLogo;
 const appBaseUrl = getConfig().appUrl.toString().replace('/dashboard', '');
+const productImage = getConfig().appUrl ? appBaseUrl + appLogo : 'https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse_Shipping_Protection.png?v=1728361462';
 const icons: {
   id: string;
   icon: string;
@@ -219,6 +219,14 @@ onDBEvtBuffered(
           type: 'json',
           value: JSON.stringify(data.css) || 'null',
         });
+      }
+      if(data.geoLocation!==undefined){
+        metaFields.push({
+          key: 'geoLocation',
+          namespace: 'package_protection',
+          type: 'json',
+          value:JSON.stringify(data.geoLocation)
+        })
       }
       if (data.cssSelector) {
         metaFields.push({

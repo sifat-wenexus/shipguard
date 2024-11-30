@@ -638,6 +638,10 @@ var __publicField = (obj, key, value) => {
           // boundaryParents: new Set(
           //   Array.from(document.querySelectorAll('cart-drawer'))
           // ),
+        },
+        {
+          selector: ".cart-notification__links",
+          insertPosition: position ?? "before"
         }
       ];
     }
@@ -970,7 +974,8 @@ var __publicField = (obj, key, value) => {
     }
   }
   async function packageProtection() {
-    var _a, _b;
+    var _a, _b, _c, _d;
+    const settings = window.WeNexusOverallPackageProtectionSettings;
     const clients = [
       PackageProtectionClientShopifyFreeTheme,
       PackageProtectionClientMulti,
@@ -991,8 +996,7 @@ var __publicField = (obj, key, value) => {
     }
     const getItems = async () => (await window.weNexusCartApi.get()).items;
     let items = await getItems();
-    const settings = window.WeNexusOverallPackageProtectionSettings;
-    const excludeVariants = window.WeNexusOverallPackageProtectionSettings.packageProtectionProductAndVariants.map((product) => {
+    const excludeVariants = (_b = (_a = window.WeNexusOverallPackageProtectionSettings) == null ? void 0 : _a.packageProtectionProductAndVariants) == null ? void 0 : _b.map((product) => {
       return product.excludedPackageProtectionVariants.map(
         (variant) => Number(variant.id.replace("gid://shopify/ProductVariant/", ""))
       );
@@ -1007,7 +1011,7 @@ var __publicField = (obj, key, value) => {
       }
       return result2;
     };
-    const enabledByDefault = settings.insuranceDisplayButton ?? true;
+    const enabledByDefault = (settings == null ? void 0 : settings.insuranceDisplayButton) ?? true;
     const enabled = () => {
       const value = localStorage.getItem("package-protection-enabled");
       if (value === "false") {
@@ -1032,18 +1036,18 @@ var __publicField = (obj, key, value) => {
     const client = new ClientClass(packageProtectionApi);
     let selectors = [];
     if (!settings.defaultSetting) {
-      selectors = ((_a = client.getInsertionPointSelectors) == null ? void 0 : _a.call(
+      selectors = ((_c = client.getInsertionPointSelectors) == null ? void 0 : _c.call(
         client,
         settings.position.toLowerCase() ?? "before",
         settings.cssSelector
       )) || [];
     } else {
-      selectors = ((_b = client.getInsertionPointSelectors) == null ? void 0 : _b.call(client, "before")) || [];
+      selectors = ((_d = client.getInsertionPointSelectors) == null ? void 0 : _d.call(client, "before")) || [];
     }
     const fixedMultiplePlan = settings.fixedMultiplePlan;
     const fixedMultipleVariants = settings.productVariants;
     const result = fixedMultiplePlan.map((plan) => {
-      const match = fixedMultipleVariants.find(
+      const match = fixedMultipleVariants == null ? void 0 : fixedMultipleVariants.find(
         (v) => Number(v.price) === Number(plan.protectionFees)
       );
       if (match) {

@@ -273,11 +273,11 @@ progress[value]:after {
     display: none;
   }
 }
-.custom-font-size > table,
-span,
-div {
-  font-size: 13px;
-}
+/*.custom-font-size > table,*/
+/*span,*/
+/*div {*/
+/*  font-size: 13px;*/
+/*}*/
 *,
 :before,
 :after {

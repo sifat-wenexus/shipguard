@@ -22,7 +22,6 @@ const LandingPage = () => {
         <Pricing/>
         <WidgetSetting/>
         <Smtp/>
-        hello
         <ClaimsManagement/>
         <ClaimProcess/>
         <Overview/>

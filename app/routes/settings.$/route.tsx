@@ -6,7 +6,7 @@ import serverIcon from '~/assets/icons/server.svg';
 
 import type { InlineGridProps } from '@shopify/polaris';
 import { CalloutCard } from '~/components/callout-card';
-import { json, useLoaderData } from '@remix-run/react';
+import { json, useLoaderData, useNavigate } from '@remix-run/react';
 import { PageShell } from '~/components/page-shell';
 import { shopify } from '~/modules/shopify.server';
 import { prisma } from '~/modules/prisma.server';
@@ -195,6 +195,7 @@ export async function loader({ request }) {
 const Settings = () => {
   const { settingsCart, settingsCartSecond, currencyCode } =
     useLoaderData<typeof loader>();
+  const navigate = useNavigate();
   const columns = useMemo<InlineGridProps['columns']>(
     () => ({
       xl: 2,
@@ -207,8 +208,8 @@ const Settings = () => {
   );
   return (
     <PageShell currencyCode={currencyCode}>
-      <div className="ml-0 sm:ml-4">
-        <Page>
+      <Page title={'Settings'} backAction={{ onAction: () => navigate(-1) }}>
+        <div className="ml-0 sm:ml-4">
           <Layout>
             <div className="w-full  my-3 m-2 ml-6 sm:ml-0 mt-8">
               <h1 className="font-bold text-lg text-center">
@@ -343,8 +344,8 @@ const Settings = () => {
               )}
             </div>
           </Layout>
-        </Page>
-      </div>
+        </div>
+      </Page>
     </PageShell>
   );
 };

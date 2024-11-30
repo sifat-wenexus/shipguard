@@ -6,7 +6,7 @@ import DateRangePicker from '../dashboard/date-range';
 import { PageShell } from '~/components/page-shell';
 import { ExportIcon } from '@shopify/polaris-icons';
 import type { IActiveDates } from '../order/route';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useNavigate } from '@remix-run/react';
 import { prisma } from '~/modules/prisma.server';
 import ClaimOrderList from './claim-order-list';
 import { useMemo, useState } from 'react';
@@ -67,7 +67,7 @@ const FileClaimRequest = () => {
     useState<IActiveDates>(defaultActiveDates);
   const [isProcess, setIsProcess] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<string>('');
-
+  const navigate = useNavigate();
   const handleExport = () => {
     // return;
     const wb = XLSX.utils.book_new();
@@ -85,7 +85,7 @@ const FileClaimRequest = () => {
   return (
     <PageShell currencyCode={currencyCode}>
       <div className="m-4 sm:m-0 mt-10 sm:mt-4">
-        <Page>
+        <Page title='Claim Request'  backAction={{ onAction: () => navigate(-1) }}>
           <Layout>
             {isProcess ? (
               <ClaimRequestProcess
@@ -95,9 +95,9 @@ const FileClaimRequest = () => {
               />
             ) : (
               <div className="w-full ms-4">
-                <Text as="h1" variant="headingLg" alignment="start">
-                  Claim Request
-                </Text>
+                {/*<Text as="h1" variant="headingLg" alignment="start">*/}
+                {/*  Claim Request*/}
+                {/*</Text>*/}
                 <br />
                 <Box paddingBlockEnd={'400'}>
                   <div className="flex justify-between">

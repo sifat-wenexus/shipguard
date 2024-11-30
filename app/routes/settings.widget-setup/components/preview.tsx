@@ -11,7 +11,7 @@ const Preview = ({ formState }) => {
   );
   return (
     <div className="sm:ml-4">
-      <div className="sm:mt-12"></div>
+      <div className="sm:mt-4"></div>
       <ShadowBevelBox icon={<Icon source={ViewIcon} />} title="Preview">
         <ProductCard card={1} />
         <div className="mt-4"></div>

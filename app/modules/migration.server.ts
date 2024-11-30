@@ -217,8 +217,10 @@ export class Migration {
     await jobRunner.run({
       name: 'import-orders',
       storeId: this.session.storeId,
-      interval: 60 * 60 * 6,
-      scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 6),
+      // interval: 60 * 60 * 6,
+      interval:15,
+      scheduleAt:new Date(Date.now() + 1000 *15),
+      // scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 6),
       maxRetries: 5,
     });
   }

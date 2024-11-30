@@ -116,7 +116,7 @@ export default function Root() {
                 {' '}
                 {!skipAuth && (
                   <>
-                    <Nav />
+                    {/*<Nav />*/}
                     <MainNav />
                   </>
                 )}

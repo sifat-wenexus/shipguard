@@ -318,11 +318,12 @@ const ClaimOrderList = ({
         }}
       >
         {subscription.loading ? (
+          <IndexTable.Row id={'request-loading'} position={1}>
           <IndexTable.Cell colSpan={7}>
             <div className="flex justify-center">
               <Spinner accessibilityLabel="Loading..." size="large" />
             </div>
-          </IndexTable.Cell>
+          </IndexTable.Cell></IndexTable.Row>
         ) : (
           <>{rowMarkup}</>
         )}

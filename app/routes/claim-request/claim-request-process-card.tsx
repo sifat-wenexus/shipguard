@@ -59,10 +59,9 @@ const ClaimRequestProcessCard = ({
     (e) =>
       fulfillmentLineItems.some((i) => i.lineItemId === e.fulfillmentLineItemId)
   );
-
   return (
     <div key={data.id}>
-      <Card roundedAbove="sm">
+      <Card roundedAbove="sm" >
         <BlockStack gap="200">
           <InlineGrid columns="1fr auto">
             <Text as="h2" variant="headingLg">
@@ -96,6 +95,7 @@ const ClaimRequestProcessCard = ({
           </Text>
 
           <IndexTable
+            key={data.id}
             // resourceName={{ singular: 'item', plural: 'items' }}
             itemCount={fulfillmentLineItems?.length}
             selectable={false}
@@ -123,7 +123,7 @@ const ClaimRequestProcessCard = ({
                 return (
                   <IndexTable.Row
                     id={id?.toString()}
-                    key={id}
+                    key={index}
                     //selected={selectedResources?.includes(OrderId)}
                     position={index}
                   >
