@@ -77,16 +77,27 @@ export async function upsertStore(session: Session, afterAuth = false) {
             storeId: hasStore.id,
           },
           select: {
-            id: true,
-          }
+            orderId: true,
+          },
         });
 
         await jobRunner.run({
           name: 'import-orders',
           storeId: hasStore.id,
           payload: {
-            orderIds: orderIds.map((order) => order.id),
-          }
+            orderIds: orderIds.map((order) => order.orderId.split('/').pop()),
+          },
+        });
+
+        await jobRunner.run({
+          name: 'import-orders',
+          storeId: hasStore.id,
+          interval: 60 * 60 * 24,
+          scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+          maxRetries: 5,
+          payload: {
+            since: new Date(),
+          },
         });
       }
     }

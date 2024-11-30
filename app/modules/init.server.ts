@@ -38,7 +38,11 @@ async function init() {
     });
   }
 
-  const aStore = await prisma.store.findFirst();
+  const aStore = await prisma.store.findFirst({
+    where: {
+      uninstalledAt: null,
+    },
+  });
 
   if (!aStore) {
     return;
