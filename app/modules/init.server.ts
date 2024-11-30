@@ -2,6 +2,7 @@ import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { Migration } from '~/modules/migration.server';
 import { getShopifyGQLClient, shopify } from '~/modules/shopify.server';
+import type { Session } from '~/shopify-api/lib';
 import { prisma } from '~/modules/prisma.server';
 
 async function init() {
@@ -48,11 +49,21 @@ async function init() {
 
     query.addListener(async (data) => {
       for (const { domain } of data) {
+        let session: Session;
+
         try {
-          const session = await findOfflineSession(domain);
+          session = await findOfflineSession(domain);
+        } catch (e) {
+          continue;
+        }
 
+        try {
           await Migration.attempt(session);
+        } catch (e) {
+          console.error(e);
+        }
 
+        try {
           const productImage =
             'https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse_Shipping_Protection.png?v=1728361462';
           const gqlClient = getShopifyGQLClient(session);
@@ -83,21 +94,20 @@ async function init() {
 
           for (const node of existingProduct.body.data.products.nodes) {
             const mediaNodes = node.media?.nodes || [];
-
-            if (node.media.nodes.length === 0) {
-              await gqlClient.query<any>({
+            const createMedia = () =>
+              gqlClient.query<any>({
                 data: {
                   query: `#graphql
-                  mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
-                    productCreateMedia(media: $media, productId: $productId) {
+                mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
+                  productCreateMedia(media: $media, productId: $productId) {
 
-                      mediaUserErrors {
-                        field
-                        message
-                      }
-
+                    mediaUserErrors {
+                      field
+                      message
                     }
-                  }`,
+
+                  }
+                }`,
                   variables: {
                     media: [
                       {
@@ -111,6 +121,9 @@ async function init() {
                 },
                 tries: 20,
               });
+
+            if (node.media.nodes.length === 0) {
+              await createMedia();
             }
 
             for (const media of mediaNodes) {
@@ -119,6 +132,7 @@ async function init() {
                 console.log('found:', media.preview.image.url);
               } else {
                 console.log('not-found');
+                await createMedia();
               }
             }
           }
