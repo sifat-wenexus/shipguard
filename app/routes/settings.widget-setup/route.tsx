@@ -1,14 +1,14 @@
 import CustomizedInsuranceStyle from './components/customized-insurance-style';
 import { hexToHsba, hsbaToHexWithAlpha } from '~/modules/utils/color-utils';
-import { shopify as shopifyRemix } from '../../modules/shopify.server';
 import { Banner, Box, Button, Layout, Page, Text } from '@shopify/polaris';
+import Location from '~/routes/settings.widget-setup/components/location';
+import { shopify as shopifyRemix } from '../../modules/shopify.server';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import InsurancePricing from './components/insurance-pricing';
 import { useLivePageData } from '~/hooks/use-live-page-data';
 import SpecialSettings from './components/special-settings';
 import { queryProxy } from '~/modules/query/query-proxy';
-import Tutorial from '../settings.$/components/tutorial';
 import PublishButton from './components/publish-button';
 import type { PackageProtection } from '#prisma-client';
 import PlacementCard from './components/placement-cart';
@@ -23,7 +23,6 @@ import Preview from './components/preview';
 import Content from './components/content';
 import { json } from '@remix-run/node';
 import Css from './components/css';
-
 import type {
   ActionFunctionArgs,
   LinksFunction,
@@ -108,7 +107,6 @@ export async function action({ request }: ActionFunctionArgs) {
       price: Number(price),
       ...payload,
     };
-
     try {
       await queryProxy.packageProtection.upsert(
         {
@@ -225,7 +223,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     where: { id: ctx.session.storeId },
     select: { currencyCode: true },
   });
-
   return json({
     enabled: settingsData?.enabled ?? false,
     currencyCode: currencyCode,
@@ -245,6 +242,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       price: settingsData?.price ?? '',
       icon: settingsData?.icon ?? 'three',
       css: settingsData?.css ?? '',
+      geoLocation:settingsData?.geoLocation?? [],
 
       switchColor: settingsData?.switchColor
         ? hexToHsba(settingsData.switchColor)
@@ -364,12 +362,10 @@ const Settings = () => {
       },
     },
   });
-
   const [enabled] = useState(data.enabled);
   const [insurancePriceError, setInsurancePriceError] = useState(false);
   const { state, } = formState;
   const { storeInfo } = useLivePageData();
-
   const save = useCallback(async () => {
     try {
       await fetcher.submit(
@@ -440,6 +436,7 @@ const Settings = () => {
               <CustomizedInsuranceStyle formState={formState} />
               <Content formState={formState} />
               <SpecialSettings formState={formState} />
+              <Location formState={formState} />
               <Css formState={formState} />
               {/* <Box paddingBlockEnd={'1200'}></Box> */}
             </Layout.Section>

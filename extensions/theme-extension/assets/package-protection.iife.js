@@ -971,6 +971,16 @@ var __publicField = (obj, key, value) => {
   }
   async function packageProtection() {
     var _a, _b;
+    const settings = window.WeNexusOverallPackageProtectionSettings;
+    const userLocation = window.wenexusUserLocation;
+    const checkCountry = settings.geoLocation.find(
+      (country) => country.value === userLocation.country
+    );
+    if (settings.geoLocation.length > 0) {
+      if (!checkCountry) {
+        return;
+      }
+    }
     const clients = [
       PackageProtectionClientShopifyFreeTheme,
       PackageProtectionClientMulti,
@@ -991,7 +1001,6 @@ var __publicField = (obj, key, value) => {
     }
     const getItems = async () => (await window.weNexusCartApi.get()).items;
     let items = await getItems();
-    const settings = window.WeNexusOverallPackageProtectionSettings;
     const excludeVariants = window.WeNexusOverallPackageProtectionSettings.packageProtectionProductAndVariants.map((product) => {
       return product.excludedPackageProtectionVariants.map(
         (variant) => Number(variant.id.replace("gid://shopify/ProductVariant/", ""))

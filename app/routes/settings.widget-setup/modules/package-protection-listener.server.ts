@@ -220,6 +220,14 @@ onDBEvtBuffered(
           value: JSON.stringify(data.css) || 'null',
         });
       }
+      if(data.geoLocation!==undefined){
+        metaFields.push({
+          key: 'geoLocation',
+          namespace: 'package_protection',
+          type: 'json',
+          value:JSON.stringify(data.geoLocation)
+        })
+      }
       if (data.cssSelector) {
         metaFields.push({
           key: 'cssSelector',

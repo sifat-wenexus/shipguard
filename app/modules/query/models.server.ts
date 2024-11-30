@@ -36,6 +36,7 @@ export const models = defineModels(() => {
     'fixedProductId',
     'showOnCartPage',
     'showOnMiniCart',
+    'geoLocation',
     'switchColor',
     'cssSelector',
     'percentage',

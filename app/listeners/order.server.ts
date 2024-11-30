@@ -153,7 +153,7 @@ export const orderCreateEvent = async ({
           customerFirstName: payload.customer.first_name,
           customerLastName: payload.customer.last_name,
           orderName: updatedOrder.body.data.orderUpdate.order.name,
-          storeId: session?.storeId!,
+          storeId: session?.storeId,
           orderDate: payload.created_at,
           orderAmount: Number(
             updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
@@ -188,7 +188,7 @@ export const orderCreateEvent = async ({
           customerFirstName: payload.customer.first_name,
           customerLastName: payload.customer.last_name,
           orderName: payload.name,
-          storeId: session?.storeId!,
+          storeId: session?.storeId,
           orderAmount: Number(payload.total_price),
           orderDate: payload.created_at,
           protectionFee: 0,
@@ -358,7 +358,7 @@ const orderPartiallyFulfilledEvent = async ({
           .filter((item) => item.sku === PRODUCT_SKU);
 
         if (isExistFulfillmentPackageItem.length) {
-          isExistFulfillmentPackageItem.forEach(async (item) => {
+          for (const item of isExistFulfillmentPackageItem) {
             await gqlClient.query<any>({
               data: `#graphql
               mutation {
@@ -381,7 +381,7 @@ const orderPartiallyFulfilledEvent = async ({
               }`,
               tries: 20,
             });
-          });
+          }
         }
       }
 

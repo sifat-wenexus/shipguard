@@ -28,9 +28,15 @@ export const loader: LoaderFunction = async ({ request }) => {
     const orderId = `#${params.orderId}`;
     const getPackageProtectionOrder =
       await prisma.packageProtectionOrder.findFirst({
-        where: { orderName: orderId, hasPackageProtection: { equals: true } },
+        where: {
+          orderName: orderId,
+          hasPackageProtection: { equals: true },
+          storeId: session.storeId,
+        },
         include: { PackageProtectionClaimOrder: true },
       });
+
+    console.log(getPackageProtectionOrder);
 
     if (!getPackageProtectionOrder) {
       return json({
@@ -286,7 +292,9 @@ export const loader: LoaderFunction = async ({ request }) => {
         .filter((item) => item.fulfillmentLineItems.length > 0),
     };
     // ----------------------------------------------------------------
-
+    if (finalResult.fulfillments.length === 0) {
+      return json({ error: 'No items in this order have been fulfilled yet.', status: 404 });
+    }
     return json({
       message: 'request successful.',
       data: finalResult,
@@ -433,7 +441,9 @@ export const action: ActionFunction = async ({ request }) => {
               packageProtection?.emailTemplateLogo
             }`
           : null;
-        const claimPage = `${getConfig().appUrl.toString().replace('dashboard','')}settings/claim-request`;
+        const claimPage = `${getConfig()
+          .appUrl.toString()
+          .replace('dashboard', '')}settings/claim-request`;
         await sendMail({
           template: 'CLAIM_REQUEST_EMAIL_FOR_ADMIN',
           storeId: data.storeId,

@@ -1,6 +1,5 @@
-import { Box, Button, ButtonGroup, ContextualSaveBar } from '@shopify/polaris';
 import type { FormState } from '~/hooks/use-form-state';
-import * as Icons from '@shopify/polaris-icons';
+import { ContextualSaveBar } from '@shopify/polaris';
 import { useCallback } from 'react';
 import type { FC } from 'react';
 import _ from 'lodash';
@@ -19,7 +18,7 @@ export const SaveBar: FC<Props> = ({ formState, onSave }) => {
     }
   }, [formState, onSave]);
 
-  if (formState.changes.length === 1) return null;
+  if (formState.changes.length === 1 || !formState.isDirty) return null;
 
   return (
     <ContextualSaveBar

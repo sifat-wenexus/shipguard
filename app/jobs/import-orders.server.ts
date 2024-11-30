@@ -1,7 +1,10 @@
 import { orderCreateEvent, orderUpdatedEvent } from '~/listeners/order.server';
 import { bulkOperationManager } from '~/modules/bulk-operation-manager.server';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
-import { getShopifyRestClient } from '~/modules/shopify.server';
+import {
+  getShopifyGQLClient,
+  getShopifyRestClient,
+} from '~/modules/shopify.server';
 import { prisma } from '~/modules/prisma.server';
 import { Job } from '~/modules/job/job';
 import _ from 'lodash';
@@ -27,7 +30,7 @@ export class ImportOrders extends Job<Payload> {
     // await this.updatePayload({ since: new Date().toISOString() });
 
     await this.performShopifyBulkQuery(
-        `#graphql
+      `#graphql
       {
         # orders(query: "created_at:>='' OR updated_at:>=''", sortKey: ORDER_NUMBER)
         orders(sortKey: ORDER_NUMBER) {
@@ -35,7 +38,16 @@ export class ImportOrders extends Job<Payload> {
             node {
               id
               name
+              email
+              createdAt
+              totalPriceSet {
+                shopMoney {
+                  amount
+                }
+              }
+              displayFulfillmentStatus
               customer {
+                id
                 email
                 firstName
                 lastName
@@ -64,7 +76,6 @@ export class ImportOrders extends Job<Payload> {
                   }
                 }
               }
-
               fulfillments {
                 id
                 status
@@ -91,7 +102,7 @@ export class ImportOrders extends Job<Payload> {
           }
         }
       }
-      `,
+      `
     );
     await this.updateProgress(10);
 
@@ -132,8 +143,22 @@ export class ImportOrders extends Job<Payload> {
       };
     }
 
-    const restClient = getShopifyRestClient(session);
+    console.log('dddd')
 
+const organizeOrderPayload=(orders)=>{
+return  orders.map(element=>{
+    return {
+      name:element.name,
+      order_id:element.id.split('/').pop(),
+      admin_graphql_api_id:element.id,
+      line_items:element.lineItems,
+      customer:{...element.customer,id:element.customer.id.split('/').pop()},
+      total_price:element.totalPriceSet.shopMoney.amount,
+      created_at:element.createdAt,
+      fulfillment_status:element.displayFulfillmentStatus  ==='PARTIALLY_FULFILLED'?'partial':element.displayFulfillmentStatus==='FULFILLED'?'fulfilled':'unfulfilled',
+    }
+  })
+}
     const orders = bulkOperationManager.stitchResult(data);
 
     const ordersAvailable = await prisma.packageProtectionOrder.findMany({
@@ -148,64 +173,58 @@ export class ImportOrders extends Job<Payload> {
         fulfillmentStatus: true,
       },
     });
-    const availableOrderIds = new Set(ordersAvailable.map((order) => order.orderId));
+    const availableOrderIds = new Set(
+      ordersAvailable.map((order) => order.orderId)
+    );
 
-    const orderIdsToImport = _.chunk(
-      orders.filter(
-        (order) => !availableOrderIds.has(order.id),
-      )
-        .map((order) => order.id.split('/').pop()),
-      50,
+    const ordersToImport = _.chunk(
+      orders.filter((order) => !availableOrderIds.has(order.id)),
+      // .map((order) => order.id.split('/').pop()),
+      50
     );
 
     const importedOrders: any[] = [];
-
-    for (const orderIds of orderIdsToImport) {
-      const orders = await restClient.get<{ orders: any[] }>({
-        path: '/orders.json',
-        query: {
-          ids: orderIds.join(','),
-        },
-      });
-
-      for (const order of orders.body.orders) {
-        await orderCreateEvent({
-          shop: store.domain,
-          payload: order,
-          session,
-        } as any);
-
-        importedOrders.push(order);
-      }
+    for (const order of ordersToImport) {
+      console.log('order : => ', order);
+      console.log('organize order:', organizeOrderPayload(order))
+      await orderCreateEvent({
+        shop: store.domain,
+        payload: organizeOrderPayload(order),
+        session,
+      } as any);
+      importedOrders.push(order);
     }
 
-    const orderIdsToUpdate = _.chunk(
-      orders.filter((order) => availableOrderIds.has(order.id))
-        .map((order) => order.id.split('/').pop()),
-      50,
+    const ordersToUpdate = _.chunk(
+      orders
+        .filter((order) => availableOrderIds.has(order.id)),
+        // .map((order) => order.id.split('/').pop()),
+      50
     );
 
     await this.updateProgress(80);
 
     const updatedOrders: any[] = [];
 
-    for (const orderIds of orderIdsToUpdate) {
-      const orders = await restClient.get<{ orders: any[] }>({
-        path: '/orders.json',
-        query: {
-          ids: orderIds.join(','),
-        },
-      });
+    for (const order of ordersToUpdate) {
+      await orderUpdatedEvent({
+      shop: store.domain,
+      payload: organizeOrderPayload(order),
+      session,
+    } as any);
+      updatedOrders.push(order);
 
-      for (const order of orders.body.orders) {
-        await orderUpdatedEvent({
-          shop: store.domain,
-          payload: order,
-          session,
-        } as any);
-
-        updatedOrders.push(order);
-      }
+      // const orders = await restClient.get<{ orders: any[] }>({
+      //   path: '/orders.json',
+      //   query: {
+      //     ids: orderIds.join(','),
+      //   },
+      // });
+      //
+      // for (const order of orders.body.orders) {
+      //
+      //
+      // }
     }
 
     return {
@@ -215,4 +234,3 @@ export class ImportOrders extends Job<Payload> {
     };
   }
 }
-

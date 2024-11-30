@@ -12,6 +12,7 @@ import {
 export function Nav() {
   const [selected, setSelected] = useState(0);
   const urlPath = useLocation().pathname;
+  console.log('loading');
 
   const tabs = useMemo(() => [
     {
