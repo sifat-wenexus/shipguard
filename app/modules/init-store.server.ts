@@ -77,7 +77,7 @@ export async function upsertStore(session: Session, afterAuth = false) {
             storeId: hasStore.id,
           },
           select: {
-            id: true,
+            orderId: true,
           }
         });
 
@@ -85,7 +85,7 @@ export async function upsertStore(session: Session, afterAuth = false) {
           name: 'import-orders',
           storeId: hasStore.id,
           payload: {
-            orderIds: orderIds.map((order) => order.id),
+            orderIds: orderIds.map((order) => order.orderId),
           }
         });
 
