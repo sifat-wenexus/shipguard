@@ -13,6 +13,20 @@ emitter.on(
       storeId,
     });
 
+    await prisma.store.update({
+      where: {
+        id: storeId,
+      },
+      data: {
+        uninstalledAt: new Date(),
+        PackageProtection: {
+          update: {
+            enabled: false,
+          },
+        },
+      },
+    });
+
     try {
       await prisma.session.deleteMany({
         where: { storeId },
@@ -23,17 +37,14 @@ emitter.on(
   }
 );
 
-emitter.on(
-  'SHOP_REDACT',
-  async ({ storeId }: WebhookListenerArgs) => {
-    // Delete shop data after 25 days
-    jobRunner.run({
-      storeId,
-      name: 'shop-redact',
-      scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 25),
-    });
-  }
-);
+emitter.on('SHOP_REDACT', async ({ storeId }: WebhookListenerArgs) => {
+  // Delete shop data after 25 days
+  jobRunner.run({
+    storeId,
+    name: 'shop-redact',
+    scheduleAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 25),
+  });
+});
 
 emitter.on(
   'CUSTOMERS_DATA_REQUEST',
