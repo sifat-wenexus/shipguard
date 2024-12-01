@@ -26,10 +26,10 @@ export class ImportOrders extends Job<Payload> {
   async fetchOrders() {
     let query = '';
 
-    if (this.job.payload.since) {
+    if (this.job.payload?.since) {
       const since = new Date(this.job.payload.since);
       query = `created_at:>='${since.toISOString()}' OR updated_at:>='${since.toISOString()}'`;
-    } else if (this.job.payload.orderIds) {
+    } else if (this.job.payload?.orderIds) {
       query = `id:${this.job.payload.orderIds.join(' OR id:')}`;
     }
 
