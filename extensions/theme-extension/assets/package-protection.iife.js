@@ -660,6 +660,15 @@ var __publicField = (obj, key, value) => {
     }
     // theme support
     async refreshWidget() {
+      const c = this.container;
+      if (c) {
+        const protectionPrice = document.getElementsByClassName("protection-price");
+        let latestPrice = "";
+        Array.from(c == null ? void 0 : c.getElementsByClassName("protection-price")).forEach(
+          (widget) => latestPrice = widget.innerHTML
+        );
+        Array.from(protectionPrice).forEach((el) => el.innerHTML = latestPrice);
+      }
       let subTotal = document.getElementsByClassName("totals__total-value");
       const items = await window.weNexusCartApi.get();
       setTimeout(() => {
