@@ -1,17 +1,19 @@
+import { getThemeFileInfo } from '~/modules/get-theme-file-content';
+import { json, useLoaderData, useNavigate } from '@remix-run/react';
+import type { InlineGridProps } from '@shopify/polaris';
+import { CalloutCard } from '~/components/callout-card';
+import { PageShell } from '~/components/page-shell';
+import { shopify } from '~/modules/shopify.server';
+import { prisma } from '~/modules/prisma.server';
+import type { Prisma } from '#prisma-client';
+import { useMemo } from 'react';
+
+
 import checkoutIcon from '~/assets/icons/checkout-extension.svg';
 import pageIcon from '~/assets/icons/customer-claim-page.svg';
 import widgetIcon from '~/assets/icons/widget-setup.svg';
 import emailIcon from '~/assets/icons/email-outline.svg';
 import serverIcon from '~/assets/icons/server.svg';
-
-import type { InlineGridProps } from '@shopify/polaris';
-import { CalloutCard } from '~/components/callout-card';
-import { json, useLoaderData, useNavigate } from '@remix-run/react';
-import { PageShell } from '~/components/page-shell';
-import { shopify } from '~/modules/shopify.server';
-import { prisma } from '~/modules/prisma.server';
-import { useMemo } from 'react';
-
 import {
   EmptyState,
   InlineGrid,
@@ -23,13 +25,6 @@ import {
   Text,
   Box,
 } from '@shopify/polaris';
-
-import {
-  SettingsIcon,
-  WrenchIcon,
-  CheckIcon,
-  InfoIcon,
-} from '@shopify/polaris-icons';
 import {
   cancelCustomerTemplate,
   refundCustomerTemplate,
@@ -37,11 +32,15 @@ import {
   reqAdminTemplate,
   reqCustomerTemplate,
 } from '../settings.email-template/components/default-template-code';
-import type { Prisma } from '#prisma-client';
+import {
+  SettingsIcon,
+  WrenchIcon,
+  CheckIcon,
+  InfoIcon,
+} from '@shopify/polaris-icons';
 
 export async function loader({ request }) {
   const ctx = await shopify.authenticate.admin(request);
-  const restAdminApi = await ctx.admin.rest.resources;
 
   const smtp = await prisma.smtpSetting.findFirst({
     where: { id: ctx.session.storeId },
@@ -77,20 +76,13 @@ export async function loader({ request }) {
       select: { enabled: true },
     });
     let claimPage = false;
-    const theme = await restAdminApi.Theme.all({
-      session: ctx.session,
-    })
-      .then((r) => r.data.find((item) => item.role === 'main'))
-      .catch((err) => console.error(err));
 
-    const template = await restAdminApi.Asset.all({
-      session: ctx.session,
-      theme_id: theme?.id,
-      // asset: { key: 'templates/page.claim-request.json' },
-    });
-    if (
-      template.data.find((t) => t.key === 'templates/page.claim-request.json')
-    ) {
+    const templateInfo = await getThemeFileInfo(
+      'templates/page.claim-request.json',
+      ctx.session
+    );
+
+    if (templateInfo) {
       claimPage = true;
     }
     const settingsCart = [

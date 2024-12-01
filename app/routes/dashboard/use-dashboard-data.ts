@@ -10,9 +10,9 @@ export function useDashboardData(
 ) {
   const lineDataQuery = useMemo(
     () =>
-      queryProxy.packageProtectionOrder.subscribeGroupBy({
-        by: ['orderDate'],
-        _sum: { orderAmount: true, refundAmount: true },
+      queryProxy.packageProtectionOrder.findMany({
+        // by: ['orderDate'],
+        // _sum: { orderAmount: true, refundAmount: true },
         where: {
           AND: [
             {
@@ -154,7 +154,7 @@ export function useDashboardData(
       // Extract date and calculate net amount
       const date = new Date(item.orderDate).toISOString().split('T')[0]; // Extract only the date part
       const netAmount =
-        parseFloat(item._sum.orderAmount) - parseFloat(item._sum.refundAmount);
+        parseFloat(item.orderAmount) - parseFloat(item.refundAmount);
 
       // Group by date and sum the net amounts
       if (!acc[date]) {
@@ -213,12 +213,12 @@ export function useDashboardData(
     totalSubscription.loading;
 
   return {
-    lineData,
     loading,
-    notClaimed: notClaimedSubscription.data,
     pieData,
+    lineData,
+    total: totalSubscription.data,
+    notClaimed: notClaimedSubscription.data,
     totalPackageProtect: totalPackageProtectionSubscription.data,
     totalNonPackageProtect: totalNonPackageProtectionSubscription.data,
-    total: totalSubscription.data,
   };
 }
