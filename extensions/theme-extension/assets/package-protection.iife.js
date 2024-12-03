@@ -1148,6 +1148,17 @@ var __publicField = (obj, key, value) => {
       await client.refreshPriceUI();
       await client.refreshWidget();
       client.enabledCheckoutButton();
+      await checkExcludeVariants();
+      const items2 = await getItems();
+      const itemIds = settings.packageProtectionProductAndVariants.map(
+        (p) => p.excludedPackageProtectionVariants.map(
+          (v) => Number(v.id.split("/").pop())
+        )
+      );
+      if (items2.length === itemIds.length) {
+        console.log("hiding");
+      }
+      console.log("-", itemIds, items2);
     }, true);
     for (const selector of selectors) {
       if (selector.shouldUse && !selector.shouldUse()) {
