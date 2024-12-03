@@ -4,11 +4,13 @@ import { InfoIcon, ViewIcon } from '@shopify/polaris-icons';
 import { Box, Divider, Icon, Link } from '@shopify/polaris';
 import { packageIcons } from './package-icons';
 import ProductCard from './product-preview';
+import { useState } from 'react';
 
 const Preview = ({ formState }) => {
   const selectedIcon = packageIcons.find(
     (i) => i.id === formState?.state?.icon
   );
+  const [switchOn,setSwitchOn] = useState<boolean>(false);
   return (
     <div className="sm:ml-4">
       <div className="sm:mt-4"></div>
@@ -38,7 +40,8 @@ const Preview = ({ formState }) => {
                 )}
               </span>
 
-              {formState.state.insuranceDisplayButton ? (
+              { //formState.state.insuranceDisplayButton
+               switchOn ? (
                 <span>{formState.state.enabledDescription}</span>
               ) : (
                 <span>{formState.state.disabledDescription}</span>
@@ -47,14 +50,15 @@ const Preview = ({ formState }) => {
             <div className="ml-3">
               <div
                 className="flex items-center justify-center mb-1"
-                onClick={() =>
-                  formState.addChange({
-                    insuranceDisplayButton:
-                      !formState.state.insuranceDisplayButton,
-                  })
+                onClick={() =>setSwitchOn(p=>!p)
+                  // formState.addChange({
+                  //   insuranceDisplayButton:
+                  //     !formState.state.insuranceDisplayButton,
+                  // })
                 }
               >
-                {formState.state.insuranceDisplayButton ? (
+                { // formState.state.insuranceDisplayButton
+                  switchOn? (
                   <div
                     className="flex w-12 h-6 bg-green-500 relative drop-shadow-2xl rounded-full cursor-pointer"
                     style={{
@@ -80,7 +84,8 @@ const Preview = ({ formState }) => {
           className="bg-gray-950 text-gray-300 font-semibold text-base p-3 my-3 rounded w-full hover:bg-black hover:text-gray-100 disabled:bg-slate-600 disabled:cursor-not-allowed disabled:text-gray-300"
           // disabled={!formState.staged.checked}
         >
-          Checkout {formState.state.insuranceDisplayButton? '$949.99':'$800.00'}
+          Checkout {   // formState.state.insuranceDisplayButton
+          switchOn ? '$949.99':'$800.00'}
         </button>
       </ShadowBevelBox>
       <Box paddingBlockEnd={'200'}></Box>
@@ -89,3 +94,5 @@ const Preview = ({ formState }) => {
 };
 
 export default Preview;
+
+// TODO: insuranceDisplayButton setting change after submission
