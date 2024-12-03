@@ -28,7 +28,6 @@ export class Migration {
     {
       id:'update-package-protection-insurance-button-false',
       method: this.updatePackageProtection.bind(this),
-
     }
   ];
 
