@@ -13,19 +13,23 @@ emitter.on(
       storeId,
     });
 
-    await prisma.store.update({
-      where: {
-        id: storeId,
-      },
-      data: {
-        uninstalledAt: new Date(),
-        PackageProtection: {
-          update: {
-            enabled: false,
+    try {
+      await prisma.store.update({
+        where: {
+          id: storeId,
+        },
+        data: {
+          uninstalledAt: new Date(),
+          PackageProtection: {
+            update: {
+              enabled: false,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (e) {
+      console.error('Error while updating store', e);
+    }
 
     try {
       await prisma.session.deleteMany({

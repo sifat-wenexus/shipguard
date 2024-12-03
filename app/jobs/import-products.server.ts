@@ -73,25 +73,31 @@ export class ImportProducts extends Job<Payload> {
 
     await this.updateProgress(30);
 
-    await prisma.$transaction(async (trx) => {
-      for (const collection of collections) {
-        await trx.collection.upsert({
-          where: {
-            id: collection.id,
-          },
-          create: {
-            id: collection.id,
-            title: collection.title,
-            featuredImage: collection.image?.url,
-            storeId: this.job.storeId!,
-          },
-          update: {
-            title: collection.title,
-            featuredImage: collection.image?.url,
-          },
-        });
+    await prisma.$transaction(
+      async (trx) => {
+        for (const collection of collections) {
+          await trx.collection.upsert({
+            where: {
+              id: collection.id,
+            },
+            create: {
+              id: collection.id,
+              title: collection.title,
+              featuredImage: collection.image?.url,
+              storeId: this.job.storeId!,
+            },
+            update: {
+              title: collection.title,
+              featuredImage: collection.image?.url,
+            },
+          });
+        }
+      },
+      {
+        timeout: 600000,
+        maxWait: 600000,
       }
-    });
+    );
 
     await this.updateProgress(40);
 
@@ -126,6 +132,8 @@ export class ImportProducts extends Job<Payload> {
             vendor
             tags
             productType
+            updatedAt
+            createdAt
             featuredImage {
               url
             }
@@ -195,6 +203,7 @@ export class ImportProducts extends Job<Payload> {
               vendor: product.vendor,
               tags: product.tags,
               featuredImage: product.featuredImage?.url,
+              shopifyUpdatedAt: product.updatedAt || product.createdAt || new Date(),
               Collections: product.collections
                 ? {
                   connect: product.collections.map((c) => ({ id: c.id })),
@@ -225,6 +234,7 @@ export class ImportProducts extends Job<Payload> {
               vendor: product.vendor,
               tags: product.tags,
               featuredImage: product.featuredImage?.url,
+              shopifyUpdatedAt: product.updatedAt || product.createdAt || new Date(),
               Collections: product.collections
                 ? {
                   set: product.collections.map((c) => ({ id: c.id })),
@@ -255,8 +265,8 @@ export class ImportProducts extends Job<Payload> {
         }
       },
       {
-        timeout: 30000,
-        maxWait: 30000,
+        timeout: 600000,
+        maxWait: 600000,
       }
     );
 

@@ -1,5 +1,6 @@
 import { jobRunner } from '~/modules/job/job-runner.server';
 import { getShopifyGQLClient } from './shopify.server';
+import { emitter } from '~/modules/emitter.server';
 import type { Session } from '~/shopify-api/lib';
 import { prisma } from './prisma.server';
 
@@ -57,9 +58,9 @@ export async function upsertStore(session: Session, afterAuth = false) {
       moneyFormat: body.data.shop.currencyFormats.moneyFormat,
       moneyInEmailsFormat: body.data.shop.currencyFormats.moneyInEmailsFormat,
       moneyWithCurrencyFormat:
-        body.data.shop.currencyFormats.moneyWithCurrencyFormat,
+      body.data.shop.currencyFormats.moneyWithCurrencyFormat,
       moneyWithCurrencyInEmailsFormat:
-        body.data.shop.currencyFormats.moneyWithCurrencyInEmailsFormat,
+      body.data.shop.currencyFormats.moneyWithCurrencyInEmailsFormat,
     };
 
     if (afterAuth) {
@@ -122,15 +123,7 @@ export async function upsertStore(session: Session, afterAuth = false) {
     });
 
     if (!hasStore) {
-      await prisma.store.update({
-        where: {
-          domain: session.shop,
-        },
-        data: {
-          appStatus: 'READY',
-        },
-      });
-
+      emitter.emit('store.init', store);
       console.log(`Initialized store ${session.shop}`);
     }
 

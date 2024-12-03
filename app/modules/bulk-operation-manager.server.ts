@@ -29,6 +29,12 @@ export class BulkOperationManager {
       await this.run();
       await this.pollInfo();
     }, 10000);
+
+    emitter.on('store.delete', async (storeId: string) => {
+      if (this.operations[storeId]) {
+        delete this.operations[storeId];
+      }
+    });
   }
 
   private operations: Record<string, Operations> = {};
@@ -63,7 +69,7 @@ export class BulkOperationManager {
       })
     );
 
-    setTimeout(() => this.pollInfo(), 3000);
+    setTimeout(() => this.pollInfo(), 1000);
   }
 
   async updateOperationInfo(
@@ -83,7 +89,20 @@ export class BulkOperationManager {
     }
 
     if (!session) {
-      session = (await findOfflineSessionByStoreId(operation.storeId) ?? undefined);
+      session = await findOfflineSessionByStoreId(operation.storeId);
+    }
+
+    if (!session) {
+      return prisma.bulkOperation.update({
+        where: {
+          id: operation.id,
+        },
+        data: {
+          processed: true,
+          status: 'EXPIRED',
+          error: 'Session not found',
+        },
+      });
     }
 
     const client = getShopifyGQLClient(session);
@@ -199,11 +218,6 @@ export class BulkOperationManager {
         }
 
         const session = await findOfflineSessionByStoreId(storeId);
-
-        if (!session) {
-          return;
-        }
-
         const client = getShopifyGQLClient(session);
 
         let response: RequestReturn<Record<string, any>>;
@@ -289,6 +303,7 @@ export class BulkOperationManager {
             });
           }
         } catch (e: any) {
+          console.error(e);
           const _operation = await prisma.bulkOperation.update({
             where: {
               id: operation.id,
@@ -306,8 +321,8 @@ export class BulkOperationManager {
         }
 
         const { userErrors, bulkOperation } =
-          response.body.data.bulkOperationRunQuery ||
-          response.body.data.bulkOperationRunMutation;
+        response.body.data.bulkOperationRunQuery ||
+        response.body.data.bulkOperationRunMutation;
 
         if (userErrors?.length || bulkOperation?.errorCode) {
           const _operation = await prisma.bulkOperation.update({
@@ -388,7 +403,7 @@ export class BulkOperationManager {
     }
 
     if (!session) {
-      session = (await findOfflineSessionByStoreId(operation.storeId) ?? undefined);
+      session = await findOfflineSessionByStoreId(operation.storeId);
     }
 
     const client = getShopifyGQLClient(session);
@@ -542,6 +557,7 @@ export class BulkOperationManager {
         query,
         status: 'SCHEDULED',
         nodeId: process.env.NODE_ID || 'local',
+        variables: variables || {},
       },
     });
 
@@ -554,7 +570,7 @@ export class BulkOperationManager {
 
     operations.scheduled.add(operation);
 
-    if (type === 'MUTATION' && variables) {
+    if (type === 'MUTATION' && variables && variables?.length > 0) {
       const _operation = await prisma.bulkOperation.update({
         where: {
           id: operation.id,

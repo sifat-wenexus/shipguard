@@ -3,6 +3,7 @@ import { queryProxy } from '~/modules/query/query-proxy';
 import { jobRunner } from './job/job-runner.server';
 import type { Session } from '~/shopify-api/lib';
 import { getConfig } from './get-config.server';
+import { emitter } from './emitter.server';
 import { prisma } from './prisma.server';
 import _ from 'lodash';
 
@@ -28,7 +29,6 @@ export class Migration {
     {
       id:'update-package-protection-insurance-button-false',
       method: this.updatePackageProtection.bind(this),
-
     }
   ];
 
@@ -65,7 +65,7 @@ export class Migration {
       return console.log(`No migrations to run for ${this.session.shop}`);
     }
 
-    await queryProxy.store.update({
+    const store = await queryProxy.store.update({
       where: {
         domain: this.session.shop,
       },
@@ -74,13 +74,15 @@ export class Migration {
       },
     });
 
+    emitter.emit('store.updating', store);
+
     // If lastMigrationId is null, start from the beginning, otherwise start after the last migration that was run
     const lastIndex = lastMigrationId
       ? this.order.findIndex((o) => o.id === lastMigrationId)
       : -1;
 
     try {
-      await prisma.$transaction(
+      await queryProxy.$transaction(
         async (prisma) => {
           // Run all migrations after the last migration
           // If a migration fails, the transaction will be rolled back
@@ -92,7 +94,7 @@ export class Migration {
 
             await migration.method();
 
-            await queryProxy.store.update({
+            await prisma.store.update({
               where: {
                 domain: this.session.shop,
               },
@@ -117,6 +119,8 @@ export class Migration {
           appStatus: 'READY',
         },
       });
+
+      emitter.emit('store.ready', store);
 
       console.log(`Finished migrations for ${this.session.shop}`);
     }

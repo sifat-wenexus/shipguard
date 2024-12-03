@@ -55,8 +55,18 @@ export class WebhookManager {
       console.log(`Found ${webhooks.length} webhooks to process`);
 
       const webhooksByStores = _.groupBy(webhooks, 'storeId');
+      const storesById = _.keyBy(stores, 'id');
 
       for (const storeId in webhooksByStores) {
+        const store = storesById[storeId];
+
+        if (store.appStatus !== 'READY') {
+          this.stores[storeId].pendingWebhooks = new Set(
+            webhooksByStores[storeId]
+          );
+          continue;
+        }
+
         const webhooksByTopics = _.groupBy(webhooksByStores[storeId], 'topic');
 
         for (const topic in webhooksByTopics) {
@@ -106,18 +116,41 @@ export class WebhookManager {
       }
     });
 
-    emitter.on('store.create', (store: Store) => {
-      this.stores[store.id] = {
-        lazyReferences: new Set(),
-        pendingWebhooks: new Set(),
-        readyToRun: true,
-      };
+    emitter.on('store.init', (store: Store) => {
+      if (!this.stores.hasOwnProperty(store.id)) {
+        this.stores[store.id] = {
+          lazyReferences: new Set(),
+          pendingWebhooks: new Set(),
+          readyToRun: false,
+        };
+      }
     });
 
     emitter.on('store.delete', (store: Store) => {
       if (this.stores[store.id]) {
         delete this.stores[store.id];
       }
+    });
+
+    emitter.on('store.ready', (store: Store) => {
+      this.stores[store.id].readyToRun = true;
+      console.log(`Store ready to process webhooks: ${store.id}`);
+
+      while (this.stores[store.id].pendingWebhooks.size > 0) {
+        const pendingWebhooks = Array.from(
+          this.stores[store.id].pendingWebhooks
+        );
+
+        this.stores[store.id].pendingWebhooks.clear();
+
+        for (const webhook of pendingWebhooks) {
+          this.handleWebhook(webhook, false, true);
+        }
+      }
+    });
+
+    emitter.on('store.updating', (store: Store) => {
+      this.stores[store.id].readyToRun = false;
     });
   }
 
@@ -172,10 +205,13 @@ export class WebhookManager {
       clearTimeout(storeInfo.lazyTimeout);
     }
 
-    storeInfo.lazyTimeout = setTimeout(() => {
-      storeInfo.lazyReferences.clear();
-      this.stopLazyWebhookProcessing(storeId, reference);
-    }, 1000 * 60 * 15);
+    storeInfo.lazyTimeout = setTimeout(
+      () => {
+        storeInfo.lazyReferences.clear();
+        this.stopLazyWebhookProcessing(storeId, reference);
+      },
+      1000 * 60 * 15
+    );
   }
 
   async handleRequest(request: Request) {
@@ -257,6 +293,11 @@ export class WebhookManager {
   ) {
     const storeInfo = this.stores[webhook.storeId];
 
+    if (!storeInfo) {
+      console.log(`Store not found: ${webhook.topic}, ${webhook.id}`);
+      return;
+    }
+
     if (checkReady && !storeInfo.readyToRun) {
       console.log(`Store not ready to run: ${webhook.topic}, ${webhook.id}`);
       return storeInfo.pendingWebhooks.add(webhook);
@@ -274,7 +315,7 @@ export class WebhookManager {
         try {
           session = await findOfflineSessionByStoreId(webhook.storeId);
         } catch (e) {
-          console.error(e);
+          return console.error(e);
         }
       }
 
@@ -338,8 +379,8 @@ export class WebhookManager {
 
     const secondsSinceLastWebhook = storeInfo.lastLazyWebhook
       ? Math.floor(
-          (Date.now() - storeInfo.lastLazyWebhook.createdAt.getTime()) / 1000
-        )
+        (Date.now() - storeInfo.lastLazyWebhook.createdAt.getTime()) / 1000
+      )
       : 0;
 
     if (storeInfo.pendingWebhooks.size < 1500 && secondsSinceLastWebhook < 30) {
