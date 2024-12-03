@@ -26,8 +26,8 @@ export class Migration {
       method: this.importOrders.bind(this),
     },
     {
-      id:'update-package-protection-insurance-button-false',
-      method: this.updatePackageProtection.bind(this),
+      id:'update-package-protection-insurance-button',
+      method: this.updatePackageProtections.bind(this),
     }
   ];
 
@@ -233,7 +233,7 @@ export class Migration {
     });
   }
 
-  async updatePackageProtection(){
-    await queryProxy.packageProtection.updateMany({where:{insuranceDisplayButton:true},data:{insuranceDisplayButton:false}});
+  async updatePackageProtections(){
+    await queryProxy.packageProtection.updateMany({where:{insuranceDisplayButton:true},data:{insuranceDisplayButton:false},},{session:this.session});
   }
 }
