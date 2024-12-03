@@ -1153,6 +1153,27 @@ var __publicField = (obj, key, value) => {
       await client.refreshPriceUI();
       await client.refreshWidget();
       client.enabledCheckoutButton();
+      items = await getItems();
+      const excludeVariantIds = settings.packageProtectionProductAndVariants.map(
+        (e) => e.excludedPackageProtectionVariants.map(
+          (j) => Number(j.id.split("/").pop())
+        )
+      ).flat();
+      const haveExcludedVariants = items.filter(
+        (item) => excludeVariantIds.every((id) => id === item.variant_id)
+      );
+      console.log("haveExcludedVariants", haveExcludedVariants);
+      setTimeout(() => {
+        if (haveExcludedVariants.length === items.length && window.Shopify.theme.theme_store_id === 887) {
+          const widget = document.getElementsByClassName(
+            "wenexus-package-protection"
+          );
+          Array.from(widget).forEach((item) => {
+            const element = item;
+            element.style.display = "none";
+          });
+        }
+      }, 100);
     }, true);
     for (const selector of selectors) {
       if (selector.shouldUse && !selector.shouldUse()) {
@@ -1179,7 +1200,7 @@ var __publicField = (obj, key, value) => {
             // enabled()
             variants.length > 0 ? enabled() : false
           );
-          if (!checkbox.checked && variants.length == 0)
+          if (variants.length == 0 && window.Shopify.theme.theme_store_id !== 887)
             ;
           else {
             switch (selector.insertPosition) {

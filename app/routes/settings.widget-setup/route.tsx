@@ -41,6 +41,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const state = JSON.parse(body.get('state') as string);
 
     const {
+      insuranceDisplayButton,
       excludeProductVariant,
       switchColor,
       price,
@@ -56,6 +57,7 @@ export async function action({ request }: ActionFunctionArgs) {
       percentage: Number(percentage),
       price: Number(price),
       enabled: enabled,
+      insuranceDisplayButton:false,
       ...payload,
     };
     try {
@@ -90,6 +92,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const state = JSON.parse(body.get('state') as string);
 
     const {
+      insuranceDisplayButton,
       excludeProductVariant,
       switchColor,
       price,
@@ -103,7 +106,7 @@ export async function action({ request }: ActionFunctionArgs) {
       minimumFee: Number(minimumFee),
       maximumFee: Number(maximumFee),
       percentage: Number(percentage),
-
+      insuranceDisplayButton:false,
       price: Number(price),
       ...payload,
     };

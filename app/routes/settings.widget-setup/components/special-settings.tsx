@@ -54,27 +54,27 @@ const SpecialSettings = ({ formState }) => {
     >
       <FormLayout>
         <FormLayout.Group>
-          <Box paddingBlockStart="100" paddingBlockEnd="100">
-            <b>Insurance default display status</b>
-            <Radio
-              onChange={() =>
-                formState.addChange({ insuranceDisplayButton: true })
-              }
-              checked={formState.state.insuranceDisplayButton}
-              label="Default enabled"
-              id="Selected"
-              type="radio"
-            />
-            <Radio
-              onChange={() =>
-                formState.addChange({ insuranceDisplayButton: false })
-              }
-              checked={!formState.state.insuranceDisplayButton}
-              label="Default off"
-              id="Unselected"
-              type="radio"
-            />
-          </Box>
+          {/*<Box paddingBlockStart="100" paddingBlockEnd="100">*/}
+          {/*  <b>Insurance default display status</b>*/}
+          {/*  <Radio*/}
+          {/*    onChange={() =>*/}
+          {/*      formState.addChange({ insuranceDisplayButton: true })*/}
+          {/*    }*/}
+          {/*    checked={formState.state.insuranceDisplayButton}*/}
+          {/*    label="Default enabled"*/}
+          {/*    id="Selected"*/}
+          {/*    type="radio"*/}
+          {/*  />*/}
+          {/*  <Radio*/}
+          {/*    onChange={() =>*/}
+          {/*      formState.addChange({ insuranceDisplayButton: false })*/}
+          {/*    }*/}
+          {/*    checked={!formState.state.insuranceDisplayButton}*/}
+          {/*    label="Default off"*/}
+          {/*    id="Unselected"*/}
+          {/*    type="radio"*/}
+          {/*  />*/}
+          {/*</Box>*/}
           <Box paddingBlockStart="100" paddingBlockEnd="100">
             <b>Digital insurance product fulfillment status</b>
             {fulfillmentArray.map((item, index) => (
