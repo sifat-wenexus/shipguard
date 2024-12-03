@@ -27,9 +27,9 @@ export class Migration {
       method: this.importOrders.bind(this),
     },
     {
-      id:'update-package-protection-insurance-button',
+      id: 'update-package-protection-insurance-button',
       method: this.updatePackageProtections.bind(this),
-    }
+    },
   ];
 
   static attempt(session: Session) {
@@ -44,6 +44,7 @@ export class Migration {
     const { lastMigrationId, appStatus } = await prisma.store.findFirstOrThrow({
       where: {
         domain: this.session.shop,
+        uninstalledAt: null,
       },
       select: {
         lastMigrationId: true,
@@ -92,7 +93,12 @@ export class Migration {
               `Running migration ${migration.id} for ${this.session.shop}`
             );
 
-            await migration.method();
+            try {
+              await migration.method();
+            } catch (e) {
+              console.error(e);
+              return;
+            }
 
             await prisma.store.update({
               where: {
@@ -154,7 +160,7 @@ export class Migration {
         }
         `,
       },
-      tries: 20,
+      tries: 2,
     });
 
     if (
@@ -192,7 +198,7 @@ export class Migration {
           appUrl: config.appUrl,
         },
       },
-      tries: 20,
+      tries: 2,
     });
 
     if (result.body.userErrors) {
@@ -215,7 +221,7 @@ export class Migration {
       },
       select: {
         installedAt: true,
-      }
+      },
     });
 
     await jobRunner.run({
@@ -238,7 +244,13 @@ export class Migration {
     });
   }
 
-  async updatePackageProtections(){
-    await queryProxy.packageProtection.updateMany({where:{insuranceDisplayButton:true},data:{insuranceDisplayButton:false},},{session:this.session});
+  async updatePackageProtections() {
+    await queryProxy.packageProtection.updateMany(
+      {
+        where: { insuranceDisplayButton: true },
+        data: { insuranceDisplayButton: false },
+      },
+      { session: this.session }
+    );
   }
 }
