@@ -1020,7 +1020,7 @@ var __publicField = (obj, key, value) => {
       }
       return result2;
     };
-    const enabledByDefault = (settings == null ? void 0 : settings.insuranceDisplayButton) ?? true;
+    const enabledByDefault = (settings == null ? void 0 : settings.insuranceDisplayButton) ?? false;
     const enabled = () => {
       const value = localStorage.getItem("package-protection-enabled");
       if (value === "false") {
@@ -1159,12 +1159,12 @@ var __publicField = (obj, key, value) => {
           (j) => Number(j.id.split("/").pop())
         )
       ).flat();
+      const excludeVariants2 = checkExcludeVariants();
       const haveExcludedVariants = items.filter(
         (item) => excludeVariantIds.every((id) => id === item.variant_id)
       );
-      console.log("haveExcludedVariants", haveExcludedVariants);
       setTimeout(() => {
-        if (haveExcludedVariants.length === items.length && window.Shopify.theme.theme_store_id === 887) {
+        if ((excludeVariants2.length === 0 || haveExcludedVariants.length === items.length) && window.Shopify.theme.theme_store_id === 887) {
           const widget = document.getElementsByClassName(
             "wenexus-package-protection"
           );
