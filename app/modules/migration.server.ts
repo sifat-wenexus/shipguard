@@ -25,6 +25,11 @@ export class Migration {
       id: 'import-orders',
       method: this.importOrders.bind(this),
     },
+    {
+      id:'update-package-protection-insurance-button-false',
+      method: this.updatePackageProtection.bind(this),
+
+    }
   ];
 
   static attempt(session: Session) {
@@ -227,5 +232,9 @@ export class Migration {
       storeId: this.session.storeId,
       maxRetries: 5,
     });
+  }
+
+  async updatePackageProtection(){
+    await queryProxy.packageProtection.updateMany({where:{insuranceDisplayButton:true},data:{insuranceDisplayButton:false}});
   }
 }
