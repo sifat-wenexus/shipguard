@@ -182,7 +182,7 @@ var __publicField = (obj, key, value) => {
     constructor(api) {
       __publicField(this, "thumbnail", "https://cdn.shopify.com/s/files/1/1652/8827/files/g4990.png?v=1708754054");
       __publicField(this, "infoPageLink", "/pages/package-protection");
-      __publicField(this, "container", null);
+      __publicField(this, "containers", /* @__PURE__ */ new Map());
       __publicField(this, "title", "package title");
       __publicField(this, "enabledDescription", "enabled description");
       __publicField(this, "disabledDescription", "disabled description");
@@ -221,7 +221,7 @@ var __publicField = (obj, key, value) => {
     async getChecked() {
       return this.checked;
     }
-    async getCheckboxContainer(checked) {
+    async getCheckboxContainer(key, checked) {
       const container = document.createElement("div");
       const price = await this.getPrice();
       const description = await this.getDescription();
@@ -272,7 +272,7 @@ var __publicField = (obj, key, value) => {
         toggleSwitch.style.transform = checkbox.checked ? "translateX(20px)" : "translateX(0)";
       };
       updateToggleStyles();
-      this.container = container;
+      this.containers.set(key, container);
       return {
         container,
         checkbox
@@ -365,9 +365,9 @@ var __publicField = (obj, key, value) => {
       ];
     }
     async refreshPriceUI() {
-      if (this.container) {
-        this.container.querySelector(".protection-price").textContent = await this.getPrice();
-      }
+      this.containers.forEach(async (container) => {
+        container.querySelector(".protection-price").textContent = await this.getPrice();
+      });
     }
     async refreshWidget() {
     }
@@ -641,7 +641,10 @@ var __publicField = (obj, key, value) => {
         },
         {
           selector: ".cart-notification__links",
-          insertPosition: position ?? "before"
+          insertPosition: "before",
+          boundaryParents: new Set(
+            Array.from(document.querySelectorAll("cart-notification"))
+          )
         }
       ];
     }
@@ -660,15 +663,6 @@ var __publicField = (obj, key, value) => {
     }
     // theme support
     async refreshWidget() {
-      const c = this.container;
-      if (c) {
-        const protectionPrice = document.getElementsByClassName("protection-price");
-        let latestPrice = "";
-        Array.from(c == null ? void 0 : c.getElementsByClassName("protection-price")).forEach(
-          (widget) => latestPrice = widget.innerHTML
-        );
-        Array.from(protectionPrice).forEach((el) => el.innerHTML = latestPrice);
-      }
       let subTotal = document.getElementsByClassName("totals__total-value");
       const items = await window.weNexusCartApi.get();
       setTimeout(() => {
@@ -1010,12 +1004,13 @@ var __publicField = (obj, key, value) => {
         (variant) => Number(variant.id.replace("gid://shopify/ProductVariant/", ""))
       );
     }).flat();
-    const checkExcludeVariants = () => {
+    const checkExcludeVariants = async () => {
+      const items2 = await getItems();
       const result2 = [];
-      for (let i = 0; i < items.length; i++) {
-        const variantId = items[i].variant_id;
+      for (let i = 0; i < items2.length; i++) {
+        const variantId = items2[i].variant_id;
         if (!excludeVariants.includes(variantId)) {
-          items[i].sku !== "wenexus-shipping-protection" && result2.push(items[i]);
+          items2[i].sku !== "wenexus-shipping-protection" && result2.push(items2[i]);
         }
       }
       return result2;
@@ -1123,7 +1118,7 @@ var __publicField = (obj, key, value) => {
     cartLiveQuery.addListener(async (element) => {
       client.cartBubble();
       client.refreshWidget();
-      const v = checkExcludeVariants();
+      const v = await checkExcludeVariants();
       let submitting = false;
       Array.from(element).forEach((form) => {
         form.addEventListener("keydown", (e) => {
@@ -1153,27 +1148,6 @@ var __publicField = (obj, key, value) => {
       await client.refreshPriceUI();
       await client.refreshWidget();
       client.enabledCheckoutButton();
-      items = await getItems();
-      const excludeVariantIds = settings.packageProtectionProductAndVariants.map(
-        (e) => e.excludedPackageProtectionVariants.map(
-          (j) => Number(j.id.split("/").pop())
-        )
-      ).flat();
-      const excludeVariants2 = checkExcludeVariants();
-      const haveExcludedVariants = items.filter(
-        (item) => excludeVariantIds.every((id) => id === item.variant_id)
-      );
-      setTimeout(() => {
-        if ((excludeVariants2.length === 0 || haveExcludedVariants.length === items.length) && window.Shopify.theme.theme_store_id === 887) {
-          const widget = document.getElementsByClassName(
-            "wenexus-package-protection"
-          );
-          Array.from(widget).forEach((item) => {
-            const element = item;
-            element.style.display = "none";
-          });
-        }
-      }, 100);
     }, true);
     for (const selector of selectors) {
       if (selector.shouldUse && !selector.shouldUse()) {
@@ -1194,15 +1168,17 @@ var __publicField = (obj, key, value) => {
           client.cartUpdate();
         }
         removeHistory();
-        const variants = checkExcludeVariants();
+        const variants = await checkExcludeVariants();
         for (const element of elements) {
+          let render = false;
           const { container, checkbox } = await client.getCheckboxContainer(
-            // enabled()
+            selector,
             variants.length > 0 ? enabled() : false
           );
-          if (variants.length == 0 && window.Shopify.theme.theme_store_id !== 887)
+          if (variants.length == 0 && render)
             ;
           else {
+            render = true;
             switch (selector.insertPosition) {
               case "before":
                 element.insertAdjacentElement("beforebegin", container);
