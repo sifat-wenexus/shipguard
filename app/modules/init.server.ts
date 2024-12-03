@@ -47,6 +47,8 @@ async function init() {
       orderBy: [{ id: 'asc' }],
     });
 
+
+
     query.addListener(async (data) => {
       for (const { domain } of data) {
         let session: Session;
@@ -63,82 +65,82 @@ async function init() {
           console.error(e);
         }
 
-        try {
-          const productImage =
-            'https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse_Shipping_Protection.png?v=1728361462';
-          const gqlClient = getShopifyGQLClient(session);
-
-          const existingProduct = await gqlClient.query<any>({
-            data: {
-              query: `#graphql
-              query Product {
-                products(first: 100 ,query:"tag:wenexus-insurance OR sku:wenexus-shipping-protection"){
-                  nodes{
-                    id
-                    title
-                    media(first: 200){
-                      nodes{
-                        preview{
-                          image{
-                            url
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-              `,
-            },
-          });
-
-          for (const node of existingProduct.body.data.products.nodes) {
-            const mediaNodes = node.media?.nodes || [];
-            const createMedia = () =>
-              gqlClient.query<any>({
-                data: {
-                  query: `#graphql
-                mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
-                  productCreateMedia(media: $media, productId: $productId) {
-
-                    mediaUserErrors {
-                      field
-                      message
-                    }
-
-                  }
-                }`,
-                  variables: {
-                    media: [
-                      {
-                        alt: 'package-protection',
-                        mediaContentType: 'IMAGE',
-                        originalSource: productImage,
-                      },
-                    ],
-                    productId: node.id,
-                  },
-                },
-                tries: 20,
-              });
-
-            if (node.media.nodes.length === 0) {
-              await createMedia();
-            }
-
-            for (const media of mediaNodes) {
-              if (media.preview?.image?.url) {
-                console.log('product id----> ', node.id);
-                console.log('found:', media.preview.image.url);
-              } else {
-                console.log('not-found');
-                await createMedia();
-              }
-            }
-          }
-        } catch (e) {
-          console.error(e);
-        }
+        // try {
+        //   const productImage =
+        //     'https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse_Shipping_Protection.png?v=1728361462';
+        //   const gqlClient = getShopifyGQLClient(session);
+        //
+        //   const existingProduct = await gqlClient.query<any>({
+        //     data: {
+        //       query: `#graphql
+        //       query Product {
+        //         products(first: 100 ,query:"tag:wenexus-insurance OR sku:wenexus-shipping-protection"){
+        //           nodes{
+        //             id
+        //             title
+        //             media(first: 200){
+        //               nodes{
+        //                 preview{
+        //                   image{
+        //                     url
+        //                   }
+        //                 }
+        //               }
+        //             }
+        //           }
+        //         }
+        //       }
+        //       `,
+        //     },
+        //   });
+        //
+        //   for (const node of existingProduct.body.data.products.nodes) {
+        //     const mediaNodes = node.media?.nodes || [];
+        //     const createMedia = () =>
+        //       gqlClient.query<any>({
+        //         data: {
+        //           query: `#graphql
+        //         mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
+        //           productCreateMedia(media: $media, productId: $productId) {
+        //
+        //             mediaUserErrors {
+        //               field
+        //               message
+        //             }
+        //
+        //           }
+        //         }`,
+        //           variables: {
+        //             media: [
+        //               {
+        //                 alt: 'package-protection',
+        //                 mediaContentType: 'IMAGE',
+        //                 originalSource: productImage,
+        //               },
+        //             ],
+        //             productId: node.id,
+        //           },
+        //         },
+        //         tries: 20,
+        //       });
+        //
+        //     if (node.media.nodes.length === 0) {
+        //       await createMedia();
+        //     }
+        //
+        //     for (const media of mediaNodes) {
+        //       if (media.preview?.image?.url) {
+        //         console.log('product id----> ', node.id);
+        //         console.log('found:', media.preview.image.url);
+        //       } else {
+        //         console.log('not-found');
+        //         await createMedia();
+        //       }
+        //     }
+        //   }
+        // } catch (e) {
+        //   console.error(e);
+        // }
       }
 
       if (query.hasNext) {
