@@ -1148,17 +1148,26 @@ var __publicField = (obj, key, value) => {
       await client.refreshPriceUI();
       await client.refreshWidget();
       client.enabledCheckoutButton();
-      await checkExcludeVariants();
       const items2 = await getItems();
-      const itemIds = settings.packageProtectionProductAndVariants.map(
-        (p) => p.excludedPackageProtectionVariants.map(
-          (v) => Number(v.id.split("/").pop())
-        )
-      );
-      if (items2.length === itemIds.length) {
-        console.log("hiding");
-      }
-      console.log("-", itemIds, items2);
+      setTimeout(() => {
+        console.log("lll");
+        if (items2.length > 0 && settings.packageProtectionProductAndVariants.length > 0) {
+          const itemIds = settings.packageProtectionProductAndVariants.map(
+            (p) => p.excludedPackageProtectionVariants.map(
+              (v) => Number(v.id.split("/").pop())
+            )
+          );
+          const allMatch = items2.every(
+            (item) => itemIds.some((id) => id.includes(item.id))
+          );
+          if (allMatch) {
+            console.log("hiding-1");
+            Array.from(
+              document.querySelectorAll(".wenexus-package-protection")
+            ).forEach((el) => el.style.display = "none");
+          }
+        }
+      }, 100);
     }, true);
     for (const selector of selectors) {
       if (selector.shouldUse && !selector.shouldUse()) {

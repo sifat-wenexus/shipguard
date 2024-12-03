@@ -27,9 +27,9 @@ export class Migration {
       method: this.importOrders.bind(this),
     },
     {
-      id: 'update-package-protection-insurance-button',
-      method: this.updatePackageProtections.bind(this),
-    },
+      id:'update-package-protection-insurance',
+      method: this.updatePackageProtection.bind(this),
+    }
   ];
 
   static attempt(session: Session) {
@@ -44,7 +44,6 @@ export class Migration {
     const { lastMigrationId, appStatus } = await prisma.store.findFirstOrThrow({
       where: {
         domain: this.session.shop,
-        uninstalledAt: null,
       },
       select: {
         lastMigrationId: true,
@@ -244,13 +243,7 @@ export class Migration {
     });
   }
 
-  async updatePackageProtections() {
-    await queryProxy.packageProtection.updateMany(
-      {
-        where: { insuranceDisplayButton: true },
-        data: { insuranceDisplayButton: false },
-      },
-      { session: this.session }
-    );
+  async updatePackageProtection(){
+    await queryProxy.packageProtection.updateMany({where:{insuranceDisplayButton:true},data:{insuranceDisplayButton:false},},{session:this.session});
   }
 }
