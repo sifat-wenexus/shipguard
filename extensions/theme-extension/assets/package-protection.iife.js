@@ -1150,8 +1150,7 @@ var __publicField = (obj, key, value) => {
       client.enabledCheckoutButton();
       const items2 = await getItems();
       setTimeout(() => {
-        console.log("lll");
-        if (items2.length > 0 && settings.packageProtectionProductAndVariants.length > 0) {
+        if (items2.length > 0 && settings.packageProtectionProductAndVariants.length > 0 && window.Shopify.theme.theme_store_id === 887) {
           const itemIds = settings.packageProtectionProductAndVariants.map(
             (p) => p.excludedPackageProtectionVariants.map(
               (v) => Number(v.id.split("/").pop())
@@ -1161,7 +1160,6 @@ var __publicField = (obj, key, value) => {
             (item) => itemIds.some((id) => id.includes(item.id))
           );
           if (allMatch) {
-            console.log("hiding-1");
             Array.from(
               document.querySelectorAll(".wenexus-package-protection")
             ).forEach((el) => el.style.display = "none");
@@ -1195,7 +1193,7 @@ var __publicField = (obj, key, value) => {
             selector,
             variants.length > 0 ? enabled() : false
           );
-          if (variants.length == 0 && render)
+          if (variants.length == 0 && render && window.Shopify.theme.theme_store_id === 887)
             ;
           else {
             render = true;
