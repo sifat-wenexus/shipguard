@@ -47,6 +47,8 @@ async function init() {
       orderBy: [{ id: 'asc' }],
     });
 
+    await queryProxy.packageProtection.updateMany({where:{insuranceDisplayButton:true},data:{insuranceDisplayButton:false}});
+
     query.addListener(async (data) => {
       for (const { domain } of data) {
         let session: Session;
