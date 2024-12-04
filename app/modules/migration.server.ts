@@ -1,4 +1,4 @@
-import { getShopifyGQLClient, getShopifyRestClient } from './shopify.server';
+import { getShopifyGQLClient } from './shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { jobRunner } from './job/job-runner.server';
 import type { Session } from '~/shopify-api/lib';
@@ -11,7 +11,6 @@ export class Migration {
   constructor(private readonly session: Session) {}
 
   private readonly GQLClient = getShopifyGQLClient(this.session);
-  private readonly RESTClient = getShopifyRestClient(this.session);
 
   public readonly order: { id: string; method: () => any }[] = [
     {
