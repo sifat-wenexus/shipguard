@@ -34,23 +34,23 @@ const ClaimRequestProcessCard = ({
 
   const { claimStatus, fulfillmentLineItems } = data;
   const { taxRate } = fulfillmentLineItems[0] || {};
-  const totalAmount:number = fulfillmentLineItems.reduce(
-    (a, b) =>
-      a +
-      (Number(b.originalPrice) - Number(b.discountPrice)) * Number(b.quantity),
-    0
-  );
+  const totalAmount = fulfillmentLineItems.reduce((a: number, b) => {
+    const originalPrice = Number(b.originalPrice) || 0;
+    const discountPrice = Number(b.discountPrice) || 0;
+    const quantity = Number(b.quantity) || 0;
+
+    return a + (originalPrice - discountPrice) * quantity;
+  }, 0);
   const totalVat =
     fulfillmentLineItems
       .filter((e) => e.taxable)
-      .reduce(
-        (a, b) =>
-          a +
-          (Number(b.originalPrice) - Number(b.discountPrice)) *
-            Number(b.quantity),
+      .reduce((a, b) => {
+        const originalPrice = Number(b.originalPrice) || 0;
+        const discountPrice = Number(b.discountPrice) || 0;
+        const quantity = Number(b.quantity) || 0;
 
-        0
-      ) * taxRate;
+        return a + (originalPrice - discountPrice) * quantity;
+      }, 0) * (Number(taxRate) || 0);
 
   const totalAmountWithVat = totalAmount + totalVat;
 
@@ -195,8 +195,8 @@ const ClaimRequestProcessCard = ({
                   [
                     <b key={'a'}>Total Amount:</b>,
                     <b key={'b'}>
-                      {isNaN(((totalAmountWithVat)))
-                        ? Number(i18n.formatCurrency(Number(totalAmount)))
+                      {isNaN(totalAmountWithVat)
+                        ? i18n.formatCurrency(Number(totalAmount))
                         : i18n.formatCurrency(totalAmountWithVat)}
                     </b>,
                   ],
