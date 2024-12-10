@@ -22,7 +22,6 @@ const ClaimRequestProcessCard = ({
 }) => {
   const [i18n] = useI18n();
 
-
   function formatDateTime(input) {
     const formatTime = new Intl.DateTimeFormat('en', {
       day: 'numeric',
@@ -35,7 +34,7 @@ const ClaimRequestProcessCard = ({
 
   const { claimStatus, fulfillmentLineItems } = data;
   const { taxRate } = fulfillmentLineItems[0] || {};
-  const totalAmount = fulfillmentLineItems.reduce(
+  const totalAmount:number = fulfillmentLineItems.reduce(
     (a, b) =>
       a +
       (Number(b.originalPrice) - Number(b.discountPrice)) * Number(b.quantity),
@@ -61,7 +60,7 @@ const ClaimRequestProcessCard = ({
   );
   return (
     <div key={data.id}>
-      <Card roundedAbove="sm" >
+      <Card roundedAbove="sm">
         <BlockStack gap="200">
           <InlineGrid columns="1fr auto">
             <Text as="h2" variant="headingLg">
@@ -195,7 +194,11 @@ const ClaimRequestProcessCard = ({
                 rows={[
                   [
                     <b key={'a'}>Total Amount:</b>,
-                    <b key={'b'}>{i18n.formatCurrency(totalAmountWithVat)}</b>,
+                    <b key={'b'}>
+                      {isNaN(((totalAmountWithVat)))
+                        ? Number(i18n.formatCurrency(Number(totalAmount)))
+                        : i18n.formatCurrency(totalAmountWithVat)}
+                    </b>,
                   ],
                 ]}
                 headings={[]}
