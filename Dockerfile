@@ -6,7 +6,15 @@ EXPOSE 3000
 WORKDIR /app
 COPY . .
 
-RUN apk add --update --no-cache ruby ruby-dev ruby-bundler build-base curl
+RUN apk add --no-cache \
+    ruby \
+    ruby-dev \
+    ruby-bundler \
+    build-base \
+    curl \
+    openssl
+
+#RUN apk add --update --no-cache ruby ruby-dev ruby-bundler build-base curl
 
 RUN corepack enable pnpm
 RUN pnpm install
