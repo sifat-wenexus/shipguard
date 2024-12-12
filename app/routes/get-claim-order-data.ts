@@ -648,6 +648,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               query: `#graphql
               query($orderId: ID!) {
                 order(id: $orderId) {
+                  paymentGatewayNames
+                  presentmentCurrencyCode
                   transactions{
                     id
                   }
@@ -658,9 +660,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             },
             tries: 20,
           });
-
-          const parentId = await orderTransaction.body.data.order
-            .transactions[0].id;
+const order=orderTransaction.body.data.order
+          const parentId = await order.transactions[0].id;
 
           // console.log('orderTransaction', orderTransaction.body.data.order.transactions[0].id);
 
@@ -688,6 +689,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               `,
               variables: {
                 input: {
+                  currency:order.presentmentCurrencyCode,
                   orderId: data.orderId,
                   note: '',
                   notify: true,
@@ -695,7 +697,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                   transactions: [
                     {
                       orderId: data.orderId,
-                      gateway: 'bogus',
+                      gateway:order.presentmentCurrencyCode|| 'bogus',
                       amount: Number(bodyData.refundAmount),
                       kind: 'REFUND',
                       parentId: parentId,
