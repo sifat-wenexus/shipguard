@@ -53,8 +53,12 @@ export async function action({ request }: ActionFunctionArgs) {
     });
 
     if (provider === 'google') {
-      const client = await getGoogleAuthClient(session.storeId!);
-      client?.revokeCredentials();
+      try {
+        const client = await getGoogleAuthClient(session.storeId!);
+        client?.revokeCredentials();
+      } catch (e) {
+        console.error(e);
+      }
 
       await queryProxy.googleAuthCredential.updateMany(
         {
