@@ -14,9 +14,14 @@ export async function getGoogleUserInfo(
     return null;
   }
 
-  const userInfo = await google.oauth2('v2').userinfo.get({
-    auth: oauthClient,
-  });
+  try {
+    const userInfo = await google.oauth2('v2').userinfo.get({
+      auth: oauthClient,
+    });
 
-  return userInfo.data;
+    return userInfo.data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 }
