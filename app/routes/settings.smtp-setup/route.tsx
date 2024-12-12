@@ -33,6 +33,7 @@ import {
   TextField,
 } from '@shopify/polaris';
 import { EmailIcon } from '@shopify/polaris-icons';
+import { getGoogleAuthClient } from '~/modules/get-google-auth-client.server';
 
 export async function action({ request }: ActionFunctionArgs) {
   const { session } = await shopify.authenticate.admin(request);
@@ -52,6 +53,9 @@ export async function action({ request }: ActionFunctionArgs) {
     });
 
     if (provider === 'google') {
+      const client = await getGoogleAuthClient(session.storeId!);
+      client?.revokeCredentials();
+
       await queryProxy.googleAuthCredential.updateMany(
         {
           where: { connected: true },
