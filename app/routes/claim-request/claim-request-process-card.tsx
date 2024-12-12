@@ -33,7 +33,7 @@ const ClaimRequestProcessCard = ({
   }
 
   const { claimStatus, fulfillmentLineItems } = data;
-  const { taxRate,taxTitle ,taxPercentage} = fulfillmentLineItems[0] || {};
+  const { taxRate} = fulfillmentLineItems[0] || {};
   const totalAmount = fulfillmentLineItems.reduce((a: number, b) => {
     const originalPrice = Number(b.originalPrice) || 0;
     const discountPrice = Number(b.discountPrice) || 0;
@@ -192,12 +192,6 @@ const ClaimRequestProcessCard = ({
             <div className="w-full sm:w-[37%] ">
               <DataTable
                 rows={[
-                  [
-                    <b key={'a'}>{taxTitle}: {taxPercentage}% </b>,
-                    <b key={'b'}>
-                     {i18n.formatCurrency(totalAmount * taxRate)}
-                    </b>,
-                  ],
                   [
                     <b key={'c'}>Total Amount:</b>,
                     <b key={'d'}>

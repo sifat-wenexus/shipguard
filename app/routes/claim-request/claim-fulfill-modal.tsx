@@ -425,9 +425,24 @@ const [fulfillError, setFulfillError] = useState('');
                     >
                       <Thumbnail source={image} size="small" alt={name} />
                       <div>
-                        <Text variant="bodyMd" fontWeight="bold" as="span">
-                          {title}
-                        </Text>
+
+                        <Tooltip content={title}>
+                          <div className="w-[200px] overflow-hidden text-ellipsis ">
+                            <Text
+                              variant="bodyMd"
+                              fontWeight="bold"
+                              as="span"
+                              breakWord={true}
+                            >
+                              {title}
+                            </Text>
+                          </div>
+                        </Tooltip>
+
+
+                        {/*<Text variant="bodyMd" fontWeight="bold" as="span">*/}
+                        {/*  {title}*/}
+                        {/*</Text>*/}
                         <Text
                           as="span"
                           variant="bodySm"
