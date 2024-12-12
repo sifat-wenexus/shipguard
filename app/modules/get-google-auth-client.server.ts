@@ -26,7 +26,12 @@ export async function getGoogleAuthClient(storeId?: string) {
     return null;
   }
 
-  client.setCredentials(credential.payload as Credentials);
+  try {
+    client.setCredentials(credential.payload as Credentials);
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 
   client.on('tokens', async (tokens) => {
     const oldCredential = await prisma.googleAuthCredential.findFirstOrThrow({
