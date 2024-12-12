@@ -55,3 +55,53 @@ export async function getGoogleAuthClient(storeId?: string) {
 
   return client;
 }
+
+export async function getGoogleAuthClients(storeId: string, connected?: boolean) {
+  const credentials = await prisma.googleAuthCredential.findMany({
+    where: {
+      storeId: storeId,
+      connected,
+    },
+  });
+
+  const clients: OAuth2Client[] = [];
+
+  for (const credential of credentials) {
+    const client = new OAuth2Client(
+      process.env.GMAIL_CLIENT_USER_ID,
+      process.env.GMAIL_CLIENT_SECRET,
+      process.env.GMAIL_OAUTH_REDIRECT_URI
+    );
+
+    try {
+      client.setCredentials(credential.payload as Credentials);
+    } catch (e) {
+      console.error(e);
+      continue;
+    }
+
+    client.on('tokens', async (tokens) => {
+      const oldCredential = await prisma.googleAuthCredential.findFirstOrThrow({
+        where: {
+          storeId: storeId,
+          connected: true,
+        },
+      });
+
+      prisma.googleAuthCredential.update({
+        where: {
+          id: oldCredential.id,
+        },
+        data: {
+          payload: JSON.parse(
+            JSON.stringify(_.merge(oldCredential.payload, tokens))
+          ),
+        },
+      });
+    });
+
+    clients.push(client);
+  }
+
+  return clients;
+}

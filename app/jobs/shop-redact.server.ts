@@ -1,8 +1,8 @@
-import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { gcloudStorage } from '~/modules/gcloud-storage.server';
 import { queryProxy } from '~/modules/query/query-proxy';
-import {prisma} from "~/modules/prisma.server";
+import { prisma } from '~/modules/prisma.server';
 import { Job } from '~/modules/job/job';
+import { getGoogleAuthClients } from '~/modules/get-google-auth-client.server';
 
 export class ShopRedact extends Job {
   async execute() {
@@ -13,17 +13,21 @@ export class ShopRedact extends Job {
     const store = await prisma.store.findFirst({
       where: {
         id: this.job.storeId,
-      }
+      },
     });
 
     if (!store) {
       return 'Store not found';
     }
 
-    const session = await findOfflineSession(store.domain);
+    const clients = await getGoogleAuthClients(store.id);
 
-    if (!session) {
-      return 'Session not found';
+    for (const client of clients) {
+      try {
+        await client.revokeCredentials();
+      } catch (e) {
+        console.error(e);
+      }
     }
 
     await prisma.session.deleteMany({ where: { shop: store.domain } });
