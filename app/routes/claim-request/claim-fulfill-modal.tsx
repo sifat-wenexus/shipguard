@@ -190,7 +190,7 @@ const [fulfillError, setFulfillError] = useState('');
         onClick={handleModalChange}
         disabled={fulfillClaim}
       >
-        Fulfill Claim
+        {fulfillClaim?'Already Claimed':'Fulfill Claim'}
       </button>
     </>
   );

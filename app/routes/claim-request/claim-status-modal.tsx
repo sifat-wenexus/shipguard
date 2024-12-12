@@ -53,13 +53,13 @@ const ClaimStatusModal = ({ data, setRefetch }) => {
     (value: string[]) => setSelectedStatus(value),
     []
   );
-
   const activator = (
     <Button
       onClick={handleModalChange}
       accessibilityLabel="Change Claim Status"
       variant="primary"
       tone="success"
+      disabled={data.fulfillClaim}
     >
       Change Claim Status
     </Button>

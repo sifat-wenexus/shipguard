@@ -33,7 +33,7 @@ const ClaimRequestProcessCard = ({
   }
 
   const { claimStatus, fulfillmentLineItems } = data;
-  const { taxRate} = fulfillmentLineItems[0] || {};
+  const { taxRate } = fulfillmentLineItems[0] || {};
   const totalAmount = fulfillmentLineItems.reduce((a: number, b) => {
     const originalPrice = Number(b.originalPrice) || 0;
     const discountPrice = Number(b.discountPrice) || 0;
@@ -194,11 +194,7 @@ const ClaimRequestProcessCard = ({
                 rows={[
                   [
                     <b key={'c'}>Total Amount:</b>,
-                    <b key={'d'}>
-                      {isNaN(totalAmountWithVat)
-                        ? i18n.formatCurrency(Number(totalAmount))
-                        : i18n.formatCurrency(totalAmountWithVat)}
-                    </b>,
+                    <b key={'d'}>{i18n.formatCurrency(Number(totalAmount))}</b>,
                   ],
                 ]}
                 headings={[]}
