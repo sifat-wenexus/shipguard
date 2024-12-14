@@ -31,7 +31,7 @@ const Footer = () => {
       </div>
       <div className="bg-gray-700 text-white text-center p-4">
         <p>
-          2024 Overall: Shipping Protection |{" "}
+          2024 ShipGuard: Shipping Protection |{" "}
           <Link
             to="https://shipping-protection.wenexus.io/terms-of-service"
             target="_blank"

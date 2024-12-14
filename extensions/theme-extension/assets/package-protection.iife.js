@@ -74,7 +74,7 @@ var __publicField = (obj, key, value) => {
     }
     async calculate() {
       const allVariants = await this.getNonPackageProtectionItems();
-      const excludeVariants = window.WeNexusOverallPackageProtectionSettings.packageProtectionProductAndVariants.map((product) => {
+      const excludeVariants = window.WeNexusShipGuardPackageProtectionSettings.packageProtectionProductAndVariants.map((product) => {
         return product.excludedPackageProtectionVariants.map(
           (variant2) => Number(variant2.id.replace("gid://shopify/ProductVariant/", ""))
         );
@@ -234,14 +234,14 @@ var __publicField = (obj, key, value) => {
                 <img src="${this.thumbnail}" alt="logo" />
             </div>
             <div class="wenexus-package-protection__desc">
-                <h5>${this.title} 
+                <h5>${this.title}
                 ${this.infoPageLink ? `<a href="https://${this.infoPageLink}" target="_blank" style="color:blue;">ⓘ</a> ` : ``}
                 </h5>
                 <p> <span class="wenexus-package-protection-description">${description} </span></p>
             </div>
         </div>
         <div class="wenexus-package-protection__toggle" >
-        
+
         <div style="position:relative;">
             <input type="checkbox" ${checked ? "checked" : ""} style="position:absolute; width:100%; height:100%; left:0; z-index:99; opacity:0">
 
@@ -302,23 +302,23 @@ var __publicField = (obj, key, value) => {
             align-items: center;
             margin: ${containerMargin == null ? void 0 : containerMargin.join("px ")};
             gap: ${containerGap[0]} ${containerGap[1]}px;
-           
+
          }
-         
+
          .wenexus-package-protection__content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: ${contentGap[0]} ${contentGap[1]}px;
-           
+
          }
-         
+
          .wenexus-package-protection__image {
             max-width: ${imageWidth}px;
             max-height: ${imageWidth}px;
 
          }
-         
+
          .wenexus-package-protection__image img {
             width: 100%;
          }
@@ -331,14 +331,14 @@ var __publicField = (obj, key, value) => {
             font-size:16px;
             margin: 0;
          }
-         
+
          .wenexus-package-protection__desc p {
-           
+
             font-size: 13px;
             font-weight: ${descriptionFontWeight};
             margin: ${descriptionMargin == null ? void 0 : descriptionMargin.join("px ")}px;
          }
-         
+
          .wenexus-package-protection__desc a {
             text-decoration: none;
             font-size:inherit;
@@ -347,12 +347,12 @@ var __publicField = (obj, key, value) => {
             transition: .3s;
             ${hideDescriptionPage ? "display: none;" : ""}
          }
-         
+
          .wenexus-package-protection__toggle {
             accent-color: ${accentColor} !important;
             zoom: 1.55;
          }
-         
+
          ${extraStyles}
       </style>`;
     }
@@ -978,7 +978,7 @@ var __publicField = (obj, key, value) => {
   }
   async function packageProtection() {
     var _a, _b, _c, _d;
-    const settings = window.WeNexusOverallPackageProtectionSettings;
+    const settings = window.WeNexusShipGuardPackageProtectionSettings;
     const clients = [
       PackageProtectionClientShopifyFreeTheme,
       PackageProtectionClientMulti,
@@ -999,7 +999,7 @@ var __publicField = (obj, key, value) => {
     }
     const getItems = async () => (await window.weNexusCartApi.get()).items;
     let items = await getItems();
-    const excludeVariants = (_b = (_a = window.WeNexusOverallPackageProtectionSettings) == null ? void 0 : _a.packageProtectionProductAndVariants) == null ? void 0 : _b.map((product) => {
+    const excludeVariants = (_b = (_a = window.WeNexusShipGuardPackageProtectionSettings) == null ? void 0 : _a.packageProtectionProductAndVariants) == null ? void 0 : _b.map((product) => {
       return product.excludedPackageProtectionVariants.map(
         (variant) => Number(variant.id.replace("gid://shopify/ProductVariant/", ""))
       );

@@ -6,7 +6,7 @@
 api_version = "2024-10"
 
 [[extensions]]
-name = "Overall: Shipping Protection"
+name = "ShipGuard: Shipping Protection"
 handle = "osp-checkout"
 type = "ui_extension"
 
@@ -39,7 +39,7 @@ api_access = true
 # https://shopify.dev/docs/api/checkout-ui-extensions/unstable/configuration#metafields
 
 [[extensions.metafields]]
-namespace = "overall_shipping_protection"
+namespace = "shipguard_shipping_protection"
 key = "productVariants"
 # [[extensions.metafields]]
 # namespace = "my_namespace"

@@ -9,14 +9,14 @@ export default function TermsConditions() {
         <img
           src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/over-all-shippping-protection-logo.png?v=1731747621"
           className="w-[220px] mx-auto h-auto my-4"
-          alt="Overall: Shipping Protection"
+          alt="ShipGuard: Shipping Protection"
         />
       </Link>
 
       <ShadowBevelBox divider={false}>
         <BlockStack gap="400">
           <Text as="h1" variant="headingLg">
-            Overall: Shipping Protection - Terms & Conditions
+            ShipGuard: Shipping Protection - Terms & Conditions
           </Text>
 
           <Text variant="bodyMd" as="p">
@@ -29,7 +29,7 @@ export default function TermsConditions() {
             1. Agreement to Terms
           </Text>
           <Text variant="bodyMd" as="p">
-            By installing and using the "Overall: Shipping Protection" Shopify
+            By installing and using the "ShipGuard: Shipping Protection" Shopify
             app you ("Merchant" or "User") agree to comply with these Terms &
             Conditions. If you do not agree, you must uninstall the app and
             discontinue using our services.
@@ -39,7 +39,7 @@ export default function TermsConditions() {
             2. Services Provided
           </Text>
           <Text variant="bodyMd" as="p">
-            The "Overall: Shipping Protection" app offers the following
+            The "ShipGuard: Shipping Protection" app offers the following
             services:
           </Text>
           <List type="bullet" gap="loose">

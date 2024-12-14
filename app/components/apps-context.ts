@@ -1,8 +1,8 @@
 import { createContext } from 'react';
 
-export const AppsContext = createContext<OverallApp[]>([]);
+export const AppsContext = createContext<ShipGuardApp[]>([]);
 
-export interface OverallApp {
+export interface ShipGuardApp {
   id: string;
   name: string;
   illustration: string;

@@ -10,14 +10,14 @@ export default function PrivacyPolicy() {
         <img
           src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/over-all-shippping-protection-logo.png?v=1731747621"
           className="w-[220px] mx-auto h-auto my-4"
-          alt="Overall: Shipping Protection"
+          alt="ShipGuard: Shipping Protection"
         />
       </Link>
 
       <ShadowBevelBox divider={false}>
         <BlockStack gap="400">
           <Text as="h1" variant="headingLg">
-            Overall: Shipping Protection - Privacy Policy
+            ShipGuard: Shipping Protection - Privacy Policy
           </Text>
 
           <Text variant="bodyMd" as="p">
@@ -32,7 +32,7 @@ export default function PrivacyPolicy() {
           <Text variant="bodyMd" as="p">
             At WeNexus ("we", "our", or "us"), we are committed to safeguarding
             your privacy and personal data. This Privacy Policy applies to the
-            "Overall: Shipping Protection" app built and operated under WeNexus
+            "ShipGuard: Shipping Protection" app built and operated under WeNexus
             and available on the Shopify App Store. This app provides merchants
             with shipping protection options and integrates with Google OAuth
             2.0 for email services.

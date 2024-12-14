@@ -52,7 +52,7 @@ const CheckoutExtension = () => {
                   <Text as="p">
                     <b>Step 2: </b>
                     Select the theme where you want to enable the Checkout
-                    Extension—Overall: Shipping Protection. Then, click the
+                    Extension—ShipGuard: Shipping Protection. Then, click the
                     <TextWithBgColor text="Customize" /> button.
                   </Text>
                   <Text as="p">

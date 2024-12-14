@@ -1,6 +1,6 @@
 {% if app.metafields.package_protection.enabled %}
   <script>
-    window.WeNexusOverallPackageProtectionSettings = {{ app.metafields.package_protection | json }};
+    window.WeNexusShipGuardPackageProtectionSettings = {{ app.metafields.package_protection | json }};
   </script>
   <script src='{{ 'cart-api.iife.js' | asset_url }}' defer></script>
 

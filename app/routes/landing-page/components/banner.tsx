@@ -19,7 +19,7 @@ const Banner = () => {
               Secure Your Customers' Orders with Custom Shipping <span className="text-green-600">Protection</span>
             </h1>
             <p className="mt-4 text-base text-center text-zinc-800 max-md:max-w-full">
-              Overall: Shipping Protection makes it easy for Shopify merchants to offer their own shipping protection fees, ensuring that customers' orders are safe from loss or damage during transit
+              ShipGuard: Shipping Protection makes it easy for Shopify merchants to offer their own shipping protection fees, ensuring that customers' orders are safe from loss or damage during transit
             </p>
           </header>
           <div className="flex gap-4 my-11 max-w-full text-lg font-bold max-md:mt-10 items-center justify-center">

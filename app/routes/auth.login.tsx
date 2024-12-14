@@ -93,7 +93,7 @@ export default function AuthLogin() {
               paddingInlineEnd="400"
             >
               <InlineStack blockAlign="center" align="space-evenly">
-                <Image source={LogoImg} alt="Overall" width="70px" />
+                <Image source={LogoImg} alt="ShipGuard" width="70px" />
               </InlineStack>
             </Box>
 

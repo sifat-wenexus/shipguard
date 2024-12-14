@@ -1,4 +1,4 @@
-import type { OverallApp } from '~/components/apps-context';
+import type { ShipGuardApp } from '~/components/apps-context';
 import type { InlineGridProps } from '@shopify/polaris';
 import { CalloutCard } from '~/components/callout-card';
 import * as Icons from '@shopify/polaris-icons';
@@ -17,7 +17,7 @@ import {
 
 interface AppsProps {
   tab: number;
-  apps: OverallApp[];
+  apps: ShipGuardApp[];
 }
 
 export const Apps: FC<AppsProps> = ({ apps, tab }) => {

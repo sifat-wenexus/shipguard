@@ -2,8 +2,8 @@ import { Accordion } from "rsuite";
 const FaQ = () => {
   const items = [
     {
-      header: "What is Overall Shipping Protection?",
-      content: "Overall Shipping Protection is a customizable app that allows merchants to protect customer orders from loss, damage, or theft while managing claims directly through their dashboard.",
+      header: "What is ShipGuard Shipping Protection?",
+      content: "ShipGuard Shipping Protection is a customizable app that allows merchants to protect customer orders from loss, damage, or theft while managing claims directly through their dashboard.",
     },
     {
       header: "How do I enable shipping protection for my store?",
@@ -43,7 +43,7 @@ const FaQ = () => {
       header: "Are automated email notifications supported?",
       content: "Yes, the app integrates with Gmail OAuth 2.0 or custom SMTP to send real-time updates to customers for claims and fulfillment.",
     },{
-      header: "What makes Overall Shipping Protection unique?",
+      header: "What makes ShipGuard Shipping Protection unique?",
       content: "Unlike third-party solutions, this app routes premiums directly to you, helping you retain more control and revenue while delivering peace of mind to your customers. ",
     },{
       header: "Does it work for international orders?",
