@@ -27,8 +27,8 @@ const CheckoutExtension = () => {
                 <ShadowBevelBox title="Watch the Tutorial" divider={false}>
                   <Box paddingBlockStart="300">
                     <HelpModal
-                      video="https://www.youtube.com/embed/WNXW84CsZEg?si=A1qHbNglf7e-PBrT"
-                      thumbnail="https://cdn.shopify.com/s/files/1/0550/7982/9551/files/Checkout_extension_setup.jpg?v=1732335975"
+                      video="https://www.youtube.com/embed/hMx9vvqnR6Q?si=ZkL-HdLeJUqazpmD"
+                      thumbnail="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Set_Up_Checkout_Extension_Widget.jpg?v=1734177652"
                       duration={60 + 6}
                     />
                   </Box>
@@ -82,8 +82,8 @@ const CheckoutExtension = () => {
                   <ShadowBevelBox title="Watch the Tutorial" divider={false}>
                     <Box paddingBlockStart="300">
                       <HelpModal
-                        video="https://www.youtube.com/embed/WNXW84CsZEg?si=A1qHbNglf7e-PBrT"
-                        thumbnail="https://cdn.shopify.com/s/files/1/0550/7982/9551/files/Checkout_extension_setup.jpg?v=1732335975"
+                        video="https://www.youtube.com/embed/hMx9vvqnR6Q?si=ZkL-HdLeJUqazpmD"
+                        thumbnail="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Set_Up_Checkout_Extension_Widget.jpg?v=1734177652"
                         duration={60  + 6}
                       />
                     </Box>
