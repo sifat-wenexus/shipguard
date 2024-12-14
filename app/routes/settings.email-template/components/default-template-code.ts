@@ -77,7 +77,7 @@ export const reqAdminTemplate = `<!DOCTYPE html>
       <!-- Logo Section -->
       <div class="email-header">
         <img
-          src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/over-all-shippping-protection-logo.png?v=1731747621"
+          src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Shipguard-shipping-protection.png?v=1731747621"
           alt="shipping-protection"
           width="220px"
           height="auto"
