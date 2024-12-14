@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "014656fd1817c91322f981a3ad07bb4b"
-name = "Overall: Shipping Protection"
+name = "ShipGuard: Shipping Protection"
 application_url = "https://shipping-protection.wenexus.io/dashboard"
 embedded = true
 
