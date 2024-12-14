@@ -7,7 +7,7 @@ export default function TermsConditions() {
     <Page>
       <Link to={'https://shipping-protection.wenexus.io/'}>
         <img
-          src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/over-all-shippping-protection-logo.png?v=1731747621"
+          src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Shipguard-shipping-protection.png?v=1731747621"
           className="w-[220px] mx-auto h-auto my-4"
           alt="ShipGuard: Shipping Protection"
         />
