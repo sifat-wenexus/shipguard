@@ -85,7 +85,7 @@ const FileClaimRequest = () => {
   return (
     <PageShell currencyCode={currencyCode}>
       <div className="m-4 sm:m-0 mt-10 sm:mt-4">
-        <Page title='Claim Request'  backAction={{ onAction: () => navigate(-1) }}>
+        <Page title='Claim Request'  backAction={{ onAction: () => navigate(-1) }} fullWidth>
           <Layout>
             {isProcess ? (
               <ClaimRequestProcess

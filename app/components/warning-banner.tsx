@@ -26,6 +26,7 @@ const WarningBanner = ({ storeInfo }) => {
             hideIcon
             icon={AlertDiamondIcon}
             tone="warning"
+            onDismiss={()=>setShowBanner(false)}
           >
             <p>
               You activated an app but still need to enable Package protection

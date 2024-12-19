@@ -85,29 +85,29 @@ const Order = () => {
     <PageShell currencyCode={currencyCode}>
       <div className="m-4 sm:m-0 mt-10 sm:mt-4">
         {' '}
-        <Page title={'Order'} backAction={{ onAction: () => navigate(-1) }}>
+        <Page title={'Order'} backAction={{ onAction: () => navigate(-1) }} fullWidth>
           <Layout>
-            <div className="w-full ms-4">
-              {/* <MainNav /> */}
-              {/*<Text as="h1" variant="headingLg" alignment="start">*/}
-              {/*  Order*/}
-              {/*</Text>*/}
-              <br />
-              <Box paddingBlockEnd={'400'}>
-                <div className="flex justify-between">
-                  <DateRangePicker setActiveDates={setActiveDates} />
-                  <Button
-                    variant="primary"
-                    tone="success"
-                    onClick={handleExport}
-                    icon={<Icon source={ExportIcon} />}
-                  >
-                    Export
-                  </Button>
-                </div>
-              </Box>
-              <OrderList shop={shop} activeDates={activeDates!} />
-            </div>
+              <div className="w-full ms-4">
+                {/* <MainNav /> */}
+                {/*<Text as="h1" variant="headingLg" alignment="start">*/}
+                {/*  Order*/}
+                {/*</Text>*/}
+                <br />
+                <Box paddingBlockEnd={'400'}>
+                  <div className="flex justify-between">
+                    <DateRangePicker setActiveDates={setActiveDates} />
+                    <Button
+                      variant="primary"
+                      tone="success"
+                      onClick={handleExport}
+                      icon={<Icon source={ExportIcon} />}
+                    >
+                      Export
+                    </Button>
+                  </div>
+                </Box>
+                <OrderList shop={shop} activeDates={activeDates!} />
+              </div>
           </Layout>
         </Page>
       </div>

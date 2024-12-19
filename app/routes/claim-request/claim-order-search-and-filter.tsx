@@ -1,6 +1,6 @@
 import { FilterIcon, SearchIcon, XIcon } from '@shopify/polaris-icons';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, Icon, Popover, TextField } from '@shopify/polaris';
+import { Box, Button, Icon, Popover, TextField } from '@shopify/polaris';
 import Radio from '~/components/radio';
 
 export interface IFilterOptions {
@@ -61,22 +61,25 @@ const ClaimOrderSearchAndFilter = ({
   );
 
   const activatorClaim = (
-    <div
-      className="border border-gray-600 p-3 rounded-md font-medium hover:bg-gray-100 "
-      onClick={togglePopoverClaimActive}
-    >
-      <p className="flex justify-center">
-        {' '}
-        <span className="hidden md:block">
-          <Icon source={FilterIcon} />
-        </span>
-        <span className="hidden md:block">Claim Status</span>{' '}
-        <span className="md:hidden">
-          {' '}
-          <Icon source={FilterIcon} />
-        </span>
-      </p>
-    </div>
+
+    <Button onClick={togglePopoverClaimActive}  icon={<Icon source={FilterIcon} />}
+              fullWidth>Claim Status</Button>
+    // <div
+    //   className="border border-gray-600 p-3 rounded-md font-medium hover:bg-gray-100 "
+    //   onClick={togglePopoverClaimActive}
+    // >
+    //   <p className="flex justify-center">
+    //     {' '}
+    //     <span className="hidden md:block">
+    //       <Icon source={FilterIcon} />
+    //     </span>
+    //     <span className="hidden md:block">Claim Status</span>{' '}
+    //     <span className="md:hidden">
+    //       {' '}
+    //       <Icon source={FilterIcon} />
+    //     </span>
+    //   </p>
+    // </div>
   );
 
   const handleClaimSelect = (index: number) => {

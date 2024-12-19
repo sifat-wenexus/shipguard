@@ -1,5 +1,5 @@
 import { FilterIcon, SearchIcon, XIcon } from '@shopify/polaris-icons';
-import { Box, Icon, Popover, TextField } from '@shopify/polaris';
+import { Box, Button, Icon, Popover, TextField } from '@shopify/polaris';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Radio from '~/components/radio';
 
@@ -59,22 +59,13 @@ const OrderSearchAndFilter = ({
     []
   );
   const activator = (
-    <div
-      className="border border-gray-600 p-3 rounded-md font-medium hover:bg-gray-100 "
+    <Button
       onClick={togglePopoverActive}
+      icon={<Icon source={FilterIcon} />}
+      fullWidth
     >
-      <p className="flex justify-center">
-        {' '}
-        <span className="hidden md:block mr-2">
-          <Icon source={FilterIcon} />
-        </span>
-        <span className="hidden md:block">More Filter</span>{' '}
-        <span className="md:hidden">
-          {' '}
-          <Icon source={FilterIcon} />
-        </span>
-      </p>
-    </div>
+      More Filter
+    </Button>
   );
 
   const handleFulfillmentSelect = (index: number) => {
@@ -103,7 +94,7 @@ const OrderSearchAndFilter = ({
         .filter((element) => element.selected)
         .concat(claimStatus.filter((element) => element.selected))
     );
-  }, [fulfillmentStatus, claimStatus,setFilterItems]);
+  }, [fulfillmentStatus, claimStatus, setFilterItems]);
 
   return (
     <>
@@ -179,7 +170,7 @@ const OrderSearchAndFilter = ({
                         }))
                       );
                     }}
-                    className="text-base text-blue-500 hover:to-blue-700 hover:underline cursor-pointer"
+                    className="text-base text-blue-500 hover:to-blue-700 hover:underline cursor-pointer mt-1"
                   >
                     clear
                   </span>

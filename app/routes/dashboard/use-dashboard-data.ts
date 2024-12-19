@@ -18,6 +18,7 @@ export function useDashboardData(
             {
               storeId: { equals: storeId },
             },
+            { hasPackageProtection: { equals: true } },
             {
               orderDate: {
                 gte: startDate,
@@ -64,9 +65,9 @@ export function useDashboardData(
         },
         _count: { id: true },
         where: {
-          //hasPackageProtection: { equals: true },
           AND: [
             { storeId: { equals: storeId } },
+            { hasPackageProtection: { equals: true } },
             {
               orderDate: {
                 gte: startDate,

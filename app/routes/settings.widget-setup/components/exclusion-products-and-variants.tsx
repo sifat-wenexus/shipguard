@@ -8,7 +8,7 @@ import {
   Box,
   Thumbnail,
   IndexTable,
-  useIndexResourceState,
+  useIndexResourceState, Button,
 } from '@shopify/polaris';
 
 const ExclusionProductsAndVariants = ({ formState }) => {
@@ -106,7 +106,7 @@ const ExclusionProductsAndVariants = ({ formState }) => {
           </div>
           <div className="col-span-2">
             <button
-              className="border h-[50px] w-full rounded-md font-semibold text-sm hover:bg-gray-200 border-gray-400"
+              className="border h-full w-full rounded-md font-semibold text-sm hover:bg-gray-200 border-gray-400"
               onClick={clicked}
             >
               Browse

@@ -3,83 +3,83 @@
 }
 
 /* dashboard left and top margin none */
-.dashboard .Polaris-Layout__Section {
-  margin-top: 0px;
-  margin-left: 0px;
-}
+/*.dashboard .Polaris-Layout__Section {*/
+/*  margin-top: 0px;*/
+/*  margin-left: 0px;*/
+/*}*/
 
 /* custom css and override polaris components */
 /* ----check box style */
-.Polaris-Checkbox__Backdrop {
-  display: none !important;
-}
+/*.Polaris-Checkbox__Backdrop {*/
+/*  display: none !important;*/
+/*}*/
 
-.Polaris-Checkbox__Input {
-  opacity: 1 !important;
-}
+/*.Polaris-Checkbox__Input {*/
+/*  opacity: 1 !important;*/
+/*}*/
 
 /* text input */
-.Polaris-TextField__Input {
-  height: 50px;
-  font-size: 14px;
-}
+/*.Polaris-TextField__Input {*/
+/*  height: 50px;*/
+/*  font-size: 14px;*/
+/*}*/
 
-.Polaris-Text--bodyMd {
-  font-size: 14px;
-}
+/*.Polaris-Text--bodyMd {*/
+/*  font-size: 14px;*/
+/*}*/
 
 /* select option */
-.Polaris-Select {
-  height: 50px;
-  font-size: 14px;
-}
+/*.Polaris-Select {*/
+/*  height: 50px;*/
+/*  font-size: 14px;*/
+/*}*/
 
-.Polaris-Select__Content {
-  font-size: inherit;
-  height: inherit;
-  padding: 0px 10px;
-}
+/*.Polaris-Select__Content {*/
+/*  font-size: inherit;*/
+/*  height: inherit;*/
+/*  padding: 0px 10px;*/
+/*}*/
 
-.Polaris-Select__Input>option {
-  font-size: 14px;
-}
+/*.Polaris-Select__Input>option {*/
+/*  font-size: 14px;*/
+/*}*/
 
 /* text input margin left none */
-.wenexus-input-text .Polaris-Connected__Item.Polaris-Connected__Item--primary {
-  margin-left: 0px;
+/*.wenexus-input-text .Polaris-Connected__Item.Polaris-Connected__Item--primary {*/
+/*  margin-left: 0px;*/
 
-}
+/*}*/
 
-.wenexus-color-picker .Polaris-Connected__Item.Polaris-Connected__Item--primary {
-  margin-left: 10px;
-}
+/*.wenexus-color-picker .Polaris-Connected__Item.Polaris-Connected__Item--primary {*/
+/*  margin-left: 10px;*/
+/*}*/
 
 /* color picker color box */
-.custom-size {
-  height: 50px;
-  width: 50px;
-}
+/*.custom-size {*/
+/*  height: 50px;*/
+/*  width: 50px;*/
+/*}*/
 
 /* card heading */
-.Polaris-Text--semibold {
-  font-size: 16px;
-}
+/*.Polaris-Text--semibold {*/
+/*  font-size: 16px;*/
+/*}*/
 
-.Polaris-Text--bodySm.Polaris-Text--subdued {
-  font-size: 14px;
-}
+/*.Polaris-Text--bodySm.Polaris-Text--subdued {*/
+/*  font-size: 14px;*/
+/*}*/
 
-.wenexus-radio-label {
-  font-size: 14px;
-}
+/*.wenexus-radio-label {*/
+/*  font-size: 14px;*/
+/*}*/
 
-.Polaris-Box {
-  font-size: 14px;
-}
+/*.Polaris-Box {*/
+/*  font-size: 14px;*/
+/*}*/
 
-.Polaris-Text--root.Polaris-Text--bodySm.Polaris-Text--medium {
-  font-size: 14px;
-}
+/*.Polaris-Text--root.Polaris-Text--bodySm.Polaris-Text--medium {*/
+/*  font-size: 14px;*/
+/*}*/
 
 /* hide header of index table */
 .hide-header thead {
@@ -149,10 +149,13 @@
 }
 @media screen and (max-width: 600px) {
   #zsiq_float{
-    bottom: 3%;
+    bottom: 7%;
   }
   #zsiq_chat_wrap{
-    bottom: calc(3% + 60px);
+    bottom: calc(5% + 60px);
+  }
+  .seasonal-float-img{
+    display: none !important;
   }
 }
 
