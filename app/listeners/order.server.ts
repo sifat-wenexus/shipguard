@@ -166,11 +166,11 @@ export const orderCreateEvent = async ({
 
   try {
 
-    const order = await fetchOrders(orderId, session);
-    if (
-      order?.channelInformation?.channelDefinition?.channelName !== 'Online Store'
-    )
-      return;
+    // const order = await fetchOrders(orderId, session);
+    // if (
+    //   order?.channelInformation?.channelDefinition?.channelName !== 'Online Store'
+    // )
+    //   return;
 
 
     if (existPackageProtection) {
@@ -381,7 +381,7 @@ const orderPartiallyFulfilledEvent = async ({
     const orderId = payload.admin_graphql_api_id;
     const order = await fetchOrders(orderId, session);
 
-    if (order?.channelInformation?.channelDefinition?.channelName !== 'Online Store') return;
+    // if (order?.channelInformation?.channelDefinition?.channelName !== 'Online Store') return;
     await queryProxy.packageProtectionOrder.update(
       {
         data: {
@@ -487,10 +487,10 @@ export const orderUpdatedEvent = async ({
     const orderId = payload.admin_graphql_api_id;
     const order = await fetchOrders(orderId, session);
     console.log('   order?.channelInformation?.channelDefinition?.channelName',   order?.channelInformation?.channelDefinition?.channelName)
-    if (
-      order?.channelInformation?.channelDefinition?.channelName !== 'Online Store'
-    )
-      return;
+    // if (
+    //   order?.channelInformation?.channelDefinition?.channelName !== 'Online Store'
+    // )
+    //   return;
 
     const protectionFee = order.lineItems.nodes
       .map((e) => {
