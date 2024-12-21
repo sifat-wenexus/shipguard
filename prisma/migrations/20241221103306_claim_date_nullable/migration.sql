@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "PackageProtectionOrder" ALTER COLUMN "claimDate" DROP NOT NULL,
+ALTER COLUMN "claimDate" DROP DEFAULT,
+ALTER COLUMN "claimDate" SET DATA TYPE TIMESTAMP(3);

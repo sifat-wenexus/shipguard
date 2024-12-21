@@ -16,6 +16,7 @@ import {
   Badge,
   Link,
   Text,
+  Button,
 } from '@shopify/polaris';
 
 const OrderList = ({
@@ -42,8 +43,6 @@ const OrderList = ({
     : //.split('T')[0]
       new Date().toISOString(); //.split('T')[0];
   // let startPoint = 0;
-
-  const mediaDevice = useBreakpoints().mdDown;
 
   const query = useMemo(() => {
     const ClaimStatus: ClaimStatus[] = [
@@ -161,17 +160,23 @@ const OrderList = ({
               <IndexTable.Cell>
                 <span className="capitalize">
                   <Badge
-                    progress={hasPackageProtection?'complete':'incomplete'}
+                    progress={hasPackageProtection ? 'complete' : 'incomplete'}
                     tone={hasPackageProtection ? 'success' : 'critical'}
                   >
-                    {hasPackageProtection?'Protected':'Non Protected'}
+                    {hasPackageProtection ? 'Protected' : 'Non Protected'}
                   </Badge>
                 </span>
               </IndexTable.Cell>
               <IndexTable.Cell>
                 <span className="capitalize">
                   <Badge
-                    progress="incomplete"
+                    progress={
+                      fulfillmentStatus === 'PARTIALLY_FULFILLED'
+                        ? 'partiallyComplete'
+                        : fulfillmentStatus === 'FULFILLED'
+                        ? 'complete'
+                        : 'incomplete'
+                    }
                     tone={
                       fulfillmentStatus === 'PARTIALLY_FULFILLED'
                         ? 'warning'
@@ -237,27 +242,33 @@ const OrderList = ({
   );
 
   const emptyStateMarkup = (
-    <EmptySearchResult
-      title={'No Order yet'}
-      description={'Try changing the filters or search term'}
-      withIllustration
-    />
+    <>
+      <EmptySearchResult
+        title={'No orders found'}
+        description={'Try changing the filters or search term'}
+        withIllustration
+      />
+      {filterItems.length > 0 && (
+        <div className="flex justify-center mt-4">
+          <Button onClick={() => setFilterItems([])} variant="primary">
+            View All Orders
+          </Button>
+        </div>
+      )}
+    </>
   );
 
   return (
     <div className="w-full bg-white  rounded-lg shadow-md">
-      {Array.isArray(subscription?.data) && subscription.data.length > 0 && (
-        <OrderSearchAndFilter
-          filterOption={{
-            inputText,
-            setInputText,
-            filterItems,
-            setFilterItems,
-          }}
-        />
-      )}
+      <OrderSearchAndFilter
+        filterOption={{
+          inputText,
+          setInputText,
+          filterItems,
+          setFilterItems,
+        }}
+      />
 
-      {mediaDevice}
       <IndexTable
         condensed={false}
         // useBreakpoints().smDown
@@ -269,7 +280,7 @@ const OrderList = ({
           { title: 'Order' },
           { title: 'Protection Fees' },
           { title: 'Order Amount' },
-          {title:'Order Status'},
+          { title: 'Order Status' },
           { title: 'Fulfillment status' },
           { title: 'Claim status' },
           { title: 'Created At' },

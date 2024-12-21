@@ -388,15 +388,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           order.email = existingOrder.customer.email;
           order.line_items = lineItems.map((item) => ({
             quantity: item.quantity,
-            variant_id: +item.variant.id.replace(
+            variant_id: parseInt(item.variant.id.replace(
               'gid://shopify/ProductVariant/',
               ''
-            ),
-            //  price: item.variant.price,
+            )),
           }));
           order.shipping_address = shippingAddress;
           order.name = existingOrder.name + '-R';
           order.note = 'reorder';
+          order.source_name = 'Wenexus Reorder';
+
           const newOrder = await order.save({
             update: true,
           });
@@ -660,7 +661,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             },
             tries: 20,
           });
-const order=orderTransaction.body.data.order
+          const order = orderTransaction.body.data.order;
           const parentId = await order.transactions[0].id;
 
           // console.log('orderTransaction', orderTransaction.body.data.order.transactions[0].id);
@@ -689,7 +690,7 @@ const order=orderTransaction.body.data.order
               `,
               variables: {
                 input: {
-                  currency:order.presentmentCurrencyCode,
+                  currency: order.presentmentCurrencyCode,
                   orderId: data.orderId,
                   note: '',
                   notify: true,
@@ -697,7 +698,7 @@ const order=orderTransaction.body.data.order
                   transactions: [
                     {
                       orderId: data.orderId,
-                      gateway:order.presentmentCurrencyCode|| 'bogus',
+                      gateway: order.presentmentCurrencyCode || 'bogus',
                       amount: Number(bodyData.refundAmount),
                       kind: 'REFUND',
                       parentId: parentId,

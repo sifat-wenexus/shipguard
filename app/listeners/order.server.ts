@@ -2,10 +2,11 @@ import { PRODUCT_SKU } from '~/routes/settings.widget-setup/modules/package-prot
 import type { GraphqlClient } from '~/shopify-api/lib/clients/graphql/graphql_client';
 import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
 import { getShopifyGQLClient } from '~/modules/shopify.server';
+import type { PackageProtectionOrder } from '#prisma-client';
+import { Prisma } from '#prisma-client';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
 import type { Session } from '~/shopify-api/lib';
-import { PackageProtectionOrder, Prisma } from '#prisma-client';
 import Decimal = Prisma.Decimal;
 
 const makePackageProtectionFulfill = async (
@@ -13,9 +14,7 @@ const makePackageProtectionFulfill = async (
   gqlClient: GraphqlClient
 ) => {
   const result: { orderId: string; id: string; productTitle: string }[] = [];
-  const orders = await data;
-
-  orders.forEach((order) => {
+  data.forEach((order) => {
     const orderId = order.id;
     order.lineItems.nodes.forEach((item) => {
       const id = item.id;
@@ -78,6 +77,74 @@ async function fetchOrderStatus(id: string, session: Session) {
   return order.body.data.order.displayFulfillmentStatus;
 }
 
+async function fetchOrders(orderId: string, session: Session) {
+  const gqlClient = getShopifyGQLClient(session);
+  const getOrder = await gqlClient.query<any>({
+    data: `#graphql
+    query{
+      order(id:"${orderId}"){
+        displayFulfillmentStatus
+
+        channelInformation {
+          channelDefinition {
+            channelName
+          }
+        }
+        totalPriceSet{
+          shopMoney{
+            amount
+          }
+        }
+        fulfillmentOrders(first:250){
+          nodes{
+            id
+            status
+            lineItems(first:250){
+              nodes{
+                id
+                productTitle
+                sku
+              }
+            }
+          }
+        }
+        lineItems(first:250){
+          nodes{
+            sku
+            title
+            product {
+              id
+            }
+            originalTotalSet{
+              shopMoney{
+                amount
+              }
+            }
+          }
+        }
+        fulfillments(first:250){
+          id
+          name
+          displayStatus
+          fulfillmentLineItems(first:250){
+            nodes{
+              lineItem{
+                title
+                id
+                sku
+              }
+            }
+          }
+        }
+      }
+    }
+    `,
+    tries: 20,
+  });
+
+  return getOrder.body.data.order;
+}
+
 export const orderCreateEvent = async ({
   payload: _payload,
   session,
@@ -98,6 +165,14 @@ export const orderCreateEvent = async ({
   console.log(`OrderCreateEvent: ${payload.name}`);
 
   try {
+
+    const order = await fetchOrders(orderId, session);
+    if (
+      order?.channelInformation?.channelDefinition?.channelName !== 'Online Store'
+    )
+      return;
+
+
     if (existPackageProtection) {
       const fulfillmentStatus = await queryProxy.packageProtection.findFirst({
         where: {
@@ -169,7 +244,7 @@ export const orderCreateEvent = async ({
           })
           .join('');
 
-      const data:Partial<PackageProtectionOrder>  = {
+      const data: Partial<PackageProtectionOrder> = {
         storeId,
         hasPackageProtection: true,
         orderId: orderId,
@@ -180,8 +255,7 @@ export const orderCreateEvent = async ({
         orderName: updatedOrder.body.data.orderUpdate.order.name,
         orderDate: payload.created_at,
         orderAmount: new Decimal(
-          updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
-            .amount
+          updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney.amount
         ),
         protectionFee: new Decimal(protectionFee),
         fulfillmentStatus:
@@ -218,7 +292,7 @@ export const orderCreateEvent = async ({
         orderName: payload.name,
         orderAmount: new Decimal(payload.total_price),
         orderDate: payload.created_at,
-        protectionFee:new Decimal(0),
+        protectionFee: new Decimal(0),
         fulfillmentStatus: await fetchOrderStatus(orderId, session),
       };
 
@@ -304,143 +378,95 @@ const orderPartiallyFulfilledEvent = async ({
 
     console.log(`OrderPartiallyFulfilledEvent: ${payload.name}`);
 
-    // const existPackageProtection = payload.line_items.find(
-    //   (line) => line.sku === PRODUCT_SKU
-    // );
-    // if (existPackageProtection) {
-      const orderId = payload.admin_graphql_api_id;
+    const orderId = payload.admin_graphql_api_id;
+    const order = await fetchOrders(orderId, session);
 
-      const getOrder = await gqlClient.query<any>({
-        data: `#graphql
-        query{
-          order(id:"${orderId}"){
-            displayFulfillmentStatus
-            fulfillmentOrders(first:250){
-              nodes{
-                id
-                status
-                lineItems(first:250){
-                  nodes{
-                    id
-                    productTitle
-                    sku
-                  }
-                }
-              }
-            }
-            fulfillments(first:250){
-              id
-              name
-              displayStatus
-              fulfillmentLineItems(first:250){
-                nodes{
-                  lineItem{
-                    title
-                    id
-                    sku
-                  }
-                }
-              }
-            }
-          }
-        }
-        `,
-        tries: 20,
+    if (order?.channelInformation?.channelDefinition?.channelName !== 'Online Store') return;
+    await queryProxy.packageProtectionOrder.update(
+      {
+        data: {
+          fulfillmentStatus: order.displayFulfillmentStatus,
+        },
+        where: { orderId: orderId },
+      },
+      { session }
+    );
+
+    if (
+      fulfillmentStatus?.insuranceFulfillmentStatus ===
+      'Mark as fulfilled when other items fulfilled'
+    ) {
+      const fulfillmentOrder: Record<string, any>[] = [];
+
+      order.fulfillmentOrders.nodes.forEach((order) => {
+        const id = order.id;
+        order.lineItems.nodes.forEach((item) => {
+          fulfillmentOrder.push({
+            fulfillmentOrderId: id,
+            productId: item.id,
+            status: order.status,
+            productTitle: item.productTitle,
+            sku: item.sku,
+          });
+        });
       });
 
-      await queryProxy.packageProtectionOrder.update(
-        {
-          data: {
-            fulfillmentStatus:
-              getOrder.body.data.order.displayFulfillmentStatus,
-          },
-          where: { orderId: orderId },
-        },
-        { session }
-      );
+      const fulfillmentLineItems: Record<string, any>[] = [];
 
-      if (
-        fulfillmentStatus?.insuranceFulfillmentStatus ===
-        'Mark as fulfilled when other items fulfilled'
-      ) {
-        const fulfillmentOrder: Record<string, any>[] = [];
-
-        getOrder.body.data.order.fulfillmentOrders.nodes.forEach((order) => {
-          const id = order.id;
-          order.lineItems.nodes.forEach((item) => {
-            fulfillmentOrder.push({
-              fulfillmentOrderId: id,
-              productId: item.id,
-              status: order.status,
-              productTitle: item.productTitle,
-              sku: item.sku,
-            });
+      order.fulfillments.forEach((fulfill) => {
+        fulfill.fulfillmentLineItems.nodes.forEach((item) => {
+          fulfillmentLineItems.push({
+            fulfillmentId: fulfill.id,
+            productId: item.lineItem.id,
+            productTitle: item.lineItem.title,
+            sku: item.lineItem.sku,
           });
         });
+      });
+      const isExistFulfillmentPackageItem = fulfillmentOrder
+        .filter((order) => order.status !== 'CLOSED')
+        .filter((e) =>
+          fulfillmentLineItems.every((i) => i.productTitle !== e.productTitle)
+        )
+        .filter((item) => item.sku === PRODUCT_SKU);
 
-        const fulfillmentLineItems: Record<string, any>[] = [];
-
-        getOrder.body.data.order.fulfillments.forEach((fulfill) => {
-          fulfill.fulfillmentLineItems.nodes.forEach((item) => {
-            fulfillmentLineItems.push({
-              fulfillmentId: fulfill.id,
-              productId: item.lineItem.id,
-              productTitle: item.lineItem.title,
-              sku: item.lineItem.sku,
-            });
-          });
-        });
-        const isExistFulfillmentPackageItem = fulfillmentOrder
-          .filter((order) => order.status !== 'CLOSED')
-          .filter((e) =>
-            fulfillmentLineItems.every((i) => i.productTitle !== e.productTitle)
-          )
-          .filter((item) => item.sku === PRODUCT_SKU);
-
-        if (isExistFulfillmentPackageItem.length) {
-          for (const item of isExistFulfillmentPackageItem) {
-            await gqlClient.query<any>({
-              data: `#graphql
-              mutation {
-                fulfillmentCreate(fulfillment: {
-                  lineItemsByFulfillmentOrder:{
-                    fulfillmentOrderId:"${item.fulfillmentOrderId}",
-                    fulfillmentOrderLineItems:{id:"${item.productId}",quantity:1}
-                  }
-
-                }) {
-                  fulfillment {
-                    id
-                    status
-                  }
-                  userErrors {
-                    field
-                    message
-                  }
+      if (isExistFulfillmentPackageItem.length) {
+        for (const item of isExistFulfillmentPackageItem) {
+          await gqlClient.query<any>({
+            data: `#graphql
+            mutation {
+              fulfillmentCreate(fulfillment: {
+                lineItemsByFulfillmentOrder:{
+                  fulfillmentOrderId:"${item.fulfillmentOrderId}",
+                  fulfillmentOrderLineItems:{id:"${item.productId}",quantity:1}
                 }
-              }`,
-              tries: 20,
-            });
-          }
+
+              }) {
+                fulfillment {
+                  id
+                  status
+                }
+                userErrors {
+                  field
+                  message
+                }
+              }
+            }`,
+            tries: 20,
+          });
         }
       }
+    }
 
-      if (
-        fulfillmentStatus?.insuranceFulfillmentStatus ===
-        'Mark as fulfilled when first item(s) are fulfilled'
-      ) {
-        await makePackageProtectionFulfill(
-          getOrder.body.data.order.fulfillmentOrders.nodes,
-          gqlClient
-        );
-      }
-    // } else {
-    //   console.log(
-    //     `OrderPartiallyFulfilledEvent: No package protection, ${
-    //       (_payload as any).name
-    //     }`
-    //   );
-    // }
+    if (
+      fulfillmentStatus?.insuranceFulfillmentStatus ===
+      'Mark as fulfilled when first item(s) are fulfilled'
+    ) {
+      await makePackageProtectionFulfill(
+        order.fulfillmentOrders.nodes,
+        gqlClient
+      );
+    }
   } catch (error) {
     console.error('Error in orderPartiallyFulfilledEvent', error);
   }
@@ -456,107 +482,46 @@ export const orderUpdatedEvent = async ({
   if (!_payload || !session) {
     return console.log('OrderUpdatedEvent: No payload or session');
   }
-  const gqlClient = getShopifyGQLClient(session!);
   const payload = _payload as Record<string, any>;
-
   try {
-    // const existPackageProtection = payload.line_items.find(
-    //   (line) => line.sku === PRODUCT_SKU
-    // );
-    // if (existPackageProtection) {
-      const orderId = payload.admin_graphql_api_id;
+    const orderId = payload.admin_graphql_api_id;
+    const order = await fetchOrders(orderId, session);
+    console.log('   order?.channelInformation?.channelDefinition?.channelName',   order?.channelInformation?.channelDefinition?.channelName)
+    if (
+      order?.channelInformation?.channelDefinition?.channelName !== 'Online Store'
+    )
+      return;
 
-      const getOrder = await gqlClient.query<any>({
-        data: `#graphql
-        query{
-          order(id:"${orderId}"){
-            displayFulfillmentStatus
-            totalPriceSet{
-              shopMoney{
-                amount
-              }
-            }
-            fulfillmentOrders(first:250){
-              nodes{
-                id
-                status
-                lineItems(first:250){
-                  nodes{
-                    id
-                    productTitle
-                  }
-                }
-              }
-            }
-            lineItems(first:250){
-              nodes{
-                sku
-                title
-                product {
-                  id
-                }
-                originalTotalSet{
-                  shopMoney{
-                    amount
-                  }
-                }
-              }
-            }
-            fulfillments(first:250){
-              id
-              name
-              displayStatus
-              fulfillmentLineItems(first:250){
-                nodes{
-                  lineItem{
-                    title
-                    id
-                  }
-                }
-              }
-            }
-          }
+    const protectionFee = order.lineItems.nodes
+      .map((e) => {
+        if (e.sku === PRODUCT_SKU) {
+          return e.originalTotalSet.shopMoney.amount;
+        } else {
+          return 0;
         }
-        `,
-        tries: 20,
-      });
+      })
+      .join('');
 
-      const protectionFee = getOrder.body.data.order.lineItems.nodes
-        .map((e) => {
-          if (e.sku === PRODUCT_SKU) {
-            return e.originalTotalSet.shopMoney.amount;
-          } else {
-            return 0;
-          }
-        })
-        .join('');
+    console.log(
+      'order.displayFulfillmentStatus',
+      order.displayFulfillmentStatus,
+      order?.channelInformation?.channelDefinition?.channelName
+    );
 
-      console.log(
-        'getOrder.body.data.order.displayFulfillmentStatus',
-        getOrder.body.data.order.displayFulfillmentStatus
-      );
-
-      const updateOrder = await queryProxy.packageProtectionOrder.update(
-        {
-          data: {
-            fulfillmentStatus:
-              getOrder.body.data.order.displayFulfillmentStatus,
-            protectionFee: Number(protectionFee),
-            orderAmount: Number(
-              getOrder.body.data.order.totalPriceSet.shopMoney.amount
-            ),
-            orderDate: payload.created_at,
-          },
-          where: { orderId: orderId },
+    const updateOrder = await queryProxy.packageProtectionOrder.update(
+      {
+        data: {
+          fulfillmentStatus: order.displayFulfillmentStatus,
+          protectionFee: Number(protectionFee),
+          orderAmount: Number(order.totalPriceSet.shopMoney.amount),
+          orderDate: payload.created_at,
         },
-        { session }
-      );
-      console.log(updateOrder);
-    // } else {
-    //   console.log(
-    //     `OrderUpdatedEvent: No package protection, ${(_payload as any).name}`
-    //   );
-    // }
+        where: { orderId: orderId },
+      },
+      { session }
+    );
+    console.log(updateOrder);
+
   } catch (error) {
     console.error('Error on OrderUpdateEvent', error);
   }

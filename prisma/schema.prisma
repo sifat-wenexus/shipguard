@@ -523,7 +523,7 @@ model PackageProtectionOrder {
 
   createdAt                   DateTime                      @default(now()) @db.Timestamptz()
   updatedAt                   DateTime                      @updatedAt @db.Timestamptz()
-  claimDate                   DateTime                      @default(now()) @db.Timestamptz()
+  claimDate                   DateTime?
   orderDate                   DateTime                      @default(now()) @db.Timestamptz()
   Store                       Store                         @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   PackageProtectionClaimOrder PackageProtectionClaimOrder[]

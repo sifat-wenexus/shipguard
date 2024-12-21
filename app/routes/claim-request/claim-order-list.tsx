@@ -109,7 +109,6 @@ const ClaimOrderList = ({
         },
         include: {
           PackageProtectionClaimOrder: {
-
             where: filterFields.length
               ? { OR: filterFields }
               : { claimStatus: { not: 'PARTIALLYAPPROVE' } },
@@ -130,166 +129,172 @@ const ClaimOrderList = ({
     [setIsProcess, setOrderId]
   );
 
-  const rowMarkup = useMemo(
-    () =>{
-      const resultWithDistinctClaims = subscription?.data?.map((order) => {
-        const uniqueClaims = Array.from(
-          new Map(order.PackageProtectionClaimOrder.map((claim) => [claim.fulfillmentId, claim])).values()
-        );
-        return { ...order, PackageProtectionClaimOrder: uniqueClaims };
-      });
+  const rowMarkup = useMemo(() => {
+    const resultWithDistinctClaims = subscription?.data?.map((order) => {
+      const uniqueClaims = Array.from(
+        new Map(
+          order.PackageProtectionClaimOrder.map((claim) => [
+            claim.fulfillmentId,
+            claim,
+          ])
+        ).values()
+      );
+      return { ...order, PackageProtectionClaimOrder: uniqueClaims };
+    });
 
-     return resultWithDistinctClaims?.map(
-        (
-          {
-            id,
-            orderName,
-            protectionFee,
-            orderAmount,
-            claimDate,
-            orderId,
-            hasClaimRequest,
-            PackageProtectionClaimOrder,
-            refundAmount,
-          },
-          index
-        ) => {
-          const status = PackageProtectionClaimOrder.map((i) => i.claimStatus);
-          const claimStatus:
-            | 'Requested'
-            | 'Processing'
-            | 'Canceled'
-            | 'Approved' = status.every((i) => i === 'CANCEL')
-            ? 'Canceled'
-            : status.every((i) => i === 'REQUESTED')
-              ? 'Requested'
-              : status.every((i) => i === 'APPROVE')
-                ? 'Approved'
-                : 'Processing';
+    return resultWithDistinctClaims?.map(
+      (
+        {
+          id,
+          orderName,
+          protectionFee,
+          orderAmount,
+          claimDate,
+          orderId,
+          hasClaimRequest,
+          PackageProtectionClaimOrder,
+          refundAmount,
+        },
+        index
+      ) => {
+        const status = PackageProtectionClaimOrder.map((i) => i.claimStatus);
+        const claimStatus:
+          | 'Requested'
+          | 'Processing'
+          | 'Canceled'
+          | 'Approved' = status.every((i) => i === 'CANCEL')
+          ? 'Canceled'
+          : status.every((i) => i === 'REQUESTED')
+          ? 'Requested'
+          : status.every((i) => i === 'APPROVE')
+          ? 'Approved'
+          : 'Processing';
 
-          return (
-            <IndexTable.Row id={id.toString()} key={id} position={index}>
-              <IndexTable.Cell>
-                <Text variant="bodyMd" fontWeight="bold" as="span">
-                  <Link
-                    removeUnderline
-                    target="_blank"
-                    url={
-                      shop
-                        ? `https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
+        return (
+          <IndexTable.Row id={id.toString()} key={id} position={index}>
+            <IndexTable.Cell>
+              <Text variant="bodyMd" fontWeight="bold" as="span">
+                <Link
+                  removeUnderline
+                  target="_blank"
+                  url={
+                    shop
+                      ? `https://admin.shopify.com/store/${shop}/orders/${orderId.replace(
                           'gid://shopify/Order/',
                           ''
                         )}`
-                        : ''
+                      : ''
+                  }
+                >
+                  {' '}
+                  {orderName}
+                </Link>
+              </Text>
+            </IndexTable.Cell>
+            <IndexTable.Cell>
+              {i18n.formatCurrency(Number(protectionFee))}
+            </IndexTable.Cell>
+            <IndexTable.Cell>
+              <Text as="span">{i18n.formatCurrency(Number(orderAmount))}</Text>
+            </IndexTable.Cell>
+
+            <IndexTable.Cell>
+              {hasClaimRequest ? (
+                <>
+                  <Badge
+                    progress={
+                      claimStatus === 'Requested'
+                        ? 'incomplete'
+                        : claimStatus === 'Approved'
+                        ? 'complete'
+                        : 'partiallyComplete'
+                    }
+                    tone={
+                      claimStatus === 'Approved'
+                        ? 'success'
+                        : claimStatus === 'Canceled'
+                        ? 'critical'
+                        : claimStatus === 'Requested'
+                        ? 'warning'
+                        : 'info'
                     }
                   >
-                    {' '}
-                    {orderName}
-                  </Link>
-                </Text>
-              </IndexTable.Cell>
-              <IndexTable.Cell>
-                {i18n.formatCurrency(Number(protectionFee))}
-              </IndexTable.Cell>
-              <IndexTable.Cell>
-                <Text as="span">
-                  {i18n.formatCurrency(Number(orderAmount))}
-                </Text>
-              </IndexTable.Cell>
-
-              <IndexTable.Cell>
-                {hasClaimRequest ? (
-                  <>
-                    <Badge
-                      progress={
-                        claimStatus === 'Requested'
-                          ? 'incomplete'
-                          : claimStatus === 'Approved'
-                            ? 'complete'
-                            : 'partiallyComplete'
-                      }
-                      tone={
-                        claimStatus === 'Approved'
-                          ? 'success'
-                          : claimStatus === 'Canceled'
-                            ? 'critical'
-                            : claimStatus === 'Requested'
-                              ? 'warning'
-                              : 'info'
-                      }
-                    >
-                      {claimStatus}
-                    </Badge>
-                    <Badge
-                      tone={
-                        claimStatus === 'Approved'
-                          ? 'success'
-                          : claimStatus === 'Canceled'
-                            ? 'critical'
-                            : claimStatus === 'Requested'
-                              ? 'warning'
-                              : 'info'
-                      }
-                    >
-                      {PackageProtectionClaimOrder.length.toString()}
-                    </Badge>
-                  </>
-                ) : (
-                  <Text as="span" alignment="center">
-                    -
-                  </Text>
-                )}
-              </IndexTable.Cell>
-              <IndexTable.Cell>
-                {+refundAmount > 0 ? i18n.formatCurrency(+refundAmount) : '-'}
-              </IndexTable.Cell>
-
-              <IndexTable.Cell>{claimDate.split('T')[0]}</IndexTable.Cell>
-              <IndexTable.Cell>
-                <div className="text-center">
-                  <Button
-                    accessibilityLabel="Process"
-                    onClick={() => handleProcess(orderId)}
-                    variant="primary"
-                    icon={BlogIcon}
-                    tone="success"
-                    // disabled={
-                    //   claimStatus === 'Approved' || claimStatus === 'Canceled'
-                    // }
+                    {claimStatus}
+                  </Badge>
+                  <Badge
+                    tone={
+                      claimStatus === 'Approved'
+                        ? 'success'
+                        : claimStatus === 'Canceled'
+                        ? 'critical'
+                        : claimStatus === 'Requested'
+                        ? 'warning'
+                        : 'info'
+                    }
                   >
-                    Process
-                  </Button>
-                </div>
-              </IndexTable.Cell>
-            </IndexTable.Row>
-          );
-        }
-      )
-    },
+                    {PackageProtectionClaimOrder.length.toString()}
+                  </Badge>
+                </>
+              ) : (
+                <Text as="span" alignment="center">
+                  -
+                </Text>
+              )}
+            </IndexTable.Cell>
+            <IndexTable.Cell>
+              {+refundAmount > 0 ? i18n.formatCurrency(+refundAmount) : '-'}
+            </IndexTable.Cell>
 
-    [handleProcess, i18n, shop, subscription.data]
-  );
+            <IndexTable.Cell>{claimDate.split('T')[0]}</IndexTable.Cell>
+            <IndexTable.Cell>
+              <div className="text-center">
+                <Button
+                  accessibilityLabel="Process"
+                  onClick={() => handleProcess(orderId)}
+                  variant="primary"
+                  icon={BlogIcon}
+                  tone="success"
+                  // disabled={
+                  //   claimStatus === 'Approved' || claimStatus === 'Canceled'
+                  // }
+                >
+                  Process
+                </Button>
+              </div>
+            </IndexTable.Cell>
+          </IndexTable.Row>
+        );
+      }
+    );
+  }, [handleProcess, i18n, shop, subscription.data]);
 
   const emptyStateMarkup = (
-    <EmptySearchResult
-      title={'No Order yet'}
-      description={'Try changing the filters or search term'}
-      withIllustration
-    />
+    <>
+      <EmptySearchResult
+        title={'No orders found'}
+        description={'Try changing the filters or search term'}
+        withIllustration
+      />
+      {filterItems.length > 0 && (
+        <div className="flex justify-center mt-4">
+          <Button onClick={() => setFilterItems([])} variant="primary">
+            View All Orders
+          </Button>
+        </div>
+      )}
+    </>
   );
 
   return (
     <div className="w-full bg-white  rounded-lg shadow-md">
-      {Array.isArray(subscription.data) && subscription.data.length > 0 && (
-        <ClaimOrderSearchAndFilter
-          filterOption={{
-            inputText,
-            setInputText,
-            filterItems,
-            setFilterItems,
-          }}
-        />
-      )}
+      <ClaimOrderSearchAndFilter
+        filterOption={{
+          inputText,
+          setInputText,
+          filterItems,
+          setFilterItems,
+        }}
+      />
       <IndexTable
         itemCount={
           subscription.loading ? Infinity : (subscription.count as number)
@@ -319,11 +324,12 @@ const ClaimOrderList = ({
       >
         {subscription.loading ? (
           <IndexTable.Row id={'request-loading'} position={1}>
-          <IndexTable.Cell colSpan={7}>
-            <div className="flex justify-center">
-              <Spinner accessibilityLabel="Loading..." size="large" />
-            </div>
-          </IndexTable.Cell></IndexTable.Row>
+            <IndexTable.Cell colSpan={7}>
+              <div className="flex justify-center">
+                <Spinner accessibilityLabel="Loading..." size="large" />
+              </div>
+            </IndexTable.Cell>
+          </IndexTable.Row>
         ) : (
           <>{rowMarkup}</>
         )}

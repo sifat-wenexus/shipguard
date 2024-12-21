@@ -1,4 +1,3 @@
-
 import { Box, Button, Icon, Layout, Page } from '@shopify/polaris';
 
 import type { LoaderFunctionArgs } from '@remix-run/node';
@@ -44,7 +43,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       fulfillmentStatus: true,
       hasPackageProtection: true,
       createdAt: true,
-      claimDate: true,
+       claimDate: true,
     },
   });
   if (!data || !data.length) {
@@ -69,12 +68,49 @@ const Order = () => {
   const navigate = useNavigate();
   const { currencyCode, shop, data } = useLoaderData<typeof loader>();
 
+  const xlsxData = useMemo(
+    () =>
+      data.map((order) => {
+        const {
+          hasPackageProtection,
+          orderName,
+          customerFirstName,
+          customerLastName,
+          customerEmail,
+          orderAmount,
+          protectionFee,
+          refundAmount,
+          hasClaimRequest,
+          claimStatus,
+          fulfillmentStatus,
+          createdAt,
+          claimDate
+        } = order;
+        return {
+          orderName,
+          customerFirstName,
+          customerLastName,
+          customerEmail,
+          orderAmount,
+          protectionFee,
+          refundAmount,
+          orderStatus: hasPackageProtection ? 'Protected' : 'Non Protected',
+          hasClaimRequest,
+          fulfillmentStatus,
+          claimStatus,
+          createdAt,
+          claimDate
+        };
+      }),
+    [data]
+  );
+
   const handleExport = () => {
     // return;
     const wb = XLSX.utils.book_new();
 
     // Convert JSON data to a worksheet
-    const ws = XLSX.utils.json_to_sheet(data as any);
+    const ws = XLSX.utils.json_to_sheet(xlsxData as any);
 
     // Append the worksheet to the workbook
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
@@ -87,29 +123,33 @@ const Order = () => {
     <PageShell currencyCode={currencyCode}>
       <div className="m-4 sm:m-0 mt-10 sm:mt-4">
         {' '}
-        <Page title={'Order'} backAction={{ onAction: () => navigate(-1) }} fullWidth>
+        <Page
+          title={'Order'}
+          backAction={{ onAction: () => navigate(-1) }}
+          fullWidth
+        >
           <Layout>
-              <div className="w-full ms-4">
-                {/* <MainNav /> */}
-                {/*<Text as="h1" variant="headingLg" alignment="start">*/}
-                {/*  Order*/}
-                {/*</Text>*/}
-                <br />
-                <Box paddingBlockEnd={'400'}>
-                  <div className="flex justify-between">
-                    <DateRangePicker setActiveDates={setActiveDates} />
-                    <Button
-                      variant="primary"
-                      tone="success"
-                      onClick={handleExport}
-                      icon={<Icon source={ExportIcon} />}
-                    >
-                      Export
-                    </Button>
-                  </div>
-                </Box>
-                <OrderList shop={shop} activeDates={activeDates!} />
-              </div>
+            <div className="w-full ms-4">
+              {/* <MainNav /> */}
+              {/*<Text as="h1" variant="headingLg" alignment="start">*/}
+              {/*  Order*/}
+              {/*</Text>*/}
+              <br />
+              <Box paddingBlockEnd={'400'}>
+                <div className="flex justify-between">
+                  <DateRangePicker setActiveDates={setActiveDates} />
+                  <Button
+                    variant="primary"
+                    tone="success"
+                    onClick={handleExport}
+                    icon={<Icon source={ExportIcon} />}
+                  >
+                    Export
+                  </Button>
+                </div>
+              </Box>
+              <OrderList shop={shop} activeDates={activeDates!} />
+            </div>
           </Layout>
         </Page>
       </div>

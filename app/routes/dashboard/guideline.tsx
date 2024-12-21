@@ -1,7 +1,7 @@
-import packageProtectionImg from '~/assets/images/guideline/embed-image.png';
+import packageProtectionImg from '~/assets/images/guideline/embed-image.webp';
 import checkoutImg from '~/assets/images/guideline/9685914.webp';
 import claimPageImg from '~/assets/images/guideline/claim-page-image.png';
-import widgetImg from '~/assets/images/guideline/widget-image.png';
+import widgetImg from '~/assets/images/guideline/widget-image.webp';
 
 import { useCallback, useEffect,  useState } from 'react';
 import InstructionModal from './instruction-modal';
@@ -25,7 +25,7 @@ import {
 
 const GuideLine = ({ storeInfo, guidelineVisibility }) => {
   const [actionActive, toggleAction] = useState(false);
-  const [dismiss, setDismiss] = useState(guidelineVisibility ? true : false);
+  const [dismiss, setDismiss] = useState(!!guidelineVisibility);
   const [open, setOpen] = useState(() => {
     if (typeof window !== 'undefined') {
       const value = JSON.parse(

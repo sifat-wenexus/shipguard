@@ -132,19 +132,19 @@
 
 /*chat style*/
 #zsiq_float{
-  bottom: 10%;
+  bottom: 5%;
 }
 #zsiq_chat_wrap{
-  bottom:  calc(10% + 60px);
+  bottom:  calc(5% + 60px);
 }
 @media  screen and (min-width: 1500px) {
   #zsiq_float{
-    right: 10%;
-    bottom: 10%;
+    right: 5%;
+    bottom: 5%;
   }
   #zsiq_chat_wrap{
-    right: 10%;
-    bottom:  calc(10% + 60px);
+    right: 5%;
+    bottom:  calc(5% + 60px);
   }
 }
 @media screen and (max-width: 600px) {
