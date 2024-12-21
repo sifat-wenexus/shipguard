@@ -5,6 +5,8 @@ import { getShopifyGQLClient } from '~/modules/shopify.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { emitter } from '~/modules/emitter.server';
 import type { Session } from '~/shopify-api/lib';
+import { PackageProtectionOrder, Prisma } from '#prisma-client';
+import Decimal = Prisma.Decimal;
 
 const makePackageProtectionFulfill = async (
   data: Record<string, any>[],
@@ -167,7 +169,7 @@ export const orderCreateEvent = async ({
           })
           .join('');
 
-      const data = {
+      const data:Partial<PackageProtectionOrder>  = {
         storeId,
         hasPackageProtection: true,
         orderId: orderId,
@@ -177,11 +179,11 @@ export const orderCreateEvent = async ({
         customerLastName: payload.customer.last_name,
         orderName: updatedOrder.body.data.orderUpdate.order.name,
         orderDate: payload.created_at,
-        orderAmount: Number(
+        orderAmount: new Decimal(
           updatedOrder.body.data.orderUpdate.order.totalPriceSet.shopMoney
             .amount
         ),
-        protectionFee: Number(protectionFee),
+        protectionFee: new Decimal(protectionFee),
         fulfillmentStatus:
           updatedOrder.body.data.orderUpdate.order.displayFulfillmentStatus,
       };
@@ -205,7 +207,7 @@ export const orderCreateEvent = async ({
         );
       }
     } else {
-      const data = {
+      const data: Partial<PackageProtectionOrder> = {
         storeId,
         orderId,
         hasPackageProtection: false,
@@ -214,9 +216,9 @@ export const orderCreateEvent = async ({
         customerFirstName: payload.customer.first_name,
         customerLastName: payload.customer.last_name,
         orderName: payload.name,
-        orderAmount: Number(payload.total_price),
+        orderAmount: new Decimal(payload.total_price),
         orderDate: payload.created_at,
-        protectionFee: 0,
+        protectionFee:new Decimal(0),
         fulfillmentStatus: await fetchOrderStatus(orderId, session),
       };
 
@@ -302,10 +304,10 @@ const orderPartiallyFulfilledEvent = async ({
 
     console.log(`OrderPartiallyFulfilledEvent: ${payload.name}`);
 
-    const existPackageProtection = payload.line_items.find(
-      (line) => line.sku === PRODUCT_SKU
-    );
-    if (existPackageProtection) {
+    // const existPackageProtection = payload.line_items.find(
+    //   (line) => line.sku === PRODUCT_SKU
+    // );
+    // if (existPackageProtection) {
       const orderId = payload.admin_graphql_api_id;
 
       const getOrder = await gqlClient.query<any>({
@@ -396,7 +398,7 @@ const orderPartiallyFulfilledEvent = async ({
           .filter((item) => item.sku === PRODUCT_SKU);
 
         if (isExistFulfillmentPackageItem.length) {
-          isExistFulfillmentPackageItem.forEach(async (item) => {
+          for (const item of isExistFulfillmentPackageItem) {
             await gqlClient.query<any>({
               data: `#graphql
               mutation {
@@ -419,7 +421,7 @@ const orderPartiallyFulfilledEvent = async ({
               }`,
               tries: 20,
             });
-          });
+          }
         }
       }
 
@@ -432,13 +434,13 @@ const orderPartiallyFulfilledEvent = async ({
           gqlClient
         );
       }
-    } else {
-      console.log(
-        `OrderPartiallyFulfilledEvent: No package protection, ${
-          (_payload as any).name
-        }`
-      );
-    }
+    // } else {
+    //   console.log(
+    //     `OrderPartiallyFulfilledEvent: No package protection, ${
+    //       (_payload as any).name
+    //     }`
+    //   );
+    // }
   } catch (error) {
     console.error('Error in orderPartiallyFulfilledEvent', error);
   }
@@ -458,10 +460,10 @@ export const orderUpdatedEvent = async ({
   const payload = _payload as Record<string, any>;
 
   try {
-    const existPackageProtection = payload.line_items.find(
-      (line) => line.sku === PRODUCT_SKU
-    );
-    if (existPackageProtection) {
+    // const existPackageProtection = payload.line_items.find(
+    //   (line) => line.sku === PRODUCT_SKU
+    // );
+    // if (existPackageProtection) {
       const orderId = payload.admin_graphql_api_id;
 
       const getOrder = await gqlClient.query<any>({
@@ -550,11 +552,11 @@ export const orderUpdatedEvent = async ({
         { session }
       );
       console.log(updateOrder);
-    } else {
-      console.log(
-        `OrderUpdatedEvent: No package protection, ${(_payload as any).name}`
-      );
-    }
+    // } else {
+    //   console.log(
+    //     `OrderUpdatedEvent: No package protection, ${(_payload as any).name}`
+    //   );
+    // }
   } catch (error) {
     console.error('Error on OrderUpdateEvent', error);
   }

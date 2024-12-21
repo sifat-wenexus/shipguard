@@ -66,6 +66,10 @@ const OrderSearchAndFilter = ({
     >
       More Filter
     </Button>
+    // <button className='w-full border border-black rounded-md flex items-center p-1' onClick={togglePopoverActive}>
+    //   <Icon source={FilterIcon} />
+    //   <span className="sm:block hidden"> More Filter</span>
+    // </button>
   );
 
   const handleFulfillmentSelect = (index: number) => {
@@ -98,8 +102,8 @@ const OrderSearchAndFilter = ({
 
   return (
     <>
-      <div className="grid grid-cols-10 sm:grid-cols-10 md:grid-cols-10">
-        <div className="col-span-8 sm:col-span-9 md:col-span-8">
+      <div className="grid grid-cols-5 md:grid-cols-10">
+        <div className="col-span-3 md:col-span-8">
           <Box padding={'200'}>
             <TextField
               onChange={(text) => setInputText(text)}
@@ -111,7 +115,7 @@ const OrderSearchAndFilter = ({
             />
           </Box>
         </div>
-        <div className="col-span-2 sm:col-span-1 md:col-span-2 ">
+        <div className="col-span-2 md:col-span-2 ">
           <Box padding={'200'}>
             <div className="flex mt-[2px] filter-width">
               <Popover
@@ -123,7 +127,7 @@ const OrderSearchAndFilter = ({
                 preferredAlignment={'center'}
                 fullHeight
               >
-                <div className="w-full p-3">
+                <div className="w-full min-w-40 p-3">
                   <h1 className="font-bold text-base">Fulfillment Status</h1>
                   {fulfillmentStatus.map((item, index) => (
                     <Radio

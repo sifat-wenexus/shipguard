@@ -78,16 +78,16 @@ export default function Root() {
     if (!skipAuth) document.body.appendChild(script2);
   }, [skipAuth]);
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-
-    // Cleanup timeout on unmount
-    return () => clearTimeout(timer);
-  }, []);
+  // const [loading, setLoading] = useState(true);
+  //
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setLoading(false);
+  //   }, 1500);
+  //
+  //   // Cleanup timeout on unmount
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   return (
     <html>
@@ -108,9 +108,9 @@ export default function Root() {
               width: 48,
             }}
           >
-            {loading ? (
-              <LogoAnimation />
-            ) : (
+            {/*{loading ? (*/}
+            {/*  <LogoAnimation />*/}
+            {/*) : (*/}
               <>
                 {' '}
                 {!skipAuth && (
@@ -121,7 +121,7 @@ export default function Root() {
                 )}
                 <Outlet />
               </>
-            )}
+            {/*)}*/}
           </Frame>
         </AppProvider>
 

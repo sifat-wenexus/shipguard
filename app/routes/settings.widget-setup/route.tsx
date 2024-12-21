@@ -411,7 +411,7 @@ const Settings = () => {
                   <br />
                 </>
               )}
-              {<WarningBanner storeInfo={storeInfo} />}
+              {/*{<WarningBanner storeInfo={storeInfo} />}*/}
             </Layout.Section>
             <Layout.Section variant="oneHalf">
               <Box paddingBlockEnd={'500'}>

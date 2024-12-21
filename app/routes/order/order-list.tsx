@@ -76,7 +76,7 @@ const OrderList = ({
               return null;
             }),
           },
-          { hasPackageProtection: { equals: true } },
+          //{ hasPackageProtection: { equals: true } },
 
           {
             OR: [{ orderName: { contains: searchTerm } }],
@@ -113,6 +113,7 @@ const OrderList = ({
             orderDate,
             orderId,
             hasClaimRequest,
+            hasPackageProtection,
             PackageProtectionClaimOrder,
           },
           index
@@ -156,6 +157,16 @@ const OrderList = ({
                 <Text as="span" numeric>
                   {i18n.formatCurrency(Number(orderAmount))}
                 </Text>
+              </IndexTable.Cell>
+              <IndexTable.Cell>
+                <span className="capitalize">
+                  <Badge
+                    progress={hasPackageProtection?'complete':'incomplete'}
+                    tone={hasPackageProtection ? 'success' : 'critical'}
+                  >
+                    {hasPackageProtection?'Protected':'Non Protected'}
+                  </Badge>
+                </span>
               </IndexTable.Cell>
               <IndexTable.Cell>
                 <span className="capitalize">
@@ -258,6 +269,7 @@ const OrderList = ({
           { title: 'Order' },
           { title: 'Protection Fees' },
           { title: 'Order Amount' },
+          {title:'Order Status'},
           { title: 'Fulfillment status' },
           { title: 'Claim status' },
           { title: 'Created At' },

@@ -61,9 +61,13 @@ const ClaimOrderSearchAndFilter = ({
   );
 
   const activatorClaim = (
-
-    <Button onClick={togglePopoverClaimActive}  icon={<Icon source={FilterIcon} />}
-              fullWidth>Claim Status</Button>
+    <Button
+      onClick={togglePopoverClaimActive}
+      icon={<Icon source={FilterIcon} />}
+      fullWidth
+    >
+      Claim Status
+    </Button>
     // <div
     //   className="border border-gray-600 p-3 rounded-md font-medium hover:bg-gray-100 "
     //   onClick={togglePopoverClaimActive}
@@ -98,12 +102,12 @@ const ClaimOrderSearchAndFilter = ({
         .filter((element) => element.selected)
         .concat(claimStatus.filter((element) => element.selected))
     );
-  }, [fulfillmentStatus, claimStatus,setFilterItems]);
+  }, [fulfillmentStatus, claimStatus, setFilterItems]);
 
   return (
     <>
-      <div className="grid grid-cols-10 sm:grid-cols-10 md:grid-cols-10">
-        <div className="col-span-8 sm:col-span-9 md:col-span-8">
+      <div className="grid grid-cols-5 md:grid-cols-10">
+        <div className="col-span-3 md:col-span-8">
           <Box padding={'200'}>
             <TextField
               onChange={(text) => setInputText(text)}
@@ -115,7 +119,7 @@ const ClaimOrderSearchAndFilter = ({
             />
           </Box>
         </div>
-        <div className="col-span-2 sm:col-span-1 md:col-span-2">
+        <div className="col-span-2 md:col-span-2">
           <Box padding={'200'}>
             <div className=" w-full mt-[2px]">
               <Popover

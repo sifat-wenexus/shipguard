@@ -1,4 +1,6 @@
-import { Box, Button, Icon, Layout, Page, Text } from '@shopify/polaris';
+
+import { Box, Button, Icon, Layout, Page } from '@shopify/polaris';
+
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import DateRangePicker from '../dashboard/date-range';
 import { default30Days } from '../dashboard/dashboard';
