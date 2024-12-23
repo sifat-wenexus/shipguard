@@ -1,12 +1,10 @@
 import ImgLogo from '~/assets/images/logo-shipping-protection.png';
 import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
-import { queryProxy } from '~/modules/query/query-proxy';
 import { AppProvider } from '~/shopify-app-remix/react';
-import { useEffect, useMemo, useState } from 'react';
-import LogoAnimation from '~/components/page-loader';
 import tailwindStyles from '~/styles/tailwind.css';
 import { MainNav } from './components/main-nav';
+import { useEffect, useMemo } from 'react';
 import { Frame } from '@shopify/polaris';
 import { json } from '@remix-run/node';
 
@@ -55,12 +53,6 @@ export default function Root() {
   );
 
   useEffect(() => {
-    if (window !== undefined) {
-      (window as any).queryProxy = queryProxy;
-    }
-  }, []);
-
-  useEffect(() => {
     // First Script
     const script1 = document.createElement('script');
     script1.textContent = `
@@ -78,16 +70,6 @@ export default function Root() {
     if (!skipAuth) document.body.appendChild(script2);
   }, [skipAuth]);
 
-  // const [loading, setLoading] = useState(true);
-  //
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 1500);
-  //
-  //   // Cleanup timeout on unmount
-  //   return () => clearTimeout(timer);
-  // }, []);
   return (
     <html>
       <head>
@@ -109,20 +91,8 @@ export default function Root() {
               width: 48,
             }}
           >
-            {/*{loading ? (*/}
-            {/*  <LogoAnimation />*/}
-            {/*) : (*/}
-            <>
-              {' '}
-              {!skipAuth && (
-                <>
-                  {/*<Nav />*/}
-                  <MainNav />
-                </>
-              )}
-              <Outlet />
-            </>
-            {/*)}*/}
+            {!skipAuth && <MainNav />}
+            <Outlet />
           </Frame>
         </AppProvider>
 

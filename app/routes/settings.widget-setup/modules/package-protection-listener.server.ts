@@ -67,6 +67,8 @@ onDBEvtBuffered(
 
       console.log(`Package Protection Listener: Processing store ${storeId}`);
 
+  console.log('session',session,payload)
+
       if (!data || !session) {
         console.log('No data or session');
         continue;

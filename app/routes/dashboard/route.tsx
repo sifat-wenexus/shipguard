@@ -23,9 +23,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 const App = () => {
-  const {currencyCode,storeId} = useLoaderData<typeof loader>();
 
-  const { guidelineVisibility } = useLoaderData<typeof loader>();
+  const { guidelineVisibility,storeId,currencyCode } = useLoaderData<typeof loader>();
   return (
     <PageShell currencyCode={currencyCode}>
       <Page>
