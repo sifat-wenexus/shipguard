@@ -74,7 +74,7 @@ var __publicField = (obj, key, value) => {
     }
     async calculate() {
       const allVariants = await this.getNonPackageProtectionItems();
-      const excludeVariants = window.WeNexusOverallPackageProtectionSettings.packageProtectionProductAndVariants.map((product) => {
+      const excludeVariants = window.WeNexusShipGuardPackageProtectionSettings.packageProtectionProductAndVariants.map((product) => {
         return product.excludedPackageProtectionVariants.map(
           (variant2) => Number(variant2.id.replace("gid://shopify/ProductVariant/", ""))
         );
@@ -979,7 +979,7 @@ var __publicField = (obj, key, value) => {
   }
   async function packageProtection() {
     var _a, _b, _c, _d;
-    const settings = window.WeNexusOverallPackageProtectionSettings;
+    const settings = window.WeNexusShipGuardPackageProtectionSettings;
     const clients = [
       PackageProtectionClientShopifyFreeTheme,
       PackageProtectionClientMulti,
@@ -1000,7 +1000,7 @@ var __publicField = (obj, key, value) => {
     }
     const getItems = async () => (await window.weNexusCartApi.get()).items;
     let items = await getItems();
-    const excludeVariants = (_b = (_a = window.WeNexusOverallPackageProtectionSettings) == null ? void 0 : _a.packageProtectionProductAndVariants) == null ? void 0 : _b.map((product) => {
+    const excludeVariants = (_b = (_a = window.WeNexusShipGuardPackageProtectionSettings) == null ? void 0 : _a.packageProtectionProductAndVariants) == null ? void 0 : _b.map((product) => {
       return product.excludedPackageProtectionVariants.map(
         (variant) => Number(variant.id.replace("gid://shopify/ProductVariant/", ""))
       );
@@ -1010,7 +1010,7 @@ var __publicField = (obj, key, value) => {
       const result2 = [];
       for (let i = 0; i < items2.length; i++) {
         const variantId = items2[i].variant_id;
-        if (!excludeVariants.includes(variantId)) {
+        if (!(excludeVariants == null ? void 0 : excludeVariants.includes(variantId))) {
           items2[i].sku !== "wenexus-shipping-protection" && result2.push(items2[i]);
         }
       }
@@ -1035,23 +1035,23 @@ var __publicField = (obj, key, value) => {
       return value === "true";
     };
     const packageProtectionApi = new PackageProtectionApi(
-      Number(settings.percentage),
+      Number(settings == null ? void 0 : settings.percentage),
       enabled()
     );
     const client = new ClientClass(packageProtectionApi);
     let selectors = [];
-    if (!settings.defaultSetting) {
+    if (!(settings == null ? void 0 : settings.defaultSetting)) {
       selectors = ((_c = client.getInsertionPointSelectors) == null ? void 0 : _c.call(
         client,
-        settings.position.toLowerCase() ?? "before",
-        settings.cssSelector
+        (settings == null ? void 0 : settings.position.toLowerCase()) ?? "before",
+        settings == null ? void 0 : settings.cssSelector
       )) || [];
     } else {
       selectors = ((_d = client.getInsertionPointSelectors) == null ? void 0 : _d.call(client, "before")) || [];
     }
-    const fixedMultiplePlan = settings.fixedMultiplePlan;
-    const fixedMultipleVariants = settings.productVariants;
-    const result = fixedMultiplePlan.map((plan) => {
+    const fixedMultiplePlan = settings == null ? void 0 : settings.fixedMultiplePlan;
+    const fixedMultipleVariants = settings == null ? void 0 : settings.productVariants;
+    const result = fixedMultiplePlan == null ? void 0 : fixedMultiplePlan.map((plan) => {
       const match = fixedMultipleVariants == null ? void 0 : fixedMultipleVariants.find(
         (v) => Number(v.price) === Number(plan.protectionFees)
       );
@@ -1065,21 +1065,21 @@ var __publicField = (obj, key, value) => {
       }
       return null;
     }).filter((item) => item !== null);
-    if (settings.insurancePriceType === "FIXED_MULTIPLE") {
+    if ((settings == null ? void 0 : settings.insurancePriceType) === "FIXED_MULTIPLE") {
       packageProtectionApi.setVariants(
         PackageProtectionType.BASED_ON_CART_VALUE,
         result
       );
-    } else if (settings.insurancePriceType === "FIXED_PRICE") {
-      const fixedVariant = settings.productVariants[0];
+    } else if ((settings == null ? void 0 : settings.insurancePriceType) === "FIXED_PRICE") {
+      const fixedVariant = settings == null ? void 0 : settings.productVariants[0];
       packageProtectionApi.setVariants(PackageProtectionType.FIXED, {
         price: Number(fixedVariant.price),
         variantId: Number(fixedVariant.id)
       });
-    } else if (settings.insurancePriceType === "PERCENTAGE") {
+    } else if ((settings == null ? void 0 : settings.insurancePriceType) === "PERCENTAGE") {
       packageProtectionApi.setVariants(
         PackageProtectionType.PERCENTAGE,
-        settings.productVariants.reduce(
+        settings == null ? void 0 : settings.productVariants.reduce(
           (a, b) => {
             a[b.price] = Number(b.id);
             return a;
@@ -1088,12 +1088,12 @@ var __publicField = (obj, key, value) => {
         )
       );
     }
-    client.thumbnail = settings.iconUrl;
-    client.title = settings.title;
-    client.enabledDescription = settings.enabledDescription;
-    client.disabledDescription = settings.disabledDescription;
-    client.buttonColor = settings.switchColor;
-    client.css = settings.css;
+    client.thumbnail = settings == null ? void 0 : settings.iconUrl;
+    client.title = settings == null ? void 0 : settings.title;
+    client.enabledDescription = settings == null ? void 0 : settings.enabledDescription;
+    client.disabledDescription = settings == null ? void 0 : settings.disabledDescription;
+    client.buttonColor = settings == null ? void 0 : settings.switchColor;
+    client.css = settings == null ? void 0 : settings.css;
     client.infoPageLink = settings == null ? void 0 : settings.policyUrl;
     client.checked = enabled();
     if (typeof client.getStyleMarkup === "function") {
@@ -1151,8 +1151,8 @@ var __publicField = (obj, key, value) => {
       client.enabledCheckoutButton();
       const items2 = await getItems();
       setTimeout(() => {
-        if (items2.length > 0 && settings.packageProtectionProductAndVariants.length > 0 && window.Shopify.theme.theme_store_id === 887) {
-          const itemIds = settings.packageProtectionProductAndVariants.map(
+        if (items2.length > 0 && (settings == null ? void 0 : settings.packageProtectionProductAndVariants.length) > 0 && window.Shopify.theme.theme_store_id === 887) {
+          const itemIds = settings == null ? void 0 : settings.packageProtectionProductAndVariants.map(
             (p) => p.excludedPackageProtectionVariants.map(
               (v) => Number(v.id.split("/").pop())
             )
