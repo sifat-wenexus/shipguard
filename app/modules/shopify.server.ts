@@ -50,6 +50,8 @@ export const shopify = shopifyApp({
     CUSTOMERS_DATA_REQUEST: webhookHandler,
     SHOP_REDACT: webhookHandler,
     SHOP_UPDATE: webhookHandler,
+    THEMES_UPDATE: webhookHandler,
+    THEMES_PUBLISH: webhookHandler,
   },
   hooks: {
     afterAuth: async ({ session }) => {

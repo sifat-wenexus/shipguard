@@ -1,9 +1,8 @@
 import type { TabProps } from '@shopify/polaris/build/ts/src/components/Tabs/types';
-import { createContext, useContext } from 'react';
-import { Link, useLocation, useSearchParams } from '@remix-run/react';
+import { Link, useLocation } from '@remix-run/react';
 import type { FC } from 'react';
 
-export const MainNavContext = createContext([
+const tabs: TabProps[] = [
   {
     id: 'dashboard',
     url: '/dashboard',
@@ -30,30 +29,29 @@ export const MainNavContext = createContext([
     accessibilityLabel: 'settings',
   },
   {
-    id:'faqs',
+    id: 'faqs',
     url: '/faqs',
     content: 'FAQs',
     accessibilityLabel: 'faqs',
-  }
+  },
   // {
   //   id: 'pricing',
   //   url: '/pricing',
   //   content: 'Pricing',
   //   accessibilityLabel: 'pricing',
   // },
-] as TabProps[]);
+];
 
 export const MainNav: FC = () => {
-  const tabs = useContext(MainNavContext);
-  const urlPath = useLocation().pathname;
+  const location = useLocation();
 
   return (
     <ui-nav-menu>
       {tabs.map((tab) => (
         <Link
+          className={tab.url === location.pathname ? 'active' : ''}
           rel={tab.id === 'dashboard' ? 'home' : undefined}
           to={tab.url ?? ''}
-          className={tab.url === urlPath ? 'active' : ''}
           key={tab.id}
         >
           {tab.content}

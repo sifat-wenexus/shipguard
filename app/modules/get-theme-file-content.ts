@@ -4,7 +4,7 @@ import type { Session } from '~/shopify-api/lib';
 export async function getThemeFileContent(
   path: string,
   session: Session
-): Promise<string> {
+): Promise<string | null> {
   const gql = getShopifyGQLClient(session);
 
   const asset = await gql.query<Record<string, any>>({
@@ -33,7 +33,7 @@ export async function getThemeFileContent(
   });
 
   return (
-    asset.body.data.themes?.edges?.[0].node.files.edges[0].node.body.content ??
+    asset.body.data.themes?.edges?.[0].node.files.edges[0]?.node.body.content ??
     null
   );
 }
@@ -82,6 +82,7 @@ export async function getThemeFileInfo(
 export async function getThemeInfo(session: Session): Promise<{
   id: string;
   name: string;
+  themeStoreId: string | null;
 }> {
   const gql = getShopifyGQLClient(session);
 
@@ -92,6 +93,7 @@ export async function getThemeInfo(session: Session): Promise<{
         nodes{
           id
           name
+          themeStoreId
         }
       }
      }

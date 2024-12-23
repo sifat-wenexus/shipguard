@@ -177,6 +177,8 @@ model Store {
   id                String @id
   appInstallationId String
 
+  theme                           String?
+  themeVersion                    String?
   domain                          String    @unique
   name                            String
   email                           String?
