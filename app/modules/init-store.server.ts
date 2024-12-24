@@ -13,7 +13,10 @@ export async function upsertStore(session: Session, afterAuth = false) {
     });
 
     if (!hasStore) {
+      // send mail for app first install
+      jobRunner.run({name: 'send-email',storeId:session.storeId,payload:{uninstalled:false}});
       console.log(`Initializing store ${session.shop}`);
+
     } else {
       console.log(`Updating store ${session.shop}`);
     }
@@ -26,7 +29,6 @@ export async function upsertStore(session: Session, afterAuth = false) {
         currentAppInstallation {
           id
         }
-
         shop {
           id
           name
@@ -68,6 +70,12 @@ export async function upsertStore(session: Session, afterAuth = false) {
       (data as any).uninstalledAt = null;
 
       if (hasStore) {
+        if(hasStore.uninstalledAt){
+          // send mail for app re-install
+          jobRunner.run({name: 'send-email', storeId:hasStore.id,payload:{uninstalled:false}});
+        }
+
+
         await jobRunner.cancel({
           storeId: hasStore.id,
           name: 'shop-redact',

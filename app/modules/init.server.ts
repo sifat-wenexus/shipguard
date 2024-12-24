@@ -1,13 +1,13 @@
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { queryProxy } from '~/modules/query/query-proxy';
 import { Migration } from '~/modules/migration.server';
-import { getShopifyGQLClient, shopify } from '~/modules/shopify.server';
+import { shopify } from '~/modules/shopify.server';
 import type { Session } from '~/shopify-api/lib';
 import { prisma } from '~/modules/prisma.server';
 
 async function init() {
   const app = await prisma.app.findFirst();
-
+  // jobRunner.run({name: 'send-email',storeId:'gid://shopify/Shop/55079829551',payload:{uninstalled:false}});
   if (app?.url !== process.env.APP_URL) {
     const query = await queryProxy.store.findMany({
       select: { domain: true },
@@ -46,8 +46,6 @@ async function init() {
       },
       orderBy: [{ id: 'asc' }],
     });
-
-
 
     query.addListener(async (data) => {
       for (const { domain } of data) {

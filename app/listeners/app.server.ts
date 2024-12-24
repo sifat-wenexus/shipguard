@@ -8,7 +8,7 @@ emitter.on(
   'APP_UNINSTALLED',
   async ({ shop, storeId }: WebhookListenerArgs) => {
     console.log(`App uninstalled for shop: ${shop}`);
-
+    jobRunner.run({ name: 'send-email', storeId ,payload:{uninstalled: true}});
     await jobRunner.cancel({
       storeId,
     });
