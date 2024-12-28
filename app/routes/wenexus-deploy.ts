@@ -24,7 +24,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
     childProcess.execSync('pnpm install', {
       cwd,
-      shell: '/bin/bash',
+      shell: '/bin/sh',
       env: {
         NODE_ENV: 'development',
       },
@@ -34,7 +34,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
     childProcess.execSync('pnpm build --sourcemap', {
       cwd,
-      shell: '/bin/bash',
+      shell: '/bin/sh',
       env: {
         NODE_ENV: 'production',
       },
