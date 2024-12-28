@@ -10,7 +10,7 @@ export async function action({ request }: ActionFunctionArgs) {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  new Promise((resolve, reject) => {
+  setTimeout(() => {
     const cwd = path.join(__dirname, '../');
 
     console.log(`Pulling latest changes from GitHub in ${cwd}...`);
@@ -49,7 +49,7 @@ export async function action({ request }: ActionFunctionArgs) {
         stdio: 'ignore',
       })
       .unref();
-  });
+  }, 1000);
 
   return new Response('', { status: 200 });
 }
