@@ -16,21 +16,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
     console.log(`Pulling latest changes from GitHub in ${cwd}...`);
 
-    childProcess.execSync('git reset --hard', {
-      cwd,
-      shell: 'bash',
-    });
+    childProcess.execSync('git reset --hard', { cwd });
 
-    childProcess.execSync('git pull', {
-      cwd,
-      shell: 'bash',
-    });
+    childProcess.execSync('git pull', { cwd });
 
     console.log('Installing dependencies...');
 
     childProcess.execSync('pnpm install', {
       cwd,
-      shell: 'bash',
       env: {
         NODE_ENV: 'development',
       },
@@ -40,7 +33,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
     childProcess.execSync('pnpm build --sourcemap', {
       cwd,
-      shell: 'bash',
       env: {
         NODE_ENV: 'production',
       },
@@ -49,10 +41,7 @@ export async function action({ request }: ActionFunctionArgs) {
     // Prune the dependencies
     console.log('Pruning dependencies...');
 
-    childProcess.execSync('pnpm prune --prod', {
-      cwd,
-      shell: 'bash',
-    });
+    childProcess.execSync('pnpm prune --prod', { cwd });
 
     console.log('Restarting the server...');
 
