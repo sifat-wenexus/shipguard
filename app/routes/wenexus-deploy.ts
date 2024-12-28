@@ -7,6 +7,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const secret = searchParams.get('secret');
 
   if (secret !== process.env.GITHUB_WEBHOOK_SECRET) {
+    console.error('Unauthorized request to deploy endpoint');
     return new Response('Unauthorized', { status: 401 });
   }
 
