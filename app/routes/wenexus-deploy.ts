@@ -34,9 +34,12 @@ export async function action({ request }: ActionFunctionArgs) {
 
     console.log('Building the app...');
 
-    childProcess.execSync('pnpm build', {
+    childProcess.execSync('./node_modules/.bin/remix build --sourcemap', {
       cwd,
       shell: 'bash',
+      env: {
+        NODE_ENV: 'production',
+      }
     });
 
     console.log('Restarting the server...');
