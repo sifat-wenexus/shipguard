@@ -37,6 +37,7 @@ const skipAuthPaths = new Set([
   '/auth/login',
   '/terms-of-service',
   '/privacy-policy',
+  '/wenexus-deploy',
   '/',
 ]);
 
