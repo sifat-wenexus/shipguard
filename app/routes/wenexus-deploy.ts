@@ -29,7 +29,7 @@ export async function action({ request }: ActionFunctionArgs) {
       cwd,
       shell: true,
       env: {
-        NODE_ENV: 'production',
+        NODE_ENV: 'development',
       },
     });
 
