@@ -30,16 +30,27 @@ export async function action({ request }: ActionFunctionArgs) {
     childProcess.execSync('pnpm install', {
       cwd,
       shell: 'bash',
+      env: {
+        NODE_ENV: 'development',
+      },
     });
 
     console.log('Building the app...');
 
-    childProcess.execSync('./node_modules/.bin/remix build --sourcemap', {
+    childProcess.execSync('pnpm build --sourcemap', {
       cwd,
       shell: 'bash',
       env: {
         NODE_ENV: 'production',
-      }
+      },
+    });
+
+    // Prune the dependencies
+    console.log('Pruning dependencies...');
+
+    childProcess.execSync('pnpm prune --prod', {
+      cwd,
+      shell: 'bash',
     });
 
     console.log('Restarting the server...');
