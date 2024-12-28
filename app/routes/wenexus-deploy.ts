@@ -15,6 +15,11 @@ export async function action({ request }: ActionFunctionArgs) {
 
     console.log(`Pulling latest changes from GitHub in ${cwd}...`);
 
+    childProcess.execSync('git reset --hard', {
+      cwd,
+      shell: 'bash',
+    });
+
     childProcess.execSync('git pull', {
       cwd,
       shell: 'bash',
