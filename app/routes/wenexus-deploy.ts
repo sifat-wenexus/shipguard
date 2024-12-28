@@ -10,37 +10,41 @@ export async function action({ request }: ActionFunctionArgs) {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  const cwd = path.join(__dirname, '../');
+  new Promise((resolve, reject) => {
+    const cwd = path.join(__dirname, '../');
 
-  console.log(`Pulling latest changes from GitHub in ${cwd}...`);
+    console.log(`Pulling latest changes from GitHub in ${cwd}...`);
 
-  childProcess.execSync('git pull', {
-    cwd,
-    shell: 'bash',
-  });
-
-  console.log('Installing dependencies...');
-
-  childProcess.execSync('pnpm install', {
-    cwd,
-    shell: 'bash',
-  });
-
-  console.log('Building the app...');
-
-  childProcess.execSync('pnpm build', {
-    cwd,
-    shell: 'bash',
-  });
-
-  console.log('Restarting the server...');
-
-  childProcess
-    .spawn('pm2', ['restart', './ecosystem.config.js'], {
+    childProcess.execSync('git pull', {
       cwd,
-      detached: true,
       shell: 'bash',
-      stdio: 'ignore',
-    })
-    .unref();
+    });
+
+    console.log('Installing dependencies...');
+
+    childProcess.execSync('pnpm install', {
+      cwd,
+      shell: 'bash',
+    });
+
+    console.log('Building the app...');
+
+    childProcess.execSync('pnpm build', {
+      cwd,
+      shell: 'bash',
+    });
+
+    console.log('Restarting the server...');
+
+    childProcess
+      .spawn('pm2', ['restart', './ecosystem.config.js'], {
+        cwd,
+        detached: true,
+        shell: 'bash',
+        stdio: 'ignore',
+      })
+      .unref();
+  });
+
+  return new Response('', { status: 200 });
 }
