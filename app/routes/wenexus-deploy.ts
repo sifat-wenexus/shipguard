@@ -11,39 +11,44 @@ export async function action({ request }: ActionFunctionArgs) {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  setTimeout(() => {
+  setTimeout(async () => {
+    const execa = await import('execa');
     const cwd = path.join(__dirname, '../');
 
     console.log(`Pulling latest changes from GitHub in ${cwd}...`);
 
-    childProcess.execSync('git reset --hard', { cwd });
+    execa.execaSync('git', ['reset', '--hard'], { cwd, shell: true });
 
-    childProcess.execSync('git pull', { cwd });
+    // childProcess.execSync('git pull', { cwd });
+
+    execa.execaSync('git', ['pull'], { cwd, shell: true });
 
     console.log('Installing dependencies...');
 
-    childProcess.execSync('pnpm install', {
+    execa.execaSync('pnpm', ['install'], {
       cwd,
-      shell: '/bin/sh',
-      env: {
-        NODE_ENV: 'development',
-      },
-    });
-
-    console.log('Building the app...');
-
-    childProcess.execSync('pnpm build --sourcemap', {
-      cwd,
-      shell: '/bin/sh',
+      shell: true,
       env: {
         NODE_ENV: 'production',
       },
     });
 
+    console.log('Building the app...');
+
+    execa.execaSync('pnpm', ['build', '--sourcemap'], {
+      cwd,
+      shell: true,
+      env: { NODE_ENV: 'production' },
+    });
+
     // Prune the dependencies
     console.log('Pruning dependencies...');
 
-    childProcess.execSync('pnpm prune --prod', { cwd });
+    execa.execaSync('pnpm', ['prune', '--prod'], {
+      cwd,
+      shell: true,
+      env: { NODE_ENV: 'production' },
+    });
 
     console.log('Restarting the server...');
 
