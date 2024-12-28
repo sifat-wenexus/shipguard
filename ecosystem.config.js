@@ -6,6 +6,8 @@ module.exports = {
   apps: [
     {
       name: 'Shipping Protection',
+      mode: 'fork',
+      increment_var: 'PORT',
       script: './node_modules/.bin/remix-serve build/index.js',
       instances: cpus < 2 ? 2 : cpus,
       instance_var: 'NODE_ID',
