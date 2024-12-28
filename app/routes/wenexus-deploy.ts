@@ -17,17 +17,19 @@ export async function action({ request }: ActionFunctionArgs) {
 
     console.log(`Pulling latest changes from GitHub in ${cwd}...`);
 
-    execa.execaSync('git', ['reset', '--hard'], { cwd, shell: true });
-
-    // childProcess.execSync('git pull', { cwd });
-
-    execa.execaSync('git', ['pull'], { cwd, shell: true });
+    execa.execaSync('git', ['reset', '--hard'], {
+      cwd,
+      shell: true,
+      stdio: 'inherit',
+    });
+    execa.execaSync('git', ['pull'], { cwd, shell: true, stdio: 'inherit' });
 
     console.log('Installing dependencies...');
 
     execa.execaSync('pnpm', ['install'], {
       cwd,
       shell: true,
+      stdio: 'inherit',
       env: {
         NODE_ENV: 'development',
       },
@@ -38,6 +40,7 @@ export async function action({ request }: ActionFunctionArgs) {
     execa.execaSync('pnpm', ['build', '--sourcemap'], {
       cwd,
       shell: true,
+      stdio: 'inherit',
       env: { NODE_ENV: 'production' },
     });
 
@@ -47,6 +50,7 @@ export async function action({ request }: ActionFunctionArgs) {
     execa.execaSync('pnpm', ['prune', '--prod'], {
       cwd,
       shell: true,
+      stdio: 'inherit',
       env: { NODE_ENV: 'production' },
     });
 
