@@ -1288,6 +1288,16 @@ var __publicField = (obj, key, value) => {
         schema_name: "Veena",
         name: "Veena"
       }
+    },
+    {
+      // completed by [Abid]
+      name: "Koto",
+      attributes: {
+        theme_store_id: 3001,
+        id: 133744328790,
+        schema_name: "Koto",
+        name: "Koto"
+      }
     }
   ];
   const checkTheme = (themes) => {
