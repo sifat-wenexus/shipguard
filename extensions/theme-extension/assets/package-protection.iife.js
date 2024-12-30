@@ -1280,7 +1280,7 @@ var __publicField = (obj, key, value) => {
       }
     },
     {
-      // to be completed by [Abid]
+      // completed by [Abid]
       name: "Veena",
       attributes: {
         theme_store_id: 2566,
