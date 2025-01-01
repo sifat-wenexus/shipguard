@@ -479,17 +479,28 @@ var __publicField = (obj, key, value) => {
         schema_name: "Kingdom",
         name: "Kingdom"
       }
+    },
+    {
+      name: "Andaman",
+      attributes: {
+        theme_store_id: 1390,
+        id: 133743444054,
+        schema_name: "Andaman",
+        name: "Andaman"
+      }
     }
   ];
-  const prestigeTheme = [{
-    name: "Prestige",
-    attributes: {
-      theme_store_id: 855,
-      id: 138428776541,
-      schema_name: "Prestige",
-      name: "Prestige"
+  const prestigeTheme = [
+    {
+      name: "Prestige",
+      attributes: {
+        theme_store_id: 855,
+        id: 138428776541,
+        schema_name: "Prestige",
+        name: "Prestige"
+      }
     }
-  }];
+  ];
   const maestroooTheme = [
     {
       name: "Warehouse",
@@ -516,6 +527,26 @@ var __publicField = (obj, key, value) => {
         id: 138429071453,
         schema_name: "Focal",
         name: "Focal"
+      }
+    }
+  ];
+  const toyoTheme = [
+    {
+      name: "Toyo",
+      attributes: {
+        theme_store_id: 2358,
+        id: 133742198870,
+        schema_name: "Toyo",
+        name: "Toyo"
+      }
+    },
+    {
+      name: "Atom",
+      attributes: {
+        theme_store_id: 1974,
+        id: 133788106838,
+        schema_name: "Atom",
+        name: "Atom"
       }
     }
   ];
@@ -1010,6 +1041,164 @@ var __publicField = (obj, key, value) => {
         schema_name: "Responsive",
         name: "Responsive"
       }
+    },
+    {
+      name: "Sydney",
+      attributes: {
+        theme_store_id: 2117,
+        id: 133787910230,
+        schema_name: "Sydney",
+        name: "Sydney"
+      }
+    },
+    {
+      name: "Madrid",
+      attributes: {
+        theme_store_id: 2870,
+        id: 133741445206,
+        schema_name: "Madrid",
+        name: "Madrid"
+      }
+    },
+    {
+      name: "Avante",
+      attributes: {
+        theme_store_id: 1667,
+        id: 133741248598,
+        schema_name: "Avante",
+        name: "Avante"
+      }
+    },
+    {
+      name: "Charge",
+      attributes: {
+        theme_store_id: 2063,
+        id: 133741215830,
+        schema_name: "Charge",
+        name: "Charge"
+      }
+    },
+    {
+      name: "Relax",
+      attributes: {
+        theme_store_id: 2477,
+        id: 133743706198,
+        schema_name: "Relax",
+        name: "Relax"
+      }
+    },
+    {
+      name: "Divine",
+      attributes: {
+        theme_store_id: 2931,
+        id: 133742854230,
+        schema_name: "Divine",
+        name: "Divine"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Starlite",
+      attributes: {
+        theme_store_id: 2455,
+        id: 133743378518,
+        schema_name: "Starlite",
+        name: "Starlite"
+      }
+    },
+    {
+      name: "Luxe",
+      attributes: {
+        theme_store_id: 2779,
+        id: 133741150294,
+        schema_name: "Luxe",
+        name: "Luxe"
+      }
+    },
+    {
+      name: "Essence",
+      attributes: {
+        theme_store_id: 2366,
+        id: 133741903958,
+        schema_name: "Essence",
+        name: "Essence"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Abode",
+      attributes: {
+        theme_store_id: 1918,
+        id: 133741969494,
+        schema_name: "Abode",
+        name: "Abode"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Loft",
+      attributes: {
+        theme_store_id: 846,
+        id: 133742624854,
+        schema_name: "Loft",
+        name: "Loft"
+      }
+    },
+    {
+      name: "Neat",
+      attributes: {
+        theme_store_id: 1878,
+        id: 133743837270,
+        schema_name: "Neat",
+        name: "Neat"
+      }
+    },
+    {
+      name: "Noire",
+      attributes: {
+        theme_store_id: 2926,
+        id: 133787942998,
+        schema_name: "Noire",
+        name: "Noire"
+      }
+    },
+    {
+      name: "Praise",
+      attributes: {
+        theme_store_id: 2144,
+        id: 133788500054,
+        schema_name: "Praise",
+        name: "Praise"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Polyform",
+      attributes: {
+        theme_store_id: 2493,
+        id: 133788532822,
+        schema_name: "Polyform",
+        name: "Polyform"
+      }
+    },
+    {
+      name: "Roam",
+      attributes: {
+        theme_store_id: 1777,
+        id: 133789057110,
+        schema_name: "Roam",
+        name: "Roam"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Align",
+      attributes: {
+        theme_store_id: 1966,
+        id: 138429923421,
+        schema_name: "Align",
+        name: "Align"
+      }
     }
   ];
   const universalForSubTotalTheme = [
@@ -1136,6 +1325,512 @@ var __publicField = (obj, key, value) => {
         schema_name: "Aesthetic",
         name: "Aesthetic"
       }
+    },
+    {
+      name: "Whisk",
+      attributes: {
+        theme_store_id: 1819,
+        id: 133741576278,
+        schema_name: "Whisk",
+        name: "Whisk"
+      }
+    },
+    {
+      name: "Flawless",
+      attributes: {
+        theme_store_id: 2847,
+        id: 133741510742,
+        schema_name: "Flawless",
+        name: "Flawless"
+      }
+    },
+    {
+      name: "Copenhagen",
+      attributes: {
+        theme_store_id: 2564,
+        id: 133788237910,
+        schema_name: "Copenhagen",
+        name: "Copenhagen"
+      }
+    },
+    {
+      name: "Barcelona",
+      attributes: {
+        theme_store_id: 2324,
+        id: 133788008534,
+        schema_name: "Barcelona",
+        name: "Barcelona"
+      }
+    },
+    {
+      name: "Monaco",
+      attributes: {
+        theme_store_id: 2125,
+        id: 133787713622,
+        schema_name: "Monaco",
+        name: "Monaco"
+      }
+    },
+    {
+      name: "Berlin",
+      attributes: {
+        theme_store_id: 2138,
+        id: 133743018070,
+        schema_name: "Berlin",
+        name: "Berlin"
+      }
+    },
+    {
+      name: "Pursuit",
+      attributes: {
+        theme_store_id: 1654,
+        id: 133741346902,
+        schema_name: "Pursuit",
+        name: "Pursuit"
+      }
+    },
+    {
+      name: "Multi",
+      attributes: {
+        theme_store_id: 2337,
+        id: 133743050838,
+        schema_name: "Multi",
+        name: "Multi"
+      }
+    },
+    {
+      name: "ShowTime",
+      attributes: {
+        theme_store_id: 687,
+        id: 138430283869,
+        schema_name: "ShowTime",
+        name: "ShowTime"
+      }
+    },
+    {
+      name: "Galleria",
+      attributes: {
+        theme_store_id: 851,
+        id: 133790892118,
+        schema_name: "Galleria",
+        name: "Galleria"
+      }
+    },
+    {
+      name: "Digital",
+      attributes: {
+        theme_store_id: 2539,
+        id: 133741281366,
+        schema_name: "Digital",
+        name: "Digital"
+      }
+    },
+    {
+      name: "Outsiders",
+      attributes: {
+        theme_store_id: 2896,
+        id: 133742035030,
+        schema_name: "Outsiders",
+        name: "Outsiders"
+      }
+    },
+    {
+      name: "Swipe",
+      attributes: {
+        theme_store_id: 2737,
+        id: 133787975766,
+        schema_name: "Swipe",
+        name: "Swipe"
+      }
+    },
+    {
+      name: "Select",
+      attributes: {
+        theme_store_id: 2372,
+        id: 133743935574,
+        schema_name: "Select",
+        name: "Select"
+      }
+    },
+    {
+      name: "Minimalista",
+      attributes: {
+        theme_store_id: 2316,
+        id: 133742067798,
+        schema_name: "Minimalista",
+        name: "Minimalista"
+      }
+    },
+    {
+      name: "Stockmart",
+      attributes: {
+        theme_store_id: 2105,
+        id: 133744459862,
+        schema_name: "Stockmart",
+        name: "Stockmart"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Fame",
+      attributes: {
+        theme_store_id: 2101,
+        id: 133788139606,
+        schema_name: "Fame",
+        name: "Fame"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Gain",
+      attributes: {
+        theme_store_id: 2077,
+        id: 133741183062,
+        schema_name: "Gain",
+        name: "Gain"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Boutique",
+      attributes: {
+        theme_store_id: 3051,
+        id: 133742002262,
+        schema_name: "Boutique",
+        name: "Boutique"
+      }
+    },
+    {
+      name: "Ultra",
+      attributes: {
+        theme_store_id: 2967,
+        id: 133742100566,
+        schema_name: "Ultra",
+        name: "Ultra"
+      }
+    },
+    {
+      name: "Infinity",
+      attributes: {
+        theme_store_id: 2061,
+        id: 133741772886,
+        schema_name: "Infinity",
+        name: "Infinity"
+      }
+    },
+    {
+      name: "Colors",
+      attributes: {
+        theme_store_id: 757,
+        id: 133742755926,
+        schema_name: "Colors",
+        name: "Colors"
+      }
+    },
+    {
+      name: "California",
+      attributes: {
+        theme_store_id: 691,
+        id: 133742690390,
+        schema_name: "California",
+        name: "California"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Stockholm",
+      attributes: {
+        theme_store_id: 1405,
+        id: 133743902806,
+        schema_name: "Stockholm",
+        name: "Stockholm"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Portland",
+      attributes: {
+        theme_store_id: 1924,
+        id: 133743542358,
+        schema_name: "Portland",
+        name: "Portland"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Handmade",
+      attributes: {
+        theme_store_id: 1791,
+        id: 133788434518,
+        schema_name: "Handmade",
+        name: "Handmade"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Kidu",
+      attributes: {
+        theme_store_id: 2268,
+        id: 133743804502,
+        schema_name: "Kidu",
+        name: "Kidu"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Nexa",
+      attributes: {
+        theme_store_id: 2820,
+        id: 133788368982,
+        schema_name: "Nexa",
+        name: "Nexa"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Urban",
+      attributes: {
+        theme_store_id: 2405,
+        id: 133744263254,
+        schema_name: "Urban",
+        name: "Urban"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Agile",
+      attributes: {
+        theme_store_id: 2346,
+        id: 133743673430,
+        schema_name: "Agile",
+        name: "Agile"
+      }
+    },
+    {
+      name: "Nostalgia",
+      attributes: {
+        theme_store_id: 2175,
+        id: 133744197718,
+        schema_name: "Nostalgia",
+        name: "Nostalgia"
+      }
+    },
+    {
+      name: "Refine",
+      attributes: {
+        theme_store_id: 2782,
+        id: 133788696662,
+        schema_name: "Refine",
+        name: "Refine"
+      }
+    },
+    {
+      name: "Mandolin",
+      attributes: {
+        theme_store_id: 1696,
+        id: 133744132182,
+        schema_name: "Mandolin",
+        name: "Mandolin"
+      }
+    },
+    {
+      name: "Lute",
+      attributes: {
+        theme_store_id: 2171,
+        id: 133789319254,
+        schema_name: "Lute",
+        name: "Lute"
+      }
+    },
+    {
+      name: "Banjo",
+      attributes: {
+        theme_store_id: 1778,
+        id: 133789220950,
+        schema_name: "Banjo",
+        name: "Banjo"
+      }
+    },
+    {
+      name: "Chord",
+      attributes: {
+        theme_store_id: 1584,
+        id: 133789352022,
+        schema_name: "Chord",
+        name: "Chord"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Effortless",
+      attributes: {
+        theme_store_id: 1743,
+        id: 133788172374,
+        schema_name: "Effortless",
+        name: "Effortless"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Urge",
+      attributes: {
+        theme_store_id: 2213,
+        id: 133788794966,
+        schema_name: "Urge",
+        name: "Urge"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Huge",
+      attributes: {
+        theme_store_id: 2158,
+        id: 133789286486,
+        schema_name: "Huge",
+        name: "Huge"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Vincent",
+      attributes: {
+        theme_store_id: 2913,
+        id: 133787746390,
+        schema_name: "Vincent",
+        name: "Vincent"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Minion",
+      attributes: {
+        theme_store_id: 1571,
+        id: 133742231638,
+        schema_name: "Minion",
+        name: "Minion"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Area",
+      attributes: {
+        theme_store_id: 2073,
+        id: 133787582550,
+        schema_name: "Area",
+        name: "Area"
+      }
+    },
+    {
+      name: "Elysian",
+      attributes: {
+        theme_store_id: 2578,
+        id: 133788663894,
+        schema_name: "Elysian",
+        name: "Elysian"
+      }
+    },
+    {
+      name: "Brava",
+      attributes: {
+        theme_store_id: 2148,
+        id: 133789253718,
+        schema_name: "Brava",
+        name: "Brava"
+      }
+    },
+    {
+      name: "Erickson",
+      attributes: {
+        theme_store_id: 1790,
+        id: 133789089878,
+        schema_name: "Erickson",
+        name: "Erickson"
+      }
+    },
+    {
+      name: "StyleScape",
+      attributes: {
+        theme_store_id: 2238,
+        id: 133788401750,
+        schema_name: "StyleScape",
+        name: "StyleScape"
+      }
+    },
+    {
+      name: "Soul",
+      attributes: {
+        theme_store_id: 2825,
+        id: 133788336214,
+        schema_name: "Soul",
+        name: "Soul"
+      }
+    },
+    {
+      name: "Emporium",
+      attributes: {
+        theme_store_id: 1854,
+        id: 133788303446,
+        schema_name: "Emporium",
+        name: "Emporium"
+      }
+    },
+    {
+      name: "Creator",
+      attributes: {
+        theme_store_id: 1922,
+        id: 133788270678,
+        schema_name: "Creator",
+        name: "Creator"
+      }
+    },
+    {
+      name: "Palo Alto",
+      attributes: {
+        theme_store_id: 777,
+        id: 138429136989,
+        schema_name: "Palo Alto",
+        name: "Palo Alto"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Zora",
+      attributes: {
+        theme_store_id: 2505,
+        id: 133789155414,
+        schema_name: "Zora",
+        name: "Zora"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Pipeline",
+      attributes: {
+        theme_store_id: 739,
+        id: 138428973149,
+        schema_name: "Pipeline",
+        name: "Pipeline"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Story",
+      attributes: {
+        theme_store_id: 864,
+        id: 138430185565,
+        schema_name: "Story",
+        name: "Story"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Broadcast",
+      attributes: {
+        theme_store_id: 868,
+        id: 138428907613,
+        schema_name: "Broadcast",
+        name: "Broadcast"
+      }
     }
   ];
   const universalForExponentSubtotal = [
@@ -1180,6 +1875,53 @@ var __publicField = (obj, key, value) => {
     //     name: 'Baseline',
     //   },
     // },
+    {
+      // NOT COMPLETED FULLY. HAS ISSUES.
+      name: "Murmel",
+      attributes: {
+        theme_store_id: 2512,
+        id: 133789384790,
+        schema_name: "Murmel",
+        name: "Murmel"
+      }
+    },
+    {
+      name: "District",
+      attributes: {
+        theme_store_id: 735,
+        id: 138429759581,
+        schema_name: "District",
+        name: "District"
+      }
+    },
+    {
+      name: "Sitar",
+      attributes: {
+        theme_store_id: 2599,
+        id: 138430087261,
+        schema_name: "Sitar",
+        name: "Sitar"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Concept",
+      attributes: {
+        theme_store_id: 2412,
+        id: 138428842077,
+        schema_name: "Concept",
+        name: "Concept"
+      }
+    },
+    {
+      name: "Kairo",
+      attributes: {
+        theme_store_id: 1843,
+        id: 133788041302,
+        schema_name: "Kairo",
+        name: "Kairo"
+      }
+    },
     {
       name: "Exhibit",
       attributes: {
@@ -1297,6 +2039,294 @@ var __publicField = (obj, key, value) => {
         id: 133744328790,
         schema_name: "Koto",
         name: "Koto"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Piano",
+      attributes: {
+        theme_store_id: 2812,
+        id: 133744164950,
+        schema_name: "Piano",
+        name: "Piano"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Cello",
+      attributes: {
+        theme_store_id: 2328,
+        id: 133743411286,
+        schema_name: "Cello",
+        name: "Cello"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Viola",
+      attributes: {
+        theme_store_id: 1701,
+        id: 138430546013,
+        schema_name: "Viola",
+        name: "Viola"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "King",
+      attributes: {
+        theme_store_id: 2948,
+        id: 133742886998,
+        schema_name: "King",
+        name: "King"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Shark",
+      attributes: {
+        theme_store_id: 2619,
+        id: 133742788694,
+        schema_name: "Shark",
+        name: "Shark"
+      }
+    },
+    {
+      name: "Energy",
+      attributes: {
+        theme_store_id: 2717,
+        id: 133742264406,
+        schema_name: "Energy",
+        name: "Energy"
+      }
+    },
+    {
+      name: "Igloo",
+      attributes: {
+        theme_store_id: 2315,
+        id: 133742166102,
+        schema_name: "Igloo",
+        name: "Igloo"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Meka",
+      attributes: {
+        theme_store_id: 2845,
+        id: 133741936726,
+        schema_name: "Meka",
+        name: "Meka"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Providence",
+      attributes: {
+        theme_store_id: 587,
+        id: 133742723158,
+        schema_name: "Providence",
+        name: "Providence"
+      }
+    },
+    {
+      name: "Amber",
+      attributes: {
+        theme_store_id: 2217,
+        id: 133743345750,
+        schema_name: "Amber",
+        name: "Amber"
+      }
+    },
+    {
+      name: "Marble",
+      attributes: {
+        theme_store_id: 1907,
+        id: 133742592086,
+        schema_name: "Marble",
+        name: "Marble"
+      }
+    },
+    {
+      name: "Sunrise",
+      attributes: {
+        theme_store_id: 57,
+        id: 133742493782,
+        schema_name: "Sunrise",
+        name: "Sunrise"
+      }
+    },
+    {
+      name: "Unicorn",
+      attributes: {
+        theme_store_id: 2264,
+        id: 133744296022,
+        schema_name: "Unicorn",
+        name: "Unicorn"
+      }
+    },
+    {
+      name: "Iris",
+      attributes: {
+        theme_store_id: 2489,
+        id: 133744099414,
+        schema_name: "Iris",
+        name: "Iris"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Divide",
+      attributes: {
+        theme_store_id: 2273,
+        id: 133787648086,
+        schema_name: "Divide",
+        name: "Divide"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Takeout",
+      attributes: {
+        theme_store_id: 2534,
+        id: 133788762198,
+        schema_name: "Takeout",
+        name: "Takeout"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Aisle",
+      attributes: {
+        theme_store_id: 2378,
+        id: 133788729430,
+        schema_name: "Aisle Theme",
+        name: "Aisle"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Noblesse",
+      attributes: {
+        theme_store_id: 2546,
+        id: 133788631126,
+        schema_name: "Noblesse",
+        name: "Noblesse"
+      }
+    },
+    {
+      // completed by [Abid] - might need to debug button state issue.
+      name: "Pesto",
+      attributes: {
+        theme_store_id: 2275,
+        id: 133788565590,
+        schema_name: "Pesto",
+        name: "Pesto"
+      }
+    },
+    {
+      name: "Satoshi",
+      attributes: {
+        theme_store_id: 2881,
+        id: 133788467286,
+        schema_name: "Satoshi",
+        name: "Satoshi"
+      }
+    },
+    {
+      name: "Modules",
+      attributes: {
+        theme_store_id: 1795,
+        id: 133789450326,
+        schema_name: "Modules",
+        name: "Modules"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Bazaar",
+      attributes: {
+        theme_store_id: 1448,
+        id: 133789417558,
+        schema_name: "Bazaar",
+        name: "Bazaar"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Nimbus",
+      attributes: {
+        theme_store_id: 3094,
+        id: 138429333597,
+        schema_name: "Nimbus",
+        name: "Nimbus"
+      }
+    },
+    {
+      // completed by [Abid]
+      name: "Eurus",
+      attributes: {
+        theme_store_id: 2048,
+        id: 138429300829,
+        schema_name: "Eurus",
+        name: "Eurus"
+      }
+    },
+    {
+      name: "Avenue",
+      attributes: {
+        theme_store_id: 865,
+        id: 138429857885,
+        schema_name: "Avenue",
+        name: "Avenue"
+      }
+    }
+  ];
+  const brickSpaceLabTheme = [
+    {
+      name: "Space",
+      attributes: {
+        theme_store_id: 2659,
+        id: 133743575126,
+        schema_name: "Space",
+        name: "Space"
+      }
+    },
+    {
+      name: "Keystone",
+      attributes: {
+        theme_store_id: 2943,
+        id: 133787779158,
+        schema_name: "Keystone",
+        name: "Keystone"
+      }
+    },
+    {
+      name: "Paper",
+      attributes: {
+        theme_store_id: 1662,
+        id: 133744394326,
+        schema_name: "Paper",
+        name: "Paper"
+      }
+    },
+    {
+      name: "Machina",
+      attributes: {
+        theme_store_id: 2883,
+        id: 133789122646,
+        schema_name: "Machina",
+        name: "Machina"
+      }
+    },
+    {
+      // this might need custom support
+      name: "Mavon",
+      attributes: {
+        theme_store_id: 1979,
+        id: 138430120029,
+        schema_name: "Mavon",
+        name: "Mavon"
       }
     }
   ];
@@ -2806,6 +3836,10 @@ var __publicField = (obj, key, value) => {
         // { selector: '.cart-details .flex-buttons', insertPosition: 'before' }, // Abid theme=kingdom
         { selector: "#CartDetails", insertPosition: "before" },
         // Abid theme=kingdom
+        { selector: "main.drawer__inner.min-h-0.h-full small.text-caption", insertPosition: "after" },
+        // Abid theme=polyform
+        { selector: "div.py-24.flex div.md\\:ml-auto.max-sm\\:w-full div.flex.flex-col.items-end.gap-8 button", insertPosition: "before" },
+        // Abid theme=polyform
         { selector: "form.sticky-in-panel .link-btn", insertPosition: "before" },
         // Abid theme=Xtra
         { selector: "aside:not([class]) .overlay-dynamic_buy_button", insertPosition: "before" },
@@ -2814,9 +3848,25 @@ var __publicField = (obj, key, value) => {
         // Abid theme=NExt
         { selector: "fieldset aside p.link-btn.wide", insertPosition: "before" },
         // Abid theme=NExt
-        { selector: "form.ajax-cart__cart-form.grid__wrapper.narrow.mb4.js-cart-form div.ajax-cart__buttons", insertPosition: "before" },
+        { selector: ".cart-checkout-container", insertPosition: "before" },
+        // Abid theme=Starlite
+        { selector: "div.cart-purchase__checkout-section div.bottom-cart-wrapper", insertPosition: "before" },
+        // Abid theme=loft
+        { selector: "div.mini-cart__footer div.cart-summary__meta a.button", insertPosition: "before" },
+        // Abid theme=align
+        { selector: 'form.cart__wrapper div.cart-summary .cart-summary__buttons button[name="checkout"]', insertPosition: "before" },
+        // Abid theme=align
+        { selector: "form#cart button#cart-notification-checkout", insertPosition: "before" },
+        // Abid theme=Abode
+        {
+          selector: "form.ajax-cart__cart-form.grid__wrapper.narrow.mb4.js-cart-form div.ajax-cart__buttons",
+          insertPosition: "before"
+        },
         // Abid theme=forge
-        { selector: "form.ajax-cart__cart-form.grid__wrapper.edge.js-cart-form div.ajax-cart__buttons", insertPosition: "before" },
+        {
+          selector: "form.ajax-cart__cart-form.grid__wrapper.edge.js-cart-form div.ajax-cart__buttons",
+          insertPosition: "before"
+        },
         // Abid theme=NExt
         { selector: ".theme-button--secondary", insertPosition: "before" },
         { selector: ".ajaxcart__footer", insertPosition: "before" },
@@ -2835,7 +3885,17 @@ var __publicField = (obj, key, value) => {
         { selector: ".cart-ctas", insertPosition: "before" },
         { selector: ".mini-cart-footer-actions", insertPosition: "before" },
         { selector: ".cart-template__checkout-buttons", insertPosition: "before" },
-        { selector: ".add-to-cart-wrap", insertPosition: "before" }
+        { selector: ".add-to-cart-wrap", insertPosition: "before" },
+        { selector: ".drawer__footer-actions", insertPosition: "before" },
+        { selector: ".cart__checkout", insertPosition: "before" },
+        { selector: ".cart-sidebar__footer-actions", insertPosition: "before" },
+        { selector: ".cart-modal-buttons", insertPosition: "before" },
+        { selector: "add-order-note", insertPosition: "after" },
+        { selector: ".tax-note", insertPosition: "after" },
+        { selector: ".main-cart__footer__fine-print", insertPosition: "after" },
+        { selector: ".header-minicart-footer-wrapper", insertPosition: "before" },
+        { selector: ".sticky-menu-buttons-slideout-closed", insertPosition: "before" },
+        { selector: 'button[aria-label="Agree to Terms"]', insertPosition: "before" }
         // { selector: 'input[name="checkout"]', insertPosition: 'before' }, // Abid theme=Masonry
         // { selector: 'button[name="checkout"]', insertPosition: 'before' }, // Abid
         // { selector:   'div.ml-auto', insertPosition: 'before' },
@@ -2879,8 +3939,18 @@ var __publicField = (obj, key, value) => {
         // [Abid] - theme = Next
         "form.f8vl.f8vl-initialized ul.l4tt.form-group",
         // [Abid] - theme = Next
+        "div.cart-notification__links",
+        // [Abid] - theme = Abode
         "div.ajax-cart__final-details",
         // [Abid] - theme = forge
+        "div.cart-purchase__buttons",
+        // [Abid] - theme = loft
+        "div#CartDrawer",
+        // [Abid] - theme = polyform
+        "div#main-cart-footer",
+        // [Abid] - theme = polyform
+        ".mini-cart__footer",
+        ".cart-summary",
         ".ajaxcart__footer",
         ".cart__blocks",
         ".cart-template__footer",
@@ -2896,7 +3966,15 @@ var __publicField = (obj, key, value) => {
         ".cart-footer",
         ".mini-cart-footer",
         ".cart-drawer__cart-total",
-        ".cart-template__cart-total"
+        ".cart-template__cart-total",
+        ".cart-page__block-container",
+        ".cart-sidebar__footer",
+        ".cart-totals",
+        ".sub-total",
+        ".main-cart__footer__total",
+        ".header-minicart-footer-wrapper",
+        ".sticky-menu container",
+        "#total-bottom"
         // 'section[class="pb-section"]'
       ];
       const items = await window.weNexusCartApi.get();
@@ -2911,7 +3989,7 @@ var __publicField = (obj, key, value) => {
       removeGridFromForgeTheme();
       const updateSubtotal = (price = 0) => {
         subtotalSelector.forEach((selector) => {
-          let subTotal = document.querySelector(selector);
+          let subTotals = document.querySelectorAll(selector);
           function replaceTextInDocument(node) {
             const oldText = Number(items.items_subtotal_price / 100).toFixed(2);
             const newText = Number(items.items_subtotal_price / 100 + price).toFixed(2);
@@ -2927,7 +4005,9 @@ var __publicField = (obj, key, value) => {
               Array.from(node.childNodes).forEach(replaceTextInDocument);
             }
           }
-          replaceTextInDocument(subTotal);
+          subTotals.forEach((subTotal) => {
+            replaceTextInDocument(subTotal);
+          });
         });
       };
       setTimeout(() => {
@@ -2975,13 +4055,59 @@ var __publicField = (obj, key, value) => {
         // [Abid] theme = Streamline
         "form.sticky-cart__inner",
         // [Abid] theme = Streamline
-        "form#CartPageForm"
+        "form#CartPageForm",
         // [Abid] theme = Gem
+        ".cart-total-box",
+        // [Abid] theme = Fame
+        ".cart-drawer__container",
+        // [Abid] theme = Gain
+        ".cart-template__summary",
+        // [Abid] theme = Gain
+        ".cart-footer__summary",
+        // [Abid] theme = Bootique
+        ".cart-drawer__bottom",
+        // [Abid] theme = Stockholm
+        ".total-holder",
+        // [Abid] theme = Kidu
+        ".main-cart_cart-totals-wrap",
+        // [Abid] theme = Kidu
+        ".cart-drawer_foot-wrap",
+        // [Abid] theme = Nexa
+        ".main-cart_widget--totals",
+        // [Abid] theme = Nexa
+        ".main-cart",
+        // [Abid] theme = agile
+        ".accordion-wrap",
+        // [Abid] theme = Effortless
+        ".shopping-cart",
+        // [Abid] theme = Effortless
+        ".template__cart__footer",
+        ".cart-table__checkoutWrp",
+        ".cart-subtotal",
+        'div[data-element="subtotal-block"]',
+        "#cart-drawer-live-region-subtotal",
+        "div[data-cart-subtotal-block]",
+        "subtotal-price",
+        ".cart-footer__subtotal",
+        ".cart-totals",
+        ".order-summary-card",
+        ".more",
+        ".subtotal",
+        ".subtotal .money ",
+        ".cart-drawer-footer-total",
+        ".CartDrawer__Total",
+        ".Cart__Total",
+        ".cart-header-details",
+        ".sub--total-cart",
+        ".items-baseline",
+        ".cart-drawer__totals",
+        "#cart-subtotal",
+        ".cart__total"
       ];
       const items = await window.weNexusCartApi.get();
       const updateSubtotal = (price = 0) => {
         subtotalSelector.forEach((selector) => {
-          let subTotal = document.querySelector(selector);
+          let subTotals = document.querySelectorAll(selector);
           function replaceTextInDocument(node) {
             const oldText = Number(items.items_subtotal_price / 100).toFixed(2);
             const newText = Number(items.items_subtotal_price / 100 + price).toFixed(2);
@@ -2997,7 +4123,9 @@ var __publicField = (obj, key, value) => {
               Array.from(node.childNodes).forEach(replaceTextInDocument);
             }
           }
-          replaceTextInDocument(subTotal);
+          subTotals.forEach((subTotal) => {
+            replaceTextInDocument(subTotal);
+          });
         });
       };
       setTimeout(() => {
@@ -3030,7 +4158,7 @@ var __publicField = (obj, key, value) => {
       return checkTheme(switchTheme);
     }
     getInsertionPointSelectors() {
-      const elements = document.querySelectorAll('button[name="checkout"][type="submit"], input[name="checkout"][type="submit"],input[type="submit"]');
+      const elements = document.querySelectorAll('button[name="checkout"][type="submit"], input[name="checkout"][type="submit"]');
       elements.forEach((element) => {
         if (element.parentElement) {
           element.parentElement.classList.add("wenexus-theme-support");
@@ -3053,7 +4181,36 @@ var __publicField = (obj, key, value) => {
         ".cart-amount",
         ".cart-drawer__footer",
         ".subtotal_amount",
-        ".cart__item-subtotal"
+        ".cart__item-subtotal",
+        ".cart-drawer-price-total",
+        ".cart-summary-price",
+        // [Abid] theme = king
+        "div.total.row",
+        // [Abid] theme = providence
+        "cart-dynamic.flex.gap-4.flex-col",
+        // [Abid] theme = Aisle
+        'div[x-show="cart.total_price > 0"]',
+        // [Abid] theme = space
+        ".drawer-inner__footer",
+        // [Abid] theme = Noblese
+        ".cart-form__footer",
+        // [Abid] theme = Noblese
+        ".minicart-top__wrapper",
+        // [Abid] theme = Baazar
+        ".cart-footer_wrapper",
+        // [Abid] theme = Baazar
+        // 'strong[x-html="Shopify.formatMoney(cart.total_price, true)"]:not(.text-right)',
+        // 'span[x-html="Shopify.formatMoney(cart.original_total_price, true)"]:nth-of-type(2)',
+        ".cart-popup__footer",
+        ".totals",
+        ".cart-summary ",
+        ".cart-tot2",
+        ".cart-drawer-footer",
+        "p[data-cart-subtotal]",
+        ".liveCartFooter",
+        ".table-container",
+        ".product-price",
+        ".vendors"
       ];
       const items = await window.weNexusCartApi.get();
       const subtotal = Array.from(document.querySelectorAll(".cart-drawer__text"));
@@ -3062,7 +4219,7 @@ var __publicField = (obj, key, value) => {
       });
       const updateSubtotal = (price = 0) => {
         subtotalSelector.forEach((selector) => {
-          let subTotal = document.querySelector(selector);
+          let subTotals = document.querySelectorAll(selector);
           function replaceTextInDocument(node) {
             const oldText = Number(items.items_subtotal_price / 100).toFixed(2);
             const newText = Number(items.items_subtotal_price / 100 + price).toFixed(2);
@@ -3078,7 +4235,9 @@ var __publicField = (obj, key, value) => {
               Array.from(node.childNodes).forEach(replaceTextInDocument);
             }
           }
-          replaceTextInDocument(subTotal);
+          subTotals.forEach((subTotal) => {
+            replaceTextInDocument(subTotal);
+          });
         });
       };
       setTimeout(() => {
@@ -3197,6 +4356,10 @@ var __publicField = (obj, key, value) => {
         {
           selector: "button[name='checkout']",
           insertPosition: "before"
+        },
+        {
+          selector: ".cart-buttons",
+          insertPosition: "before"
         }
       ];
     }
@@ -3218,7 +4381,8 @@ var __publicField = (obj, key, value) => {
     async refreshWidget() {
       console.log("kingdomTheme");
       const subtotalSelector = [
-        "#CartTotal strong"
+        "#CartTotal strong",
+        ".cart-summary-line"
       ];
       const items = await window.weNexusCartApi.get();
       const updateSubtotal = (price = 0) => {
@@ -3235,6 +4399,234 @@ var __publicField = (obj, key, value) => {
               items.currency
             );
           }
+        });
+      };
+      setTimeout(() => {
+        const price = this.getWidgetPrice();
+        const checkoutSwitch = localStorage.getItem("package-protection-enabled");
+        let des = "";
+        if (checkoutSwitch === "true") {
+          des = this.enabledDescription;
+          updateSubtotal(price);
+          updateSubtotal(price);
+        } else {
+          des = this.disabledDescription;
+          updateSubtotal();
+          updateSubtotal();
+        }
+        const descriptionElements = document.getElementsByClassName(
+          "wenexus-package-protection-description"
+        );
+        Array.from(descriptionElements).forEach(
+          (el) => el.innerHTML = `${des} `
+        );
+      }, 500);
+    }
+    cartUpdate() {
+      window.location.reload();
+    }
+  }
+  class PackageProtectionClientToyoTheme extends PackageProtectionClientBasic {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "thumbnail", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753");
+    }
+    static shouldUse() {
+      return checkTheme(toyoTheme);
+    }
+    getInsertionPointSelectors() {
+      return [
+        {
+          selector: ".drawer__footer button[name='checkout']",
+          insertPosition: "before"
+        },
+        {
+          selector: "div.cart__blocks cart-note",
+          insertPosition: "after"
+        },
+        {
+          selector: ".cart-buttons",
+          insertPosition: "before"
+        }
+      ];
+    }
+    async getStyleMarkup(options) {
+      return super.getStyleMarkup({
+        imageWidth: 66,
+        containerMargin: [10, 0, 12, 0],
+        containerJustify: "end",
+        titleFontSize: 1,
+        descriptionFontSize: 0.8,
+        hideDescriptionPage: false,
+        descriptionMargin: [2, 0, 0, 0],
+        containerMaxWidth: "250px",
+        ...options,
+        accentColor: "#2c7e3f"
+      });
+    }
+    doesSelectorContainSubtotal(textContent) {
+      if (!textContent)
+        return false;
+      const numberRegex = /\b\d+(\.\d{2})?\b/;
+      return numberRegex.test(textContent);
+    }
+    // theme support
+    async refreshWidget() {
+      console.log("Toyo theme");
+      const subtotalSelector = [
+        ".totals__subtotal-value",
+        ".cart-order-summary",
+        ".cart-total-price"
+      ];
+      const items = await window.weNexusCartApi.get();
+      const updateSubtotal = (price = 0) => {
+        subtotalSelector.forEach((selector) => {
+          const executeChange = (selector2) => {
+            if (selector2 && this.doesSelectorContainSubtotal(selector2.textContent)) {
+              selector2.textContent = this.formatPrice(
+                Number(items.total_price / 100 + price),
+                items.currency
+              ) + " " + items.currency;
+              return;
+            }
+          };
+          let subTotalArr = document.querySelectorAll(selector);
+          subTotalArr.forEach((subTotal) => {
+            executeChange(subTotal);
+          });
+        });
+      };
+      setTimeout(() => {
+        const price = this.getWidgetPrice();
+        const checkoutSwitch = localStorage.getItem("package-protection-enabled");
+        let des = "";
+        if (checkoutSwitch === "true") {
+          des = this.enabledDescription;
+          updateSubtotal(price);
+          updateSubtotal(price);
+        } else {
+          des = this.disabledDescription;
+          updateSubtotal();
+          updateSubtotal();
+        }
+        const descriptionElements = document.getElementsByClassName(
+          "wenexus-package-protection-description"
+        );
+        Array.from(descriptionElements).forEach(
+          (el) => el.innerHTML = `${des} `
+        );
+      }, 500);
+    }
+    cartUpdate() {
+      window.location.reload();
+    }
+  }
+  class PackageProtectionClientBrickSpaceTheme extends PackageProtectionClientBasic {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "thumbnail", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753");
+    }
+    static shouldUse() {
+      return checkTheme(brickSpaceLabTheme);
+    }
+    getInsertionPointSelectors() {
+      return [
+        {
+          selector: "[name='checkout']",
+          insertPosition: "before"
+        },
+        {
+          selector: "div.cart__blocks cart-note",
+          insertPosition: "after"
+        },
+        {
+          selector: ".cart-buttons",
+          insertPosition: "before"
+        }
+      ];
+    }
+    async getStyleMarkup(options) {
+      return super.getStyleMarkup({
+        imageWidth: 66,
+        containerMargin: [10, 0, 12, 0],
+        containerJustify: "end",
+        titleFontSize: 1,
+        descriptionFontSize: 0.8,
+        hideDescriptionPage: false,
+        descriptionMargin: [2, 0, 0, 0],
+        containerMaxWidth: "250px",
+        ...options,
+        accentColor: "#2c7e3f"
+      });
+    }
+    // theme support
+    async refreshWidget() {
+      console.log("Space theme");
+      const subtotalSelector = [
+        ".cart-details-footer",
+        ".cart-drawer-subtotal__main-content",
+        "div.border--b-width.w-full.p-4.color__bg-tertiary.color__tertiary.color__border-divider-1",
+        'button[name="checkout"]',
+        "aside",
+        'input[name="checkout"]',
+        ".cart-total-price",
+        ".cart__footer",
+        ".cart_notification_links_inner"
+        // 'section[class="pb-section"]'
+      ];
+      const items = await window.weNexusCartApi.get();
+      const checkboxInput = document.querySelector('.wenexus-package-protection__toggle input[type="checkbox"]');
+      if (checkboxInput)
+        checkboxInput.classList.add("product-variant__input");
+      const removeGridFromForgeTheme = () => {
+        const dom = document.querySelector("div.ajax-cart__summary-wrapper.js-cart-summary");
+        if (dom)
+          dom.style.display = "unset";
+      };
+      removeGridFromForgeTheme();
+      const updateSubtotal = (price = 0) => {
+        subtotalSelector.forEach((selector) => {
+          let subTotalArr = document.querySelectorAll(selector);
+          function replaceTextInDocument(node) {
+            const oldText = Number(items.items_subtotal_price / 100).toFixed(2);
+            const newText = Number(items.items_subtotal_price / 100 + price).toFixed(2);
+            const performReplaceIfNodeIsInput = () => {
+              console.log("node element is input");
+              if (price === 0) {
+                const priceWithSubtotal = localStorage.getItem("items_subtotal_price");
+                const currentValue = node.getAttribute("value");
+                if (!currentValue)
+                  return;
+                const updatedValue = currentValue.replace(new RegExp(`\\b${priceWithSubtotal}\\b`, "g"), newText);
+                node.setAttribute("value", updatedValue);
+              } else {
+                localStorage.setItem("items_subtotal_price", newText);
+                const currentValue = node.getAttribute("value");
+                if (!currentValue)
+                  return;
+                const updatedValue = currentValue.replace(new RegExp(`\\b${oldText}\\b`, "g"), newText);
+                node.setAttribute("value", updatedValue);
+              }
+            };
+            if (node.tagName === "INPUT") {
+              performReplaceIfNodeIsInput();
+              return;
+            }
+            if ((node == null ? void 0 : node.nodeType) === (Node == null ? void 0 : Node.TEXT_NODE)) {
+              if (price === 0) {
+                const priceWithSubtotal = localStorage.getItem("items_subtotal_price");
+                node.textContent = node.textContent.replace(new RegExp(`\\b${priceWithSubtotal}\\b`, "g"), newText);
+              } else {
+                localStorage.setItem("items_subtotal_price", newText);
+                node.textContent = node.textContent.replace(new RegExp(`\\b${oldText}\\b`, "g"), newText);
+              }
+            } else if ((node == null ? void 0 : node.nodeType) === (Node == null ? void 0 : Node.ELEMENT_NODE)) {
+              Array.from(node.childNodes).forEach(replaceTextInDocument);
+            }
+          }
+          subTotalArr.forEach((subTotal) => {
+            replaceTextInDocument(subTotal);
+          });
         });
       };
       setTimeout(() => {
@@ -3291,6 +4683,8 @@ var __publicField = (obj, key, value) => {
       PackageProtectionClientSwitchTheme,
       PackageProtectionClientUniversalExponentSubtotalTheme,
       PackageProtectionClientKingdomTheme,
+      PackageProtectionClientToyoTheme,
+      PackageProtectionClientBrickSpaceTheme,
       PackageProtectionClientBasic
     ];
     const ClientClass = clients.find((Client) => {
