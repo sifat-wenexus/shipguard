@@ -2102,7 +2102,10 @@ export class QueryServer {
             );
           }
           /** --- End --- */
-        } else if (fieldData.disconnect || fieldData.set) {
+        } else if (
+          !(relation.left.type === 'many' && relation.right.type === 'many') &&
+          (fieldData.disconnect || fieldData.set)
+        ) {
           throw new QueryException(
             `Cannot disconnect relation "${relationField}" because it is required`,
             'QUERY_INVALID'
@@ -2404,19 +2407,13 @@ export class QueryServer {
     }
   }
 
-  async find(
+  async processQuery(
     rootQuery: QuerySchema,
     session?: Session,
-    trxOrId?: PrismaClient | Prisma.TransactionClient | string
-  ): Promise<
-    | LiveQueryServer<Record<string, any>>
-    | LiveQueryPaginatedServer<Record<string, any>[]>
-    | NormalQueryPaginated<Record<string, any>[]>
-    | Record<string, any>
-    | Record<string, any>[]
-  > {
-    const trx =
-      typeof trxOrId === 'string' ? this.transactions[trxOrId]?.trx : trxOrId;
+  ): Promise<{
+    query: QuerySchema;
+    queue: (QuerySchema & { noWhere?: boolean })[];
+  }> {
     const queue: (QuerySchema & { noWhere?: boolean })[] = [rootQuery];
 
     for (let q = 0; q < queue.length; q++) {
@@ -2541,10 +2538,33 @@ export class QueryServer {
       }
     }
 
+    return {
+      query: rootQuery,
+      queue,
+    };
+  }
+
+  async find(
+    rootQuery: QuerySchema,
+    session?: Session,
+    trxOrId?: PrismaClient | Prisma.TransactionClient | string
+  ): Promise<
+    | LiveQueryServer<Record<string, any>>
+    | LiveQueryPaginatedServer<Record<string, any>[]>
+    | NormalQueryPaginated<Record<string, any>[]>
+    | Record<string, any>
+    | Record<string, any>[]
+  > {
+    const trx =
+      typeof trxOrId === 'string' ? this.transactions[trxOrId]?.trx : trxOrId;
+    const processResult = await this.processQuery(rootQuery, session);
+
+    rootQuery = processResult.query;
+
     if (rootQuery.subscribe) {
       const dependencies = new Set<string>();
 
-      for (const query of queue) {
+      for (const query of processResult.queue) {
         dependencies.add(query.model);
       }
 
@@ -3132,8 +3152,8 @@ export class QueryServer {
     }
 
     const trxConfig = {
-      timeout: process.env.NODE_ENV === 'development' ? 30000 : 600000, // 30 seconds or 10 minutes
-      maxWait: process.env.NODE_ENV === 'development' ? 30000 : 600000, // 30 seconds or 10 minutes
+      timeout: process.env.NODE_ENV === 'development' ? 600000 : 600000, // 30 seconds or 10 minutes
+      maxWait: process.env.NODE_ENV === 'development' ? 600000 : 600000, // 30 seconds or 10 minutes
     };
 
     if (mutation.type === 'deleteMany' || mutation.type === 'updateMany') {

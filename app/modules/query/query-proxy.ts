@@ -167,23 +167,13 @@ function getQueryProxy(trxId?: string) {
               };
             }
 
-            return async (...args: any[]) => {
+            return (...args: any[]) => {
               const query = args[0] ?? {};
 
               if (queryMethods.has(method)) {
                 if (!method.startsWith('subscribe')) {
                   if (method === 'findMany' || method === 'groupBy') {
-                    const count = await fetch(
-                      `/api/query?query=${JSON.stringify({
-                        type: 'count',
-                        model: model as ModelNames,
-                        subscribe: false,
-                        query: _.pick(query, 'where'),
-                        trxId,
-                      })}`
-                    ).then((r) => r.json());
-
-                    return new NormalQueryPaginated(count, {
+                    return new NormalQueryPaginated(Infinity, {
                       type: method as QueryType,
                       model: model as ModelNames,
                       subscribe: false,
@@ -191,32 +181,27 @@ function getQueryProxy(trxId?: string) {
                     });
                   }
 
-                  return fetch(
-                    `/api/query?query=${JSON.stringify({
+                  return fetch(`/api/query`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
                       type: method as QueryType,
                       model: model as ModelNames,
                       subscribe: false,
                       query,
                       trxId,
-                    })}`
-                  ).then((r) => r.json());
+                    }),
+                  }).then((r) => r.json());
                 }
 
                 if (
                   method === 'subscribeFindMany' ||
                   method === 'subscribeGroupBy'
                 ) {
-                  const count = await fetch(
-                    `/api/query?query=${JSON.stringify({
-                      type: 'count',
-                      model: model as ModelNames,
-                      subscribe: false,
-                      query: _.pick(query, 'where'),
-                    })}`
-                  ).then((r) => r.json());
-
                   return new LiveQueryPaginatedClient(
-                    count,
+                    Infinity,
                     model as ModelNames,
                     _.camelCase(method.replace('subscribe', '')) as QueryType,
                     args[0] ?? {}
@@ -230,7 +215,7 @@ function getQueryProxy(trxId?: string) {
                 );
               }
 
-              return fetch(`/api/query`, {
+              return fetch(`/api/mutation`, {
                 method: 'POST',
                 body: JSON.stringify({
                   type: method as MutationType,

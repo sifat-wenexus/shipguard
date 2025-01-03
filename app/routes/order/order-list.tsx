@@ -1,5 +1,5 @@
 import type { ClaimStatus, FullfillmentStatus } from '#prisma-client';
-import { useQueryPaginated } from '~/hooks/use-query-paginated';
+import { PaginatedQuery, useQueryPaginated } from '~/hooks/use-query-paginated';
 import type { IFilterOptions } from './order-search-and-filter';
 import OrderSearchAndFilter from './order-search-and-filter';
 import { queryProxy } from '~/modules/query/query-proxy';
@@ -59,7 +59,7 @@ const OrderList = ({
       'PARTIALLY_FULFILLED',
     ];
 
-    return queryProxy.packageProtectionOrder.subscribeFindMany({
+    return {
       where: {
         AND: [
           {
@@ -73,7 +73,7 @@ const OrderList = ({
               }
 
               return null;
-            }),
+            }) as any, // TODO: Remove as any
           },
           //{ hasPackageProtection: { equals: true } },
 
@@ -95,9 +95,9 @@ const OrderList = ({
           distinct: ['fulfillmentId'],
         },
       },
-    });
+    } satisfies PaginatedQuery<'packageProtectionOrder', 'findMany'>;
   }, [endDate, filterItems, searchTerm, startDate]);
-  const subscription = useQueryPaginated(query);
+  const subscription = useQueryPaginated('packageProtectionOrder', 'findMany', query, true);
 
   const rowMarkup = useMemo(
     () =>

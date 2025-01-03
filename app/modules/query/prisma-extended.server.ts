@@ -4,9 +4,9 @@ import type { Session } from '~/shopify-api/lib';
 import { prisma } from '~/modules/prisma.server';
 import type { Prisma } from '#prisma-client';
 
-type PaginatedArgs<T> = Omit<T, 'take' | 'skip'> & {
-  page: number;
-  pageSize: number;
+export type PaginatedArgs<T> = Omit<T, 'take' | 'skip'> & {
+  page?: number;
+  pageSize?: number;
 };
 
 interface MutationOptions {
@@ -193,15 +193,15 @@ export interface PaginatedResult<R> {
   hasNext: boolean;
   hasPrev: boolean;
 
-  refresh(): Promise<R>;
+  refresh(query?: any): Promise<void>;
 
-  next(): Promise<R | null>;
+  onLoading(callback: (loading: boolean) => void): () => void;
 
-  previous(): Promise<R | null>;
+  next(): Promise<void>;
 
-  jumpTo(page: number): Promise<R | null>;
+  previous(): Promise<void>;
 
-  firstPage(): Promise<R>;
+  jumpTo(page: number): Promise<void>;
 
   addListener(callback: (data: R) => void): PaginatedResult<R>;
 
@@ -213,12 +213,19 @@ export interface Subscription<R> {
 
   removeListener(callback: (data: R) => void): Subscription<R>;
 
+  onLoading(callback: (loading: boolean) => void): () => void;
+
+  refresh(query?: any): void;
+
   close(): void;
 }
 
 export interface SubscriptionWithPaginatedResult<R>
   extends Subscription<R>,
-    Omit<PaginatedResult<R>, 'addListener' | 'removeListener' | 'refresh'> {}
+    Omit<
+      PaginatedResult<R>,
+      'addListener' | 'removeListener' | 'refresh' | 'onLoading'
+    > {}
 
 export type PrismaExtended = Pick<
   typeof prismaExtended,

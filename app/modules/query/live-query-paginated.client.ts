@@ -11,10 +11,7 @@ export interface Pagination<D> {
   totalPages: number;
 }
 
-export class LiveQueryPaginatedClient<
-    R,
-    D extends Pagination<R> = Pagination<R>
-  >
+export class LiveQueryPaginatedClient<R, D extends Pagination<R> = Pagination<R>>
   extends LiveQueryClient<D, R>
   implements SubscriptionWithPaginatedResult<R>
 {
@@ -52,6 +49,10 @@ export class LiveQueryPaginatedClient<
     return this._pageSize;
   }
 
+  set pageSize(value: number) {
+    this._pageSize = value;
+  }
+
   get totalItems() {
     return this._totalItems;
   }
@@ -72,34 +73,22 @@ export class LiveQueryPaginatedClient<
     return this.page > 1;
   }
 
-  next(): Promise<R | null> {
+  next() {
     return this.jumpTo(this._page + 1);
   }
 
-  previous(): Promise<R | null> {
+  previous() {
     return this.jumpTo(this._page - 1);
   }
 
-  jumpTo(page: number): Promise<R | null> {
+  async jumpTo(page: number) {
     if (page < 1 || page > this._totalPages || page === this._page) {
-      return Promise.resolve(null);
+      return Promise.resolve(void 0);
     }
 
     this.query.page = page;
     this._page = page;
 
-    return this.setupEventSource();
-  }
-
-  firstPage(): Promise<R> {
-    return new Promise(async (resolve) => {
-      await this.ready;
-
-      if (this.page !== 1) {
-        this.jumpTo(1).then((data) => resolve(data!));
-      } else {
-        resolve(this.data!);
-      }
-    });
+    return this.refresh(this.query);
   }
 }

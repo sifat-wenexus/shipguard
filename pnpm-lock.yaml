@@ -155,6 +155,9 @@ importers:
       tslib:
         specifier: ^2.7.0
         version: 2.7.0
+      uWebSockets.js:
+        specifier: github:uNetworking/uWebSockets.js
+        version: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/14bb3af6789a263804899d5440223b9e2a5a43e3
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -5769,6 +5772,10 @@ packages:
     resolution: {integrity: sha512-NW8ByodCSNCwZeghjN3o+JX5OFH0Ojg6sadjEKY4huZ52TqbJTJnDo5+Tw98lSy63NZvi4n+ez5m2u5d4PkZyw==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  uWebSockets.js@https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/14bb3af6789a263804899d5440223b9e2a5a43e3:
+    resolution: {tarball: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/14bb3af6789a263804899d5440223b9e2a5a43e3}
+    version: 0.0.0
 
   ua-parser-js@0.7.39:
     resolution: {integrity: sha512-IZ6acm6RhQHNibSt7+c09hhvsKy9WUr4DVbeq9U8o71qxyYtJpQeDxQnMrVqnIFMLcQjHO0I9wgfO2vIahht4w==}
@@ -12872,6 +12879,8 @@ snapshots:
       possible-typed-array-names: 1.0.0
 
   typescript@5.6.2: {}
+
+  uWebSockets.js@https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/14bb3af6789a263804899d5440223b9e2a5a43e3: {}
 
   ua-parser-js@0.7.39: {}
 

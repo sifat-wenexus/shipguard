@@ -11,6 +11,7 @@ module.exports = {
       instance_var: 'NODE_ID',
       source_map_support: true,
       env: dotenv.parse(fs.readFileSync('.env')),
+      node_args: ['--inspect=7000'],
     },
   ],
 };
