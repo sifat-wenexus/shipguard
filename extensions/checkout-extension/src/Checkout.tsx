@@ -31,7 +31,7 @@ const Extension = () => {
   const [enabled, setEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   // console.log(hide);
-  const baseUrl = 'https://shipping-protection.wenexus.io';
+  const baseUrl = 'https://shipguard.app';
   // const baseUrl = 'https://jefferson-developed-coast-livecam.trycloudflare.com';
 
 

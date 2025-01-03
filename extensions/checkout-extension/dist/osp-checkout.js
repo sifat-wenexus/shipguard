@@ -19617,7 +19617,7 @@ ${errorInfo.componentStack}`);
     const [hide, setHide] = (0, import_react16.useState)(false);
     const [enabled, setEnabled] = (0, import_react16.useState)(false);
     const [loading, setLoading] = (0, import_react16.useState)(false);
-    const baseUrl = "https://shipping-protection.wenexus.io";
+    const baseUrl = "https://shipguard.app";
     const totalAmount = cartLine.filter((item) => item.merchandise.sku !== PRODUCT_SKU).reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
     (0, import_react16.useEffect)(() => {
       const payload = cartLine.filter((line) => line.merchandise.sku !== PRODUCT_SKU);

@@ -19618,7 +19618,7 @@ ${errorInfo.componentStack}`);
     const totalAmount = cartLine.filter((item) => item.merchandise.sku !== "wenexus-shipping-protection.tsx").reduce((sum, item) => sum + item.cost.totalAmount.amount, 0);
     (0, import_react16.useEffect)(() => {
       fetch(
-        `https://shipping-protection.wenexus.io/checkout-extension?total=${totalAmount}&shopUrl=${shop == null ? void 0 : shop.myshopifyDomain}`
+        `https://shipguard.app/checkout-extension?total=${totalAmount}&shopUrl=${shop == null ? void 0 : shop.myshopifyDomain}`
       ).then((response) => response.json()).then((res) => {
         setVariantId(res.variantId);
         setVariantPrice(res.variantPrice);
