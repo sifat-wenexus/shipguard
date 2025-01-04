@@ -1,1 +1,274 @@
-var CartAPI=function(c){"use strict";var p=Object.defineProperty;var g=(c,a,o)=>a in c?p(c,a,{enumerable:!0,configurable:!0,writable:!0,value:o}):c[a]=o;var d=(c,a,o)=>(g(c,typeof a!="symbol"?a+"":a,o),o);const f=class f extends XMLHttpRequest{static addEventListener(s,e,t=!0){t?this.beforeListeners[s].add(e):this.afterListeners[s].add(e)}static removeEventListener(s,e,t=!0){t?this.beforeListeners[s].delete(e):this.afterListeners[s].delete(e)}open(s,e,t=!0,i,n){for(const r of f.beforeListeners.open)r(this,s,e,t,i,n);super.open(s,e,t,i,n);for(const r of f.afterListeners.open)r(this,s,e,t,i,n)}};d(f,"beforeListeners",{open:new Set}),d(f,"afterListeners",{open:new Set});let a=f;const h=class h{constructor(s){d(this,"queue",new Set);d(this,"listeners",{before:new Set,after:new Set});d(this,"running",null);d(this,"cart",null);if(this.fetchFn=s,!h.instance)h.instance=this;else return h.instance;window.fetch=async(t,i)=>{const n=typeof t=="string"||t instanceof URL?t.toString():t.url,r=this.getCartEndpoint(n);if(r){const u=s(t,i);this.notifyListeners(r,u);const l=await u;return await this.notifyListeners(r),l}return s(t,i)},window.XMLHttpRequest=a,a.addEventListener("open",(t,i,n)=>{const r=this.getCartEndpoint(n);if(r){const u=new Promise((l,w)=>{t.addEventListener("load",()=>{l(void 0),this.notifyListeners(r)}),t.addEventListener("error",w)});this.notifyListeners(r,u)}},!0);const e=localStorage.getItem("wenexus-cart-queue");e&&(this.queue=new Set(JSON.parse(e))),this.runQueue(this.queue.size>0),window.addEventListener("beforeunload",t=>{if(this.queue.size>0)return t.preventDefault(),"Cart updates are still in progress. Are you sure you want to leave?"})}getCartEndpoint(s){const e=typeof s=="string"?s:s.toString(),t=new URL(!e.startsWith("http://")||!e.startsWith("https://")?`${window.location.origin}/${e}`:e),i={add:"/cart/add",update:"/cart/update",change:"/cart/change",clear:"/cart/clear"};for(const n in i){const r=i[n];if([r,`${r}.js`].some(u=>t.pathname.endsWith(u)))return n}return null}async notifyListeners(s,e){const t=this.cart;if(e){for(const r of this.listeners.before)r(t??await this.get(!0),{requestType:s,updatedBy:"api"},()=>new Promise(u=>{const l=()=>{if(this.queue.size>0||this.running)return setTimeout(l,800);u(e.then(()=>this.get(!0)))};setTimeout(l,800)}));await e;const n=await this.get(!0);return JSON.stringify(t,null,0)===JSON.stringify(n,null,0)?t:n}const i=await this.get(!0);if(JSON.stringify(t,null,0)===JSON.stringify(i,null,0))return t;for(const n of this.listeners.after)n(i,{requestType:s,updatedBy:"api"});return i}addListener(s,e=!1){return this.listeners[e?"before":"after"].add(s),()=>{this.removeListener(s,e)}}removeListener(s,e=!1){this.listeners[e?"before":"after"].delete(s)}async runQueue(s=!1){if(!this.running){for(const e of this.queue){this.running=e,this.queue.delete(e),localStorage.setItem("wenexus-cart-queue",JSON.stringify(Array.from(this.queue)));const t=await this.fetchFn.call(window,`/cart/${e.type}.js`,{method:"POST",headers:e.payload?{"Content-Type":"application/json"}:void 0,body:e.payload?JSON.stringify(e.payload):void 0});window.dispatchEvent(new CustomEvent(`wenexus-cart-response-${e.id}`,{detail:t}))}this.running=null,s&&(alert("Recovered from lost cart updates"),this.notifyListeners("add")),this.queue.size>0&&setTimeout(()=>this.runQueue(),10)}}waitForResponse(s){return new Promise(e=>{window.addEventListener(`wenexus-cart-response-${s}`,t=>e(t.detail))})}async request(s,e,t=!0){const i=Math.random().toString(36).slice(2)+Date.now().toString(36);this.queue.add({id:i,type:s,payload:e,trigger:t}),localStorage.setItem("wenexus-cart-queue",JSON.stringify(Array.from(this.queue))),this.runQueue();const n=await this.waitForResponse(i);return t?{cart:await this.notifyListeners(s),response:await n.json()}:{cart:await this.get(!t),response:await n.json()}}async get(s=!1){if(this.cart&&!s)return this.cart;const t=await(await fetch("/cart.js")).json();return this.cart=t,t}async update(s,e=!0){const{cart:t}=await this.request("update",{updates:s},e);return t}async append(s,e=!0){const{cart:t}=await this.request("add",{items:s},e);return t}async remove(s,e=!0){const t=s.filter(n=>{var r;return(r=this.cart)==null?void 0:r.items.some(u=>u.variant_id===n)});if(!t.length)return await this.get();const{cart:i}=await this.request("update",{updates:t.reduce((n,r)=>({...n,[r]:0}),{})},e);return i}};d(h,"instance");let o=h;return window.weNexusCartApi=new o(fetch),c.CartApi=o,Object.defineProperty(c,Symbol.toStringTag,{value:"Module"}),c}({});
+var CartAPI = function(exports) {
+  "use strict";var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
+
+  const _XHRCustom = class _XHRCustom extends XMLHttpRequest {
+    static addEventListener(type, listener, before = true) {
+      if (before) {
+        this.beforeListeners[type].add(listener);
+      } else {
+        this.afterListeners[type].add(listener);
+      }
+    }
+    static removeEventListener(type, listener, before = true) {
+      if (before) {
+        this.beforeListeners[type].delete(listener);
+      } else {
+        this.afterListeners[type].delete(listener);
+      }
+    }
+    open(method, url, async = true, user, password) {
+      for (const listener of _XHRCustom.beforeListeners.open) {
+        listener(this, method, url, async, user, password);
+      }
+      super.open(method, url, async, user, password);
+      for (const listener of _XHRCustom.afterListeners.open) {
+        listener(this, method, url, async, user, password);
+      }
+    }
+  };
+  __publicField(_XHRCustom, "beforeListeners", {
+    open: /* @__PURE__ */ new Set()
+  });
+  __publicField(_XHRCustom, "afterListeners", {
+    open: /* @__PURE__ */ new Set()
+  });
+  let XHRCustom = _XHRCustom;
+  const _CartApi = class _CartApi {
+    constructor(fetchFn) {
+      __publicField(this, "queue", /* @__PURE__ */ new Set());
+      __publicField(this, "listeners", {
+        before: /* @__PURE__ */ new Set(),
+        after: /* @__PURE__ */ new Set()
+      });
+      __publicField(this, "running", null);
+      __publicField(this, "cart", null);
+      this.fetchFn = fetchFn;
+      if (!_CartApi.instance) {
+        _CartApi.instance = this;
+      } else {
+        return _CartApi.instance;
+      }
+      window.fetch = async (url, options) => {
+        const urlStr = typeof url === "string" || url instanceof URL ? url.toString() : url.url;
+        const type = this.getCartEndpoint(urlStr);
+        if (type) {
+          const promise = fetchFn(url, options);
+          this.notifyListeners(type, promise);
+          const res = await promise;
+          await this.notifyListeners(type);
+          return res;
+        }
+        return fetchFn(url, options);
+      };
+      window.XMLHttpRequest = XHRCustom;
+      XHRCustom.addEventListener(
+        "open",
+        (xhr, _method, url) => {
+          const type = this.getCartEndpoint(url);
+          if (type) {
+            const promise = new Promise((resolve, reject) => {
+              xhr.addEventListener("load", () => {
+                resolve(void 0);
+                this.notifyListeners(type);
+              });
+              xhr.addEventListener("error", reject);
+            });
+            this.notifyListeners(type, promise);
+          }
+        },
+        true
+      );
+      const queueRaw = localStorage.getItem("wenexus-cart-queue");
+      if (queueRaw) {
+        this.queue = new Set(JSON.parse(queueRaw));
+      }
+      this.runQueue(this.queue.size > 0);
+      window.addEventListener("beforeunload", (evt) => {
+        if (this.queue.size > 0) {
+          evt.preventDefault();
+          return "Cart updates are still in progress. Are you sure you want to leave?";
+        }
+      });
+    }
+    getCartEndpoint(url) {
+      const urlStr = typeof url === "string" ? url : url.toString();
+      const urlObj = new URL(
+        !urlStr.startsWith("http://") || !urlStr.startsWith("https://") ? `${window.location.origin}/${urlStr}` : urlStr
+      );
+      const matchMap = {
+        add: "/cart/add",
+        update: "/cart/update",
+        change: "/cart/change",
+        clear: "/cart/clear"
+      };
+      for (const key in matchMap) {
+        const path = matchMap[key];
+        if ([path, `${path}.js`].some((p) => urlObj.pathname.endsWith(p))) {
+          return key;
+        }
+      }
+      return null;
+    }
+    async notifyListeners(requestType, promise) {
+      const oldCart = this.cart;
+      if (promise) {
+        for (const listener of this.listeners.before) {
+          listener(
+            oldCart ?? await this.get(true),
+            { requestType, updatedBy: "api" },
+            () => new Promise((resolve) => {
+              const _resolve = () => {
+                if (this.queue.size > 0 || this.running) {
+                  return setTimeout(_resolve, 800);
+                }
+                resolve(promise.then(() => this.get(true)));
+              };
+              setTimeout(_resolve, 800);
+            })
+          );
+        }
+        await promise;
+        const newCart2 = await this.get(true);
+        if (JSON.stringify(oldCart, null, 0) === JSON.stringify(newCart2, null, 0)) {
+          return oldCart;
+        }
+        return newCart2;
+      }
+      const newCart = await this.get(true);
+      if (JSON.stringify(oldCart, null, 0) === JSON.stringify(newCart, null, 0)) {
+        return oldCart;
+      }
+      for (const listener of this.listeners.after) {
+        listener(newCart, { requestType, updatedBy: "api" });
+      }
+      return newCart;
+    }
+    addListener(listener, before = false) {
+      this.listeners[before ? "before" : "after"].add(listener);
+      return () => {
+        this.removeListener(listener, before);
+      };
+    }
+    removeListener(listener, before = false) {
+      this.listeners[before ? "before" : "after"].delete(listener);
+    }
+    async runQueue(recovered = false) {
+      if (this.running) {
+        return;
+      }
+      for (const request of this.queue) {
+        this.running = request;
+        this.queue.delete(request);
+        localStorage.setItem(
+          "wenexus-cart-queue",
+          JSON.stringify(Array.from(this.queue))
+        );
+        const response = await this.fetchFn.call(
+          window,
+          `/cart/${request.type}.js`,
+          {
+            method: "POST",
+            headers: request.payload ? {
+              "Content-Type": "application/json"
+            } : void 0,
+            body: request.payload ? JSON.stringify(request.payload) : void 0
+          }
+        );
+        window.dispatchEvent(
+          new CustomEvent(`wenexus-cart-response-${request.id}`, {
+            detail: response
+          })
+        );
+      }
+      this.running = null;
+      if (recovered) {
+        alert("Recovered from lost cart updates");
+        this.notifyListeners("add");
+      }
+      if (this.queue.size > 0) {
+        setTimeout(() => this.runQueue(), 10);
+      }
+    }
+    waitForResponse(id) {
+      return new Promise((resolve) => {
+        window.addEventListener(
+          `wenexus-cart-response-${id}`,
+          (event) => resolve(event.detail)
+        );
+      });
+    }
+    async request(type, payload, trigger = true) {
+      const id = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      this.queue.add({ id, type, payload, trigger });
+      localStorage.setItem(
+        "wenexus-cart-queue",
+        JSON.stringify(Array.from(this.queue))
+      );
+      this.runQueue();
+      const response = await this.waitForResponse(id);
+      if (trigger) {
+        return {
+          cart: await this.notifyListeners(type),
+          response: await response.json()
+        };
+      }
+      return {
+        cart: await this.get(!trigger),
+        response: await response.json()
+      };
+    }
+    async get(refresh = false) {
+      if (this.cart && !refresh) {
+        return this.cart;
+      }
+      const response = await fetch(`/cart.js`);
+      const cart = await response.json();
+      this.cart = cart;
+      return cart;
+    }
+    async update(updates, trigger = true) {
+      const { cart } = await this.request("update", { updates }, trigger);
+      return cart;
+    }
+    async append(items, trigger = true) {
+      const { cart } = await this.request("add", { items }, trigger);
+      return cart;
+    }
+    async remove(variantIds, trigger = true) {
+      const toRemove = variantIds.filter(
+        (id) => {
+          var _a;
+          return (_a = this.cart) == null ? void 0 : _a.items.some((item) => item.variant_id === id);
+        }
+      );
+      if (!toRemove.length) {
+        return await this.get();
+      }
+      const { cart } = await this.request(
+        "update",
+        {
+          updates: toRemove.reduce(
+            (acc, id) => ({
+              ...acc,
+              [id]: 0
+            }),
+            {}
+          )
+        },
+        trigger
+      );
+      return cart;
+    }
+  };
+  __publicField(_CartApi, "instance");
+  let CartApi = _CartApi;
+  window.weNexusCartApi = new CartApi(fetch);
+  exports.CartApi = CartApi;
+  Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+  return exports;
+}({});
