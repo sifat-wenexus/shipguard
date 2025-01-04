@@ -18,6 +18,9 @@ const LogoUpload = ({ file, setFile, logo, prevFile }) => {
     }
   };
 
+  console.log(imagePreviewUrl);
+  console.log('logo',logo)
+
   const fileUpload = !file && !logo && (
     <DropZone.FileUpload actionHint="Accepts .jpg, .gif .png and .webp" />
   );

@@ -120,9 +120,11 @@ const PlacementCard = ({ formState }) => {
                   label={'Package protection placement'}
                 />
               </Box>
-              <Box paddingBlockStart="300">
-                <Tutorial />
-              </Box>
+
+              {/*<Box paddingBlockStart="300">*/}
+              {/*  <Tutorial />*/}
+              {/*</Box>*/}
+
             </>
           )}{' '}
           {/* <Divider />

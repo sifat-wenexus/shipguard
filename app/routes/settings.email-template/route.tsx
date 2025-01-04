@@ -123,6 +123,7 @@ const EmailTemplate = () => {
     []
   );
   const packageProtection = useQuery('packageProtection', 'findFirst', dataQuery, true);
+  console.log(packageProtection);
   const logo = packageProtection.data?.emailTemplateLogo
     ? `${appUrl}/api/files/${packageProtection.data?.emailTemplateLogo}`
     : null;
