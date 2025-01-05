@@ -203,6 +203,8 @@ export interface PaginatedResult<R> {
 
   jumpTo(page: number): Promise<void>;
 
+  firstPage(): Promise<R>;
+
   addListener(callback: (data: R) => void): PaginatedResult<R>;
 
   removeListener(callback: (data: R) => void): PaginatedResult<R>;

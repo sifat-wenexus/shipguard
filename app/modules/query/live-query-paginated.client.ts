@@ -81,6 +81,27 @@ export class LiveQueryPaginatedClient<R, D extends Pagination<R> = Pagination<R>
     return this.jumpTo(this._page - 1);
   }
 
+  firstPage(): Promise<R> {
+    return new Promise<R>((resolve) => {
+      const listener = (data: R) => {
+        this.removeListener(listener);
+        resolve(data);
+      };
+
+      this.addListener(listener);
+
+      if (this.page !== 1) {
+        return this.jumpTo(1);
+      }
+
+      if (this.data) {
+        listener(this.data);
+      } else {
+        this.refresh(this.query);
+      }
+    });
+  }
+
   async jumpTo(page: number) {
     if (page < 1 || page > this._totalPages || page === this._page) {
       return Promise.resolve(void 0);
