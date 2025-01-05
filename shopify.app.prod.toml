@@ -2,7 +2,7 @@
 
 client_id = "014656fd1817c91322f981a3ad07bb4b"
 name = "ShipGuard: Shipping Protection"
-application_url = "https://shipping-protection.wenexus.io/dashboard"
+application_url = "https://shipguard.app/dashboard"
 embedded = true
 
 [access_scopes]
@@ -10,7 +10,7 @@ embedded = true
 scopes = "read_assigned_fulfillment_orders,read_merchant_managed_fulfillment_orders,read_orders,read_products,read_publications,read_themes,read_third_party_fulfillment_orders,write_assigned_fulfillment_orders,write_merchant_managed_fulfillment_orders,write_orders,write_products,write_publications,write_third_party_fulfillment_orders,read_locations,read_customers"
 
 [auth]
-redirect_urls = ["https://shipping-protection.wenexus.io/auth/callback"]
+redirect_urls = ["https://shipguard.app/auth/callback"]
 
 [webhooks]
 api_version = "2024-10"
@@ -32,10 +32,10 @@ topics = [
   "shop/update"
 ]
 compliance_topics = ["customers/redact", "customers/data_request", "shop/redact"]
-uri = "https://shipping-protection.wenexus.io/webhooks"
+uri = "https://shipguard.app/webhooks"
 
 [app_proxy]
-url = "https://shipping-protection.wenexus.io"
+url = "https://shipguard.app"
 subpath = "Shipping-Protection"
 prefix = "apps"
 

@@ -33,11 +33,12 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
     };
   }
 
+  private readonly loadListeners = new Set<(loading: boolean) => void>();
   private readonly handlers = new Set<(data: any) => any>();
-  private readonly _pageSize: number = 0;
   private readonly schema: QuerySchema;
   private _totalItems: number = 0;
   private _totalPages: number = 0;
+  private _pageSize: number = 0;
   private data: D | null = null;
   private _page: number = 0;
 
@@ -47,6 +48,10 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
 
   get pageSize() {
     return this._pageSize;
+  }
+
+  set pageSize(value: number) {
+    this._pageSize = value;
   }
 
   get totalItems() {
@@ -70,6 +75,10 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
   }
 
   async refresh() {
+    for (const listener of this.loadListeners) {
+      listener(true);
+    }
+
     if (typeof window === 'undefined') {
       if (this.data) {
         this._totalItems = await (
@@ -88,14 +97,18 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
 
       this._totalPages = Math.ceil(this._totalItems / this._pageSize);
     } else {
-      const response: Pagination<D> = await fetch(
-        `/api/query?query=${JSON.stringify({
+      const response: Pagination<D> = await fetch(`/api/query`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           type: this.schema.type,
           model: this.schema.model,
           query: this.schema.query,
           subscribe: false,
-        })}`
-      ).then((r) => r.json());
+        }),
+      }).then((r) => r.json());
 
       this.data = response.data;
 
@@ -108,7 +121,9 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
       handler(this.data);
     }
 
-    return this.data!;
+    for (const listener of this.loadListeners) {
+      listener(false);
+    }
   }
 
   next() {
@@ -121,24 +136,12 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
 
   jumpTo(page: number) {
     if (page < 1 || page > this._totalPages || page === this._page) {
-      return Promise.resolve(null);
+      return Promise.resolve(void 0);
     }
 
     this._page = page;
     this.schema.query.page = this._page;
     return this.refresh();
-  }
-
-  firstPage(): Promise<D> {
-    return new Promise((resolve) => {
-      if (this.page !== 1) {
-        this.jumpTo(1).then((data) => resolve(data));
-      } else if (this.data) {
-        resolve(this.data);
-      } else {
-        this.refresh().then(resolve);
-      }
-    });
   }
 
   addListener(handler: (data: D) => any) {
@@ -156,5 +159,13 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
   removeListener(handler: (data: D) => any) {
     this.handlers.delete(handler);
     return this;
+  }
+
+  onLoading(callback: (loading: boolean) => void): () => void {
+    this.loadListeners.add(callback);
+
+    return () => {
+      this.loadListeners.delete(callback);
+    };
   }
 }

@@ -1,7 +1,6 @@
 import { CountrySelect } from '~/routes/settings.widget-setup/components/country-select';
 import { useQueryPaginated } from '~/hooks/use-query-paginated';
 import { ShadowBevelBox } from '~/components/shadow-bevel-box';
-import { queryProxy } from '~/modules/query/query-proxy';
 import { Box, FormLayout, Icon } from '@shopify/polaris';
 import { LocationIcon } from '@shopify/polaris-icons';
 import { useEffect, useMemo, useState } from 'react';
@@ -11,10 +10,10 @@ const Location = ({ formState }) => {
   const [location, setLocation] = useState(formState.state.geoLocation.length===0);
 
   const query = useMemo(
-    async () => await queryProxy.country.findMany({ pageSize: 500 }),
+    () => ({ pageSize: 500 }),
     []
   );
-  const countries = useQueryPaginated(query).data;
+  const countries = useQueryPaginated('country', 'findMany', query).data;
   // geoLocation
 
   useEffect(() => {

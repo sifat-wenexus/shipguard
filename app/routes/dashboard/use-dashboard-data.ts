@@ -1,6 +1,5 @@
-import { useQueryPaginated } from '~/hooks/use-query-paginated';
-import { queryProxy } from '~/modules/query/query-proxy';
-import { useQuery } from '~/hooks/use-query';
+import { PaginatedQuery, useQueryPaginated } from '~/hooks/use-query-paginated';
+import { Query, useQuery } from '~/hooks/use-query';
 import { useMemo } from 'react';
 
 export function useDashboardData(
@@ -10,7 +9,7 @@ export function useDashboardData(
 ) {
   const lineDataQuery = useMemo(
     () =>
-      queryProxy.packageProtectionOrder.findMany({
+      ({
         // by: ['orderDate'],
         // _sum: { orderAmount: true, refundAmount: true },
         where: {
@@ -30,13 +29,13 @@ export function useDashboardData(
         orderBy: {
           orderDate: 'desc', // Order by date ascending
         },
-      }),
+      } satisfies PaginatedQuery<'packageProtectionOrder', 'findMany'>),
     [endDate, startDate, storeId]
   );
 
   const pieQuery = useMemo(
     () =>
-      queryProxy.packageProtectionClaimOrder.findMany({
+      ({
         where: {
           AND: [
             { storeId: { equals: storeId } },
@@ -51,104 +50,106 @@ export function useDashboardData(
           ],
         },
         distinct: ['fulfillmentId'],
-      }),
+      } satisfies PaginatedQuery<'packageProtectionClaimOrder', 'findMany'>),
     [startDate, endDate, storeId]
   );
 
   const totalQuery = useMemo(
-    () =>
-      queryProxy.packageProtectionOrder.subscribeAggregate({
-        _sum: {
-          refundAmount: true,
-          orderAmount: true,
-          protectionFee: true,
-        },
-        _count: { id: true },
-        where: {
-          AND: [
-            { storeId: { equals: storeId } },
-            { hasPackageProtection: { equals: true } },
-            {
-              orderDate: {
-                gte: startDate,
-                lte: endDate,
-              },
+    () => ({
+      _sum: {
+        refundAmount: true,
+        orderAmount: true,
+        protectionFee: true,
+      },
+      _count: { id: true },
+      where: {
+        AND: [
+          { storeId: { equals: storeId } },
+          { hasPackageProtection: { equals: true } },
+          {
+            orderDate: {
+              gte: startDate,
+              lte: endDate,
             },
-          ],
-        },
-      }),
+          },
+        ],
+      },
+    } satisfies Query<'packageProtectionOrder', 'aggregate'>),
     [endDate, startDate, storeId]
   );
   const notClaimedQuery = useMemo(
-    () =>
-      queryProxy.packageProtectionOrder.subscribeCount({
-        where: {
-          AND: [
-            { storeId: { equals: storeId } },
-            {
-              AND: [
-                { hasClaimRequest: true },
-                { claimStatus: { in: ['REQUESTED', 'INPROGRESS'] } },
-              ],
+    () => ({
+      where: {
+        AND: [
+          { storeId: { equals: storeId } },
+          {
+            AND: [
+              { hasClaimRequest: true },
+              { claimStatus: { in: ['REQUESTED', 'INPROGRESS'] } },
+            ],
+          },
+          {
+            orderDate: {
+              gte: startDate,
+              lte: endDate,
             },
-            {
-              orderDate: {
-                gte: startDate,
-                lte: endDate,
-              },
-            },
-          ],
-        },
-      }),
+          },
+        ],
+      },
+    } satisfies Query<'packageProtectionOrder', 'count'>),
     [endDate, startDate, storeId]
   );
   const totalPackageProtectionQuery = useMemo(
-    () =>
-      queryProxy.packageProtectionOrder.subscribeCount({
-        where: {
-          AND: [
-            { storeId: { equals: storeId } },
-            { hasPackageProtection: true },
-            {
-              orderDate: {
-                gte: startDate,
-                lte: endDate,
-              },
+    () => ({
+      where: {
+        AND: [
+          { storeId: { equals: storeId } },
+          { hasPackageProtection: true },
+          {
+            orderDate: {
+              gte: startDate,
+              lte: endDate,
             },
-          ],
-        },
-      }),
+          },
+        ],
+      },
+    }),
     [endDate, startDate, storeId]
   );
   const totalNonPackageProtectionQuery = useMemo(
-    () =>
-      queryProxy.packageProtectionOrder.subscribeCount({
-        where: {
-          AND: [
-            { storeId: { equals: storeId } },
-            { hasPackageProtection: false },
-            {
-              orderDate: {
-                gte: startDate,
-                lte: endDate,
-              },
+    () => ({
+      where: {
+        AND: [
+          { storeId: { equals: storeId } },
+          { hasPackageProtection: false },
+          {
+            orderDate: {
+              gte: startDate,
+              lte: endDate,
             },
-          ],
-        },
-      }),
+          },
+        ],
+      },
+    }),
     [endDate, startDate, storeId]
   );
   const totalNonPackageProtectionSubscription = useQuery(
-    totalNonPackageProtectionQuery
+    'packageProtectionOrder',
+    'count',
+    totalNonPackageProtectionQuery,
+    true
   );
 
   const totalPackageProtectionSubscription = useQuery(
-    totalPackageProtectionQuery
+    'packageProtectionOrder',
+    'count',
+    totalPackageProtectionQuery,
+    true
   );
-  const lineDataSubscription = useQueryPaginated(lineDataQuery);
-  const notClaimedSubscription = useQuery(notClaimedQuery);
-  const totalSubscription = useQuery(totalQuery);
-  const pie = useQuery(pieQuery);
+  const lineDataSubscription = useQueryPaginated('packageProtectionOrder', 'findMany', lineDataQuery);
+  const notClaimedSubscription = useQuery('packageProtectionOrder', 'count', notClaimedQuery, true);
+  const totalSubscription = useQuery('packageProtectionOrder', 'aggregate', totalQuery, true);
+  const pie = useQuery('packageProtectionClaimOrder', 'findMany', pieQuery, true);
 
   const groupByDate = (data) => {
     return data?.reduce((acc: Record<string, number>, item) => {

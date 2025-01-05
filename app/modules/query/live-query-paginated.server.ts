@@ -43,7 +43,7 @@ export class LiveQueryPaginatedServer<D = Record<string, any>[]>
     this._page = page;
   }
 
-  private readonly _pageSize: number = 0;
+  private _pageSize: number = 0;
   private _totalPages: number = 0;
   private _totalItems: number = 0;
   private _page: number = 0;
@@ -54,6 +54,10 @@ export class LiveQueryPaginatedServer<D = Record<string, any>[]>
 
   get pageSize() {
     return this._pageSize;
+  }
+
+  set pageSize(value: number) {
+    this._pageSize = value;
   }
 
   get totalItems() {
@@ -76,7 +80,11 @@ export class LiveQueryPaginatedServer<D = Record<string, any>[]>
     return this.page > 1;
   }
 
-  async refresh() {
+  async refresh(query?: QuerySchema['query']) {
+    if (query) {
+      this.schema.query = query;
+    }
+
     const count = await (prisma[this.schema.model] as any).count({
       where: this.schema.query.where,
     });
@@ -90,32 +98,22 @@ export class LiveQueryPaginatedServer<D = Record<string, any>[]>
     return super.refresh();
   }
 
-  next(): Promise<D | null> {
+  next() {
     return this.jumpTo(this._page + 1);
   }
 
-  previous(): Promise<D | null> {
+  previous() {
     return this.jumpTo(this._page - 1);
   }
 
-  jumpTo(page: number): Promise<D | null> {
+  jumpTo(page: number) {
     if (page < 1 || page > this._totalPages || page === this._page) {
-      return Promise.resolve(null);
+      return Promise.resolve(void 0);
     }
 
     this._page = page;
     this.schema.query.page = this._page;
 
     return this.refresh();
-  }
-
-  firstPage(): Promise<D> {
-    return new Promise((resolve) => {
-      if (this.page !== 1) {
-        this.jumpTo(1).then((data) => resolve(data!))
-      } else {
-        this.refresh().then(resolve);
-      }
-    });
   }
 }

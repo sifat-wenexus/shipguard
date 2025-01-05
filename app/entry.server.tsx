@@ -11,6 +11,8 @@ import './routes/settings.widget-setup/modules/package-protection-listener.serve
 import { webhookManager } from './modules/webhook-manager.server';
 import './modules/bulk-operation-manager.server';
 import './modules/find-offline-session.server';
+import './modules/websocket/websocket.server';
+import '~/modules/websocket/handlers/index';
 import '~/modules/query/token-store.server';
 import './modules/job/job-runner.server';
 import './modules/query/query.server';
@@ -35,7 +37,16 @@ export default async function handleRequest(
     ? 'onAllReady'
     : 'onShellReady';
 
-  return new Promise((resolve, reject) => {
+  if (process.env.NODE_ENV === 'development') {
+    responseHeaders.set(
+      'Content-Security-Policy',
+      `connect-src 'self' blob: ws://* wss://* https://* https://bugsnag-mtl.shopifycloud.com:4900/js hcaptcha.com *.hcaptcha.com http://localhost:* ws://localhost:*`
+    );
+  }
+
+  return new Promise(async (resolve, reject) => {
+    const { cors } = await import('remix-utils/cors');
+
     const { pipe, abort } = renderToPipeableStream(
       <RemixServer
         context={remixContext}
@@ -48,12 +59,16 @@ export default async function handleRequest(
           const stream = createReadableStreamFromReadable(body);
 
           responseHeaders.set('Content-Type', 'text/html');
+          const response = new Response(stream, {
+            headers: responseHeaders,
+            status: responseStatusCode,
+          });
           resolve(
-            new Response(stream, {
-              headers: responseHeaders,
-              status: responseStatusCode,
+            cors(request, response, {
+              origin: '*',
             })
           );
+
           pipe(body);
         },
         onShellError(error) {

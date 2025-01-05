@@ -1,9 +1,8 @@
-import ClaimOrderSearchAndFilter from './claim-order-search-and-filter';
 import type { IFilterOptions } from './claim-order-search-and-filter';
-import { useQueryPaginated } from '~/hooks/use-query-paginated';
-import { queryProxy } from '~/modules/query/query-proxy';
-import { useCallback, useMemo, useState } from 'react';
+import ClaimOrderSearchAndFilter from './claim-order-search-and-filter';
+import { PaginatedQuery, useQueryPaginated } from '~/hooks/use-query-paginated';
 import type { Dispatch, SetStateAction } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { IActiveDates } from '../order/route';
 import type { ClaimStatus } from '#prisma-client';
 import { BlogIcon } from '@shopify/polaris-icons';
@@ -11,12 +10,12 @@ import useDebounce from '~/hooks/use-debounce';
 import { useI18n } from '@shopify/react-i18n';
 
 import {
+  Badge,
+  Button,
   EmptySearchResult,
   IndexTable,
-  Spinner,
-  Button,
-  Badge,
   Link,
+  Spinner,
   Text,
 } from '@shopify/polaris';
 
@@ -83,7 +82,7 @@ const ClaimOrderList = ({
 
   const query = useMemo(
     () =>
-      queryProxy.packageProtectionOrder.subscribeFindMany({
+      ({
         where: {
           AND: [
             {
@@ -115,11 +114,16 @@ const ClaimOrderList = ({
           },
         },
         orderBy: { orderDate: 'desc' },
-      }),
+      } satisfies PaginatedQuery<'packageProtectionOrder', 'findMany'>),
     [endDate, filterFields, searchTerm, startDate]
   );
 
-  const subscription = useQueryPaginated(query);
+  const subscription = useQueryPaginated(
+    'packageProtectionOrder',
+    'findMany',
+    query,
+    true
+  );
 
   const handleProcess = useCallback(
     (orderId: string) => {

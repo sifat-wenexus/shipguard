@@ -1,3 +1,4 @@
+import { WebsocketClient } from '~/modules/websocket/websocket.client';
 import ImgLogo from '~/assets/images/logo-shipping-protection.png';
 import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
@@ -70,6 +71,14 @@ export default function Root() {
     script2.defer = true;
     if (!skipAuth) document.body.appendChild(script2);
   }, [skipAuth]);
+
+  useEffect(() => {
+    const websocket = new WebsocketClient();
+
+    return () => {
+      websocket.close();
+    };
+  }, []);
 
   return (
     <html>

@@ -119,10 +119,10 @@ const EmailTemplate = () => {
   };
 
   const dataQuery = useMemo(
-    () => queryProxy.packageProtection.subscribeFindFirst(),
+    () => ({}),
     []
   );
-  const packageProtection = useQuery(dataQuery);
+  const packageProtection = useQuery('packageProtection', 'findFirst', dataQuery, true);
   const logo = packageProtection.data?.emailTemplateLogo
     ? `${appUrl}/api/files/${packageProtection.data?.emailTemplateLogo}`
     : null;

@@ -16,7 +16,7 @@ const Footer = () => {
           </p>
           <div className=" flex gap-4 my-11 max-w-full text-lg font-bold max-md:mt-10 items-center justify-center">
             <Link
-              to="https://shipping-protection.wenexus.io/auth/login"
+              to="https://shipguard.app/auth/login"
               target="_blank"
             >
               <button className="self-start px-6 py-1 text-white bg-green-600 rounded-xl shadow-[0px_11px_56px_rgba(255,172,55,0.15)] max-md:px-5 border-green-600 border-2 hover:bg-white hover:text-black">
@@ -33,7 +33,7 @@ const Footer = () => {
         <p>
           2024 ShipGuard: Shipping Protection |{" "}
           <Link
-            to="https://shipping-protection.wenexus.io/terms-of-service"
+            to="https://shipguard.app/terms-of-service"
             target="_blank"
           >
             {" "}
@@ -41,7 +41,7 @@ const Footer = () => {
           </Link>{" "}
           |{" "}
           <Link
-            to="https://shipping-protection.wenexus.io/privacy-policy"
+            to="https://shipguard.app/privacy-policy"
             target="_blank"
           >
             Privacy Policy

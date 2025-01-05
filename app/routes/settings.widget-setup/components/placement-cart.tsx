@@ -1,4 +1,4 @@
-import { ElementPlacementPosition } from 'prisma/client/default';
+import type { ElementPlacementPosition } from 'prisma/client/default';
 import { ShadowBevelBox } from '~/components/shadow-bevel-box';
 import { InfoIcon, ReplaceIcon } from '@shopify/polaris-icons';
 import Radio from '~/components/radio';
@@ -12,6 +12,7 @@ import {
   Icon,
   Box,
 } from '@shopify/polaris';
+import Tutorial from '~/routes/settings.checkout-extension/tutorial';
 
 const PlacementCard = ({ formState }) => {
   const { state } = formState;
@@ -119,6 +120,11 @@ const PlacementCard = ({ formState }) => {
                   label={'Package protection placement'}
                 />
               </Box>
+
+              {/*<Box paddingBlockStart="300">*/}
+              {/*  <Tutorial />*/}
+              {/*</Box>*/}
+
             </>
           )}{' '}
           {/* <Divider />

@@ -5,7 +5,7 @@ import { Link } from '@remix-run/react';
 export default function PrivacyPolicy() {
   return (
     <Page>
-      <Link to={'https://shipping-protection.wenexus.io/'}>
+      <Link to={'https://shipguard.app/'}>
         {' '}
         <img
           src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Shipguard-shipping-protection.png?v=1731747621"

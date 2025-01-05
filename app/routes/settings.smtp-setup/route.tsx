@@ -18,21 +18,20 @@ import type { SmtpSetting } from '#prisma-client';
 import GmailLogo from '~/assets/images/gmail.png';
 import { prisma } from '~/modules/prisma.server';
 import * as Icons from '@shopify/polaris-icons';
-import GoogleLogo from '~/assets/images/Logo-google-icon-PNG.png'
+import GoogleLogo from '~/assets/images/Logo-google-icon-PNG.png';
 
 import { useQuery } from '~/hooks/use-query';
 import {
   AccountConnection,
   Box,
   Button,
-  Card, Icon,
+  Card,
   Layout,
   Page,
   Select,
   Text,
   TextField,
 } from '@shopify/polaris';
-import { EmailIcon } from '@shopify/polaris-icons';
 import { getGoogleAuthClient } from '~/modules/get-google-auth-client.server';
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -426,24 +425,38 @@ const SMTP = () => {
     { label: 'SMTP', value: 'smtp' },
     { label: 'SMTPS', value: 'smtps' },
   ];
-  const options:{label:any,value:string}[] = [
-    { label: <div className={'flex gap-2 items-center '}><span><img src={GoogleLogo} alt="" width={'15px'}/></span> Google</div>, value: 'google' },
+  const options: { label: any; value: string }[] = [
+    {
+      label: (
+        <div className={'flex gap-2 items-center '}>
+          <span>
+            <img src={GoogleLogo} alt="" width={'15px'} />
+          </span>{' '}
+          Google
+        </div>
+      ),
+      value: 'google',
+    },
     { label: 'Custom', value: 'custom' },
   ];
 
   const googleAuthQuery = useMemo(
-    () =>
-      queryProxy.googleAuthCredential.subscribeFindFirst({
-        where: {
-          connected: true,
-        },
-        select: {
-          connected: true,
-        },
-      }),
+    () => ({
+      where: {
+        connected: true,
+      },
+      select: {
+        connected: true,
+      },
+    }),
     []
   );
-  const googleAuth = useQuery(googleAuthQuery);
+  const googleAuth = useQuery(
+    'googleAuthCredential',
+    'findFirst',
+    googleAuthQuery,
+    true
+  );
 
   const isGmailConnected = useMemo(
     () => !!(loaderData.googleUserInfo || googleAuth.data?.connected),
@@ -565,7 +578,8 @@ const SMTP = () => {
                           loaderData.googleUserInfo?.picture || GmailLogo
                         }
                         title={
-                          loaderData.googleUserInfo?.email || 'Google Account Integration'
+                          loaderData.googleUserInfo?.email ||
+                          'Google Account Integration'
                         }
                         connected={isGmailConnected}
                         accountName="Google"
@@ -589,7 +603,11 @@ const SMTP = () => {
                                 Terms of Service
                               </Link>{' '}
                               and{' '}
-                              <Link to="/privacy-policy" className="underline" target={'_blank'}>
+                              <Link
+                                to="/privacy-policy"
+                                className="underline"
+                                target={'_blank'}
+                              >
                                 Privacy Policy
                               </Link>
                               .

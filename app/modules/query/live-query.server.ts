@@ -10,7 +10,7 @@ export class LiveQueryServer<D = Record<string, any> | Record<string, any>[]>
   implements Subscription<D> {
   // eslint-disable-next-line no-useless-constructor
   constructor(
-    public readonly schema: QuerySchema,
+    public schema: QuerySchema,
     private readonly server: QueryServer,
     public readonly dependencies: Set<string>,
     public readonly scope?: string,
@@ -18,6 +18,7 @@ export class LiveQueryServer<D = Record<string, any> | Record<string, any>[]>
   ) {
   }
 
+  private readonly loadListeners = new Set<(loading: boolean) => void>();
   private readonly handlers = new Set<(data: any) => any>();
   signature: string | null = null;
   private closed = false;
@@ -29,12 +30,20 @@ export class LiveQueryServer<D = Record<string, any> | Record<string, any>[]>
       .digest('base64');
   }
 
-  async refresh(): Promise<D> {
+  async refresh(query?: QuerySchema['query']) {
     if (this.closed) {
       throw new QueryException(
         'This live query has been destroyed.',
         'QUERY_INVALID',
       );
+    }
+
+    if (query) {
+      this.schema.query = query;
+    }
+
+    for (const listener of this.loadListeners) {
+      listener(true);
     }
 
     const data = await (prisma[this.schema.model][this.schema.type] as any)(
@@ -44,7 +53,7 @@ export class LiveQueryServer<D = Record<string, any> | Record<string, any>[]>
     const signature = this.hashData(data);
 
     if (this.signature === signature) {
-      return data;
+      return;
     }
 
     this.signature = signature;
@@ -53,7 +62,9 @@ export class LiveQueryServer<D = Record<string, any> | Record<string, any>[]>
       handler(data);
     }
 
-    return data;
+    for (const listener of this.loadListeners) {
+      listener(false);
+    }
   }
 
   addListener(handler: (data: D) => any) {
@@ -81,6 +92,14 @@ export class LiveQueryServer<D = Record<string, any> | Record<string, any>[]>
     }
 
     return this;
+  }
+
+  onLoading(callback: (loading: boolean) => void): () => void {
+    this.loadListeners.add(callback);
+
+    return () => {
+      this.loadListeners.delete(callback);
+    };
   }
 
   close(): void {

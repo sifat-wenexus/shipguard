@@ -5,7 +5,7 @@ import { Link } from '@remix-run/react';
 export default function TermsConditions() {
   return (
     <Page>
-      <Link to={'https://shipping-protection.wenexus.io/'}>
+      <Link to={'https://shipguard.app/'}>
         <img
           src="https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Shipguard-shipping-protection.png?v=1731747621"
           className="w-[220px] mx-auto h-auto my-4"

@@ -1,9 +1,8 @@
 import type { Types } from '../../prisma/client/runtime/library';
-import { useQueryPaginated } from '~/hooks/use-query-paginated';
+import { PaginatedQuery, useQueryPaginated } from '~/hooks/use-query-paginated';
 import type { Prisma, PrismaClient } from '#prisma-client';
-import { queryProxy } from '~/modules/query/query-proxy';
-import { useMemo } from 'react';
 import type React from 'react';
+import { useMemo } from 'react';
 
 export type ProductLoaderArgs = Omit<
   Prisma.Args<PrismaClient['product'], 'findMany'>,
@@ -12,7 +11,11 @@ export type ProductLoaderArgs = Omit<
   page?: number;
   pageSize?: number;
 };
-type Items<A extends ProductLoaderArgs> = Types.Result.GetResult<Payload, A, 'findMany'>;
+type Items<A extends ProductLoaderArgs> = Types.Result.GetResult<
+  Payload,
+  A,
+  'findMany'
+>;
 type Payload = Prisma.Payload<PrismaClient['product']>;
 
 export interface ProductLoaderProps<A extends ProductLoaderArgs> {
@@ -43,10 +46,19 @@ export function ProductLoader<A extends ProductLoaderArgs = ProductLoaderArgs>(
       args.where = AND[0];
     }
 
-    return queryProxy.product.findMany(args);
+    return (props.args ? args : { pageSize: 100000 }) as PaginatedQuery<
+      'product',
+      'findMany'
+    >;
   }, [props.args, props.ids]);
 
-  const paginated = useQueryPaginated(query, true);
+  const paginated = useQueryPaginated(
+    'product',
+    'findMany',
+    query,
+    false,
+    true
+  );
 
   return props.renderItems(paginated.data as any, paginated.loading);
 }

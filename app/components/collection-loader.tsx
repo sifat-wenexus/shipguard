@@ -1,7 +1,6 @@
+import {PaginatedQuery, useQueryPaginated} from '~/hooks/use-query-paginated';
 import type { Types } from '../../prisma/client/runtime/library';
-import { useQueryPaginated } from '~/hooks/use-query-paginated';
 import type { Prisma, PrismaClient } from '#prisma-client';
-import { queryProxy } from '~/modules/query/query-proxy';
 import { useMemo } from 'react';
 import type React from 'react';
 
@@ -43,10 +42,10 @@ export function CollectionLoader<A extends CollectionLoaderArgs = CollectionLoad
       args.where = AND[0];
     }
 
-    return queryProxy.collection.findMany(args);
+    return args as PaginatedQuery<'collection', 'findMany'>;
   }, [props.args, props.ids]);
 
-  const paginated = useQueryPaginated(query, true);
+  const paginated = useQueryPaginated('collection', 'findMany', query, false, true);
 
   return props.renderItems(paginated.data as any, paginated.loading);
 }
