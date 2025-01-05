@@ -298,7 +298,7 @@ const OrderList = ({
       >
         {subscription.loading ? (
           <IndexTable.Row id={'loading'} position={1}>
-            <IndexTable.Cell colSpan={6}>
+            <IndexTable.Cell colSpan={7}>
               <div className="flex justify-center">
                 <Spinner accessibilityLabel="Loading..." size="large" />
               </div>
