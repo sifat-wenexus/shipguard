@@ -419,6 +419,7 @@ onDBEvtBuffered(
                 ],
                 gql
               );
+              console.log('package protection',data.insurancePriceType)
               await metaFields.push({
                 key: 'productVariants',
                 namespace: 'package_protection',

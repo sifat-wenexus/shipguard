@@ -1,4 +1,4 @@
-import { WebsocketClient } from '~/modules/websocket/websocket.client';
+import { websocketClient } from '~/modules/websocket/websocket.client';
 import ImgLogo from '~/assets/images/logo-shipping-protection.png';
 import polarisViz from '@shopify/polaris-viz/build/esm/styles.css';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css';
@@ -73,10 +73,8 @@ export default function Root() {
   }, [skipAuth]);
 
   useEffect(() => {
-    const websocket = new WebsocketClient();
-
     return () => {
-      websocket.close();
+      websocketClient.close();
     };
   }, []);
 
