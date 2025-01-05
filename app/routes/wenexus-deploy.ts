@@ -44,6 +44,15 @@ export async function action({ request }: ActionFunctionArgs) {
       env: { NODE_ENV: 'production' },
     });
 
+    childProcess
+      .spawn('pnpm', ['run', 'deploy'], {
+        cwd,
+        detached: true,
+        shell: 'bash',
+        stdio: 'ignore',
+      })
+      .unref();
+
     // Prune the dependencies
     console.log('Pruning dependencies...');
 
