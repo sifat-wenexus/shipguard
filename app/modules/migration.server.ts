@@ -243,6 +243,6 @@ export class Migration {
   }
 
   async updatePackageProtection2(){
-    await queryProxy.packageProtection.updateMany({where:{insuranceDisplayButton:false},data:{insuranceDisplayButton:true},},{session:this.session});
+    await queryProxy.packageProtection.updateMany({where:{insuranceDisplayButton:true},data:{insuranceDisplayButton:false},},{session:this.session});
   }
 }
