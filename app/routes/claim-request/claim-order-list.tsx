@@ -124,7 +124,6 @@ const ClaimOrderList = ({
     query,
     true
   );
-
   const handleProcess = useCallback(
     (orderId: string) => {
       setIsProcess(true);
@@ -249,7 +248,7 @@ const ClaimOrderList = ({
               {+refundAmount > 0 ? i18n.formatCurrency(+refundAmount) : '-'}
             </IndexTable.Cell>
 
-            <IndexTable.Cell>{claimDate.split('T')[0]}</IndexTable.Cell>
+            <IndexTable.Cell>{claimDate?.split('T')[0]}</IndexTable.Cell>
             <IndexTable.Cell>
               <div className="text-center">
                 <Button

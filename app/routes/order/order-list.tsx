@@ -98,7 +98,7 @@ const OrderList = ({
     } satisfies PaginatedQuery<'packageProtectionOrder', 'findMany'>;
   }, [endDate, filterItems, searchTerm, startDate]);
   const subscription = useQueryPaginated('packageProtectionOrder', 'findMany', query, true);
-console.log('subscription', subscription);
+
   const rowMarkup = useMemo(
     () =>
       subscription.data?.map(

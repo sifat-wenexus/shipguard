@@ -465,10 +465,12 @@ export const cancelCustomerTemplate = `<!DOCTYPE html>
 
       p {
         line-height: 25px;
+        font-size: 16px;
       }
 
       td {
         padding: 10px;
+        font-size: 16px;
       }
 
       .email-container {
@@ -527,5 +529,7 @@ export const cancelCustomerTemplate = `<!DOCTYPE html>
 
 </body>
 </html>
+
+
 
 `;
