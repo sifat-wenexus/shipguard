@@ -7,7 +7,7 @@ import { prisma } from '~/modules/prisma.server';
 
 async function init() {
   const app = await prisma.app.findFirst();
-  // jobRunner.run({name: 'send-email',storeId:'gid://shopify/Shop/55079829551',payload:{uninstalled:false}});
+ // jobRunner.run({name: 'send-email',storeId:'gid://shopify/Shop/55079829551',payload:{uninstalled:false}});
   if (app?.url !== process.env.APP_URL) {
     const query = await queryProxy.store.findMany({
       select: { domain: true },

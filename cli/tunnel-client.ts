@@ -44,7 +44,6 @@ export class Client {
 
       const setup = () => {
         let intervalId: NodeJS.Timeout | null = null;
-
         const ws = new WebSocket(tunnelURL)
           .once('open', resolve)
           .once('error', reject)
@@ -52,18 +51,15 @@ export class Client {
             if (intervalId) {
               clearInterval(intervalId);
             }
-
             setup();
           })
           .on('message', (data) => this.setupRequest(data as Buffer));
-
         intervalId = setInterval(() => {
           if (ws.readyState === WebSocket.OPEN) {
             ws.ping();
           }
         }, 10000);
       };
-
       setup();
     });
   }

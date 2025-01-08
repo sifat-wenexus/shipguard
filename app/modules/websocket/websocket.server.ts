@@ -1,11 +1,11 @@
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { sseTokenStore } from '~/modules/query/token-store.server';
 import { emitter } from '~/modules/emitter.server';
-import { Session } from '~/shopify-api/lib';
+import type { Session } from '~/shopify-api/lib';
 import EventEmitter from 'events';
 import Joi from 'joi';
 
-import {
+import type {
   EventPayload,
   MessageEventMapServer,
   ReplyEventMapServer,
@@ -13,12 +13,13 @@ import {
   RequestPayload,
 } from './common';
 
-import {
-  App,
+import type {
   HttpRequest,
   HttpResponse,
   us_socket_context_t,
-  WebSocket,
+  WebSocket} from 'uWebSockets.js';
+import {
+  App
 } from 'uWebSockets.js';
 
 export class WebsocketServer {

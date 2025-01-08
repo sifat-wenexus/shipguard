@@ -20,11 +20,11 @@ emitter.on(
         },
         data: {
           uninstalledAt: new Date(),
-          PackageProtection: {
-            update: {
-              enabled: false,
-            },
-          },
+          PackageProtection:{
+            update:{
+              enabled:false
+            }
+          }
         },
       });
     } catch (e) {
