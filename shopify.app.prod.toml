@@ -7,7 +7,7 @@ embedded = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_assigned_fulfillment_orders,read_merchant_managed_fulfillment_orders,read_orders,read_products,read_publications,read_themes,write_themes,read_third_party_fulfillment_orders,write_assigned_fulfillment_orders,write_merchant_managed_fulfillment_orders,write_orders,write_products,write_publications,write_third_party_fulfillment_orders,read_locations,read_customers"
+scopes = "read_assigned_fulfillment_orders,read_merchant_managed_fulfillment_orders,read_orders,read_products,read_publications,read_themes,read_third_party_fulfillment_orders,write_assigned_fulfillment_orders,write_merchant_managed_fulfillment_orders,write_orders,write_products,write_publications,write_third_party_fulfillment_orders,read_locations,read_customers"
 
 [auth]
 redirect_urls = ["https://shipguard.app/auth/callback"]
