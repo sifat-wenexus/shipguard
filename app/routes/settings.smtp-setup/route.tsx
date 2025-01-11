@@ -3,7 +3,7 @@ import { SendTestEmail } from '~/routes/settings.smtp-setup/components/send-test
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { getGoogleUserInfo } from '~/modules/get-google-user-info.server';
-import { Link, useLoaderData, useNavigate, useRevalidator } from '@remix-run/react';
+import { Link, useLoaderData, useRevalidator } from '@remix-run/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import { queryProxy } from '~/modules/query/query-proxy';
@@ -206,7 +206,6 @@ const SMTP = () => {
   const [provider, setProvider] = useState<string>(
     loaderData.smtpSettings?.provider || 'google'
   );
-  const navigate = useNavigate();
   const fetcher = useBetterFetcher();
   const reValidator = useRevalidator();
   const [viewPassword, setViewPassword] = useState(false);
@@ -540,15 +539,15 @@ const SMTP = () => {
   return (
     <PageShell currencyCode={loaderData.currencyCode}>
       <div className="mt-8 sm:mt-4 m-2">
-        <Page title={'SMTP Setup'} backAction={{ onAction: () => navigate(-1) }}>
+        <Page>
           <Layout>
             <Layout.Section variant="fullWidth">
-              {/*<div className="mb-4 flex items-center gap-4">*/}
-              {/*  <Button icon={Icons.ArrowLeftIcon} url="/settings"></Button>*/}
-              {/*  <Text as="h1" variant="headingLg">*/}
-              {/*    SMTP Setup*/}
-              {/*  </Text>*/}
-              {/*</div>*/}
+              <div className="mb-4 flex items-center gap-4">
+                <Button icon={Icons.ArrowLeftIcon} url="/settings"></Button>
+                <Text as="h1" variant="headingLg">
+                  SMTP Setup
+                </Text>
+              </div>
               <Card>
                 <div className="w-full sm:p-4">
                   <Box paddingBlockStart="200" paddingBlockEnd="200">
