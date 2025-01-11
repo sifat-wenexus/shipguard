@@ -36,6 +36,7 @@ export function useQueryPaginated<
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    query.page=page
     const s = !subscribe ? queryProxy[model][method](query) as unknown as PaginatedResult<D> : queryProxy[model][
       `subscribe${method[0].toUpperCase()}${method.slice(1)}`
       ](query) as SubscriptionWithPaginatedResult<D>;
@@ -79,17 +80,20 @@ export function useQueryPaginated<
         (s as SubscriptionWithPaginatedResult<D>).close();
       }
     };
-  }, [model, method, query, subscribe, combinePages]);
+  }, [model, method, query,page, subscribe, combinePages]);
 
   const next = useCallback(() => {
     if (subscription?.hasNext) {
-      subscription.next();
+      // subscription.next();
+      setPage(subscription.page + 1);
     }
+
   }, [subscription, query]);
 
   const previous = useCallback(() => {
     if (subscription?.hasPrev) {
-      subscription.previous();
+      // subscription.previous();
+      setPage(subscription.page - 1);
     }
   }, [subscription]);
 
