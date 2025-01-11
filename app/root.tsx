@@ -53,7 +53,6 @@ export default function Root() {
     () => skipAuthPaths.has(location.pathname),
     [location.pathname]
   );
-console.log('app deployed')
   useEffect(() => {
     // First Script
     const script1 = document.createElement('script');
