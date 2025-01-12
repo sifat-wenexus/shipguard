@@ -393,7 +393,7 @@ const Settings = () => {
       setInsurancePriceError(false);
     }
   }, [state.insurancePriceType]);
-  console.log('settings',enabled)
+  console.log('settings',data.enabled)
   return (
     <PageShell currencyCode={data.currencyCode}>
       <div className="m-2 sm:m-0">
@@ -411,7 +411,7 @@ const Settings = () => {
                   <br />
                 </>
               )}
-              {enabled && <WarningBanner storeInfo={storeInfo} />}
+              {data.enabled && <WarningBanner storeInfo={storeInfo} />}
               {/*{<WarningBanner storeInfo={storeInfo} />}*/}
             </Layout.Section>
             <Layout.Section variant="oneHalf">
