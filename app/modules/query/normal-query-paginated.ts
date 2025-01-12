@@ -8,6 +8,11 @@ import _ from 'lodash';
 export class NormalQueryPaginated<D = Record<string, any>[]>
   implements PaginatedResult<D>
 {
+  private readonly loadListeners = new Set<(loading: boolean) => void>();
+  private readonly handlers = new Set<(data: any) => any>();
+  private readonly schema: QuerySchema;
+  private data: D | null = null;
+
   constructor(
     count: number,
     schema: QuerySchema,
@@ -33,18 +38,19 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
     };
   }
 
-  private readonly loadListeners = new Set<(loading: boolean) => void>();
-  private readonly handlers = new Set<(data: any) => any>();
-  private readonly schema: QuerySchema;
   private _totalItems: number = 0;
-  private _totalPages: number = 0;
-  private _pageSize: number = 0;
-  private data: D | null = null;
-  private _page: number = 0;
 
-  get page() {
-    return this._page;
+  get totalItems() {
+    return this._totalItems;
   }
+
+  private _totalPages: number = 0;
+
+  get totalPages() {
+    return this._totalPages;
+  }
+
+  private _pageSize: number = 0;
 
   get pageSize() {
     return this._pageSize;
@@ -54,12 +60,10 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
     this._pageSize = value;
   }
 
-  get totalItems() {
-    return this._totalItems;
-  }
+  private _page: number = 0;
 
-  get totalPages() {
-    return this._totalPages;
+  get page() {
+    return this._page;
   }
 
   get hasNext() {
@@ -90,6 +94,9 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
 
       this.schema.query.take = this._pageSize;
       this.schema.query.skip = (this._page - 1) * this._pageSize;
+
+      delete this.schema.query.page;
+      delete this.schema.query.pageSize;
 
       this.data = await (
         (this.trx ?? prisma)[this.schema.model][this.schema.type] as any
