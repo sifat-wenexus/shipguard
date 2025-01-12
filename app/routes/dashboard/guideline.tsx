@@ -41,7 +41,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
 
   const [toggleLine, setToggleLine] = useState({
     install: false,
-    setUp: false,
+    setUp: true,
     enable: false,
     claim: false,
     smtp: false,
@@ -219,7 +219,7 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                         </h2>
                       </span>
 
-                      {toggleLine.setUp && (
+                      {/*{toggleLine.setUp && (*/}
                         <>
                           <br />
                           <br />
@@ -230,10 +230,12 @@ const GuideLine = ({ storeInfo, guidelineVisibility }) => {
                            Edit Widget Setting
                           </Button>
                         </>
-                      )}
+                      {/*)}*/}
                     </div>
                     <div className="text-right hidden sm:block">
-                      {toggleLine.setUp && <img src={widgetImg} alt="i" width={'270px'} />}
+                      {/*{toggleLine.setUp &&*/}
+                        <img src={widgetImg} alt="i" width={'270px'} />
+                      {/*// }*/}
                     </div>
                   </div>
                 </div>

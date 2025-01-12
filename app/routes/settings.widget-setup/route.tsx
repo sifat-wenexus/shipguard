@@ -2,7 +2,7 @@ import CustomizedInsuranceStyle from './components/customized-insurance-style';
 import { hexToHsba, hsbaToHexWithAlpha } from '~/modules/utils/color-utils';
 import { Banner, Box, Button, Layout, Page, Text } from '@shopify/polaris';
 import { shopify as shopifyRemix } from '../../modules/shopify.server';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import InsurancePricing from './components/insurance-pricing';
 import SpecialSettings from './components/special-settings';
@@ -26,6 +26,8 @@ import type {
   LoaderFunctionArgs,
 } from '@remix-run/node';
 import style from './styles/route.css';
+import WarningBanner from '~/components/warning-banner';
+import { useLivePageData } from '~/hooks/use-live-page-data';
 
 export async function action({ request }: ActionFunctionArgs) {
   const ctx = await shopifyRemix.authenticate.admin(request);
@@ -385,7 +387,7 @@ const Settings = () => {
       console.error(e);
     }
   }, [fetcher, state]);
-
+  const { storeInfo } = useLivePageData();
   useEffect(() => {
     if (state.insurancePriceType) {
       setInsurancePriceError(false);
@@ -422,6 +424,8 @@ const Settings = () => {
               <div className="sm:hidden block">
                 <Preview formState={formState} />
               </div>
+
+              {enabled&&<WarningBanner storeInfo={storeInfo} />}
 
               <PublishButton
                 enabled={enabled}

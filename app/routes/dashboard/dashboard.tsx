@@ -6,7 +6,7 @@ import DashboardLoading from './dashboard-loading';
 import '@shopify/polaris-viz/build/esm/styles.css';
 import type { IActiveDates } from '../order/route';
 import LineChartForDashboard from './line-chart';
-import React, { useMemo, useState } from 'react';
+import React, {  useMemo, useState } from 'react';
 import '@shopify/polaris/build/esm/styles.css';
 import { useI18n } from '@shopify/react-i18n';
 import DateRangePicker from './date-range';
@@ -40,9 +40,8 @@ export const default30Days = () => {
   };
 };
 
-const Dashboard = ({ guidelineVisibility, storeId }) => {
+const Dashboard = ({ guidelineVisibility, storeId ,enabled}) => {
   const defaultActiveDates = useMemo(() => default30Days(), []);
-
   const [activeDates, setActiveDates] =
     useState<IActiveDates>(defaultActiveDates);
   const [i18n] = useI18n();
@@ -79,7 +78,7 @@ const Dashboard = ({ guidelineVisibility, storeId }) => {
   //     return 0;
   //   }
   // }, [data.loading]);
-
+console.log(enabled)
   if (data.loading) {
     renderElement = <DashboardLoading />;
   } else {
@@ -254,7 +253,8 @@ const Dashboard = ({ guidelineVisibility, storeId }) => {
           Hi 👋, Welcome to ShipGuard: Shipping Protection
         </Text>
         <br />
-        {<WarningBanner storeInfo={storeInfo} />}
+
+        {enabled&&<WarningBanner storeInfo={storeInfo} />}
 
         {
           <GuideLine

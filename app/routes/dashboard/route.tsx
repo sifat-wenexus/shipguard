@@ -15,20 +15,30 @@ export async function loader({ request }: LoaderFunctionArgs) {
     select: { currencyCode: true },
   });
 
+  const packageProtection = await prisma.packageProtection.findFirst({
+    where: { storeId: ctx.session.storeId },
+    select: { enabled: true },
+  });
+
   return json({
     guidelineVisibility: cookieHeader,
     currencyCode,
     storeId: ctx.session.storeId,
+    enabled: packageProtection ? packageProtection.enabled : false,
   });
 }
 
 const App = () => {
-
-  const { guidelineVisibility,storeId,currencyCode } = useLoaderData<typeof loader>();
+  const { guidelineVisibility, storeId, currencyCode,enabled } =
+    useLoaderData<typeof loader>();
   return (
     <PageShell currencyCode={currencyCode}>
       <Page>
-        <Dashboard guidelineVisibility={guidelineVisibility} storeId={storeId}/>
+        <Dashboard
+          guidelineVisibility={guidelineVisibility}
+          storeId={storeId}
+          enabled={enabled}
+        />
       </Page>
     </PageShell>
   );
