@@ -540,15 +540,15 @@ const SMTP = () => {
   return (
     <PageShell currencyCode={loaderData.currencyCode}>
       <div className="mt-8 sm:mt-4 m-2">
-        <Page title={'SMTP Setup'} backAction={{ onAction: () => navigate(-1) }}>
+        <Page>
           <Layout>
             <Layout.Section variant="fullWidth">
-              {/*<div className="mb-4 flex items-center gap-4">*/}
-              {/*  <Button icon={Icons.ArrowLeftIcon} url="/settings"></Button>*/}
-              {/*  <Text as="h1" variant="headingLg">*/}
-              {/*    SMTP Setup*/}
-              {/*  </Text>*/}
-              {/*</div>*/}
+              <div className="mb-4 flex items-center gap-4">
+                <Button icon={Icons.ArrowLeftIcon} onClick={()=>navigate(-1)}></Button>
+                <Text as="h1" variant="headingLg">
+                  SMTP Setup
+                </Text>
+              </div>
               <Card>
                 <div className="w-full sm:p-4">
                   <Box paddingBlockStart="200" paddingBlockEnd="200">

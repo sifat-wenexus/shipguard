@@ -4,6 +4,7 @@ import { useLivePageData } from '~/hooks/use-live-page-data';
 import TextWithBgColor from './components/TextWithBgColor';
 import { HelpModal } from '~/components/help-modal';
 import {
+  ArrowLeftIcon,
   DomainRedirectIcon,
   LayoutSectionIcon,
   PageIcon,
@@ -15,15 +16,15 @@ const ClaimPageSetup = () => {
   const { storeInfo } = useLivePageData();
   return (
     <div className="m-2 sm:m-0 ">
-      <Page title={' Customer Claim Page Setup'} backAction={{ onAction: () => navigate(-1) }}>
+      <Page >
         <Layout>
           <Layout.Section variant="fullWidth">
-            {/*<div className="mb-4 flex items-center gap-4 mt-6">*/}
-            {/*  <Button icon={ArrowLeftIcon} url="/settings"></Button>*/}
-            {/*  <Text as="h1" variant="headingLg">*/}
-            {/*    Customer Claim Page Setup*/}
-            {/*  </Text>*/}
-            {/*</div>*/}
+            <div className="mb-4 flex items-center gap-4 mt-6">
+              <Button icon={ArrowLeftIcon} onClick={()=>navigate(-1)}></Button>
+              <Text as="h1" variant="headingLg">
+                Customer Claim Page Setup
+              </Text>
+            </div>
             <ShadowBevelBox
               icon={<Icon source={LayoutSectionIcon} />}
               title="Setup Claim Page Template"

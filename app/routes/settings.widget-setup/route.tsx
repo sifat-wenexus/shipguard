@@ -395,7 +395,7 @@ const Settings = () => {
     <PageShell currencyCode={data.currencyCode}>
       <div className="m-2 sm:m-0">
         <SaveBar formState={formState} onSave={save} />
-        <Page title={'Widget Setup'} backAction={{ onAction: () => navigate(-1) }}>
+        <Page >
           <Layout>
             <Layout.Section variant="fullWidth">
               {insurancePriceError && (
@@ -411,14 +411,14 @@ const Settings = () => {
               {/*{<WarningBanner storeInfo={storeInfo} />}*/}
             </Layout.Section>
             <Layout.Section variant="oneHalf">
-              {/*<Box paddingBlockEnd={'500'}>*/}
-              {/*  <div className="flex items-center gap-4">*/}
-              {/*    <Button icon={ArrowLeftIcon} url="/settings"></Button>*/}
-              {/*    <Text as="h1" variant="headingLg">*/}
-              {/*      Widget Setup*/}
-              {/*    </Text>*/}
-              {/*  </div>*/}
-              {/*</Box>*/}
+              <Box paddingBlockEnd={'500'}>
+                <div className="flex items-center gap-4">
+                  <Button icon={ArrowLeftIcon} onClick={()=>navigate(-1)}></Button>
+                  <Text as="h1" variant="headingLg">
+                    Widget Setup
+                  </Text>
+                </div>
+              </Box>
               <div className="sm:hidden block">
                 <Preview formState={formState} />
               </div>

@@ -216,58 +216,61 @@ const EmailTemplate = () => {
         setLoading(false);
       });
   }, [file]);
-console.log(file,logo,prevFile);
+
   return (
     <PageShell currencyCode={currencyCode}>
       <div className="mt-8 sm:mt-4 m-2">
-        <Page
-          title="Email Template Setup"
-          backAction={{ onAction: () => navigate(-1) }}
-          secondaryActions={
-            <div>
-              <Modal
-                activator={
-                  <Button
-                    icon={PaintBrushFlatIcon}
-                    onClick={() => {
-                      setActive(true);
-                    }}
-                  >
-                    Customize Email Logo
-                  </Button>
-                }
-                open={active}
-                onClose={() => {
-                  setActive(false);
-                }}
-                title="Upload Your Company Logo"
-                primaryAction={{
-                  content: 'Done',
-                  onAction: handleLogoUpload,
-                  loading: loading,
-                }}
-                secondaryActions={[
-                  {
-                    content: 'Cancel',
-                    onAction: () => setActive(false),
-                  },
-                ]}
-              >
-                <Modal.Section>
-                  <LogoUpload
-                    file={file}
-                    setFile={setFile}
-                    logo={logo}
-                    prevFile={prevFile}
-                  />
-                </Modal.Section>
-              </Modal>
-            </div>
-          }
-        >
+        <Page>
           <Layout>
             {!templateSubject ? (
               <Layout.Section variant="fullWidth">
+                <div className="flex justify-between">
+                  <div className="mb-4 flex items-center gap-4 ">
+                    <Button icon={ArrowLeftIcon} onClick={()=>navigate(-1)}></Button>
+                    <Text as="h1" variant="headingLg">
+                      Email Template Setup
+                    </Text>
+                  </div>
+                  <div>
+                    <Modal
+                      activator={
+                        <Button
+                          icon={PaintBrushFlatIcon}
+                          onClick={() => {
+                            setActive(true);
+                          }}
+                        >
+                          Customize Email Logo
+                        </Button>
+                      }
+                      open={active}
+                      onClose={() => {
+                        setActive(false);
+                      }}
+                      title="Upload Your Company Logo"
+                      primaryAction={{
+                        content: 'Done',
+                        onAction: handleLogoUpload,
+                        loading: loading,
+                      }}
+                      secondaryActions={[
+                        {
+                          content: 'Cancel',
+                          onAction: () => setActive(false),
+                        },
+                      ]}
+                    >
+                      <Modal.Section>
+                        <LogoUpload
+                          file={file}
+                          setFile={setFile}
+                          logo={logo}
+                          prevFile={prevFile}
+                        />
+                      </Modal.Section>
+                    </Modal>
+                  </div>
+                </div>
                 <Card>
                   <div className="w-full sm:p-2">
                     <div className="border border-gray-400 rounded">

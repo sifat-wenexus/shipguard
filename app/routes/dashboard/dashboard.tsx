@@ -263,14 +263,11 @@ const Dashboard = ({ guidelineVisibility, storeId }) => {
           />
         }
         <br />
-        {storeInfo?.install &&
-          storeInfo?.ebbedBlock &&
-          storeInfo?.claimPage && (
-            <>
-              <DateRangePicker setActiveDates={setActiveDates} />
-              {renderElement}
-            </>
-          )}
+        <DateRangePicker setActiveDates={setActiveDates} />
+
+        {renderElement}
+
+
       </>
     </div>
   );

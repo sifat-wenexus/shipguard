@@ -35,6 +35,12 @@ const tabs: TabProps[] = [
     accessibilityLabel: 'faqs',
   },
   // {
+  //   id: 'support',
+  //   url: '/support',
+  //   content: 'Help & Support',
+  //   accessibilityLabel: 'Help & Support',
+  // },
+  // {
   //   id: 'pricing',
   //   url: '/pricing',
   //   content: 'Pricing',

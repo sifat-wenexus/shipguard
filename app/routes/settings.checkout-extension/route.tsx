@@ -9,15 +9,15 @@ const CheckoutExtension = () => {
   const navigate = useNavigate();
   return (
     <div className="m-2 sm:m-0">
-      <Page title="Checkout Extension Setup"  backAction={{ onAction: () => navigate(-1) }}>
+      <Page>
         <Layout>
           <Layout.Section variant="fullWidth">
-            {/*<div className="mb-4 flex items-center gap-4">*/}
-            {/*  <Button icon={ArrowLeftIcon} url="/settings"></Button>*/}
-            {/*  <Text as="h1" variant="headingLg">*/}
-            {/*    Checkout Extension Setup*/}
-            {/*  </Text>*/}
-            {/*</div>*/}
+            <div className="mb-4 flex items-center gap-4">
+              <Button icon={ArrowLeftIcon} onClick={()=>navigate(-1)}></Button>
+              <Text as="h1" variant="headingLg">
+                Checkout Extension Setup
+              </Text>
+            </div>
 
             <ShadowBevelBox
               icon={<Icon source={LayoutSectionIcon} />}

@@ -1,10 +1,10 @@
-import { Box, Button, Icon, Layout, Page } from '@shopify/polaris';
+import { Box, Button, Icon, Layout, Page, Text } from '@shopify/polaris';
 
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import DateRangePicker from '../dashboard/date-range';
 import { default30Days } from '../dashboard/dashboard';
 import { PageShell } from '~/components/page-shell';
-import { ExportIcon } from '@shopify/polaris-icons';
+import { ArrowLeftIcon, ExportIcon } from '@shopify/polaris-icons';
 import { shopify } from '~/modules/shopify.server';
 import React, { useMemo, useState } from 'react';
 import { prisma } from '~/modules/prisma.server';
@@ -43,7 +43,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       fulfillmentStatus: true,
       hasPackageProtection: true,
       createdAt: true,
-       claimDate: true,
+      claimDate: true,
     },
   });
   if (!data || !data.length) {
@@ -84,7 +84,7 @@ const Order = () => {
           claimStatus,
           fulfillmentStatus,
           createdAt,
-          claimDate
+          claimDate,
         } = order;
         return {
           orderName,
@@ -99,7 +99,7 @@ const Order = () => {
           fulfillmentStatus,
           claimStatus,
           createdAt,
-          claimDate
+          claimDate,
         };
       }),
     [data]
@@ -123,18 +123,24 @@ const Order = () => {
     <PageShell currencyCode={currencyCode}>
       <div className="m-4 sm:m-0 mt-10 sm:mt-4">
         {' '}
-        <Page
-          title={'Order'}
-          backAction={{ onAction: () => navigate(-1) }}
-          fullWidth
-        >
+        <Page fullWidth>
           <Layout>
-            <div className="w-full ms-4">
-              {/* <MainNav /> */}
-              {/*<Text as="h1" variant="headingLg" alignment="start">*/}
-              {/*  Order*/}
-              {/*</Text>*/}
-              <br />
+            <Layout.Section variant="fullWidth">
+              <div className="mb-4 flex items-center gap-4 mt-6">
+                <Button
+                  icon={ArrowLeftIcon}
+                  onClick={() => navigate(-1)}
+                ></Button>
+                <Text as="h1" variant="headingLg">
+                  Order
+                </Text>
+              </div>
+              {/*<div className="w-full ms-4">*/}
+              {/*  /!* <MainNav /> *!/*/}
+              {/*  /!*<Text as="h1" variant="headingLg" alignment="start">*!/*/}
+              {/*  /!*  Order*!/*/}
+              {/*  /!*</Text>*!/*/}
+              {/*  <br />*/}
               <Box paddingBlockEnd={'400'}>
                 <div className="flex justify-between">
                   <DateRangePicker setActiveDates={setActiveDates} />
@@ -149,7 +155,8 @@ const Order = () => {
                 </div>
               </Box>
               <OrderList shop={shop} activeDates={activeDates!} />
-            </div>
+              {/*</div>*/}
+            </Layout.Section>
           </Layout>
         </Page>
       </div>

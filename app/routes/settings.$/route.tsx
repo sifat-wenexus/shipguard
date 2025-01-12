@@ -6,7 +6,7 @@ import { PageShell } from '~/components/page-shell';
 import { shopify } from '~/modules/shopify.server';
 import { prisma } from '~/modules/prisma.server';
 import type { Prisma } from '#prisma-client';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 
 import checkoutIcon from '~/assets/icons/checkout-extension.svg';
@@ -36,7 +36,7 @@ import {
   SettingsIcon,
   WrenchIcon,
   CheckIcon,
-  InfoIcon,
+  InfoIcon, ArrowLeftIcon,
 } from '@shopify/polaris-icons';
 
 export async function loader({ request }) {
@@ -200,83 +200,27 @@ const Settings = () => {
   );
   return (
     <PageShell currencyCode={currencyCode}>
-      <Page title={'Settings'} backAction={{ onAction: () => navigate(-1) }}>
-        <div className="ml-0 sm:ml-4">
-          <Layout>
-            <div className="w-full  my-3 m-2 ml-6 sm:ml-0 mt-8">
-              <h1 className="font-bold text-lg text-center">
-                Store Code Setup
-              </h1>{' '}
-              <p className="text-center">
-                Code setup for in-house shipping protection
-              </p>
-              <br />
-              <Box paddingBlockStart="400">
-                {settingsCart.length === 0 ? (
-                  <Card padding="400">
-                    <EmptyState
-                      image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png?width=150&height=150"
-                      heading="Nothing here"
-                    >
-                      <Text as="p">No Cart Fund</Text>
-                    </EmptyState>
-                  </Card>
-                ) : (
-                  <InlineGrid columns={columns} gap="400">
-                    {settingsCart.map((app) => (
-                      <CalloutCard
-                        button={
-                          app.installed ? (
-                            <Button
-                              icon={SettingsIcon}
-                              url={`/${app.id}`}
-                              variant="primary"
-                            >
-                              Configure
-                            </Button>
-                          ) : app.available ? (
-                            <Button
-                              icon={WrenchIcon}
-                              url={`/${app.id}`}
-                              variant="primary"
-                              tone="success"
-                            >
-                              Setup Settings
-                            </Button>
-                          ) : undefined
-                        }
-                        description={app.description}
-                        image={app.illustration}
-                        title={app.name}
-                        key={app.id}
-                        badge={
-                          app.installed ? (
-                            <Badge tone="success" size="large" icon={CheckIcon}>
-                              Active
-                            </Badge>
-                          ) : app.name === 'Checkout Extension Setup' ? (
-                            <Badge tone="critical" size="large" icon={InfoIcon}>
-                              Shopify Plus required
-                            </Badge>
-                          ) : (
-                            <Badge tone="warning" size="large" icon={InfoIcon}>
-                              Action Required
-                            </Badge>
-                          )
-                        }
-                      />
-                    ))}
-                  </InlineGrid>
-                )}
-              </Box>
-              <br />
-              <h1 className="font-bold text-lg text-center mt-8">
-                Setup SMTP Server & Mail Template
-              </h1>{' '}
-              <p className="text-center">
-                Code setup for in-house shipping protection
-              </p>
-              <br />
+      <Page>
+        {/*<div className="ml-0 sm:ml-4">*/}
+        <Layout>
+          <Layout.Section variant="fullWidth">
+            <div className="mb-4 flex items-center gap-4 mt-6">
+              <Button
+                icon={ArrowLeftIcon}
+                onClick={() => navigate(-1)}
+              ></Button>
+              <Text as="h1" variant="headingLg">
+                Settings
+              </Text>
+            </div>
+
+          <div className="w-full  my-3 m-2 ml-6 sm:ml-0 mt-8">
+            <h1 className="font-bold text-lg text-center">Store Code Setup</h1>{' '}
+            <p className="text-center">
+              Code setup for in-house shipping protection
+            </p>
+            <br />
+            <Box paddingBlockStart="400">
               {settingsCart.length === 0 ? (
                 <Card padding="400">
                   <EmptyState
@@ -288,7 +232,7 @@ const Settings = () => {
                 </Card>
               ) : (
                 <InlineGrid columns={columns} gap="400">
-                  {settingsCartSecond.map((app) => (
+                  {settingsCart.map((app) => (
                     <CalloutCard
                       button={
                         app.installed ? (
@@ -315,14 +259,13 @@ const Settings = () => {
                       title={app.name}
                       key={app.id}
                       badge={
-                        app.name ===
-                        'Email Template Setup' ? null : app.installed ? (
+                        app.installed ? (
                           <Badge tone="success" size="large" icon={CheckIcon}>
                             Active
                           </Badge>
                         ) : app.name === 'Checkout Extension Setup' ? (
                           <Badge tone="critical" size="large" icon={InfoIcon}>
-                            Shopify Plus Needed
+                            Shopify Plus required
                           </Badge>
                         ) : (
                           <Badge tone="warning" size="large" icon={InfoIcon}>
@@ -334,9 +277,76 @@ const Settings = () => {
                   ))}
                 </InlineGrid>
               )}
-            </div>
-          </Layout>
-        </div>
+            </Box>
+            <br />
+            <h1 className="font-bold text-lg text-center mt-8">
+              Setup SMTP Server & Mail Template
+            </h1>{' '}
+            <p className="text-center">
+              Code setup for in-house shipping protection
+            </p>
+            <br />
+            {settingsCart.length === 0 ? (
+              <Card padding="400">
+                <EmptyState
+                  image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png?width=150&height=150"
+                  heading="Nothing here"
+                >
+                  <Text as="p">No Cart Fund</Text>
+                </EmptyState>
+              </Card>
+            ) : (
+              <InlineGrid columns={columns} gap="400">
+                {settingsCartSecond.map((app) => (
+                  <CalloutCard
+                    button={
+                      app.installed ? (
+                        <Button
+                          icon={SettingsIcon}
+                          url={`/${app.id}`}
+                          variant="primary"
+                        >
+                          Configure
+                        </Button>
+                      ) : app.available ? (
+                        <Button
+                          icon={WrenchIcon}
+                          url={`/${app.id}`}
+                          variant="primary"
+                          tone="success"
+                        >
+                          Setup Settings
+                        </Button>
+                      ) : undefined
+                    }
+                    description={app.description}
+                    image={app.illustration}
+                    title={app.name}
+                    key={app.id}
+                    badge={
+                      app.name ===
+                      'Email Template Setup' ? null : app.installed ? (
+                        <Badge tone="success" size="large" icon={CheckIcon}>
+                          Active
+                        </Badge>
+                      ) : app.name === 'Checkout Extension Setup' ? (
+                        <Badge tone="critical" size="large" icon={InfoIcon}>
+                          Shopify Plus Needed
+                        </Badge>
+                      ) : (
+                        <Badge tone="warning" size="large" icon={InfoIcon}>
+                          Action Required
+                        </Badge>
+                      )
+                    }
+                  />
+                ))}
+              </InlineGrid>
+            )}
+          </div>
+          </Layout.Section>
+        </Layout>
+        {/*</div>*/}
       </Page>
     </PageShell>
   );
