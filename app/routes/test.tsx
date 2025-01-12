@@ -1,11 +1,27 @@
 import { json } from '@remix-run/node';
-import { shopify as shopifyRemix } from '~/modules/shopify.server';
-import { getShopInfo } from '~/modules/get-theme-file-content';
+import { getShopifyGQLClient, shopify as shopifyRemix } from '~/modules/shopify.server';
+
 
 export async function loader({ request }) {
   const ctx = await shopifyRemix.authenticate.admin(request);
 
-  const store = await getShopInfo(ctx.session);
+  const gql = getShopifyGQLClient(ctx.session);
 
-  return json({ res: 'helllo from test' ,result:store});
+  const asset = await gql.query<Record<string, any>>({
+    data: `#graphql
+    query {
+      shop{
+        name
+        url
+        primaryDomain{
+          id
+          host
+          url
+        }
+      }
+    }
+    `,tries:20
+  });
+
+  return json({ res: 'helllo from test' ,result:asset});
 }
