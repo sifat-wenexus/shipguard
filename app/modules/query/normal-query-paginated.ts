@@ -4,10 +4,16 @@ import type { QuerySchema } from '~/modules/query/schema/query-schema';
 import type { Prisma, PrismaClient } from '#prisma-client';
 import { prisma } from '~/modules/prisma.server';
 import _ from 'lodash';
+import { queryServer } from '~/modules/query/query.server';
 
 export class NormalQueryPaginated<D = Record<string, any>[]>
   implements PaginatedResult<D>
 {
+  private readonly loadListeners = new Set<(loading: boolean) => void>();
+  private readonly handlers = new Set<(data: any) => any>();
+  private readonly schema: QuerySchema;
+  private data: D | null = null;
+
   constructor(
     count: number,
     schema: QuerySchema,
@@ -33,18 +39,19 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
     };
   }
 
-  private readonly loadListeners = new Set<(loading: boolean) => void>();
-  private readonly handlers = new Set<(data: any) => any>();
-  private readonly schema: QuerySchema;
   private _totalItems: number = 0;
-  private _totalPages: number = 0;
-  private _pageSize: number = 0;
-  private data: D | null = null;
-  private _page: number = 0;
 
-  get page() {
-    return this._page;
+  get totalItems() {
+    return this._totalItems;
   }
+
+  private _totalPages: number = 0;
+
+  get totalPages() {
+    return this._totalPages;
+  }
+
+  private _pageSize: number = 0;
 
   get pageSize() {
     return this._pageSize;
@@ -54,12 +61,10 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
     this._pageSize = value;
   }
 
-  get totalItems() {
-    return this._totalItems;
-  }
+  private _page: number = 0;
 
-  get totalPages() {
-    return this._totalPages;
+  get page() {
+    return this._page;
   }
 
   get hasNext() {
@@ -91,9 +96,18 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
       this.schema.query.take = this._pageSize;
       this.schema.query.skip = (this._page - 1) * this._pageSize;
 
+      let queryProcessed;
+
+      if (!globalThis.window) {
+        const _queryProcessed = await queryServer.processQuery(this.schema);
+        queryProcessed = _queryProcessed.query.query;
+      } else {
+        queryProcessed = this.schema.query;
+      }
+
       this.data = await (
         (this.trx ?? prisma)[this.schema.model][this.schema.type] as any
-      )(this.schema.query);
+      )(queryProcessed);
 
       this._totalPages = Math.ceil(this._totalItems / this._pageSize);
     } else {
