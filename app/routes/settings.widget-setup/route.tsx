@@ -56,7 +56,7 @@ export async function action({ request }: ActionFunctionArgs) {
       percentage: Number(percentage),
       price: Number(price),
       enabled: enabled,
-      insuranceDisplayButton:false,
+      insuranceDisplayButton: false,
       ...payload,
     };
     try {
@@ -105,7 +105,7 @@ export async function action({ request }: ActionFunctionArgs) {
       minimumFee: Number(minimumFee),
       maximumFee: Number(maximumFee),
       percentage: Number(percentage),
-      insuranceDisplayButton:false,
+      insuranceDisplayButton: false,
       price: Number(price),
       ...payload,
     };
@@ -244,7 +244,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       price: settingsData?.price ?? '',
       icon: settingsData?.icon ?? 'three',
       css: settingsData?.css ?? '',
-      geoLocation:settingsData?.geoLocation?? [],
+      geoLocation: settingsData?.geoLocation ?? [],
 
       switchColor: settingsData?.switchColor
         ? hexToHsba(settingsData.switchColor)
@@ -367,7 +367,7 @@ const Settings = () => {
   });
   const [enabled] = useState(data.enabled);
   const [insurancePriceError, setInsurancePriceError] = useState(false);
-  const { state, } = formState;
+  const { state } = formState;
   const save = useCallback(async () => {
     try {
       await fetcher.submit(
@@ -393,11 +393,12 @@ const Settings = () => {
       setInsurancePriceError(false);
     }
   }, [state.insurancePriceType]);
+  console.log('settings',enabled)
   return (
     <PageShell currencyCode={data.currencyCode}>
       <div className="m-2 sm:m-0">
         <SaveBar formState={formState} onSave={save} />
-        <Page >
+        <Page>
           <Layout>
             <Layout.Section variant="fullWidth">
               {insurancePriceError && (
@@ -410,12 +411,16 @@ const Settings = () => {
                   <br />
                 </>
               )}
+              {enabled && <WarningBanner storeInfo={storeInfo} />}
               {/*{<WarningBanner storeInfo={storeInfo} />}*/}
             </Layout.Section>
             <Layout.Section variant="oneHalf">
               <Box paddingBlockEnd={'500'}>
                 <div className="flex items-center gap-4">
-                  <Button icon={ArrowLeftIcon} onClick={()=>navigate(-1)}></Button>
+                  <Button
+                    icon={ArrowLeftIcon}
+                    onClick={() => navigate(-1)}
+                  ></Button>
                   <Text as="h1" variant="headingLg">
                     Widget Setup
                   </Text>
@@ -424,8 +429,6 @@ const Settings = () => {
               <div className="sm:hidden block">
                 <Preview formState={formState} />
               </div>
-
-              {enabled&&<WarningBanner storeInfo={storeInfo} />}
 
               <PublishButton
                 enabled={enabled}
