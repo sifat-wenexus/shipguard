@@ -144,26 +144,6 @@ export class NormalQueryPaginated<D = Record<string, any>[]>
     return this.refresh();
   }
 
-  firstPage(): Promise<D> {
-    return new Promise(resolve => {
-      const listener = (data: D) => {
-        this.removeListener(listener);
-        resolve(data);
-      };
-
-      this.addListener(listener);
-
-      if (this.page !== 1) {
-        return this.jumpTo(1);
-      }
-
-      if (this.data) {
-        listener(this.data);
-      } else {
-        this.refresh();
-      }
-    })
-  }
   addListener(handler: (data: D) => any) {
     this.handlers.add(handler);
 

@@ -143,8 +143,8 @@ function getQueryProxy(trxId?: string) {
                       type: (!isSubscription
                         ? method
                         : _.camelCase(
-                            method.replace('subscribe', '')
-                          )) as QueryType,
+                          method.replace('subscribe', '')
+                        )) as QueryType,
                       model: model as ModelNames,
                       query: args[0] ?? {},
                       subscribe: isSubscription,

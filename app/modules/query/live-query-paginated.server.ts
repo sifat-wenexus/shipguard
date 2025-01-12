@@ -80,23 +80,6 @@ export class LiveQueryPaginatedServer<D = Record<string, any>[]>
     return this.page > 1;
   }
 
-  firstPage(): Promise<D> {
-    return new Promise<D>((resolve) => {
-      const listener = (data: D) => {
-        this.removeListener(listener);
-        resolve(data);
-      };
-
-      this.addListener(listener);
-
-      if (this.page !== 1) {
-        return this.jumpTo(1);
-      }
-
-      this.refresh(this.schema.query);
-    });
-  }
-
   async refresh(query?: QuerySchema['query']) {
     if (query) {
       this.schema.query = query;

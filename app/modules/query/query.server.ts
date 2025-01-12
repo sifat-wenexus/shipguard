@@ -29,12 +29,12 @@ import _ from 'lodash';
 type Permission<T extends keyof Actions<any>> = T extends 'read'
   ? ReadPermission<any>
   : T extends 'create'
-  ? CreatePermission<any>
-  : T extends 'update'
-  ? UpdatePermission<any>
-  : T extends 'delete'
-  ? DeletePermission<any>
-  : true | void;
+    ? CreatePermission<any>
+    : T extends 'update'
+      ? UpdatePermission<any>
+      : T extends 'delete'
+        ? DeletePermission<any>
+        : true | void;
 
 export class QueryServer {
   readonly models = models;
@@ -966,8 +966,8 @@ export class QueryServer {
       mutation.type === 'create' || mutation.type === 'update'
         ? mutation.permission[mutation.type]
         : !mutation.oldData
-        ? mutation.permission.create
-        : mutation.permission.update;
+          ? mutation.permission.create
+          : mutation.permission.update;
 
     if (permission && permission !== true && permission.validation) {
       let validationQuery: Record<string, any> | boolean;
@@ -1040,7 +1040,7 @@ export class QueryServer {
             where[parent.relation.fKeyHolder.fieldsTo[i]] =
               parent.mutation.newData?.[
                 parent.relation.fKeyHolder.fieldsFrom[i]
-              ];
+                ];
           }
         }
 
@@ -1218,8 +1218,8 @@ export class QueryServer {
             mutation.type === 'createMany'
               ? 'create'
               : mutation.type === 'updateMany'
-              ? 'update'
-              : mutation.type,
+                ? 'update'
+                : mutation.type,
           data,
         } as DataObj);
       }
@@ -1499,11 +1499,11 @@ export class QueryServer {
               prisma,
               relation.right === relation.fKeyHolder
                 ? [
-                    {
-                      mutation: mutationObj,
-                      relation,
-                    },
-                  ]
+                  {
+                    mutation: mutationObj,
+                    relation,
+                  },
+                ]
                 : undefined
             );
 
