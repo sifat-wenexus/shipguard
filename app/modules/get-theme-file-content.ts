@@ -103,27 +103,4 @@ export async function getThemeInfo(session: Session): Promise<{
   return asset.body.data.themes?.nodes[0] ?? null;
 }
 
-export async function getShopInfo(session: Session): Promise<{
-  id: string;
-  host: string;
-}> {
-  const gql = getShopifyGQLClient(session);
 
-  const asset = await gql.query<Record<string, any>>({
-    data: `#graphql
-    query {
-      shop{
-        name
-        url
-        primaryDomain{
-          id
-          host
-          url
-        }
-      }
-    }
-    `,tries:20
-  });
-
-  return asset.body.data.shop?.primaryDomain ?? null;
-}

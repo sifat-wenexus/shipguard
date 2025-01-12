@@ -5,12 +5,12 @@ import { getConfig } from '~/modules/get-config.server';
 import { prisma } from '~/modules/prisma.server';
 import { json } from '@remix-run/react';
 import {
-  getShopInfo,
   getThemeFileContent,
   getThemeFileInfo,
   getThemeInfo,
 } from '~/modules/get-theme-file-content';
 import { fixJsonString } from '~/utils/removeCommentFromJosn';
+import { queryProxy } from '~/modules/query/query-proxy';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
@@ -57,9 +57,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
       if (theme) {
         ThemeId = theme.id.replace('gid://shopify/OnlineStoreTheme/', '');
       }
-      const store = await getShopInfo(ctx.session);
+      const store = await queryProxy.store.findFirst({where:{id: ctx.session.storeId}});
       if (store) {
-        shopName = store.host.split('.')[0];
+        shopName = store.domain.split('.')[0];
       }
 
       const templateInfo = await getThemeFileInfo(
