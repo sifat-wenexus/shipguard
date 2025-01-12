@@ -365,7 +365,7 @@ const Settings = () => {
       },
     },
   });
-  const [enabled] = useState(data.enabled);
+  const [enabled,setEnabled] = useState(data.enabled);
   const [insurancePriceError, setInsurancePriceError] = useState(false);
   const { state } = formState;
   const save = useCallback(async () => {
@@ -393,7 +393,7 @@ const Settings = () => {
       setInsurancePriceError(false);
     }
   }, [state.insurancePriceType]);
-  console.log('settings',data.enabled)
+  console.log('settings',enabled)
   return (
     <PageShell currencyCode={data.currencyCode}>
       <div className="m-2 sm:m-0">
@@ -411,7 +411,7 @@ const Settings = () => {
                   <br />
                 </>
               )}
-              {data.enabled && <WarningBanner storeInfo={storeInfo} />}
+              {enabled && <WarningBanner storeInfo={storeInfo} />}
               {/*{<WarningBanner storeInfo={storeInfo} />}*/}
             </Layout.Section>
             <Layout.Section variant="oneHalf">
@@ -432,6 +432,7 @@ const Settings = () => {
 
               <PublishButton
                 enabled={enabled}
+                setEnabled={setEnabled}
                 formState={formState}
                 setInsurancePriceError={setInsurancePriceError}
               />

@@ -2,23 +2,22 @@ import { ShadowBevelBox } from '~/components/shadow-bevel-box';
 import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import { SettingsIcon } from '@shopify/polaris-icons';
 import { Icon, Link, Text } from '@shopify/polaris';
-import { useCallback, useState } from 'react';
 import { Switch } from '~/components/switch';
+import { useCallback } from 'react';
 
 const PublishButton = ({
-  enabled: isEnabled,
+  enabled,
+  setEnabled,
   formState,
   setInsurancePriceError,
 }) => {
   const fetcher = useBetterFetcher();
   const { state } = formState;
 
-  const [enabled, setEnabled] = useState(isEnabled);
-
-  const openChat=()=>{
-    const chat = document.getElementById('zsiq_float')
-    chat && chat?.click()
-  }
+  const openChat = () => {
+    const chat = document.getElementById('zsiq_float');
+    chat && chat?.click();
+  };
 
   const toggleEnabled = useCallback(
     (enabled: boolean) => {
@@ -63,8 +62,8 @@ const PublishButton = ({
       {/*<br />*/}
       <Text as="p" tone="subdued">
         If the widget doesn’t show or work in the cart after publishing, turn
-        off this switch to disable it. <Link onClick={openChat}>Contact us </Link> for a free
-        expert fix.
+        off this switch to disable it.{' '}
+        <Link onClick={openChat}>Contact us </Link> for a free expert fix.
       </Text>
     </ShadowBevelBox>
   );
