@@ -57,7 +57,7 @@ const LogoUpload = ({ file, setFile, logo, prevFile }) => {
         </div>
       </div>
     </div>
-  ) : (
+  ) : prevFile?(
     <div className="p-3 flex justify-center items-center my-3">
       <div className="text-center">
         <div className="w-[220px] m-auto">
@@ -76,7 +76,7 @@ const LogoUpload = ({ file, setFile, logo, prevFile }) => {
         </div>
       </div>
     </div>
-  );
+  ):null;
   return (
     <DropZone onDrop={handleDropZoneDrop} allowMultiple={false} variableHeight>
       {uploadedFiles}

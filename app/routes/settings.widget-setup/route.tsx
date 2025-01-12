@@ -1,23 +1,20 @@
 import CustomizedInsuranceStyle from './components/customized-insurance-style';
 import { hexToHsba, hsbaToHexWithAlpha } from '~/modules/utils/color-utils';
 import { Banner, Box, Button, Layout, Page, Text } from '@shopify/polaris';
-import Location from '~/routes/settings.widget-setup/components/location';
 import { shopify as shopifyRemix } from '../../modules/shopify.server';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useBetterFetcher } from '~/hooks/use-better-fetcher';
 import InsurancePricing from './components/insurance-pricing';
-import { useLivePageData } from '~/hooks/use-live-page-data';
 import SpecialSettings from './components/special-settings';
 import { queryProxy } from '~/modules/query/query-proxy';
 import PublishButton from './components/publish-button';
 import type { PackageProtection } from '#prisma-client';
 import PlacementCard from './components/placement-cart';
-import WarningBanner from '~/components/warning-banner';
 import { ArrowLeftIcon } from '@shopify/polaris-icons';
 import { useFormState } from '~/hooks/use-form-state';
 import { PageShell } from '~/components/page-shell';
 import { prisma } from '~/modules/prisma.server';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useNavigate } from '@remix-run/react';
 import { SaveBar } from '~/components/save-bar';
 import Preview from './components/preview';
 import Content from './components/content';
@@ -280,6 +277,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: style }];
 const Settings = () => {
+  const navigate = useNavigate();
   const fetcher = useBetterFetcher();
   const data = useLoaderData<typeof loader>();
   const initialState = useMemo(() => data.data, [data.data]);
@@ -368,7 +366,6 @@ const Settings = () => {
   const [enabled] = useState(data.enabled);
   const [insurancePriceError, setInsurancePriceError] = useState(false);
   const { state, } = formState;
-  const { storeInfo } = useLivePageData();
   const save = useCallback(async () => {
     try {
       await fetcher.submit(
@@ -398,7 +395,7 @@ const Settings = () => {
     <PageShell currencyCode={data.currencyCode}>
       <div className="m-2 sm:m-0">
         <SaveBar formState={formState} onSave={save} />
-        <Page>
+        <Page title={'Widget Setup'} backAction={{ onAction: () => navigate(-1) }}>
           <Layout>
             <Layout.Section variant="fullWidth">
               {insurancePriceError && (
@@ -414,14 +411,14 @@ const Settings = () => {
               {/*{<WarningBanner storeInfo={storeInfo} />}*/}
             </Layout.Section>
             <Layout.Section variant="oneHalf">
-              <Box paddingBlockEnd={'500'}>
-                <div className="flex items-center gap-4">
-                  <Button icon={ArrowLeftIcon} url="/settings"></Button>
-                  <Text as="h1" variant="headingLg">
-                    Widget Setup
-                  </Text>
-                </div>
-              </Box>
+              {/*<Box paddingBlockEnd={'500'}>*/}
+              {/*  <div className="flex items-center gap-4">*/}
+              {/*    <Button icon={ArrowLeftIcon} url="/settings"></Button>*/}
+              {/*    <Text as="h1" variant="headingLg">*/}
+              {/*      Widget Setup*/}
+              {/*    </Text>*/}
+              {/*  </div>*/}
+              {/*</Box>*/}
               <div className="sm:hidden block">
                 <Preview formState={formState} />
               </div>

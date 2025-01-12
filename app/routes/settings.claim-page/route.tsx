@@ -4,26 +4,26 @@ import { useLivePageData } from '~/hooks/use-live-page-data';
 import TextWithBgColor from './components/TextWithBgColor';
 import { HelpModal } from '~/components/help-modal';
 import {
-  ArrowLeftIcon,
   DomainRedirectIcon,
   LayoutSectionIcon,
   PageIcon,
 } from '@shopify/polaris-icons';
+import { useNavigate } from '@remix-run/react';
 
 const ClaimPageSetup = () => {
+  const navigate = useNavigate();
   const { storeInfo } = useLivePageData();
-
   return (
     <div className="m-2 sm:m-0 ">
-      <Page>
+      <Page title={' Customer Claim Page Setup'} backAction={{ onAction: () => navigate(-1) }}>
         <Layout>
           <Layout.Section variant="fullWidth">
-            <div className="mb-4 flex items-center gap-4 mt-6">
-              <Button icon={ArrowLeftIcon} url="/settings"></Button>
-              <Text as="h1" variant="headingLg">
-                Customer Claim Page Setup
-              </Text>
-            </div>
+            {/*<div className="mb-4 flex items-center gap-4 mt-6">*/}
+            {/*  <Button icon={ArrowLeftIcon} url="/settings"></Button>*/}
+            {/*  <Text as="h1" variant="headingLg">*/}
+            {/*    Customer Claim Page Setup*/}
+            {/*  </Text>*/}
+            {/*</div>*/}
             <ShadowBevelBox
               icon={<Icon source={LayoutSectionIcon} />}
               title="Setup Claim Page Template"

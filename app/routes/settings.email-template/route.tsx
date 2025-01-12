@@ -8,7 +8,7 @@ import { getConfig } from '~/modules/get-config.server';
 import LiquidEditor from './components/text-editor';
 import LogoUpload from './components/logo-upload';
 import { prisma } from '~/modules/prisma.server';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useNavigate } from '@remix-run/react';
 import { useQuery } from '~/hooks/use-query';
 import type { $Enums } from '#prisma-client';
 import { json } from '@remix-run/node';
@@ -103,6 +103,7 @@ const EmailTemplate = () => {
     storeId,
     appUrl,
   } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
   const [templateSubject, setTemplateSubject] = useState<string>('');
   const [editorState, setEditorState] = useState(false);
   const [templatePreview, setTemplatePreview] = useState('');
@@ -215,61 +216,58 @@ const EmailTemplate = () => {
         setLoading(false);
       });
   }, [file]);
-
+console.log(file,logo,prevFile);
   return (
     <PageShell currencyCode={currencyCode}>
       <div className="mt-8 sm:mt-4 m-2">
-        <Page>
+        <Page
+          title="Email Template Setup"
+          backAction={{ onAction: () => navigate(-1) }}
+          secondaryActions={
+            <div>
+              <Modal
+                activator={
+                  <Button
+                    icon={PaintBrushFlatIcon}
+                    onClick={() => {
+                      setActive(true);
+                    }}
+                  >
+                    Customize Email Logo
+                  </Button>
+                }
+                open={active}
+                onClose={() => {
+                  setActive(false);
+                }}
+                title="Upload Your Company Logo"
+                primaryAction={{
+                  content: 'Done',
+                  onAction: handleLogoUpload,
+                  loading: loading,
+                }}
+                secondaryActions={[
+                  {
+                    content: 'Cancel',
+                    onAction: () => setActive(false),
+                  },
+                ]}
+              >
+                <Modal.Section>
+                  <LogoUpload
+                    file={file}
+                    setFile={setFile}
+                    logo={logo}
+                    prevFile={prevFile}
+                  />
+                </Modal.Section>
+              </Modal>
+            </div>
+          }
+        >
           <Layout>
             {!templateSubject ? (
               <Layout.Section variant="fullWidth">
-                <div className="flex justify-between">
-                  <div className="mb-4 flex items-center gap-4 ">
-                    <Button icon={ArrowLeftIcon} url="/settings"></Button>
-                    <Text as="h1" variant="headingLg">
-                      Email Template Setup
-                    </Text>
-                  </div>
-                  <div>
-                    <Modal
-                      activator={
-                        <Button
-                          icon={PaintBrushFlatIcon}
-                          onClick={() => {
-                            setActive(true);
-                          }}
-                        >
-                          Customize Email Logo
-                        </Button>
-                      }
-                      open={active}
-                      onClose={() => {
-                        setActive(false);
-                      }}
-                      title="Upload Your Company Logo"
-                      primaryAction={{
-                        content: 'Done',
-                        onAction: handleLogoUpload,
-                        loading: loading,
-                      }}
-                      secondaryActions={[
-                        {
-                          content: 'Cancel',
-                          onAction: () => setActive(false),
-                        },
-                      ]}
-                    >
-                      <Modal.Section>
-                        <LogoUpload
-                          file={file}
-                          setFile={setFile}
-                          logo={logo}
-                          prevFile={prevFile}
-                        />
-                      </Modal.Section>
-                    </Modal>
-                  </div>
-                </div>
                 <Card>
                   <div className="w-full sm:p-2">
                     <div className="border border-gray-400 rounded">

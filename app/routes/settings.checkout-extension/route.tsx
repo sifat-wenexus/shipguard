@@ -3,19 +3,21 @@ import { ArrowLeftIcon, LayoutSectionIcon } from '@shopify/polaris-icons';
 import { Box, Button, Icon, Layout, Page, Text } from '@shopify/polaris';
 import { ShadowBevelBox } from '~/components/shadow-bevel-box';
 import { HelpModal } from '~/components/help-modal';
+import { useNavigate } from '@remix-run/react';
 
 const CheckoutExtension = () => {
+  const navigate = useNavigate();
   return (
     <div className="m-2 sm:m-0">
-      <Page>
+      <Page title="Checkout Extension Setup"  backAction={{ onAction: () => navigate(-1) }}>
         <Layout>
           <Layout.Section variant="fullWidth">
-            <div className="mb-4 flex items-center gap-4">
-              <Button icon={ArrowLeftIcon} url="/settings"></Button>
-              <Text as="h1" variant="headingLg">
-                Checkout Extension Setup
-              </Text>
-            </div>
+            {/*<div className="mb-4 flex items-center gap-4">*/}
+            {/*  <Button icon={ArrowLeftIcon} url="/settings"></Button>*/}
+            {/*  <Text as="h1" variant="headingLg">*/}
+            {/*    Checkout Extension Setup*/}
+            {/*  </Text>*/}
+            {/*</div>*/}
 
             <ShadowBevelBox
               icon={<Icon source={LayoutSectionIcon} />}
