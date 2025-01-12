@@ -113,9 +113,12 @@ export async function getShopInfo(session: Session): Promise<{
     data: `#graphql
     query {
       shop{
+        name
+        url
         primaryDomain{
           id
           host
+          url
         }
       }
     }
