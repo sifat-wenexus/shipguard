@@ -28,6 +28,9 @@ export class Migration {
     {
       id:'update-package-protection-insurance3',
       method: this.updatePackageProtection3.bind(this),
+    }  ,  {
+      id:'tempMigration',
+      method: this.tempMigration.bind(this),
     }
   ];
 
@@ -245,4 +248,10 @@ export class Migration {
   async updatePackageProtection3(){
     await queryProxy.packageProtection.updateMany({where:{insuranceDisplayButton:true},data:{insuranceDisplayButton:false},},{session:this.session});
   }
+
+  async  tempMigration(){
+      await  queryProxy.packageProtection.updateMany({where:{switchColor:'#6bce6a'},data:{switchColor:"#6bce6b"}},{session:this.session});
+  }
+
+
 }
