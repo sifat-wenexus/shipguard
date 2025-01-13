@@ -23,9 +23,9 @@ export function useLivePageData(delay: number = 10000) {
   };
 
   useEffect(() => {
-    getStoreInfoData();
+    getStoreInfoData().then(console.log);
     const intervalId = setInterval(() => {
-      getStoreInfoData();
+      getStoreInfoData().then(console.log);
     }, delay);
     return () => clearInterval(intervalId);
   }, []);

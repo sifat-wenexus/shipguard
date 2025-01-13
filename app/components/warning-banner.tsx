@@ -3,10 +3,12 @@ import { Banner, Button, Modal, Text } from '@shopify/polaris';
 import guidelineImage from '~/assets/images/guideline.png';
 import { AlertDiamondIcon } from '@shopify/polaris-icons';
 import { useCallback, useEffect, useState } from 'react';
+import { IGuideLineResponse } from '~/routes/get-guide-line-data';
 // import { Link } from '@remix-run/react';
 
-const WarningBanner = ({ storeInfo }) => {
+const WarningBanner = ({ storeInfo }: { storeInfo: IGuideLineResponse }) => {
   if (storeInfo.embedBlock) return null;
+
   const [active, setActive] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const handlePopUp = useCallback(() => {
@@ -14,20 +16,22 @@ const WarningBanner = ({ storeInfo }) => {
   }, [active]);
   const activator = <Button onClick={handlePopUp}>Check instructions</Button>;
 
+  const { themeId, appExtensionId, embedBlock, shopName } = storeInfo;
+
   useEffect(() => {
-    if(storeInfo.ebbedBlock === undefined || storeInfo.ebbedBlock===null)return
-    setShowBanner(!storeInfo.ebbedBlock)
-  }, [storeInfo?.ebbedBlock]);
+    if (embedBlock === undefined || embedBlock === null) return;
+    setShowBanner(!embedBlock);
+  }, [embedBlock]);
   return (
     <>
-      {showBanner&&(
+      {showBanner && (
         <div className="w-full mb-4">
           <Banner
             title="Package protection isn't showing up on your store yet"
             hideIcon
             icon={AlertDiamondIcon}
             tone="warning"
-            onDismiss={()=>setShowBanner(false)}
+            onDismiss={() => setShowBanner(false)}
           >
             <p>
               You activated an app but still need to enable Package protection
@@ -39,8 +43,8 @@ const WarningBanner = ({ storeInfo }) => {
                 tone="success"
                 variant="primary"
                 url={
-                  storeInfo.shopName
-                    ? `https://admin.shopify.com/store/${storeInfo?.shopName}/themes/${storeInfo?.ThemeId}/editor?context=apps&template=index&activateAppId=${storeInfo.appExtensionId}/shipping-protection`
+                  shopName
+                    ? `https://admin.shopify.com/store/${shopName}/themes/${themeId}/editor?context=apps&template=index&activateAppId=${appExtensionId}/shipping-protection`
                     : ''
                 }
                 target="_blank"
@@ -56,8 +60,8 @@ const WarningBanner = ({ storeInfo }) => {
                   content: 'Goto Theme Editor',
                   onAction: () => {
                     window.open(
-                      storeInfo?.store
-                        ? `https://admin.shopify.com/store/${storeInfo?.store?.name}/themes/${storeInfo?.ThemeId}/editor?context=apps`
+                      shopName
+                        ? `https://admin.shopify.com/store/${shopName}/themes/${themeId}/editor?context=apps`
                         : ''
                     );
                   },
