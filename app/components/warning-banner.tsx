@@ -7,7 +7,7 @@ import { IGuideLineResponse } from '~/routes/get-guide-line-data';
 // import { Link } from '@remix-run/react';
 
 const WarningBanner = ({ storeInfo }: { storeInfo: IGuideLineResponse }) => {
-  if (storeInfo.embedBlock) return null;
+  if (storeInfo?.embedBlock) return null;
 
   const [active, setActive] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
