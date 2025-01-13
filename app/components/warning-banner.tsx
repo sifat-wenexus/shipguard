@@ -6,7 +6,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { IGuideLineResponse } from '~/routes/get-guide-line-data';
 // import { Link } from '@remix-run/react';
 
-const WarningBanner = ({ storeInfo }: { storeInfo: IGuideLineResponse }) => {
+const WarningBanner = ({ storeInfo }: { storeInfo: IGuideLineResponse |null }) => {
+  if(!storeInfo) return null;
   if (storeInfo?.embedBlock) return null;
 
   const [active, setActive] = useState(false);
