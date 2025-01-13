@@ -1,6 +1,8 @@
+import type { LoaderFunctionArgs, TypedResponse } from '@remix-run/node';
 import { makeAlphaNumeric } from '~/modules/utils/alpha-numeric-string';
 import { shopify as shopifyRemix } from '../modules/shopify.server';
-import type { LoaderFunctionArgs } from '@remix-run/node';
+import { fixJsonString } from '~/utils/removeCommentFromJosn';
+import { queryProxy } from '~/modules/query/query-proxy';
 import { getConfig } from '~/modules/get-config.server';
 import { prisma } from '~/modules/prisma.server';
 import { json } from '@remix-run/react';
@@ -9,18 +11,38 @@ import {
   getThemeFileInfo,
   getThemeInfo,
 } from '~/modules/get-theme-file-content';
-import { fixJsonString } from '~/utils/removeCommentFromJosn';
-import { queryProxy } from '~/modules/query/query-proxy';
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export interface IGuideLineResponse {
+  embedBlock: boolean;
+  claimPage: boolean;
+  themeId: string;
+  shopName: string;
+  smtp: boolean;
+  install: boolean;
+  appExtensionId: string | undefined;
+}
+
+interface IErrorResponse {
+  error: string;
+  success: boolean;
+}
+
+export async function loader({
+  request,
+}: LoaderFunctionArgs): Promise<
+  TypedResponse<IGuideLineResponse | IErrorResponse>
+> {
   try {
     const ctx = await shopifyRemix.authenticate.admin(request);
-
-    let ebbedBlock = false;
-    let claimPage = false;
-    let ThemeId = '';
-    let shopName = '';
-    let smtp: string | boolean = false;
+    const response: IGuideLineResponse = {
+      embedBlock: false,
+      claimPage: false,
+      themeId: '',
+      shopName: '',
+      smtp: false,
+      install: false,
+      appExtensionId: process.env.SHOPIFY_OSP_THEME_ID,
+    };
     try {
       const install = await prisma.packageProtection.findFirst({
         where: { storeId: ctx.session.storeId },
@@ -45,7 +67,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
                   `${process.env.SHOPIFY_OSP_THEME_ID}`
                 )
               ) {
-                ebbedBlock = !blocks[block].disabled;
+                response.embedBlock = !blocks[block].disabled;
+                // ebbedBlock = !blocks[block].disabled;
               }
             }
           }
@@ -55,11 +78,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
       }
       const theme = await getThemeInfo(ctx.session);
       if (theme) {
-        ThemeId = theme.id.replace('gid://shopify/OnlineStoreTheme/', '');
+        response.themeId = theme.id.replace(
+          'gid://shopify/OnlineStoreTheme/',
+          ''
+        );
+        // ThemeId = theme.id.replace('gid://shopify/OnlineStoreTheme/', '');
       }
-      const store = await queryProxy.store.findFirst({where:{id: ctx.session.storeId}});
+      const store = await queryProxy.store.findFirst({
+        where: { id: ctx.session.storeId },
+      });
       if (store) {
-        shopName = store.domain.split('.')[0];
+        response.shopName = store.domain.split('.')[0];
+        // shopName = store.domain.split('.')[0];
       }
 
       const templateInfo = await getThemeFileInfo(
@@ -68,37 +98,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
       );
 
       if (templateInfo) {
-        claimPage = true;
+        response.claimPage = true;
+        // claimPage = true;
       }
       const smtpSetting = await prisma.smtpSetting.findFirst({
         where: { id: ctx.session.storeId },
       });
       if (smtpSetting) {
-        smtp = smtpSetting.provider ?? false;
+        response.smtp = !!smtpSetting.provider;
+        // smtp = !!smtpSetting.provider;
       }
 
-      return json({
-        smtp,
-        ThemeId,
-        shopName,
-        ebbedBlock,
-        install: install?.enabled,
-        claimPage,
-        storeId: ctx.session.storeId,
-        appExtensionId: process.env.SHOPIFY_OSP_THEME_ID,
-      });
+      return json({ ...response, install: install?.enabled ?? false });
     } catch (err) {
       console.error(err);
-      return json({
-        smtp,
-        ThemeId,
-        shopName,
-        ebbedBlock,
-        install: false,
-        claimPage,
-        storeId: ctx.session.storeId,
-        appExtensionId: process.env.SHOPIFY_OSP_THEME_ID,
-      });
+      return json(response);
     }
   } catch (err) {
     console.error('error in loader', err);

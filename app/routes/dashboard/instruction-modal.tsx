@@ -1,13 +1,22 @@
 import guidelineImage from '~/assets/images/guideline.png';
 import { Button, Modal, Text } from '@shopify/polaris';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
+import { IResponse } from '~/routes/get-guide-line-data';
+
+interface  IParams{
+  storeInfo:IResponse|null;
+  active: boolean;
+  setActive: (active: boolean) => void;
+  activator: any
+}
+
 
 const InstructionModal = ({
   storeInfo,
   active = false,
   setActive = (t: boolean) => {},
   activator = <Button>Check instructions</Button>,
-}) => {
+}:IParams) => {
   const handlePopUp = useCallback(() => setActive(!active), [active]);
 
   return (
@@ -20,7 +29,7 @@ const InstructionModal = ({
         content: 'Goto Theme Editor',
         onAction: () => {
           window.open(
-            `https://admin.shopify.com/store/${storeInfo?.shopName}/themes/${storeInfo?.ThemeId}/editor?context=apps&template=index&activateAppId=${storeInfo.appExtensionId}/shipping-protection`,
+            `https://admin.shopify.com/store/${storeInfo?.shopName}/themes/${storeInfo?.themeId}/editor?context=apps&template=index&activateAppId=${storeInfo?.appExtensionId}/shipping-protection`,
             '_blank'
           );
         },

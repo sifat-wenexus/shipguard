@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import type { IGuideLineResponse } from '~/routes/get-guide-line-data';
 
 export function useLivePageData(delay: number = 10000) {
-  const [storeInfo, setStoreInfo] = useState<Record<string, any>>({});
+  const [storeInfo, setStoreInfo] = useState<IGuideLineResponse|null>(null);
   const [loading, setLoading] = useState(false);
 
   const previousDataRef = useRef();

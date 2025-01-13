@@ -62,7 +62,7 @@ const ClaimPageSetup = () => {
                       tone="success"
                       url={
                         storeInfo?.shopName
-                          ? `https://admin.shopify.com/store/${storeInfo?.shopName}/themes/${storeInfo?.ThemeId}/editor`
+                          ? `https://admin.shopify.com/store/${storeInfo?.shopName}/themes/${storeInfo?.themeId}/editor`
                           : ''
                       }
                       target="_blank"

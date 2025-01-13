@@ -393,7 +393,6 @@ const Settings = () => {
       setInsurancePriceError(false);
     }
   }, [state.insurancePriceType]);
-  console.log('settings',enabled)
   return (
     <PageShell currencyCode={data.currencyCode}>
       <div className="m-2 sm:m-0">

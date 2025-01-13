@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Banner, Button, Modal, Text } from '@shopify/polaris';
 import guidelineImage from '~/assets/images/guideline.png';
 import { AlertDiamondIcon } from '@shopify/polaris-icons';

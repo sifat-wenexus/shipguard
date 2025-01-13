@@ -78,7 +78,6 @@ const Dashboard = ({ guidelineVisibility, storeId ,enabled}) => {
   //     return 0;
   //   }
   // }, [data.loading]);
-console.log(enabled)
   if (data.loading) {
     renderElement = <DashboardLoading />;
   } else {
