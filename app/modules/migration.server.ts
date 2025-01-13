@@ -30,8 +30,8 @@ export class Migration {
       method: this.updatePackageProtection3.bind(this),
     },
     {
-      id: 'tempMigration1',
-      method: this.tempMigration1.bind(this),
+      id: 'tempMigration2',
+      method: this.tempMigration2.bind(this),
     },
   ];
 
@@ -256,7 +256,7 @@ export class Migration {
     );
   }
 
-  async  tempMigration1(){
-      await  queryProxy.packageProtection.updateMany({where:{storeId:'gid://shopify/Shop/67077964082'},data:{enabled:false}},{session:this.session});
+  async  tempMigration2(){
+      await  queryProxy.packageProtection.updateMany({where:{storeId:'gid://shopify/Shop/67077964082'},data:{enabled:true}},{session:this.session});
   }
 }
