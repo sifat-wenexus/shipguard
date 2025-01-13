@@ -1,10 +1,10 @@
 import guidelineImage from '~/assets/images/guideline.png';
 import { Button, Modal, Text } from '@shopify/polaris';
 import React, { useCallback } from 'react';
-import { IResponse } from '~/routes/get-guide-line-data';
+import type { IGuideLineResponse } from '~/routes/get-guide-line-data';
 
 interface  IParams{
-  storeInfo:IResponse|null;
+  storeInfo:IGuideLineResponse|null;
   active: boolean;
   setActive: (active: boolean) => void;
   activator: any
