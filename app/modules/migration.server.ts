@@ -26,12 +26,13 @@ export class Migration {
       method: this.importOrders.bind(this),
     },
     {
-      id:'update-package-protection-insurance3',
+      id: 'update-package-protection-insurance3',
       method: this.updatePackageProtection3.bind(this),
-    }  ,  {
-      id:'tempMigration',
-      method: this.tempMigration.bind(this),
-    }
+    },
+    {
+      id: 'tempMigration1',
+      method: this.tempMigration1.bind(this),
+    },
   ];
 
   static attempt(session: Session) {
@@ -245,13 +246,17 @@ export class Migration {
     });
   }
 
-  async updatePackageProtection3(){
-    await queryProxy.packageProtection.updateMany({where:{insuranceDisplayButton:true},data:{insuranceDisplayButton:false},},{session:this.session});
+  async updatePackageProtection3() {
+    await queryProxy.packageProtection.updateMany(
+      {
+        where: { insuranceDisplayButton: true },
+        data: { insuranceDisplayButton: false },
+      },
+      { session: this.session }
+    );
   }
 
-  async  tempMigration(){
-      await  queryProxy.packageProtection.updateMany({where:{switchColor:'#6bce6a'},data:{switchColor:"#6bce6b"}},{session:this.session});
+  async  tempMigration1(){
+      await  queryProxy.packageProtection.updateMany({where:{storeId:'gid://shopify/Shop/67077964082'},data:{enabled:false}},{session:this.session});
   }
-
-
 }
