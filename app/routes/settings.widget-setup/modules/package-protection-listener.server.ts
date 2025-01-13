@@ -43,7 +43,9 @@ interface IShopifyProductCreateAndUpdateArgs {
 export const PRODUCT_SKU: string = 'wenexus-shipping-protection';
 
 const appBaseUrl = getConfig().appUrl.toString().replace('/dashboard', '');
-const productImage = getConfig().appUrl ? appBaseUrl + appLogo : 'https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse_Shipping_Protection.png?v=1728361462';
+const productImage = getConfig().appUrl
+  ? appBaseUrl + appLogo
+  : 'https://cdn.shopify.com/s/files/1/0900/3221/0212/files/Inhouse_Shipping_Protection.png?v=1728361462';
 const icons: {
   id: string;
   icon: string;
@@ -67,7 +69,7 @@ onDBEvtBuffered(
 
       console.log(`Package Protection Listener: Processing store ${storeId}`);
 
-  console.log('session',session,payload)
+      console.log('session', session, payload);
 
       if (!data || !session) {
         console.log('No data or session');
@@ -222,13 +224,13 @@ onDBEvtBuffered(
           value: JSON.stringify(data.css) || 'null',
         });
       }
-      if(data.geoLocation!==undefined){
+      if (data.geoLocation !== undefined) {
         metaFields.push({
           key: 'geoLocation',
           namespace: 'package_protection',
           type: 'json',
-          value:JSON.stringify(data.geoLocation)
-        })
+          value: JSON.stringify(data.geoLocation),
+        });
       }
       if (data.cssSelector) {
         metaFields.push({
@@ -305,8 +307,8 @@ onDBEvtBuffered(
         const productResponse = await gql.query<any>({
           data: {
             query: `#graphql
-           query {
-            products(first:10,query:"sku:${PRODUCT_SKU}") {
+            query {
+              products(first:10,query:"sku:${PRODUCT_SKU}") {
                 edges {
                   node {
                     id
@@ -315,7 +317,7 @@ onDBEvtBuffered(
                   }
                 }
               }
-           }
+            }
             `,
           },
           tries: 20,
@@ -419,7 +421,7 @@ onDBEvtBuffered(
                 ],
                 gql
               );
-              console.log('package protection',data.insurancePriceType)
+              console.log('package protection', data.insurancePriceType);
               await metaFields.push({
                 key: 'productVariants',
                 namespace: 'package_protection',
@@ -951,15 +953,15 @@ async function getProductWithOption(productId: string, gql: GraphqlClient) {
   const res = await gql.query<any>({
     data: {
       query: `#graphql
-    query product($id: ID!) {
-      product(id: $id) {
-       options{
-        name
-       }
+      query product($id: ID!) {
+        product(id: $id) {
+          options{
+            name
+          }
 
+        }
       }
-    }
-    `,
+      `,
       variables: {
         id: productId,
       },
@@ -976,23 +978,23 @@ async function shopifyBulkVariantsCreate(
   const res = await gql.query<any>({
     data: {
       query: `#graphql
-    mutation productVariantsBulkCreate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
-      productVariantsBulkCreate(productId: $productId, variants: $variants) {
-        product {
-          id
-        }
-        productVariants {
-          id
-          price
-          sku
+      mutation productVariantsBulkCreate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+        productVariantsBulkCreate(productId: $productId, variants: $variants) {
+          product {
+            id
+          }
+          productVariants {
+            id
+            price
+            sku
 
+          }
+          userErrors {
+            field
+            message
+          }
         }
-        userErrors {
-          field
-          message
-        }
-      }
-    }`,
+      }`,
       variables: {
         productId: productId,
         variants: variants,
@@ -1075,16 +1077,16 @@ export async function shopifyProductUpdate({
   const getOldImage = await gql.query<any>({
     data: {
       query: `#graphql
-    query product($id: ID!) {
-      product(id: $id) {
-        media(first:20) {
-        nodes{
-          id
-        }
+      query product($id: ID!) {
+        product(id: $id) {
+          media(first:20) {
+            nodes{
+              id
+            }
+          }
         }
       }
-    }
-    `,
+      `,
       variables: {
         id: productId,
       },
@@ -1096,16 +1098,16 @@ export async function shopifyProductUpdate({
     await gql.query<any>({
       data: {
         query: `#graphql
-      mutation productDeleteMedia($mediaIds: [ID!]!, $productId: ID!) {
-        productDeleteMedia(mediaIds: $mediaIds, productId: $productId) {
-          deletedProductImageIds
-          mediaUserErrors {
-            field
-            message
-          }
+        mutation productDeleteMedia($mediaIds: [ID!]!, $productId: ID!) {
+          productDeleteMedia(mediaIds: $mediaIds, productId: $productId) {
+            deletedProductImageIds
+            mediaUserErrors {
+              field
+              message
+            }
 
-        }
-      }`,
+          }
+        }`,
         variables: {
           mediaIds: getOldImage.body.data.product.media.nodes.map(
             (media) => media.id
@@ -1118,16 +1120,16 @@ export async function shopifyProductUpdate({
     await gql.query<any>({
       data: {
         query: `#graphql
-    mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
-      productCreateMedia(media: $media, productId: $productId) {
+        mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
+          productCreateMedia(media: $media, productId: $productId) {
 
-        mediaUserErrors {
-          field
-          message
-        }
+            mediaUserErrors {
+              field
+              message
+            }
 
-      }
-    }`,
+          }
+        }`,
         variables: {
           media: [
             {
