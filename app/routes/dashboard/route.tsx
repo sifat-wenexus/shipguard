@@ -6,6 +6,7 @@ import { prisma } from '~/modules/prisma.server';
 import { Page } from '@shopify/polaris';
 import { json } from '@remix-run/node';
 import Dashboard from './dashboard';
+import OurApps from '~/components/our-apps';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const cookieHeader = request.headers.get('cookie');
@@ -39,6 +40,7 @@ const App = () => {
           storeId={storeId}
           enabled={enabled}
         />
+        <OurApps/>
       </Page>
     </PageShell>
   );

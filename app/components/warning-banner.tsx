@@ -62,7 +62,7 @@ const WarningBanner = ({ storeInfo }: { storeInfo: IGuideLineResponse |null }) =
                   onAction: () => {
                     window.open(
                       shopName
-                        ? `https://admin.shopify.com/store/${shopName}/themes/${themeId}/editor?context=apps`
+                        ? `https://admin.shopify.com/store/${shopName}/themes/${themeId}/editor?context=apps&&template=index&activateAppId=${appExtensionId}/shipping-protection`
                         : ''
                     );
                   },
