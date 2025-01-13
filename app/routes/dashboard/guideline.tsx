@@ -241,7 +241,11 @@ const GuideLine = ({
               {/*  </div>*/}
               {/*</div>*/}
               <hr />
-              <div className={`m-4 bg-gray-200 rounded-lg`}>
+              <div
+                className={`m-4 ${
+                  toggleLine.setUp ? 'bg-gray-200' : undefined
+                } rounded-lg`}
+              >
                 <div className="flex p-2 gap-3">
                   <span className="guideline-icon mt-1">
                     {install ? TickMark() : RoundDoted()}
@@ -261,20 +265,23 @@ const GuideLine = ({
                         </span>
                       </span>
 
-                      {/*{toggleLine.setUp && (*/}
-                      <>
-                        <br />
-                        <br />
-                        <Button variant="primary" url="/settings/widget-setup">
-                          Insurance Widget Setup
-                        </Button>
-                      </>
-                      {/*)}*/}
+                      {toggleLine.setUp && (
+                        <div>
+                          <br />
+                          <br />
+                          <Button
+                            variant="primary"
+                            url="/settings/widget-setup"
+                          >
+                            Insurance Widget Setup
+                          </Button>
+                        </div>
+                      )}
                     </div>
                     <div className="text-right hidden sm:block">
-                      {/*{toggleLine.setUp &&*/}
-                      <img src={widgetImg} alt="i" width={'220px'} />
-                      {/*// }*/}
+                      {toggleLine.setUp && (
+                        <img src={widgetImg} alt="i" width={'220px'} />
+                      )}
                     </div>
                   </div>
                 </div>

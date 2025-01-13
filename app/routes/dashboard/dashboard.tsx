@@ -23,6 +23,7 @@ import {
   Text,
   Tooltip,
 } from '@shopify/polaris';
+import OurApps from '~/components/our-apps';
 
 export const default30Days = () => {
   const till = new Date();
@@ -252,21 +253,15 @@ const Dashboard = ({ guidelineVisibility, storeId ,enabled}) => {
           Hi 👋, Welcome to ShipGuard: Shipping Protection
         </Text>
         <br />
-
         {enabled&&<WarningBanner storeInfo={storeInfo} />}
-
-        {
           <GuideLine
             storeInfo={storeInfo}
             guidelineVisibility={guidelineVisibility}
           />
-        }
         <br />
         <DateRangePicker setActiveDates={setActiveDates} />
-
         {renderElement}
-
-
+        <OurApps/>
       </>
     </div>
   );

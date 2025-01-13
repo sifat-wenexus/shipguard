@@ -1,0 +1,5 @@
+
+.customIconSize > .Polaris-Icon {
+  width: 48px; /* Customize width */
+  height: 48px; /* Customize height */
+}

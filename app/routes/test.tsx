@@ -1,27 +1,16 @@
 import { json } from '@remix-run/node';
-import { getShopifyGQLClient, shopify as shopifyRemix } from '~/modules/shopify.server';
+import {  shopify as shopifyRemix } from '~/modules/shopify.server';
+import { prisma } from '~/modules/prisma.server';
+import { queryProxy } from '~/modules/query/query-proxy';
 
 
 export async function loader({ request }) {
   const ctx = await shopifyRemix.authenticate.admin(request);
 
-  const gql = getShopifyGQLClient(ctx.session);
 
-  const asset = await gql.query<Record<string, any>>({
-    data: `#graphql
-    query {
-      shop{
-        name
-        url
-        primaryDomain{
-          id
-          host
-          url
-        }
-      }
-    }
-    `,tries:20
-  });
 
-  return json({ res: 'helllo from test' ,result:asset});
+  const google = await fetch('https://jsonplaceholder.typicode.com/todos/1')
+  console.log({google: google.json()})
+
+  return json({ res: 'helllo from test' ,google});
 }

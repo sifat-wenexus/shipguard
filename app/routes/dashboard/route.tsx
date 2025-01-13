@@ -40,7 +40,6 @@ const App = () => {
           storeId={storeId}
           enabled={enabled}
         />
-        <OurApps/>
       </Page>
     </PageShell>
   );

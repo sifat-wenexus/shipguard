@@ -15,7 +15,7 @@ const OurApps = () => {
   return (
     <Box>
       <br />
-      <h1 className="text-xl my-3 font-bold">Recommended</h1>
+      <h1 className="text-xl my-3 font-bold ms-4 sm:ms-0">Recommended</h1>
       {appsList.map((app, index) => {
         return (
           <div className="bg-white p-4 rounded-lg shadow-lg mb-4" key={index}>
