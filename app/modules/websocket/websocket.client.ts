@@ -46,7 +46,7 @@ export class WebsocketClient extends EventTarget {
 
         const url =
           process.env.NODE_ENV === 'development'
-            ? `ws://localhost:${globalThis.process?.env.WEBSOCKET_PORT ?? 3001}`
+            ? `ws://localhost:${globalThis.process?.env.WEBSOCKET_PORT ?? 3003}`
             : `wss://${location.host}`;
 
         const reconnect = () =>  {
