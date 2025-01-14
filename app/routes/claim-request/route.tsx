@@ -4,7 +4,7 @@ import ClaimRequestProcess from './calim-request-process';
 import { default30Days } from '../dashboard/dashboard';
 import DateRangePicker from '../dashboard/date-range';
 import { PageShell } from '~/components/page-shell';
-import { ExportIcon } from '@shopify/polaris-icons';
+import { ArrowLeftIcon, ExportIcon } from '@shopify/polaris-icons';
 import type { IActiveDates } from '../order/route';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import { prisma } from '~/modules/prisma.server';
@@ -85,8 +85,18 @@ const FileClaimRequest = () => {
   return (
     <PageShell currencyCode={currencyCode}>
       <div className="m-4 sm:m-0 mt-10 sm:mt-4">
-        <Page title='Claim Request'  backAction={{ onAction: () => navigate(-1) }}>
+        <Page fullWidth >
+          {/*title='Claim Request'  backAction={{ onAction: () => navigate(-1) }}*/}
           <Layout>
+            <div className="mb-4 flex items-center gap-4 mt-6">
+              <Button
+                icon={ArrowLeftIcon}
+                onClick={() => navigate(-1)}
+              ></Button>
+              <Text as="h1" variant="headingLg">
+                Claim Request
+              </Text>
+            </div>
             {isProcess ? (
               <ClaimRequestProcess
                 setIsProcess={setIsProcess}
