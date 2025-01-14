@@ -39,7 +39,7 @@ const [fulfillError, setFulfillError] = useState('');
 
   const handleModalChange = useCallback(() => {
     if(claimStatus!=='APPROVE'){
-      setFulfillError('Please Change Claim Status!');
+      setFulfillError('Please Change Claim Status To Approve!');
       return;
     }
     setActive(!active);

@@ -61,7 +61,7 @@ const ClaimRequestProcess = ({ setIsProcess, orderId, shop }) => {
     <>
       {loading ? (
         <Layout.Section>
-          <SkeletonLoading />
+        <div className='mt-6'>  <SkeletonLoading /></div>
         </Layout.Section>
       ) : (
         <>

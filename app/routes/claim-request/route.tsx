@@ -85,17 +85,19 @@ const FileClaimRequest = () => {
   return (
     <PageShell currencyCode={currencyCode}>
       <div className="m-4 sm:m-0 mt-10 sm:mt-4">
-        <Page fullWidth >
+        <Page fullWidth>
           {/*title='Claim Request'  backAction={{ onAction: () => navigate(-1) }}*/}
-          <div className="mb-4 flex items-center gap-4 mt-6">
-            <Button
-              icon={ArrowLeftIcon}
-              onClick={() => navigate(-1)}
-            ></Button>
-            <Text as="h1" variant="headingLg">
-              Claim Request
-            </Text>
-          </div>
+          {isProcess ?null:
+            <div className="mb-4 flex items-center gap-4 mt-6">
+              <Button
+                icon={ArrowLeftIcon}
+                onClick={() => navigate(-1)}
+              ></Button>
+              <Text as="h1" variant="headingLg">
+                Claim Request
+              </Text>
+            </div>
+          }
           <Layout>
             {isProcess ? (
               <ClaimRequestProcess
