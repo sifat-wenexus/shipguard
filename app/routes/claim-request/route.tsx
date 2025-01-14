@@ -87,7 +87,7 @@ const FileClaimRequest = () => {
       <div className="m-4 sm:m-0 mt-10 sm:mt-4">
         <Page fullWidth>
           <Layout>
-            <Layout.Section variant="fullWidth">
+            <Layout.Section>
               <div className="mb-4 flex items-center gap-4 mt-6">
                 <Button
                   icon={ArrowLeftIcon}
