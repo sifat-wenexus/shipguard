@@ -23,7 +23,7 @@ const DashboardLoading = () => {
               ))}
             </div>
           </div>
-          <div className="col-span-3 border h-full">
+          <div className="col-span-3 sm:col-span-2 border h-full">
             <div className="bg-white rounded-lg shadow-sm h-full p-4">
               <SkeletonDisplayText size="small" />
               <div className="mt-3"></div>
