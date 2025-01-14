@@ -72,6 +72,12 @@ export default function Root() {
   }, [skipAuth]);
 
   useEffect(() => {
+    websocketClient.getClient().then((client) => {
+      client.addEventListener('open', () => {
+        console.log('Websocket connection opened');
+      });
+    });
+
     return () => {
       websocketClient.close();
     };

@@ -383,8 +383,3 @@ export class Reply<P> extends EventTarget {
 // ------------------------------------------------------------ //
 
 export const websocketClient = new WebsocketClient();
-websocketClient.getClient().then((client) => {
-  client.addEventListener('open', () => {
-    console.log('Websocket connection opened');
-  });
-});
