@@ -18,11 +18,6 @@ import type {
 export const loader: LoaderFunction = async ({ request }) => {
   try {
 
-    // Set CORS headers
-    const responseHeaders = new Headers();
-    responseHeaders.set('Access-Control-Allow-Origin', '*'); // Allow all origins (change to a specific domain if needed)
-    responseHeaders.set('Access-Control-Allow-Methods', 'GET');
-
     let url = new URL(request.url);
     let searchParams = url.searchParams;
     const params = Object.fromEntries(searchParams.entries());
@@ -300,7 +295,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     if (finalResult.fulfillments.length === 0) {
       return json({ error: 'No items in this order have been fulfilled yet.', status: 404 });
     }
-console.log(finalResult);
     return json({
       message: 'request successful.',
       data: finalResult,
