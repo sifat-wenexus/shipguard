@@ -17,6 +17,12 @@ import type {
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
+
+    // Set CORS headers
+    const responseHeaders = new Headers();
+    responseHeaders.set('Access-Control-Allow-Origin', '*'); // Allow all origins (change to a specific domain if needed)
+    responseHeaders.set('Access-Control-Allow-Methods', 'GET');
+
     let url = new URL(request.url);
     let searchParams = url.searchParams;
     const params = Object.fromEntries(searchParams.entries());
