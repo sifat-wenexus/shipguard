@@ -17,7 +17,6 @@ import type {
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
-
     let url = new URL(request.url);
     let searchParams = url.searchParams;
     const params = Object.fromEntries(searchParams.entries());
@@ -44,7 +43,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       });
     }
 
-    console.log(orderId,getPackageProtectionOrder);
+    console.log(orderId, getPackageProtectionOrder);
 
     // if (
     //   getPackageProtectionOrder.hasClaimRequest &&
@@ -293,12 +292,15 @@ export const loader: LoaderFunction = async ({ request }) => {
     // ----------------------------------------------------------------
 
     if (finalResult.fulfillments.length === 0) {
-      return json({ error: 'No items in this order have been fulfilled yet.', status: 404 });
+      return json({
+        error: 'No items in this order have been fulfilled yet.',
+        status: 404,
+      });
     }
     return json({
       message: 'request successful.',
       data: finalResult,
-    },{headers:{"Access-Control-Allow-Origin": "*",}});
+    });
   } catch (err) {
     console.error('error', err);
     return json({
