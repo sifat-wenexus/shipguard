@@ -18,9 +18,9 @@ import type {
 export const loader: LoaderFunction = async ({ request }) => {
   try {
     let url = new URL(request.url);
-
     let searchParams = url.searchParams;
     const params = Object.fromEntries(searchParams.entries());
+    console.log('requested url', url.pathname, params.orderId);
     const session = await findOfflineSession(params.url);
     if (!session) {
       throw new Error(`Session not found!`);
