@@ -5,6 +5,12 @@
   <div id='claim-liquid'></div>
 </body>
 
+<script>
+  window.wenexus_shop_domain = '{{ shop.permanent_domain }}';
+  console.log(window.wenexus_shop_domain);
+</script>
+
+
 <script src='{{ 'package-protection-claim.js' | asset_url }}' defer></script>
 
 {% schema %}

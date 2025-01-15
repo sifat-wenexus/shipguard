@@ -20,7 +20,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     let url = new URL(request.url);
     let searchParams = url.searchParams;
     const params = Object.fromEntries(searchParams.entries());
-
     const session = await findOfflineSession(params.url);
 
     if (!session) {
