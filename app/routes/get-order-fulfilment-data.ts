@@ -43,6 +43,8 @@ export const loader: LoaderFunction = async ({ request }) => {
       });
     }
 
+    console.log(orderId,getPackageProtectionOrder);
+
     // if (
     //   getPackageProtectionOrder.hasClaimRequest &&
     //   process.env.NODE_ENV === 'production'
