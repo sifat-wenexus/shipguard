@@ -22,6 +22,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const params = Object.fromEntries(searchParams.entries());
     console.log('session:-----> ', params.url);
     const session = await findOfflineSession(params.url);
+
     if (!session) {
       throw new Error(`Session not found!`);
     }
