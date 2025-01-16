@@ -22,8 +22,8 @@ export class Migration {
       method: this.importOrders.bind(this),
     },
     {
-      id: 'update-package-protection-insurance7',
-      method: this.updatePackageProtection7.bind(this),
+      id: 'update-package-protection-insurance-8',
+      method: this.updatePackageProtection8.bind(this),
     },
   ];
   private readonly GQLClient = getShopifyGQLClient(this.session);
@@ -241,9 +241,11 @@ export class Migration {
     });
   }
 
-  async updatePackageProtection7() {
+  async updatePackageProtection8() {
 
-    if(this.session.storeId === 'gid://shopify/Shop/85380661576'){
+    if(this.session.storeId == 'gid://shopify/Shop/85380661576'){
+
+      console.log('running migration------------------------------------- ha ha ha.....');
       await queryProxy.packageProtection.updateMany(
         {
           where: {
