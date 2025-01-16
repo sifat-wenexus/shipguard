@@ -26,8 +26,8 @@ export class Migration {
       method: this.importOrders.bind(this),
     },
     {
-      id: 'update-package-protection-insurance3',
-      method: this.updatePackageProtection3.bind(this),
+      id: 'update-package-protection-insurance4',
+      method: this.updatePackageProtection4.bind(this),
     },
   ];
 
@@ -242,10 +242,12 @@ export class Migration {
     });
   }
 
-  async updatePackageProtection3() {
+  async updatePackageProtection4() {
     await queryProxy.packageProtection.updateMany(
       {
-        where: { insuranceDisplayButton: true },
+        where: { AND:[{
+          insuranceDisplayButton:true
+          },{ storeId: {notEqual:'gid://shopify/Shop/85380661576'}}] },
         data: { insuranceDisplayButton: false },
       },
       { session: this.session }
