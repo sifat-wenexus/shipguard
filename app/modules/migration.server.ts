@@ -8,10 +8,6 @@ import { prisma } from './prisma.server';
 import _ from 'lodash';
 
 export class Migration {
-  constructor(private readonly session: Session) {}
-
-  private readonly GQLClient = getShopifyGQLClient(this.session);
-
   public readonly order: { id: string; method: () => any }[] = [
     {
       id: 'initialization',
@@ -30,6 +26,9 @@ export class Migration {
       method: this.updatePackageProtection4.bind(this),
     },
   ];
+  private readonly GQLClient = getShopifyGQLClient(this.session);
+
+  constructor(private readonly session: Session) {}
 
   static attempt(session: Session) {
     return new Migration(session).run();
@@ -243,15 +242,18 @@ export class Migration {
   }
 
   async updatePackageProtection4() {
-    await queryProxy.packageProtection.updateMany(
-      {
-        where: { AND:[{
-          insuranceDisplayButton:true
-          },{ storeId: {notEqual:'gid://shopify/Shop/85380661576'}}] },
-        data: { insuranceDisplayButton: false },
-      },
-      { session: this.session }
-    );
-  }
 
+    if(this.session.storeId !== 'gid://shopify/Shop/85380661576'){
+      await queryProxy.packageProtection.update(
+        {
+          where: {
+            storeId: this.session.storeId,
+            insuranceDisplayButton: true,
+          },
+          data: { insuranceDisplayButton: false },
+        },
+        { session: this.session }
+      );
+    }
+  }
 }
