@@ -23,8 +23,8 @@ export const packageIcons = [
     id: 'three',
     icon: PackageBlack,
   },
-  // {
-  //   id: 'four',
-  //   icon: PackageOne,
-  // },
+  {
+    id: 'four',
+    icon: PackageOne,
+  },
 ];
