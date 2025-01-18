@@ -4,17 +4,21 @@ import { shopify } from '~/modules/shopify.server';
 import { useLoaderData } from '@remix-run/react';
 import { prisma } from '~/modules/prisma.server';
 import { Page } from '@shopify/polaris';
-import { json } from '@remix-run/node';
+import { json , createCookie } from '@remix-run/node';
 import Dashboard from './dashboard';
-import OurApps from '~/components/our-apps';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const cookieHeader = request.headers.get('cookie');
   const ctx = await shopify.authenticate.admin(request);
-  const { currencyCode } = await prisma.store.findFirstOrThrow({
+
+
+
+  const { currencyCode,domain } = await prisma.store.findFirstOrThrow({
     where: { id: ctx.session.storeId },
-    select: { currencyCode: true },
+    select: { currencyCode: true ,domain:true},
   });
+
+  const guidelineCookie=createCookie(`shipping-insurance-guideline-${domain.split('.')[0]}`)
+  const cookieHeader = await guidelineCookie.parse(request.headers.get('Cookie'));
 
   const packageProtection = await prisma.packageProtection.findFirst({
     where: { storeId: ctx.session.storeId },
@@ -32,6 +36,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 const App = () => {
   const { guidelineVisibility, storeId, currencyCode,enabled } =
     useLoaderData<typeof loader>();
+
   return (
     <PageShell currencyCode={currencyCode}>
       <Page>
