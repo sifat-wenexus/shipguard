@@ -3581,9 +3581,9 @@ var __publicField = (obj, key, value) => {
             selector,
             variants.length > 0 ? enabled() : false
           );
-          if (variants.length == 0 && render && window.Shopify.theme.theme_store_id === 887)
-            ;
-          else {
+          if (variants.length == 0 && !render) {
+            console.log("not render");
+          } else {
             render = true;
             switch (selector.insertPosition) {
               case "before":
