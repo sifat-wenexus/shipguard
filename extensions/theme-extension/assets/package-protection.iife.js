@@ -6,1258 +6,1261 @@ var __publicField = (obj, key, value) => {
 };
 (function() {
   "use strict";
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r;
-  const _0xba9c37 = _0x3dda;
-  (function(_0x62e07b, _0x3e00af) {
-    const _0x58d716 = _0x3dda, _0x4a571b = _0x62e07b();
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q;
+  const _0x54fc1c = _0x2aba;
+  (function(_0x2e3b5b, _0x495f8f) {
+    const _0x4746e6 = _0x2aba, _0x189e1a = _0x2e3b5b();
     while (!![]) {
       try {
-        const _0x3da05a = parseInt(_0x58d716(343)) / 1 * (parseInt(_0x58d716(327)) / 2) + parseInt(_0x58d716(344)) / 3 * (-parseInt(_0x58d716(290)) / 4) + -parseInt(_0x58d716(339)) / 5 + -parseInt(_0x58d716(340)) / 6 * (-parseInt(_0x58d716(336)) / 7) + parseInt(_0x58d716(313)) / 8 * (-parseInt(_0x58d716(323)) / 9) + parseInt(_0x58d716(291)) / 10 + -parseInt(_0x58d716(308)) / 11;
-        if (_0x3da05a === _0x3e00af)
+        const _0x2d7c30 = parseInt(_0x4746e6(347)) / 1 * (-parseInt(_0x4746e6(317)) / 2) + -parseInt(_0x4746e6(334)) / 3 * (-parseInt(_0x4746e6(335)) / 4) + -parseInt(_0x4746e6(324)) / 5 + -parseInt(_0x4746e6(315)) / 6 * (parseInt(_0x4746e6(297)) / 7) + parseInt(_0x4746e6(314)) / 8 * (parseInt(_0x4746e6(307)) / 9) + -parseInt(_0x4746e6(346)) / 10 + parseInt(_0x4746e6(340)) / 11 * (parseInt(_0x4746e6(312)) / 12);
+        if (_0x2d7c30 === _0x495f8f)
           break;
         else
-          _0x4a571b["push"](_0x4a571b["shift"]());
-      } catch (_0x4ac352) {
-        _0x4a571b["push"](_0x4a571b["shift"]());
+          _0x189e1a["push"](_0x189e1a["shift"]());
+      } catch (_0x23c907) {
+        _0x189e1a["push"](_0x189e1a["shift"]());
       }
     }
-  })(_0x1b3d, 582945);
-  function _0x3dda(_0x1e7066, _0x385619) {
-    const _0x1b3dc0 = _0x1b3d();
-    return _0x3dda = function(_0x3ddacf, _0x474b05) {
-      _0x3ddacf = _0x3ddacf - 287;
-      let _0x3b484f = _0x1b3dc0[_0x3ddacf];
-      return _0x3b484f;
-    }, _0x3dda(_0x1e7066, _0x385619);
+  })(_0x4d05, 404602);
+  function _0x2aba(_0x4e09f0, _0x4b8e1d) {
+    const _0x4d058f = _0x4d05();
+    return _0x2aba = function(_0x2aba6a, _0x1d0dba) {
+      _0x2aba6a = _0x2aba6a - 292;
+      let _0x537d48 = _0x4d058f[_0x2aba6a];
+      return _0x537d48;
+    }, _0x2aba(_0x4e09f0, _0x4b8e1d);
   }
-  function _0x1b3d() {
-    const _0x505fe4 = ["BASED_ON_CART_VALUE", "gid://shopify/ProductVariant/", "prices", "weNexusCartApi", "variantIds", "variant_id", "6961598gKgOOZ", "has", "No variant has been set", "1530680pfRzzr", "6bQYOGl", "WeNexusShipGuardPackageProtectionSettings", "includes", "15806vhxeDG", "2180829TlitIh", "percentageVariants", "packageProtectionProductAndVariants", "fixedVariantOption", "4cadUsO", "2169230owGawj", "PERCENTAGE", "clear", "get", "map", "_type", "length", "percentage", "push", "instance", "find", "toFixed", "FIXED", "items", "getNonPackageProtectionItems", "No variant found", "final_line_price", "6737456QYCNSh", "filter", "calculate", "setVariants", "flat", "8vAGOfU", "highestPrice", "variantId", "remove", "basedOnCartValueVariants", "max", "reduce", "getPackageProtectionItems", "add", "lowestPrice", "235017JzAEPJ", "price", "No variants have been set", "excludedPackageProtectionVariants", "132FBeNRW", "replace", "keys"];
-    _0x1b3d = function() {
-      return _0x505fe4;
-    };
-    return _0x1b3d();
-  }
-  var PackageProtectionType = ((_0x5d3900) => {
-    const _0x3f957d = _0x3dda;
-    return _0x5d3900[_0x3f957d(330)] = _0x3f957d(330), _0x5d3900[_0x3f957d(292)] = _0x3f957d(292), _0x5d3900[_0x3f957d(303)] = _0x3f957d(303), _0x5d3900;
+  var PackageProtectionType = ((_0x165601) => {
+    const _0xf49fdd = _0x2aba;
+    return _0x165601[_0xf49fdd(292)] = _0xf49fdd(292), _0x165601[_0xf49fdd(339)] = "PERCENTAGE", _0x165601["FIXED"] = "FIXED", _0x165601;
   })(PackageProtectionType || {});
   const _PackageProtectionApi = class _PackageProtectionApi {
-    constructor(_0x170ab0, _0x43ed6d) {
-      __publicField(this, _a, []);
-      __publicField(this, "percentageVariants", {});
+    constructor(_0x63df8e, _0x435d16) {
+      __publicField(this, "basedOnCartValueVariants", []);
+      __publicField(this, _a, {});
       __publicField(this, _b, null);
-      __publicField(this, _c, _0xba9c37(292));
+      __publicField(this, _c, _0x54fc1c(339));
       __publicField(this, _d, /* @__PURE__ */ new Set());
-      __publicField(this, _e, []);
-      const _0x2e484c = _0x3dda;
-      return this[_0x2e484c(298)] = _0x170ab0, this["enabled"] = _0x43ed6d, _PackageProtectionApi[_0x2e484c(300)] && (_PackageProtectionApi[_0x2e484c(300)] = this), _PackageProtectionApi["instance"];
+      __publicField(this, "prices", []);
+      const _0x13035f = _0x2aba;
+      return this[_0x13035f(320)] = _0x63df8e, this["enabled"] = _0x435d16, _PackageProtectionApi[_0x13035f(299)] && (_PackageProtectionApi["instance"] = this), _PackageProtectionApi[_0x13035f(299)];
     }
-    get [(_a = _0xba9c37(317), _b = _0xba9c37(289), _c = _0xba9c37(296), _d = _0xba9c37(334), _e = _0xba9c37(332), _f = _0xba9c37(300), _0xba9c37(314))]() {
-      const _0x58586d = _0xba9c37;
-      return this[_0x58586d(332)][this[_0x58586d(332)]["length"] - 1];
+    get [(_a = _0x54fc1c(306), _b = _0x54fc1c(294), _c = _0x54fc1c(345), _d = _0x54fc1c(309), _e = _0x54fc1c(299), _0x54fc1c(323))]() {
+      const _0x4aa149 = _0x54fc1c;
+      return this["prices"][this[_0x4aa149(343)][_0x4aa149(337)] - 1];
     }
     get ["lowestPrice"]() {
-      const _0x429743 = _0xba9c37;
-      return this[_0x429743(332)][0];
+      const _0x2c952d = _0x54fc1c;
+      return this[_0x2c952d(343)][0];
     }
-    [_0xba9c37(311)](_0x1b37d2, _0x3f4a3b) {
-      const _0xf8495a = _0xba9c37;
-      this[_0xf8495a(296)] = _0x1b37d2, this["prices"][_0xf8495a(297)] = 0, this[_0xf8495a(334)][_0xf8495a(293)]();
-      if (_0x1b37d2 === _0xf8495a(292)) {
-        for (const _0x13418f of Object[_0xf8495a(329)](this[_0xf8495a(287)])) {
-          delete this[_0xf8495a(287)][_0x13418f];
+    ["setVariants"](_0x4bee8b, _0x17b859) {
+      const _0x7f61c3 = _0x54fc1c;
+      this[_0x7f61c3(345)] = _0x4bee8b, this["prices"]["length"] = 0, this[_0x7f61c3(309)][_0x7f61c3(300)]();
+      if (_0x4bee8b === _0x7f61c3(339)) {
+        for (const _0x4ca695 of Object[_0x7f61c3(305)](this["percentageVariants"])) {
+          delete this["percentageVariants"][_0x4ca695];
         }
-        this[_0xf8495a(332)][_0xf8495a(299)](...Object[_0xf8495a(329)](_0x3f4a3b)[_0xf8495a(295)](Number)["sort"]((_0x486364, _0x58764a) => _0x486364 - _0x58764a));
-        for (const _0x3fbcef of Object[_0xf8495a(329)](_0x3f4a3b)) {
-          this[_0xf8495a(287)][_0x3fbcef] = _0x3f4a3b[_0x3fbcef], this[_0xf8495a(334)][_0xf8495a(321)](_0x3f4a3b[_0x3fbcef]);
+        this[_0x7f61c3(343)][_0x7f61c3(296)](...Object[_0x7f61c3(305)](_0x17b859)[_0x7f61c3(331)](Number)["sort"]((_0x56a297, _0x48a563) => _0x56a297 - _0x48a563));
+        for (const _0x94a2ee of Object[_0x7f61c3(305)](_0x17b859)) {
+          this["percentageVariants"][_0x94a2ee] = _0x17b859[_0x94a2ee], this[_0x7f61c3(309)][_0x7f61c3(329)](_0x17b859[_0x94a2ee]);
         }
       } else
-        _0x1b37d2 === _0xf8495a(303) ? (this[_0xf8495a(334)][_0xf8495a(321)](_0x3f4a3b[_0xf8495a(315)]), this[_0xf8495a(289)] = _0x3f4a3b, this[_0xf8495a(332)][_0xf8495a(299)](_0x3f4a3b[_0xf8495a(324)])) : (this[_0xf8495a(317)][_0xf8495a(299)](..._0x3f4a3b), this[_0xf8495a(317)]["forEach"]((_0x3042ef) => this[_0xf8495a(334)][_0xf8495a(321)](_0x3042ef["variantId"])), this[_0xf8495a(332)][_0xf8495a(299)](...this[_0xf8495a(317)][_0xf8495a(295)]((_0x353178) => _0x353178[_0xf8495a(324)])["sort"]((_0x149eaf, _0xb67e74) => _0x149eaf - _0xb67e74)));
+        _0x4bee8b === "FIXED" ? (this[_0x7f61c3(309)][_0x7f61c3(329)](_0x17b859[_0x7f61c3(342)]), this[_0x7f61c3(294)] = _0x17b859, this[_0x7f61c3(343)]["push"](_0x17b859[_0x7f61c3(302)])) : (this[_0x7f61c3(341)][_0x7f61c3(296)](..._0x17b859), this[_0x7f61c3(341)][_0x7f61c3(308)]((_0x428efb) => this[_0x7f61c3(309)][_0x7f61c3(329)](_0x428efb[_0x7f61c3(342)])), this["prices"][_0x7f61c3(296)](...this[_0x7f61c3(341)][_0x7f61c3(331)]((_0xd3db96) => _0xd3db96[_0x7f61c3(302)])[_0x7f61c3(326)]((_0x4d5cdc, _0xa988ec) => _0x4d5cdc - _0xa988ec)));
     }
-    async [_0xba9c37(305)]() {
-      const _0x543463 = _0xba9c37, _0x5d7b0b = await window["weNexusCartApi"][_0x543463(294)]();
-      return _0x5d7b0b[_0x543463(304)][_0x543463(309)]((_0x590485) => !this["variantIds"][_0x543463(337)](_0x590485["variant_id"]));
+    async [_0x54fc1c(349)]() {
+      const _0x2f50c3 = _0x54fc1c, _0x72c39d = await window[_0x2f50c3(295)][_0x2f50c3(313)]();
+      return _0x72c39d["items"][_0x2f50c3(330)]((_0x2ca9d8) => !this[_0x2f50c3(309)]["has"](_0x2ca9d8[_0x2f50c3(318)]));
     }
-    async [_0xba9c37(320)]() {
-      const _0x2876f9 = _0xba9c37, _0x30af16 = await window[_0x2876f9(333)][_0x2876f9(294)]();
-      return _0x30af16[_0x2876f9(304)]["filter"]((_0x221f07) => this[_0x2876f9(334)][_0x2876f9(337)](_0x221f07["variant_id"]));
+    async [_0x54fc1c(328)]() {
+      const _0x2a674e = _0x54fc1c, _0x109be0 = await window[_0x2a674e(295)][_0x2a674e(313)]();
+      return _0x109be0[_0x2a674e(325)][_0x2a674e(330)]((_0x34b7e3) => this[_0x2a674e(309)][_0x2a674e(321)](_0x34b7e3["variant_id"]));
     }
-    async ["calculate"]() {
-      const _0x112b24 = _0xba9c37, _0x390a74 = await this[_0x112b24(305)](), _0x57c163 = window[_0x112b24(341)][_0x112b24(288)]["map"]((_0xf9196c) => {
-        const _0x123da8 = _0x112b24;
-        return _0xf9196c[_0x123da8(326)][_0x123da8(295)]((_0xf26a5b) => Number(_0xf26a5b["id"][_0x123da8(328)](_0x123da8(331), "")));
-      })[_0x112b24(312)](), _0x9d06f8 = () => {
-        const _0x1ccac4 = _0x112b24, _0x2d9fb7 = [];
-        for (let _0x1b65c9 = 0; _0x1b65c9 < _0x390a74["length"]; _0x1b65c9++) {
-          const _0x26a789 = _0x390a74[_0x1b65c9][_0x1ccac4(335)];
-          !_0x57c163[_0x1ccac4(342)](_0x26a789) && _0x2d9fb7[_0x1ccac4(299)](_0x390a74[_0x1b65c9]);
+    async [_0x54fc1c(311)]() {
+      const _0x3000b3 = _0x54fc1c, _0x3e4fa5 = await this[_0x3000b3(349)](), _0x422f14 = window[_0x3000b3(301)][_0x3000b3(336)][_0x3000b3(331)]((_0x4ab3fe) => {
+        const _0x31e62a = _0x3000b3;
+        return _0x4ab3fe["excludedPackageProtectionVariants"][_0x31e62a(331)]((_0x2fd09f) => Number(_0x2fd09f["id"][_0x31e62a(298)](_0x31e62a(322), "")));
+      })[_0x3000b3(332)](), _0x3b3f7e = () => {
+        const _0xfe02e6 = _0x3000b3, _0x5ea35a = [];
+        for (let _0x2e714c = 0; _0x2e714c < _0x3e4fa5[_0xfe02e6(337)]; _0x2e714c++) {
+          const _0x3aa066 = _0x3e4fa5[_0x2e714c][_0xfe02e6(318)];
+          !_0x422f14[_0xfe02e6(293)](_0x3aa066) && _0x5ea35a[_0xfe02e6(296)](_0x3e4fa5[_0x2e714c]);
         }
-        return _0x2d9fb7;
-      }, _0x5cbaba = _0x9d06f8(), _0x5eb5eb = _0x5cbaba[_0x112b24(319)]((_0x540126, _0x29441b) => _0x540126 + _0x29441b[_0x112b24(307)], 0) / 100;
-      if (this[_0x112b24(296)] === "FIXED") {
-        if (this[_0x112b24(289)] === null)
-          throw new Error(_0x112b24(338));
-        return { "actualPrice": this[_0x112b24(289)][_0x112b24(324)], "variantId": this[_0x112b24(289)][_0x112b24(315)], "coercedPrice": this["fixedVariantOption"][_0x112b24(324)][_0x112b24(302)](2), "forPrice": _0x5eb5eb };
+        return _0x5ea35a;
+      }, _0x4fcf11 = _0x3b3f7e(), _0x6043c3 = _0x4fcf11["reduce"]((_0x114681, _0x1d9d20) => _0x114681 + _0x1d9d20["final_line_price"], 0) / 100;
+      if (this[_0x3000b3(345)] === _0x3000b3(338)) {
+        if (this[_0x3000b3(294)] === null)
+          throw new Error(_0x3000b3(303));
+        return { "actualPrice": this[_0x3000b3(294)]["price"], "variantId": this["fixedVariantOption"]["variantId"], "coercedPrice": this[_0x3000b3(294)][_0x3000b3(302)][_0x3000b3(316)](2), "forPrice": _0x6043c3 };
       }
-      if (this[_0x112b24(296)] === "PERCENTAGE") {
-        if (this["prices"][_0x112b24(297)] === 0)
-          throw new Error("No variants have been set");
-        let _0xb37ab1 = this["lowestPrice"]["toFixed"](2), _0x1fd412 = _0x5eb5eb / 100 * this[_0x112b24(298)];
-        if (_0x1fd412 <= this["highestPrice"] && _0x1fd412 >= this[_0x112b24(322)])
-          for (const _0xde5e17 of this[_0x112b24(332)]) {
-            if (_0xde5e17 > _0x1fd412) {
-              _0xb37ab1 = _0xde5e17["toFixed"](2);
+      if (this[_0x3000b3(345)] === _0x3000b3(339)) {
+        if (this[_0x3000b3(343)][_0x3000b3(337)] === 0)
+          throw new Error(_0x3000b3(344));
+        let _0x4fc15e = this["lowestPrice"][_0x3000b3(316)](2), _0x435b48 = _0x6043c3 / 100 * this[_0x3000b3(320)];
+        if (_0x435b48 <= this[_0x3000b3(323)] && _0x435b48 >= this[_0x3000b3(348)])
+          for (const _0x324404 of this["prices"]) {
+            if (_0x324404 > _0x435b48) {
+              _0x4fc15e = _0x324404[_0x3000b3(316)](2);
               break;
             }
           }
         else {
-          if (_0x1fd412 > this["highestPrice"])
-            _0xb37ab1 = this["highestPrice"]["toFixed"](2);
+          if (_0x435b48 > this["highestPrice"])
+            _0x4fc15e = this[_0x3000b3(323)][_0x3000b3(316)](2);
           else
-            _0x1fd412 < this[_0x112b24(322)] && (_0xb37ab1 = this[_0x112b24(322)][_0x112b24(302)](2));
+            _0x435b48 < this["lowestPrice"] && (_0x4fc15e = this[_0x3000b3(348)][_0x3000b3(316)](2));
         }
-        return { "actualPrice": Number(_0x1fd412["toFixed"](2)), "variantId": this["percentageVariants"][_0xb37ab1], "coercedPrice": _0xb37ab1, "forPrice": _0x5eb5eb };
+        return { "actualPrice": Number(_0x435b48[_0x3000b3(316)](2)), "variantId": this[_0x3000b3(306)][_0x4fc15e], "coercedPrice": _0x4fc15e, "forPrice": _0x6043c3 };
       }
-      if (this[_0x112b24(317)][_0x112b24(297)] === 0)
-        throw new Error("No variants have been set");
-      const _0x5877c1 = _0x5eb5eb, _0x18c822 = this["basedOnCartValueVariants"][_0x112b24(301)]((_0x2a9cdb) => _0x5877c1 >= _0x2a9cdb["min"] && _0x5877c1 <= _0x2a9cdb[_0x112b24(318)]);
-      if (!_0x18c822)
-        throw new Error(_0x112b24(306));
-      return { "actualPrice": _0x18c822[_0x112b24(324)], "variantId": _0x18c822[_0x112b24(315)], "coercedPrice": _0x18c822[_0x112b24(324)]["toFixed"](2), "forPrice": _0x5eb5eb };
+      if (this[_0x3000b3(341)][_0x3000b3(337)] === 0)
+        throw new Error(_0x3000b3(344));
+      const _0x2d3f59 = _0x6043c3, _0xfff639 = this[_0x3000b3(341)][_0x3000b3(333)]((_0x3cada6) => _0x2d3f59 >= _0x3cada6[_0x3000b3(310)] && _0x2d3f59 <= _0x3cada6["max"]);
+      if (!_0xfff639)
+        throw new Error(_0x3000b3(319));
+      return { "actualPrice": _0xfff639[_0x3000b3(302)], "variantId": _0xfff639[_0x3000b3(342)], "coercedPrice": _0xfff639[_0x3000b3(302)][_0x3000b3(316)](2), "forPrice": _0x6043c3 };
     }
-    async [_0xba9c37(321)]() {
-      const _0xcc7b04 = _0xba9c37, _0x4c3c97 = await this[_0xcc7b04(320)]();
-      if (_0x4c3c97[_0xcc7b04(297)] > 0)
+    async ["add"]() {
+      const _0x5d6afc = _0x54fc1c, _0x1fecbe = await this[_0x5d6afc(328)]();
+      if (_0x1fecbe[_0x5d6afc(337)] > 0)
         return;
-      const { variantId: _0x1955a2 } = await this[_0xcc7b04(310)](), _0xdce7f2 = await window[_0xcc7b04(333)]["append"]([{ "id": _0x1955a2, "quantity": 1 }], ![]);
-      return _0xdce7f2["items"][_0xcc7b04(301)]((_0x3a2398) => _0x3a2398[_0xcc7b04(335)] === _0x1955a2);
+      const { variantId: _0x1c91f9 } = await this["calculate"](), _0x3202ef = await window[_0x5d6afc(295)][_0x5d6afc(304)]([{ "id": _0x1c91f9, "quantity": 1 }], ![]);
+      return _0x3202ef[_0x5d6afc(325)][_0x5d6afc(333)]((_0xc52e66) => _0xc52e66["variant_id"] === _0x1c91f9);
     }
-    async [_0xba9c37(316)]() {
-      const _0x332b66 = _0xba9c37;
-      if (this["prices"][_0x332b66(297)] === 0)
-        throw new Error(_0x332b66(325));
-      const _0x50c5aa = await this["getPackageProtectionItems"]();
-      if (_0x50c5aa[_0x332b66(297)] === 0)
+    async ["remove"]() {
+      const _0x4b3190 = _0x54fc1c;
+      if (this[_0x4b3190(343)][_0x4b3190(337)] === 0)
+        throw new Error(_0x4b3190(344));
+      const _0x399143 = await this[_0x4b3190(328)]();
+      if (_0x399143[_0x4b3190(337)] === 0)
         return;
-      return await window[_0x332b66(333)][_0x332b66(316)](_0x50c5aa["map"]((_0x3f36c0) => _0x3f36c0[_0x332b66(335)]), ![]), _0x50c5aa[0];
+      return await window[_0x4b3190(295)][_0x4b3190(327)](_0x399143["map"]((_0x4195dc) => _0x4195dc[_0x4b3190(318)]), ![]), _0x399143[0];
     }
   };
-  __publicField(_PackageProtectionApi, _f);
+  __publicField(_PackageProtectionApi, _e);
   let PackageProtectionApi = _PackageProtectionApi;
-  const _0x4980c3 = _0xd635;
-  (function(_0x67a9e7, _0x30d5d4) {
-    const _0x52cfa6 = _0xd635, _0x205ff8 = _0x67a9e7();
+  function _0x4d05() {
+    const _0x14cce4 = ["6013790sdScUu", "355151UkRlGu", "lowestPrice", "getNonPackageProtectionItems", "BASED_ON_CART_VALUE", "includes", "fixedVariantOption", "weNexusCartApi", "push", "77vTMHns", "replace", "instance", "clear", "WeNexusShipGuardPackageProtectionSettings", "price", "No variant has been set", "append", "keys", "percentageVariants", "1456200bUWxfg", "forEach", "variantIds", "min", "calculate", "17052wvADAh", "get", "8xXZtNC", "327708kcpPtT", "toFixed", "4udUTuS", "variant_id", "No variant found", "percentage", "has", "gid://shopify/ProductVariant/", "highestPrice", "114920lDBVRO", "items", "sort", "remove", "getPackageProtectionItems", "add", "filter", "map", "flat", "find", "186xKFNFX", "7876aEGRYd", "packageProtectionProductAndVariants", "length", "FIXED", "PERCENTAGE", "15917suAshp", "basedOnCartValueVariants", "variantId", "prices", "No variants have been set", "_type"];
+    _0x4d05 = function() {
+      return _0x14cce4;
+    };
+    return _0x4d05();
+  }
+  function _0x1697() {
+    const _0x417100 = ["Creative", "Stockmart", "Colors", "Energy", "Gain", "Swipe", "Cascade", "Essence", "Exhibit", "Vision", "Nostalgia", "Prestige", "Gem", "Refine", "Veena", "Modular", "Spark", "Ascent", "Minion", "Redefine", "Praise", "Pursuit", "Baseline", "Essentials", "Refresh", "Origin", "Copenhagen", "Creator", "Madrid", "Mono", "Shapes", "Bazaar", "Koto", "Trade", "Taste", "Crave", "Ride", "Venue", "Noblesse", "Lute", "Blockshop", "Effortless", "Startup", "8362638jzhvlO", "2993727lxQDYg", "Pesto", "Parallax", "Blum", "Charge", "Focal", "Publisher", "North", "Atlantic", "Andaman", "Kidu", "Wonder", "Studio", "Abode", "King", "Infinity", "Stockholm", "Athens", "Select", "Streamline", "Galleria", "Keystone", "Alchemy", "Nimbus", "Cello", "Emporium", "Mr Parker", "Takeout", "Xtra", "Meka", "Soul", "Taiga", "Boost", "Retina", "Next", "Kairo", "Palo Alto", "Maker", "Ignite", "Satoshi", "2578954FnCurp", "Monk", "Unicorn", "Modules", "Multi", "Providence", "Berlin", "Split", "Brava", "Digital", "Masonry", "Lorenza", "Urban", "Bullet", "Agile", "Amber", "Emerge", "Honey", "Avenue", "Retro", "Align", "45RhTPqn", "Paris", "Pinnacle", "Iris", "Story", "Momentum", "Minimalista", "Dawn", "Shine", "Pipeline", "Monaco", "Xclusive", "Warehouse", "Habitat", "Loft", "371296KMQNHh", "Piano", "Roam", "Mavon", "Barcelona", "Chord", "Murmel", "Motion", "Marble", "Yuva", "Cama", "Whisk", "Sense", "Expanse", "Symmetry", "Mode", "Borders", "Vivid", "Reformation", "Label", "Flow", "Spotlight", "Area", "Noire", "Space", "Foodie", "Viola", "Electro", "Woodstock", "Empire", "Expression", "District", "Editions", "Sunrise", "Enterprise", "Envy", "Debutify", "Machina", "StyleScape", "Distinctive", "Atom", "119tsbVGn", "Stiletto", "Impact", "Icon", "Kingdom", "Vantage", "Fashionopolism", "Combine", "Concept", "Sydney", "Outsiders", "Tailor", "Aesthetic", "Release", "Divide", "Starlite", "Cornerstone", "Polyform", "4YyBXli", "Craft", "Aisle", "Aurora", "Colorblock", "Maranello", "Paper", "Toyo", "California", "Banjo", "ShowTime", "Neat", "Drop", "Highlight", "Fame", "Elysian", "Shark", "Grid", "Frame", "Boutique", "4724159XamFFp", "Zest", "Beyond", "Capital", "Mojave", "Broadcast", "297681bSstxR", "Local", "Mandolin", "Sahara", "Ultra", "Eurus", "Sitar", "Responsive", "Canopy", "Testament", "Flawless", "Nordic", "Luxe", "Igloo", "706068TejMlt", "Erickson", "Avante", "50wFNDim", "Forge", "Relax", "Portland"];
+    _0x1697 = function() {
+      return _0x417100;
+    };
+    return _0x1697();
+  }
+  const _0x308cdd = _0x5815;
+  (function(_0xb83f16, _0x253180) {
+    const _0x467be5 = _0x5815, _0x237f7d = _0xb83f16();
     while (!![]) {
       try {
-        const _0x3a8fe0 = -parseInt(_0x52cfa6(540)) / 1 * (-parseInt(_0x52cfa6(564)) / 2) + parseInt(_0x52cfa6(504)) / 3 * (parseInt(_0x52cfa6(562)) / 4) + -parseInt(_0x52cfa6(607)) / 5 * (-parseInt(_0x52cfa6(559)) / 6) + parseInt(_0x52cfa6(523)) / 7 + parseInt(_0x52cfa6(531)) / 8 * (parseInt(_0x52cfa6(447)) / 9) + parseInt(_0x52cfa6(634)) / 10 * (parseInt(_0x52cfa6(426)) / 11) + -parseInt(_0x52cfa6(471)) / 12 * (parseInt(_0x52cfa6(444)) / 13);
-        if (_0x3a8fe0 === _0x30d5d4)
+        const _0x5cc1d7 = -parseInt(_0x467be5(456)) / 1 + -parseInt(_0x467be5(561)) / 2 + parseInt(_0x467be5(521)) / 3 * (-parseInt(_0x467be5(430)) / 4) + parseInt(_0x467be5(582)) / 5 * (parseInt(_0x467be5(470)) / 6) + -parseInt(_0x467be5(412)) / 7 * (parseInt(_0x467be5(597)) / 8) + parseInt(_0x467be5(520)) / 9 + parseInt(_0x467be5(473)) / 10 * (parseInt(_0x467be5(450)) / 11);
+        if (_0x5cc1d7 === _0x253180)
           break;
         else
-          _0x205ff8["push"](_0x205ff8["shift"]());
-      } catch (_0x4abca4) {
-        _0x205ff8["push"](_0x205ff8["shift"]());
+          _0x237f7d["push"](_0x237f7d["shift"]());
+      } catch (_0x4fbabb) {
+        _0x237f7d["push"](_0x237f7d["shift"]());
       }
     }
-  })(_0x5569, 313103);
-  const freeThemes = [{ "name": _0x4980c3(633), "attributes": { "theme_store_id": 887, "schema_name": _0x4980c3(633) } }, { "name": _0x4980c3(450), "attributes": { "theme_store_id": 2699, "schema_name": _0x4980c3(450) } }, { "name": "Colorblock", "attributes": { "theme_store_id": 1499, "schema_name": _0x4980c3(470) } }, { "name": _0x4980c3(420), "attributes": { "theme_store_id": 1363, "schema_name": _0x4980c3(420) } }, { "name": _0x4980c3(508), "attributes": { "theme_store_id": 1434, "schema_name": "Taste" } }, { "name": _0x4980c3(621), "attributes": { "theme_store_id": 1864, "schema_name": _0x4980c3(621) } }, { "name": _0x4980c3(443), "attributes": { "theme_store_id": 1500, "schema_name": "Ride" } }, { "name": _0x4980c3(538), "attributes": { "theme_store_id": 1431, "schema_name": _0x4980c3(538) } }, { "name": "Origin", "attributes": { "theme_store_id": 1841, "schema_name": _0x4980c3(484) } }, { "name": "Sense", "attributes": { "theme_store_id": 1356, "schema_name": "Sense" } }, { "name": _0x4980c3(514), "attributes": { "theme_store_id": 1567, "schema_name": _0x4980c3(514) } }, { "name": "Craft", "attributes": { "theme_store_id": 1368, "schema_name": _0x4980c3(422) } }, { "name": _0x4980c3(439), "attributes": { "theme_store_id": 1891, "schema_name": "Spotlight" } }, { "name": _0x4980c3(496), "attributes": { "theme_store_id": 1399, "schema_name": _0x4980c3(496) } }, { "name": _0x4980c3(491), "attributes": { "theme_store_id": 2512, "schema_name": _0x4980c3(491) } }, { "name": _0x4980c3(534), "attributes": { "theme_store_id": 2117, "schema_name": _0x4980c3(534) } }];
-  const enterpriseTheme = [{ "name": _0x4980c3(515), "attributes": { "theme_store_id": 1657, "schema_name": _0x4980c3(515) } }];
-  const kingdomTheme = [{ "name": _0x4980c3(547), "attributes": { "theme_store_id": 725, "schema_name": _0x4980c3(547) } }, { "name": _0x4980c3(477), "attributes": { "theme_store_id": 1390, "schema_name": _0x4980c3(477) } }];
-  const toyoTheme = [{ "name": "Focal", "attributes": { "theme_store_id": 714, "schema_name": _0x4980c3(541) } }, { "name": "Grid", "attributes": { "theme_store_id": 718, "schema_name": "Grid" } }, { "name": _0x4980c3(464), "attributes": { "theme_store_id": 1974, "schema_name": _0x4980c3(464) } }, { "name": _0x4980c3(502), "attributes": { "theme_store_id": 865, "schema_name": "Avenue" } }];
-  const universalTheme = [{ "name": "Ascent", "attributes": { "theme_store_id": 2989, "schema_name": _0x4980c3(431) } }, { "name": _0x4980c3(546), "attributes": { "theme_store_id": 1770, "schema_name": _0x4980c3(546) } }, { "name": _0x4980c3(463), "attributes": { "theme_store_id": 657, "schema_name": "Alchemy" } }, { "name": _0x4980c3(585), "attributes": { "theme_store_id": 863, "schema_name": _0x4980c3(585) } }, { "name": "Masonry", "attributes": { "theme_store_id": 450, "schema_name": _0x4980c3(601) } }, { "name": _0x4980c3(636), "attributes": { "theme_store_id": 230, "schema_name": _0x4980c3(636) } }, { "name": _0x4980c3(571), "attributes": { "theme_store_id": 1716, "schema_name": _0x4980c3(571) } }, { "name": "Lorenza", "attributes": { "theme_store_id": 798, "schema_name": _0x4980c3(615) } }, { "name": _0x4980c3(591), "attributes": { "theme_store_id": 911, "schema_name": _0x4980c3(591) } }, { "name": _0x4980c3(424), "attributes": { "theme_store_id": 1600, "schema_name": _0x4980c3(424) } }, { "name": _0x4980c3(619), "attributes": { "theme_store_id": 1536, "schema_name": "Influence" } }, { "name": _0x4980c3(522), "attributes": { "theme_store_id": 908, "schema_name": _0x4980c3(522) } }, { "name": _0x4980c3(608), "attributes": { "theme_store_id": 812, "schema_name": _0x4980c3(608) } }, { "name": _0x4980c3(586), "attributes": { "theme_store_id": 411, "schema_name": _0x4980c3(586) } }, { "name": _0x4980c3(434), "attributes": { "theme_store_id": 2221, "schema_name": _0x4980c3(434) } }, { "name": "Next", "attributes": { "theme_store_id": 2240, "schema_name": _0x4980c3(503) } }, { "name": _0x4980c3(638), "attributes": { "theme_store_id": 1492, "schema_name": _0x4980c3(638) } }, { "name": _0x4980c3(629), "attributes": { "theme_store_id": 1581, "schema_name": _0x4980c3(629) } }, { "name": "Pinnacle", "attributes": { "theme_store_id": 2852, "schema_name": "Pinnacle" } }, { "name": "Vantage", "attributes": { "theme_store_id": 459, "schema_name": _0x4980c3(561) } }, { "name": _0x4980c3(529), "attributes": { "theme_store_id": 1197, "schema_name": _0x4980c3(529) } }, { "name": _0x4980c3(453), "attributes": { "theme_store_id": 918, "schema_name": _0x4980c3(453) } }, { "name": _0x4980c3(630), "attributes": { "theme_store_id": 2431, "schema_name": "Distinctive" } }, { "name": _0x4980c3(468), "attributes": { "theme_store_id": 686, "schema_name": _0x4980c3(468) } }, { "name": "Testament", "attributes": { "theme_store_id": 623, "schema_name": _0x4980c3(509) } }, { "name": _0x4980c3(535), "attributes": { "theme_store_id": 2053, "schema_name": _0x4980c3(535) } }, { "name": _0x4980c3(495), "attributes": { "theme_store_id": 567, "schema_name": _0x4980c3(495) } }, { "name": _0x4980c3(537), "attributes": { "theme_store_id": 141, "schema_name": "Fashionopolism" } }, { "name": _0x4980c3(479), "attributes": { "theme_store_id": 1460, "schema_name": _0x4980c3(479) } }, { "name": _0x4980c3(498), "attributes": { "theme_store_id": 1608, "schema_name": _0x4980c3(498) } }, { "name": "Maranello", "attributes": { "theme_store_id": 2186, "schema_name": _0x4980c3(596) } }, { "name": _0x4980c3(577), "attributes": { "theme_store_id": 601, "schema_name": _0x4980c3(577) } }, { "name": _0x4980c3(569), "attributes": { "theme_store_id": 304, "schema_name": "Responsive" } }, { "name": _0x4980c3(517), "attributes": { "theme_store_id": 2870, "schema_name": _0x4980c3(517) } }, { "name": _0x4980c3(612), "attributes": { "theme_store_id": 2063, "schema_name": "Charge" } }, { "name": _0x4980c3(532), "attributes": { "theme_store_id": 2477, "schema_name": _0x4980c3(532) } }, { "name": _0x4980c3(588), "attributes": { "theme_store_id": 2455, "schema_name": "Starlite" } }, { "name": _0x4980c3(620), "attributes": { "theme_store_id": 2366, "schema_name": "Essence" } }, { "name": _0x4980c3(637), "attributes": { "theme_store_id": 1918, "schema_name": _0x4980c3(637) } }, { "name": "Loft", "attributes": { "theme_store_id": 846, "schema_name": _0x4980c3(617) } }, { "name": _0x4980c3(506), "attributes": { "theme_store_id": 2144, "schema_name": _0x4980c3(506) } }, { "name": _0x4980c3(519), "attributes": { "theme_store_id": 1777, "schema_name": _0x4980c3(519) } }, { "name": _0x4980c3(433), "attributes": { "theme_store_id": 1966, "schema_name": _0x4980c3(433) } }, { "name": _0x4980c3(493), "attributes": { "theme_store_id": 2698, "schema_name": "Release" } }, { "name": _0x4980c3(597), "attributes": { "theme_store_id": 566, "schema_name": "Atlantic" } }, { "name": _0x4980c3(454), "attributes": { "theme_store_id": 838, "schema_name": _0x4980c3(454) } }, { "name": _0x4980c3(505), "attributes": { "theme_store_id": 1578, "schema_name": "Mode" } }, { "name": _0x4980c3(442), "attributes": { "theme_store_id": 871, "schema_name": _0x4980c3(442) } }, { "name": _0x4980c3(475), "attributes": { "theme_store_id": 1615, "schema_name": _0x4980c3(475) } }, { "name": _0x4980c3(581), "attributes": { "theme_store_id": 2629, "schema_name": "Tokyo" } }, { "name": _0x4980c3(414), "attributes": { "theme_store_id": 3007, "schema_name": _0x4980c3(414) } }, { "name": _0x4980c3(459), "attributes": { "theme_store_id": 1190, "schema_name": _0x4980c3(459) } }];
-  const universalForSubTotalTheme = [{ "name": _0x4980c3(602), "attributes": { "theme_store_id": 849, "schema_name": _0x4980c3(602) } }, { "name": _0x4980c3(427), "attributes": { "theme_store_id": 2684, "schema_name": _0x4980c3(427) } }, { "name": _0x4980c3(592), "attributes": { "theme_store_id": 2160, "schema_name": _0x4980c3(592) } }, { "name": _0x4980c3(440), "attributes": { "theme_store_id": 2348, "schema_name": _0x4980c3(440) } }, { "name": _0x4980c3(552), "attributes": { "theme_store_id": 1621, "schema_name": _0x4980c3(552) } }, { "name": _0x4980c3(449), "attributes": { "theme_store_id": 1114, "schema_name": _0x4980c3(449) } }, { "name": _0x4980c3(485), "attributes": { "theme_store_id": 1762, "schema_name": _0x4980c3(485) } }, { "name": _0x4980c3(598), "attributes": { "theme_store_id": 872, "schema_name": _0x4980c3(598) } }, { "name": _0x4980c3(589), "attributes": { "theme_store_id": 2222, "schema_name": "Gem" } }, { "name": _0x4980c3(590), "attributes": { "theme_store_id": 857, "schema_name": "Impulse" } }, { "name": "Motion", "attributes": { "theme_store_id": 847, "schema_name": _0x4980c3(587) } }, { "name": _0x4980c3(456), "attributes": { "theme_store_id": 2482, "schema_name": "Essentials" } }, { "name": _0x4980c3(480), "attributes": { "theme_store_id": 2514, "schema_name": _0x4980c3(480) } }, { "name": _0x4980c3(563), "attributes": { "theme_store_id": 1819, "schema_name": "Whisk" } }, { "name": _0x4980c3(487), "attributes": { "theme_store_id": 2847, "schema_name": _0x4980c3(487) } }, { "name": "Copenhagen", "attributes": { "theme_store_id": 2564, "schema_name": "Copenhagen" } }, { "name": _0x4980c3(570), "attributes": { "theme_store_id": 2324, "schema_name": _0x4980c3(570) } }, { "name": _0x4980c3(527), "attributes": { "theme_store_id": 2125, "schema_name": "Monaco" } }, { "name": "Berlin", "attributes": { "theme_store_id": 2138, "schema_name": _0x4980c3(474) } }, { "name": _0x4980c3(632), "attributes": { "theme_store_id": 1654, "schema_name": _0x4980c3(632) } }, { "name": _0x4980c3(473), "attributes": { "theme_store_id": 2337, "schema_name": _0x4980c3(473) } }, { "name": _0x4980c3(462), "attributes": { "theme_store_id": 687, "schema_name": _0x4980c3(462) } }, { "name": _0x4980c3(425), "attributes": { "theme_store_id": 851, "schema_name": _0x4980c3(425) } }, { "name": _0x4980c3(510), "attributes": { "theme_store_id": 2539, "schema_name": _0x4980c3(510) } }, { "name": "Outsiders", "attributes": { "theme_store_id": 2896, "schema_name": _0x4980c3(611) } }, { "name": _0x4980c3(583), "attributes": { "theme_store_id": 2737, "schema_name": _0x4980c3(583) } }, { "name": _0x4980c3(566), "attributes": { "theme_store_id": 2372, "schema_name": _0x4980c3(566) } }, { "name": _0x4980c3(524), "attributes": { "theme_store_id": 2316, "schema_name": _0x4980c3(524) } }, { "name": _0x4980c3(573), "attributes": { "theme_store_id": 2105, "schema_name": "Stockmart" } }, { "name": _0x4980c3(418), "attributes": { "theme_store_id": 2101, "schema_name": _0x4980c3(418) } }, { "name": _0x4980c3(512), "attributes": { "theme_store_id": 2077, "schema_name": _0x4980c3(512) } }, { "name": _0x4980c3(625), "attributes": { "theme_store_id": 3051, "schema_name": _0x4980c3(625) } }, { "name": _0x4980c3(489), "attributes": { "theme_store_id": 2967, "schema_name": _0x4980c3(489) } }, { "name": _0x4980c3(635), "attributes": { "theme_store_id": 2061, "schema_name": _0x4980c3(635) } }, { "name": _0x4980c3(600), "attributes": { "theme_store_id": 757, "schema_name": _0x4980c3(600) } }, { "name": "California", "attributes": { "theme_store_id": 691, "schema_name": "California" } }, { "name": "Stockholm", "attributes": { "theme_store_id": 1405, "schema_name": _0x4980c3(626) } }, { "name": "Portland", "attributes": { "theme_store_id": 1924, "schema_name": _0x4980c3(429) } }, { "name": _0x4980c3(594), "attributes": { "theme_store_id": 1791, "schema_name": _0x4980c3(594) } }, { "name": _0x4980c3(482), "attributes": { "theme_store_id": 2268, "schema_name": "Kidu" } }, { "name": _0x4980c3(605), "attributes": { "theme_store_id": 2820, "schema_name": "Nexa" } }, { "name": _0x4980c3(576), "attributes": { "theme_store_id": 2405, "schema_name": _0x4980c3(576) } }, { "name": "Agile", "attributes": { "theme_store_id": 2346, "schema_name": "Agile" } }, { "name": _0x4980c3(472), "attributes": { "theme_store_id": 2175, "schema_name": _0x4980c3(472) } }, { "name": _0x4980c3(497), "attributes": { "theme_store_id": 2782, "schema_name": _0x4980c3(497) } }, { "name": _0x4980c3(556), "attributes": { "theme_store_id": 1696, "schema_name": _0x4980c3(556) } }, { "name": _0x4980c3(593), "attributes": { "theme_store_id": 2171, "schema_name": _0x4980c3(593) } }, { "name": _0x4980c3(492), "attributes": { "theme_store_id": 1778, "schema_name": _0x4980c3(492) } }, { "name": _0x4980c3(533), "attributes": { "theme_store_id": 1584, "schema_name": _0x4980c3(533) } }, { "name": "Effortless", "attributes": { "theme_store_id": 1743, "schema_name": _0x4980c3(553) } }, { "name": _0x4980c3(435), "attributes": { "theme_store_id": 2213, "schema_name": _0x4980c3(435) } }, { "name": "Huge", "attributes": { "theme_store_id": 2158, "schema_name": "Huge" } }, { "name": "Vincent", "attributes": { "theme_store_id": 2913, "schema_name": _0x4980c3(627) } }, { "name": "Minion", "attributes": { "theme_store_id": 1571, "schema_name": _0x4980c3(520) } }, { "name": _0x4980c3(575), "attributes": { "theme_store_id": 2073, "schema_name": "Area" } }, { "name": "Elysian", "attributes": { "theme_store_id": 2578, "schema_name": _0x4980c3(545) } }, { "name": _0x4980c3(451), "attributes": { "theme_store_id": 2148, "schema_name": "Brava" } }, { "name": _0x4980c3(526), "attributes": { "theme_store_id": 1790, "schema_name": _0x4980c3(526) } }, { "name": _0x4980c3(614), "attributes": { "theme_store_id": 2238, "schema_name": _0x4980c3(614) } }, { "name": _0x4980c3(446), "attributes": { "theme_store_id": 2825, "schema_name": "Soul" } }, { "name": _0x4980c3(458), "attributes": { "theme_store_id": 1854, "schema_name": _0x4980c3(458) } }, { "name": "Creator", "attributes": { "theme_store_id": 1922, "schema_name": _0x4980c3(580) } }, { "name": "Palo Alto", "attributes": { "theme_store_id": 777, "schema_name": _0x4980c3(584) } }, { "name": _0x4980c3(490), "attributes": { "theme_store_id": 2505, "schema_name": _0x4980c3(490) } }, { "name": "Pipeline", "attributes": { "theme_store_id": 739, "schema_name": _0x4980c3(539) } }, { "name": _0x4980c3(640), "attributes": { "theme_store_id": 864, "schema_name": _0x4980c3(640) } }, { "name": "Broadcast", "attributes": { "theme_store_id": 868, "schema_name": _0x4980c3(613) } }, { "name": _0x4980c3(461), "attributes": { "theme_store_id": 606, "schema_name": _0x4980c3(461) } }, { "name": _0x4980c3(441), "attributes": { "theme_store_id": 939, "schema_name": _0x4980c3(441) } }, { "name": _0x4980c3(421), "attributes": { "theme_store_id": 765, "schema_name": _0x4980c3(421) } }, { "name": "Emerge", "attributes": { "theme_store_id": 833, "schema_name": _0x4980c3(457) } }, { "name": _0x4980c3(557), "attributes": { "theme_store_id": 1926, "schema_name": _0x4980c3(557) } }, { "name": _0x4980c3(558), "attributes": { "theme_store_id": 1497, "schema_name": _0x4980c3(558) } }, { "name": _0x4980c3(551), "attributes": { "theme_store_id": 1457, "schema_name": _0x4980c3(551) } }, { "name": "Startup", "attributes": { "theme_store_id": 652, "schema_name": _0x4980c3(644) } }, { "name": _0x4980c3(610), "attributes": { "theme_store_id": 457, "schema_name": "Editions" } }, { "name": _0x4980c3(423), "attributes": { "theme_store_id": 1751, "schema_name": _0x4980c3(423) } }, { "name": _0x4980c3(430), "attributes": { "theme_store_id": 855, "schema_name": _0x4980c3(430) } }, { "name": _0x4980c3(507), "attributes": { "theme_store_id": 1818, "schema_name": "Mono" } }, { "name": _0x4980c3(536), "attributes": { "theme_store_id": 2515, "schema_name": "Monk" } }, { "name": "Debutify", "attributes": { "theme_store_id": 0, "schema_name": _0x4980c3(415) } }];
-  function _0xd635(_0x523554, _0x563550) {
-    const _0x5569be = _0x5569();
-    return _0xd635 = function(_0xd635ab, _0x3e8c77) {
-      _0xd635ab = _0xd635ab - 413;
-      let _0x596bbb = _0x5569be[_0xd635ab];
-      return _0x596bbb;
-    }, _0xd635(_0x523554, _0x563550);
+  })(_0x1697, 761558);
+  const freeThemes = [{ "name": _0x308cdd(589), "attributes": { "theme_store_id": 887, "schema_name": _0x308cdd(589) } }, { "name": _0x308cdd(510), "attributes": { "theme_store_id": 2699, "schema_name": _0x308cdd(510) } }, { "name": _0x308cdd(434), "attributes": { "theme_store_id": 1499, "schema_name": "Colorblock" } }, { "name": _0x308cdd(512), "attributes": { "theme_store_id": 1363, "schema_name": "Crave" } }, { "name": _0x308cdd(511), "attributes": { "theme_store_id": 1434, "schema_name": _0x308cdd(511) } }, { "name": _0x308cdd(527), "attributes": { "theme_store_id": 1864, "schema_name": _0x308cdd(527) } }, { "name": _0x308cdd(513), "attributes": { "theme_store_id": 1500, "schema_name": _0x308cdd(513) } }, { "name": _0x308cdd(533), "attributes": { "theme_store_id": 1431, "schema_name": _0x308cdd(533) } }, { "name": _0x308cdd(502), "attributes": { "theme_store_id": 1841, "schema_name": "Origin" } }, { "name": _0x308cdd(609), "attributes": { "theme_store_id": 1356, "schema_name": _0x308cdd(609) } }, { "name": _0x308cdd(501), "attributes": { "theme_store_id": 1567, "schema_name": _0x308cdd(501) } }, { "name": "Craft", "attributes": { "theme_store_id": 1368, "schema_name": _0x308cdd(431) } }, { "name": _0x308cdd(618), "attributes": { "theme_store_id": 1891, "schema_name": "Spotlight" } }, { "name": "Be Yours", "attributes": { "theme_store_id": 1399, "schema_name": "Be Yours" } }, { "name": "Murmel", "attributes": { "theme_store_id": 2512, "schema_name": _0x308cdd(603) } }, { "name": _0x308cdd(421), "attributes": { "theme_store_id": 2117, "schema_name": _0x308cdd(421) } }];
+  const enterpriseTheme = [{ "name": _0x308cdd(405), "attributes": { "theme_store_id": 1657, "schema_name": _0x308cdd(405) } }];
+  const kingdomTheme = [{ "name": _0x308cdd(416), "attributes": { "theme_store_id": 725, "schema_name": _0x308cdd(416) } }, { "name": _0x308cdd(530), "attributes": { "theme_store_id": 1390, "schema_name": _0x308cdd(530) } }];
+  const toyoTheme = [{ "name": _0x308cdd(526), "attributes": { "theme_store_id": 714, "schema_name": "Focal" } }, { "name": _0x308cdd(447), "attributes": { "theme_store_id": 718, "schema_name": _0x308cdd(447) } }, { "name": _0x308cdd(411), "attributes": { "theme_store_id": 1974, "schema_name": _0x308cdd(411) } }, { "name": _0x308cdd(579), "attributes": { "theme_store_id": 865, "schema_name": "Avenue" } }];
+  const universalTheme = [{ "name": "Ascent", "attributes": { "theme_store_id": 2989, "schema_name": _0x308cdd(494) } }, { "name": _0x308cdd(433), "attributes": { "theme_store_id": 1770, "schema_name": _0x308cdd(433) } }, { "name": _0x308cdd(543), "attributes": { "theme_store_id": 657, "schema_name": "Alchemy" } }, { "name": _0x308cdd(553), "attributes": { "theme_store_id": 863, "schema_name": _0x308cdd(553) } }, { "name": "Masonry", "attributes": { "theme_store_id": 450, "schema_name": _0x308cdd(571) } }, { "name": _0x308cdd(401), "attributes": { "theme_store_id": 230, "schema_name": "Expression" } }, { "name": "Frame", "attributes": { "theme_store_id": 1716, "schema_name": _0x308cdd(448) } }, { "name": _0x308cdd(572), "attributes": { "theme_store_id": 798, "schema_name": "Lorenza" } }, { "name": "Spark", "attributes": { "theme_store_id": 911, "schema_name": _0x308cdd(493) } }, { "name": _0x308cdd(587), "attributes": { "theme_store_id": 1600, "schema_name": "Momentum" } }, { "name": "Influence", "attributes": { "theme_store_id": 1536, "schema_name": "Influence" } }, { "name": "Fresh", "attributes": { "theme_store_id": 908, "schema_name": "Fresh" } }, { "name": "Capital", "attributes": { "theme_store_id": 812, "schema_name": _0x308cdd(453) } }, { "name": _0x308cdd(406), "attributes": { "theme_store_id": 411, "schema_name": "Envy" } }, { "name": "Xclusive", "attributes": { "theme_store_id": 2221, "schema_name": _0x308cdd(593) } }, { "name": "Next", "attributes": { "theme_store_id": 2240, "schema_name": _0x308cdd(555) } }, { "name": _0x308cdd(474), "attributes": { "theme_store_id": 1492, "schema_name": "Forge" } }, { "name": _0x308cdd(595), "attributes": { "theme_store_id": 1581, "schema_name": _0x308cdd(595) } }, { "name": _0x308cdd(584), "attributes": { "theme_store_id": 2852, "schema_name": _0x308cdd(584) } }, { "name": _0x308cdd(417), "attributes": { "theme_store_id": 459, "schema_name": _0x308cdd(417) } }, { "name": _0x308cdd(442), "attributes": { "theme_store_id": 1197, "schema_name": _0x308cdd(442) } }, { "name": _0x308cdd(622), "attributes": { "theme_store_id": 918, "schema_name": _0x308cdd(622) } }, { "name": _0x308cdd(410), "attributes": { "theme_store_id": 2431, "schema_name": _0x308cdd(410) } }, { "name": "Icon", "attributes": { "theme_store_id": 686, "schema_name": _0x308cdd(415) } }, { "name": "Testament", "attributes": { "theme_store_id": 623, "schema_name": _0x308cdd(465) } }, { "name": _0x308cdd(486), "attributes": { "theme_store_id": 2053, "schema_name": _0x308cdd(486) } }, { "name": _0x308cdd(547), "attributes": { "theme_store_id": 567, "schema_name": "Mr Parker" } }, { "name": _0x308cdd(418), "attributes": { "theme_store_id": 141, "schema_name": "Fashionopolism" } }, { "name": _0x308cdd(528), "attributes": { "theme_store_id": 1460, "schema_name": _0x308cdd(528) } }, { "name": _0x308cdd(538), "attributes": { "theme_store_id": 1608, "schema_name": _0x308cdd(538) } }, { "name": _0x308cdd(435), "attributes": { "theme_store_id": 2186, "schema_name": _0x308cdd(435) } }, { "name": _0x308cdd(554), "attributes": { "theme_store_id": 601, "schema_name": _0x308cdd(554) } }, { "name": "Responsive", "attributes": { "theme_store_id": 304, "schema_name": _0x308cdd(463) } }, { "name": _0x308cdd(505), "attributes": { "theme_store_id": 2870, "schema_name": _0x308cdd(505) } }, { "name": "Charge", "attributes": { "theme_store_id": 2063, "schema_name": _0x308cdd(525) } }, { "name": _0x308cdd(475), "attributes": { "theme_store_id": 2477, "schema_name": _0x308cdd(475) } }, { "name": _0x308cdd(427), "attributes": { "theme_store_id": 2455, "schema_name": "Starlite" } }, { "name": _0x308cdd(484), "attributes": { "theme_store_id": 2366, "schema_name": "Essence" } }, { "name": _0x308cdd(534), "attributes": { "theme_store_id": 1918, "schema_name": "Abode" } }, { "name": "Loft", "attributes": { "theme_store_id": 846, "schema_name": _0x308cdd(596) } }, { "name": _0x308cdd(497), "attributes": { "theme_store_id": 2144, "schema_name": _0x308cdd(497) } }, { "name": "Roam", "attributes": { "theme_store_id": 1777, "schema_name": _0x308cdd(599) } }, { "name": _0x308cdd(581), "attributes": { "theme_store_id": 1966, "schema_name": _0x308cdd(581) } }, { "name": _0x308cdd(425), "attributes": { "theme_store_id": 2698, "schema_name": _0x308cdd(425) } }, { "name": _0x308cdd(529), "attributes": { "theme_store_id": 566, "schema_name": _0x308cdd(529) } }, { "name": _0x308cdd(400), "attributes": { "theme_store_id": 838, "schema_name": _0x308cdd(400) } }, { "name": _0x308cdd(612), "attributes": { "theme_store_id": 1578, "schema_name": _0x308cdd(612) } }, { "name": "Warehouse", "attributes": { "theme_store_id": 871, "schema_name": _0x308cdd(594) } }, { "name": _0x308cdd(606), "attributes": { "theme_store_id": 1615, "schema_name": _0x308cdd(606) } }, { "name": "Tokyo", "attributes": { "theme_store_id": 2629, "schema_name": "Tokyo" } }, { "name": _0x308cdd(496), "attributes": { "theme_store_id": 3007, "schema_name": _0x308cdd(496) } }, { "name": _0x308cdd(414), "attributes": { "theme_store_id": 1190, "schema_name": "Impact" } }];
+  function _0x5815(_0x29d08b, _0x4052a8) {
+    const _0x169744 = _0x1697();
+    return _0x5815 = function(_0x581537, _0x45f1e4) {
+      _0x581537 = _0x581537 - 398;
+      let _0x1d8404 = _0x169744[_0x581537];
+      return _0x1d8404;
+    }, _0x5815(_0x29d08b, _0x4052a8);
   }
-  const universalForExponentSubtotal = [{ "name": _0x4980c3(582), "attributes": { "theme_store_id": 732, "schema_name": _0x4980c3(582) } }, { "name": _0x4980c3(549), "attributes": { "theme_store_id": 1949, "schema_name": _0x4980c3(549) } }, { "name": _0x4980c3(513), "attributes": { "theme_store_id": 902, "schema_name": "Expanse" } }];
-  const switchTheme = [{ "name": _0x4980c3(609), "attributes": { "theme_store_id": 1667, "schema_name": _0x4980c3(609) } }, { "name": _0x4980c3(416), "attributes": { "theme_store_id": 1609, "schema_name": _0x4980c3(416) } }, { "name": _0x4980c3(417), "attributes": { "theme_store_id": 2702, "schema_name": _0x4980c3(417) } }, { "name": _0x4980c3(642), "attributes": { "theme_store_id": 3070, "schema_name": _0x4980c3(642) } }, { "name": _0x4980c3(555), "attributes": { "theme_store_id": 2779, "schema_name": _0x4980c3(555) } }, { "name": "Ignite", "attributes": { "theme_store_id": 3027, "schema_name": _0x4980c3(448) } }, { "name": "Zest", "attributes": { "theme_store_id": 1611, "schema_name": _0x4980c3(618) } }, { "name": _0x4980c3(469), "attributes": { "theme_store_id": 2239, "schema_name": "Woodstock" } }, { "name": _0x4980c3(432), "attributes": { "theme_store_id": 568, "schema_name": "Symmetry" } }, { "name": _0x4980c3(436), "attributes": { "theme_store_id": 2821, "schema_name": _0x4980c3(436) } }, { "name": _0x4980c3(599), "attributes": { "theme_store_id": 735, "schema_name": _0x4980c3(599) } }, { "name": _0x4980c3(603), "attributes": { "theme_store_id": 2599, "schema_name": _0x4980c3(603) } }, { "name": _0x4980c3(478), "attributes": { "theme_store_id": 2412, "schema_name": _0x4980c3(478) } }, { "name": "Kairo", "attributes": { "theme_store_id": 1843, "schema_name": "Kairo" } }, { "name": "Exhibit", "attributes": { "theme_store_id": 1828, "schema_name": _0x4980c3(452) } }, { "name": _0x4980c3(525), "attributes": { "theme_store_id": 1535, "schema_name": _0x4980c3(525) } }, { "name": "Cascade", "attributes": { "theme_store_id": 859, "schema_name": _0x4980c3(554) } }, { "name": _0x4980c3(516), "attributes": { "theme_store_id": 773, "schema_name": _0x4980c3(516) } }, { "name": "Venue", "attributes": { "theme_store_id": 836, "schema_name": "Venue" } }, { "name": _0x4980c3(565), "attributes": { "theme_store_id": 1829, "schema_name": _0x4980c3(565) } }, { "name": "Electro", "attributes": { "theme_store_id": 2164, "schema_name": "Electro" } }, { "name": _0x4980c3(628), "attributes": { "theme_store_id": 2576, "schema_name": _0x4980c3(628) } }, { "name": _0x4980c3(501), "attributes": { "theme_store_id": 1839, "schema_name": _0x4980c3(501) } }, { "name": _0x4980c3(528), "attributes": { "theme_store_id": 688, "schema_name": _0x4980c3(528) } }, { "name": "Veena", "attributes": { "theme_store_id": 2566, "schema_name": _0x4980c3(560) } }, { "name": "Koto", "attributes": { "theme_store_id": 3001, "schema_name": _0x4980c3(438) } }, { "name": "Piano", "attributes": { "theme_store_id": 2812, "schema_name": _0x4980c3(568) } }, { "name": _0x4980c3(574), "attributes": { "theme_store_id": 2328, "schema_name": _0x4980c3(574) } }, { "name": _0x4980c3(511), "attributes": { "theme_store_id": 1701, "schema_name": _0x4980c3(511) } }, { "name": _0x4980c3(518), "attributes": { "theme_store_id": 2948, "schema_name": _0x4980c3(518) } }, { "name": _0x4980c3(499), "attributes": { "theme_store_id": 2619, "schema_name": _0x4980c3(499) } }, { "name": _0x4980c3(641), "attributes": { "theme_store_id": 2717, "schema_name": _0x4980c3(641) } }, { "name": _0x4980c3(578), "attributes": { "theme_store_id": 2315, "schema_name": _0x4980c3(578) } }, { "name": _0x4980c3(455), "attributes": { "theme_store_id": 2845, "schema_name": "Meka" } }, { "name": _0x4980c3(572), "attributes": { "theme_store_id": 587, "schema_name": _0x4980c3(572) } }, { "name": _0x4980c3(476), "attributes": { "theme_store_id": 2217, "schema_name": _0x4980c3(476) } }, { "name": _0x4980c3(428), "attributes": { "theme_store_id": 1907, "schema_name": "Marble" } }, { "name": _0x4980c3(567), "attributes": { "theme_store_id": 57, "schema_name": _0x4980c3(567) } }, { "name": _0x4980c3(550), "attributes": { "theme_store_id": 2264, "schema_name": _0x4980c3(550) } }, { "name": _0x4980c3(616), "attributes": { "theme_store_id": 2489, "schema_name": _0x4980c3(616) } }, { "name": _0x4980c3(521), "attributes": { "theme_store_id": 2273, "schema_name": _0x4980c3(521) } }, { "name": "Takeout", "attributes": { "theme_store_id": 2534, "schema_name": _0x4980c3(643) } }, { "name": _0x4980c3(606), "attributes": { "theme_store_id": 2378, "schema_name": "Aisle Theme" } }, { "name": _0x4980c3(500), "attributes": { "theme_store_id": 2546, "schema_name": _0x4980c3(500) } }, { "name": _0x4980c3(623), "attributes": { "theme_store_id": 2275, "schema_name": "Pesto" } }, { "name": "Satoshi", "attributes": { "theme_store_id": 2881, "schema_name": _0x4980c3(481) } }, { "name": _0x4980c3(445), "attributes": { "theme_store_id": 1795, "schema_name": _0x4980c3(445) } }, { "name": _0x4980c3(530), "attributes": { "theme_store_id": 1448, "schema_name": _0x4980c3(530) } }, { "name": _0x4980c3(467), "attributes": { "theme_store_id": 3094, "schema_name": _0x4980c3(467) } }, { "name": "Eurus", "attributes": { "theme_store_id": 2048, "schema_name": _0x4980c3(413) } }, { "name": _0x4980c3(488), "attributes": { "theme_store_id": 677, "schema_name": _0x4980c3(488) } }, { "name": "Cama", "attributes": { "theme_store_id": 2204, "schema_name": _0x4980c3(494) } }, { "name": _0x4980c3(486), "attributes": { "theme_store_id": 2285, "schema_name": "Vivid" } }, { "name": "Retro", "attributes": { "theme_store_id": 2630, "schema_name": _0x4980c3(579) } }, { "name": _0x4980c3(604), "attributes": { "theme_store_id": 1651, "schema_name": "Local" } }, { "name": _0x4980c3(639), "attributes": { "theme_store_id": 903, "schema_name": "Highlight" } }, { "name": _0x4980c3(631), "attributes": { "theme_store_id": 842, "schema_name": "Split" } }, { "name": _0x4980c3(483), "attributes": { "theme_store_id": 2491, "schema_name": _0x4980c3(483) } }, { "name": "Combine", "attributes": { "theme_store_id": 1826, "schema_name": _0x4980c3(542) } }, { "name": _0x4980c3(544), "attributes": { "theme_store_id": 2493, "schema_name": _0x4980c3(544) } }, { "name": _0x4980c3(465), "attributes": { "theme_store_id": 2926, "schema_name": "Noire" } }, { "name": _0x4980c3(466), "attributes": { "theme_store_id": 1878, "schema_name": _0x4980c3(466) } }, { "name": _0x4980c3(543), "attributes": { "theme_store_id": 2801, "schema_name": _0x4980c3(543) } }, { "name": _0x4980c3(419), "attributes": { "theme_store_id": 2358, "schema_name": _0x4980c3(419) } }, { "name": _0x4980c3(460), "attributes": { "theme_store_id": 1979, "schema_name": "Mavon" } }, { "name": _0x4980c3(548), "attributes": { "theme_store_id": 910, "schema_name": "Baseline" } }, { "name": _0x4980c3(622), "attributes": { "theme_store_id": 801, "schema_name": _0x4980c3(622) } }];
-  function _0x5569() {
-    const _0x1700cd = ["Shark", "Noblesse", "Blum", "Avenue", "Next", "1628877WYxvfB", "Mode", "Praise", "Mono", "Taste", "Testament", "Digital", "Viola", "Gain", "Expanse", "Refresh", "Enterprise", "Label", "Madrid", "King", "Roam", "Minion", "Divide", "Fresh", "2195844jnrnlI", "Minimalista", "Shapes", "Erickson", "Monaco", "Parallax", "Drop", "Bazaar", "38296IQthNb", "Relax", "Chord", "Sydney", "Vision", "Monk", "Fashionopolism", "Studio", "Pipeline", "4454KpNotv", "Focal", "Combine", "Nordic", "Polyform", "Elysian", "Aurora", "Kingdom", "Baseline", "Fetch", "Unicorn", "Tailor", "Stiletto", "Effortless", "Cascade", "Luxe", "Mandolin", "Sahara", "Mojave", "6CkZMkR", "Veena", "Vantage", "4NxNuwp", "Whisk", "194SEfjPR", "Creative", "Select", "Sunrise", "Piano", "Responsive", "Barcelona", "Frame", "Providence", "Stockmart", "Cello", "Area", "Urban", "Retina", "Igloo", "Retro", "Creator", "Tokyo", "Canopy", "Swipe", "Palo Alto", "Boost", "Envy", "Motion", "Starlite", "Gem", "Impulse", "Spark", "Honey", "Lute", "Handmade", "Space", "Maranello", "Atlantic", "Streamline", "District", "Colors", "Masonry", "Modular", "Sitar", "Local", "Nexa", "Aisle", "408055mXiwVt", "Capital", "Avante", "Editions", "Outsiders", "Charge", "Broadcast", "StyleScape", "Lorenza", "Iris", "Loft", "Zest", "Influence", "Essence", "Publisher", "Flow", "Pesto", "Paper", "Boutique", "Stockholm", "Vincent", "Shine", "Habitat", "Distinctive", "Split", "Pursuit", "Dawn", "59030XnBXoV", "Infinity", "Expression", "Abode", "Forge", "Highlight", "Story", "Energy", "Eclipse", "Takeout", "Startup", "Eurus", "Redefine", "Debutify", "Xtra", "Paris", "Fame", "Toyo", "Crave", "Maker", "Craft", "Taiga", "Momentum", "Galleria", "231oRlzBI", "Wonder", "Marble", "Portland", "Prestige", "Ascent", "Symmetry", "Align", "Xclusive", "Urge", "Sleek", "Keystone", "Koto", "Spotlight", "Cornerstone", "Beyond", "Warehouse", "Ride", "169PrXHpi", "Modules", "Soul", "801SvOrHK", "Ignite", "Bullet", "Trade", "Brava", "Exhibit", "Foodie", "Empire", "Meka", "Essentials", "Emerge", "Emporium", "Impact", "Mavon", "Blockshop", "ShowTime", "Alchemy", "Atom", "Noire", "Neat", "Nimbus", "Icon", "Woodstock", "Colorblock", "1483572XSkngm", "Nostalgia", "Multi", "Berlin", "Yuva", "Amber", "Andaman", "Concept", "North", "Aesthetic", "Satoshi", "Kidu", "Borders", "Origin", "Reformation", "Vivid", "Flawless", "Showcase", "Ultra", "Zora", "Murmel", "Banjo", "Release", "Cama", "Mr Parker", "Be Yours", "Refine", "Athens"];
-    _0x5569 = function() {
-      return _0x1700cd;
-    };
-    return _0x5569();
+  const universalForSubTotalTheme = [{ "name": _0x308cdd(492), "attributes": { "theme_store_id": 849, "schema_name": _0x308cdd(492) } }, { "name": _0x308cdd(532), "attributes": { "theme_store_id": 2684, "schema_name": _0x308cdd(532) } }, { "name": _0x308cdd(578), "attributes": { "theme_store_id": 2160, "schema_name": _0x308cdd(578) } }, { "name": _0x308cdd(428), "attributes": { "theme_store_id": 2348, "schema_name": _0x308cdd(428) } }, { "name": _0x308cdd(413), "attributes": { "theme_store_id": 1621, "schema_name": _0x308cdd(413) } }, { "name": "Bullet", "attributes": { "theme_store_id": 1114, "schema_name": _0x308cdd(574) } }, { "name": _0x308cdd(615), "attributes": { "theme_store_id": 1762, "schema_name": _0x308cdd(615) } }, { "name": _0x308cdd(540), "attributes": { "theme_store_id": 872, "schema_name": _0x308cdd(540) } }, { "name": "Gem", "attributes": { "theme_store_id": 2222, "schema_name": _0x308cdd(489) } }, { "name": "Impulse", "attributes": { "theme_store_id": 857, "schema_name": "Impulse" } }, { "name": "Motion", "attributes": { "theme_store_id": 847, "schema_name": _0x308cdd(604) } }, { "name": "Essentials", "attributes": { "theme_store_id": 2482, "schema_name": _0x308cdd(500) } }, { "name": _0x308cdd(424), "attributes": { "theme_store_id": 2514, "schema_name": _0x308cdd(424) } }, { "name": "Whisk", "attributes": { "theme_store_id": 1819, "schema_name": _0x308cdd(608) } }, { "name": _0x308cdd(466), "attributes": { "theme_store_id": 2847, "schema_name": _0x308cdd(466) } }, { "name": _0x308cdd(503), "attributes": { "theme_store_id": 2564, "schema_name": _0x308cdd(503) } }, { "name": _0x308cdd(601), "attributes": { "theme_store_id": 2324, "schema_name": _0x308cdd(601) } }, { "name": _0x308cdd(592), "attributes": { "theme_store_id": 2125, "schema_name": "Monaco" } }, { "name": _0x308cdd(567), "attributes": { "theme_store_id": 2138, "schema_name": _0x308cdd(567) } }, { "name": _0x308cdd(498), "attributes": { "theme_store_id": 1654, "schema_name": _0x308cdd(498) } }, { "name": "Multi", "attributes": { "theme_store_id": 2337, "schema_name": _0x308cdd(565) } }, { "name": "ShowTime", "attributes": { "theme_store_id": 687, "schema_name": _0x308cdd(440) } }, { "name": _0x308cdd(541), "attributes": { "theme_store_id": 851, "schema_name": _0x308cdd(541) } }, { "name": _0x308cdd(570), "attributes": { "theme_store_id": 2539, "schema_name": _0x308cdd(570) } }, { "name": _0x308cdd(422), "attributes": { "theme_store_id": 2896, "schema_name": _0x308cdd(422) } }, { "name": "Swipe", "attributes": { "theme_store_id": 2737, "schema_name": _0x308cdd(482) } }, { "name": "Select", "attributes": { "theme_store_id": 2372, "schema_name": _0x308cdd(539) } }, { "name": _0x308cdd(588), "attributes": { "theme_store_id": 2316, "schema_name": "Minimalista" } }, { "name": _0x308cdd(478), "attributes": { "theme_store_id": 2105, "schema_name": _0x308cdd(478) } }, { "name": _0x308cdd(444), "attributes": { "theme_store_id": 2101, "schema_name": _0x308cdd(444) } }, { "name": _0x308cdd(481), "attributes": { "theme_store_id": 2077, "schema_name": _0x308cdd(481) } }, { "name": _0x308cdd(449), "attributes": { "theme_store_id": 3051, "schema_name": _0x308cdd(449) } }, { "name": _0x308cdd(460), "attributes": { "theme_store_id": 2967, "schema_name": _0x308cdd(460) } }, { "name": "Infinity", "attributes": { "theme_store_id": 2061, "schema_name": _0x308cdd(536) } }, { "name": _0x308cdd(479), "attributes": { "theme_store_id": 757, "schema_name": _0x308cdd(479) } }, { "name": _0x308cdd(438), "attributes": { "theme_store_id": 691, "schema_name": _0x308cdd(438) } }, { "name": _0x308cdd(537), "attributes": { "theme_store_id": 1405, "schema_name": "Stockholm" } }, { "name": _0x308cdd(476), "attributes": { "theme_store_id": 1924, "schema_name": _0x308cdd(476) } }, { "name": "Handmade", "attributes": { "theme_store_id": 1791, "schema_name": "Handmade" } }, { "name": _0x308cdd(531), "attributes": { "theme_store_id": 2268, "schema_name": "Kidu" } }, { "name": "Nexa", "attributes": { "theme_store_id": 2820, "schema_name": "Nexa" } }, { "name": _0x308cdd(573), "attributes": { "theme_store_id": 2405, "schema_name": "Urban" } }, { "name": _0x308cdd(575), "attributes": { "theme_store_id": 2346, "schema_name": "Agile" } }, { "name": _0x308cdd(487), "attributes": { "theme_store_id": 2175, "schema_name": _0x308cdd(487) } }, { "name": _0x308cdd(490), "attributes": { "theme_store_id": 2782, "schema_name": _0x308cdd(490) } }, { "name": _0x308cdd(458), "attributes": { "theme_store_id": 1696, "schema_name": _0x308cdd(458) } }, { "name": _0x308cdd(516), "attributes": { "theme_store_id": 2171, "schema_name": _0x308cdd(516) } }, { "name": _0x308cdd(439), "attributes": { "theme_store_id": 1778, "schema_name": "Banjo" } }, { "name": _0x308cdd(602), "attributes": { "theme_store_id": 1584, "schema_name": _0x308cdd(602) } }, { "name": "Effortless", "attributes": { "theme_store_id": 1743, "schema_name": _0x308cdd(518) } }, { "name": "Urge", "attributes": { "theme_store_id": 2213, "schema_name": "Urge" } }, { "name": "Huge", "attributes": { "theme_store_id": 2158, "schema_name": "Huge" } }, { "name": "Vincent", "attributes": { "theme_store_id": 2913, "schema_name": "Vincent" } }, { "name": _0x308cdd(495), "attributes": { "theme_store_id": 1571, "schema_name": "Minion" } }, { "name": _0x308cdd(619), "attributes": { "theme_store_id": 2073, "schema_name": _0x308cdd(619) } }, { "name": _0x308cdd(445), "attributes": { "theme_store_id": 2578, "schema_name": _0x308cdd(445) } }, { "name": "Brava", "attributes": { "theme_store_id": 2148, "schema_name": _0x308cdd(569) } }, { "name": _0x308cdd(471), "attributes": { "theme_store_id": 1790, "schema_name": _0x308cdd(471) } }, { "name": _0x308cdd(409), "attributes": { "theme_store_id": 2238, "schema_name": "StyleScape" } }, { "name": _0x308cdd(551), "attributes": { "theme_store_id": 2825, "schema_name": _0x308cdd(551) } }, { "name": _0x308cdd(546), "attributes": { "theme_store_id": 1854, "schema_name": _0x308cdd(546) } }, { "name": "Creator", "attributes": { "theme_store_id": 1922, "schema_name": _0x308cdd(504) } }, { "name": "Palo Alto", "attributes": { "theme_store_id": 777, "schema_name": _0x308cdd(557) } }, { "name": "Zora", "attributes": { "theme_store_id": 2505, "schema_name": "Zora" } }, { "name": _0x308cdd(591), "attributes": { "theme_store_id": 739, "schema_name": _0x308cdd(591) } }, { "name": _0x308cdd(586), "attributes": { "theme_store_id": 864, "schema_name": _0x308cdd(586) } }, { "name": "Broadcast", "attributes": { "theme_store_id": 868, "schema_name": _0x308cdd(455) } }, { "name": _0x308cdd(517), "attributes": { "theme_store_id": 606, "schema_name": "Blockshop" } }, { "name": _0x308cdd(452), "attributes": { "theme_store_id": 939, "schema_name": "Beyond" } }, { "name": _0x308cdd(558), "attributes": { "theme_store_id": 765, "schema_name": _0x308cdd(558) } }, { "name": _0x308cdd(577), "attributes": { "theme_store_id": 833, "schema_name": _0x308cdd(577) } }, { "name": _0x308cdd(459), "attributes": { "theme_store_id": 1926, "schema_name": _0x308cdd(459) } }, { "name": _0x308cdd(454), "attributes": { "theme_store_id": 1497, "schema_name": "Mojave" } }, { "name": "Tailor", "attributes": { "theme_store_id": 1457, "schema_name": _0x308cdd(423) } }, { "name": "Startup", "attributes": { "theme_store_id": 652, "schema_name": _0x308cdd(519) } }, { "name": _0x308cdd(403), "attributes": { "theme_store_id": 457, "schema_name": _0x308cdd(403) } }, { "name": _0x308cdd(552), "attributes": { "theme_store_id": 1751, "schema_name": _0x308cdd(552) } }, { "name": _0x308cdd(488), "attributes": { "theme_store_id": 855, "schema_name": _0x308cdd(488) } }, { "name": _0x308cdd(506), "attributes": { "theme_store_id": 1818, "schema_name": "Mono" } }, { "name": "Monk", "attributes": { "theme_store_id": 2515, "schema_name": _0x308cdd(562) } }, { "name": _0x308cdd(407), "attributes": { "theme_store_id": 0, "schema_name": _0x308cdd(407) } }];
+  const universalForExponentSubtotal = [{ "name": _0x308cdd(464), "attributes": { "theme_store_id": 732, "schema_name": _0x308cdd(464) } }, { "name": "Fetch", "attributes": { "theme_store_id": 1949, "schema_name": "Fetch" } }, { "name": _0x308cdd(610), "attributes": { "theme_store_id": 902, "schema_name": _0x308cdd(610) } }];
+  const switchTheme = [{ "name": "Avante", "attributes": { "theme_store_id": 1667, "schema_name": _0x308cdd(472) } }, { "name": _0x308cdd(549), "attributes": { "theme_store_id": 1609, "schema_name": _0x308cdd(549) } }, { "name": "Paris", "attributes": { "theme_store_id": 2702, "schema_name": _0x308cdd(583) } }, { "name": "Eclipse", "attributes": { "theme_store_id": 3070, "schema_name": "Eclipse" } }, { "name": _0x308cdd(468), "attributes": { "theme_store_id": 2779, "schema_name": _0x308cdd(468) } }, { "name": "Ignite", "attributes": { "theme_store_id": 3027, "schema_name": _0x308cdd(559) } }, { "name": _0x308cdd(451), "attributes": { "theme_store_id": 1611, "schema_name": _0x308cdd(451) } }, { "name": _0x308cdd(399), "attributes": { "theme_store_id": 2239, "schema_name": "Woodstock" } }, { "name": "Symmetry", "attributes": { "theme_store_id": 568, "schema_name": _0x308cdd(611) } }, { "name": "Sleek", "attributes": { "theme_store_id": 2821, "schema_name": "Sleek" } }, { "name": _0x308cdd(402), "attributes": { "theme_store_id": 735, "schema_name": _0x308cdd(402) } }, { "name": _0x308cdd(462), "attributes": { "theme_store_id": 2599, "schema_name": _0x308cdd(462) } }, { "name": _0x308cdd(420), "attributes": { "theme_store_id": 2412, "schema_name": _0x308cdd(420) } }, { "name": _0x308cdd(556), "attributes": { "theme_store_id": 1843, "schema_name": _0x308cdd(556) } }, { "name": _0x308cdd(485), "attributes": { "theme_store_id": 1828, "schema_name": _0x308cdd(485) } }, { "name": _0x308cdd(507), "attributes": { "theme_store_id": 1535, "schema_name": "Shapes" } }, { "name": _0x308cdd(483), "attributes": { "theme_store_id": 859, "schema_name": _0x308cdd(483) } }, { "name": _0x308cdd(616), "attributes": { "theme_store_id": 773, "schema_name": "Label" } }, { "name": _0x308cdd(514), "attributes": { "theme_store_id": 836, "schema_name": _0x308cdd(514) } }, { "name": _0x308cdd(477), "attributes": { "theme_store_id": 1829, "schema_name": "Creative" } }, { "name": _0x308cdd(398), "attributes": { "theme_store_id": 2164, "schema_name": _0x308cdd(398) } }, { "name": _0x308cdd(590), "attributes": { "theme_store_id": 2576, "schema_name": "Shine" } }, { "name": _0x308cdd(524), "attributes": { "theme_store_id": 1839, "schema_name": _0x308cdd(524) } }, { "name": _0x308cdd(523), "attributes": { "theme_store_id": 688, "schema_name": _0x308cdd(523) } }, { "name": _0x308cdd(491), "attributes": { "theme_store_id": 2566, "schema_name": "Veena" } }, { "name": _0x308cdd(509), "attributes": { "theme_store_id": 3001, "schema_name": _0x308cdd(509) } }, { "name": _0x308cdd(598), "attributes": { "theme_store_id": 2812, "schema_name": _0x308cdd(598) } }, { "name": _0x308cdd(545), "attributes": { "theme_store_id": 2328, "schema_name": "Cello" } }, { "name": _0x308cdd(623), "attributes": { "theme_store_id": 1701, "schema_name": _0x308cdd(623) } }, { "name": _0x308cdd(535), "attributes": { "theme_store_id": 2948, "schema_name": "King" } }, { "name": _0x308cdd(446), "attributes": { "theme_store_id": 2619, "schema_name": "Shark" } }, { "name": _0x308cdd(480), "attributes": { "theme_store_id": 2717, "schema_name": _0x308cdd(480) } }, { "name": _0x308cdd(469), "attributes": { "theme_store_id": 2315, "schema_name": _0x308cdd(469) } }, { "name": _0x308cdd(550), "attributes": { "theme_store_id": 2845, "schema_name": _0x308cdd(550) } }, { "name": _0x308cdd(566), "attributes": { "theme_store_id": 587, "schema_name": _0x308cdd(566) } }, { "name": _0x308cdd(576), "attributes": { "theme_store_id": 2217, "schema_name": _0x308cdd(576) } }, { "name": _0x308cdd(605), "attributes": { "theme_store_id": 1907, "schema_name": _0x308cdd(605) } }, { "name": "Sunrise", "attributes": { "theme_store_id": 57, "schema_name": _0x308cdd(404) } }, { "name": _0x308cdd(563), "attributes": { "theme_store_id": 2264, "schema_name": _0x308cdd(563) } }, { "name": _0x308cdd(585), "attributes": { "theme_store_id": 2489, "schema_name": _0x308cdd(585) } }, { "name": _0x308cdd(426), "attributes": { "theme_store_id": 2273, "schema_name": _0x308cdd(426) } }, { "name": _0x308cdd(548), "attributes": { "theme_store_id": 2534, "schema_name": _0x308cdd(548) } }, { "name": _0x308cdd(432), "attributes": { "theme_store_id": 2378, "schema_name": "Aisle Theme" } }, { "name": "Noblesse", "attributes": { "theme_store_id": 2546, "schema_name": _0x308cdd(515) } }, { "name": _0x308cdd(522), "attributes": { "theme_store_id": 2275, "schema_name": _0x308cdd(522) } }, { "name": "Satoshi", "attributes": { "theme_store_id": 2881, "schema_name": _0x308cdd(560) } }, { "name": _0x308cdd(564), "attributes": { "theme_store_id": 1795, "schema_name": _0x308cdd(564) } }, { "name": _0x308cdd(508), "attributes": { "theme_store_id": 1448, "schema_name": _0x308cdd(508) } }, { "name": _0x308cdd(544), "attributes": { "theme_store_id": 3094, "schema_name": _0x308cdd(544) } }, { "name": _0x308cdd(461), "attributes": { "theme_store_id": 2048, "schema_name": _0x308cdd(461) } }, { "name": "Showcase", "attributes": { "theme_store_id": 677, "schema_name": "Showcase" } }, { "name": _0x308cdd(607), "attributes": { "theme_store_id": 2204, "schema_name": _0x308cdd(607) } }, { "name": _0x308cdd(614), "attributes": { "theme_store_id": 2285, "schema_name": _0x308cdd(614) } }, { "name": _0x308cdd(580), "attributes": { "theme_store_id": 2630, "schema_name": _0x308cdd(580) } }, { "name": _0x308cdd(457), "attributes": { "theme_store_id": 1651, "schema_name": _0x308cdd(457) } }, { "name": _0x308cdd(443), "attributes": { "theme_store_id": 903, "schema_name": _0x308cdd(443) } }, { "name": _0x308cdd(568), "attributes": { "theme_store_id": 842, "schema_name": _0x308cdd(568) } }, { "name": _0x308cdd(613), "attributes": { "theme_store_id": 2491, "schema_name": _0x308cdd(613) } }, { "name": "Combine", "attributes": { "theme_store_id": 1826, "schema_name": _0x308cdd(419) } }, { "name": _0x308cdd(429), "attributes": { "theme_store_id": 2493, "schema_name": _0x308cdd(429) } }, { "name": _0x308cdd(620), "attributes": { "theme_store_id": 2926, "schema_name": "Noire" } }, { "name": _0x308cdd(441), "attributes": { "theme_store_id": 1878, "schema_name": _0x308cdd(441) } }, { "name": _0x308cdd(467), "attributes": { "theme_store_id": 2801, "schema_name": _0x308cdd(467) } }, { "name": _0x308cdd(437), "attributes": { "theme_store_id": 2358, "schema_name": _0x308cdd(437) } }, { "name": _0x308cdd(600), "attributes": { "theme_store_id": 1979, "schema_name": _0x308cdd(600) } }, { "name": _0x308cdd(499), "attributes": { "theme_store_id": 910, "schema_name": _0x308cdd(499) } }, { "name": _0x308cdd(617), "attributes": { "theme_store_id": 801, "schema_name": _0x308cdd(617) } }];
+  const brickSpaceLabTheme = [{ "name": _0x308cdd(621), "attributes": { "theme_store_id": 2659, "schema_name": _0x308cdd(621) } }, { "name": _0x308cdd(542), "attributes": { "theme_store_id": 2943, "schema_name": _0x308cdd(542) } }, { "name": _0x308cdd(436), "attributes": { "theme_store_id": 1662, "schema_name": _0x308cdd(436) } }, { "name": _0x308cdd(408), "attributes": { "theme_store_id": 2883, "schema_name": "Machina" } }];
+  const _0x4b16bb = _0x6c47;
+  function _0x6c47(_0x1b227d, _0x4e5132) {
+    const _0x3bd3ea = _0x3bd3();
+    return _0x6c47 = function(_0x6c47bd, _0x26248e) {
+      _0x6c47bd = _0x6c47bd - 485;
+      let _0x5d969a = _0x3bd3ea[_0x6c47bd];
+      return _0x5d969a;
+    }, _0x6c47(_0x1b227d, _0x4e5132);
   }
-  const brickSpaceLabTheme = [{ "name": _0x4980c3(595), "attributes": { "theme_store_id": 2659, "schema_name": _0x4980c3(595) } }, { "name": _0x4980c3(437), "attributes": { "theme_store_id": 2943, "schema_name": "Keystone" } }, { "name": _0x4980c3(624), "attributes": { "theme_store_id": 1662, "schema_name": _0x4980c3(624) } }, { "name": "Machina", "attributes": { "theme_store_id": 2883, "schema_name": "Machina" } }];
-  const _0x2b0fa1 = _0x4285;
-  function _0x5444() {
-    const _0x460eaa = [".cart-drawer_foot-wrap", ".totals__total-value, .totals, .cart-preview__total-price-value", "#cart-drawer-live-region-subtotal", ".toggle-container", "cartBubble", "enabledCheckoutButton", "transform", "infoPageLink", "\n      <style>\n         .wenexus-package-protection {\n            display: flex;\n            width: 100%;\n            max-width: 500px; \n            min-height: 70px;           \n            justify-content: ", ".cart__ctas", ";\n            margin: ", ".cart-notification__links", "form#CartPageForm", ".cart__footer ", "left", ".cart-template__summary", "textContent", ' transition: all 0.3s ease-out; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); display: flex; align-items: center; justify-content: center;"></span>\n            </div>\n          <p style="margin:0px; font-size:10px; text-align:center;"><strong class="protection-price">', "buttonColor", ".accordion-wrap", "Shopify", "getElementsByTagName", "innerHTML", ".shopping-cart", ' </span></p>\n            </div>\n        </div>\n        <div class="wenexus-package-protection__toggle" >\n        \n        <div style="position:relative;">\n            <input type="checkbox" ', "getInsertionPointSelectors", ".cart__summary-total", "translateX(0)", "7865118wHmtQU", "TEXT_NODE", ".cart-drawer__summary-total", "title", "8056520UUWDpT", "5067672VcUaNr", '\n                </h5>\n                <p> <span class="wenexus-package-protection-description">', ".Cart__Total", "from", ".cart__details", ".cart-preview__btns-wrap", "nodeType", ".cart-items__total", ".cart-drawer__totals", "div[data-cart-subtotal-block]", "theme", "getChecked", "enabledDescription", "getWidgetPrice", ".template__cart__footer", "subtotal-price", " !important;\n            zoom: 1.55;\n         }\n         \n         ", "px;\n            max-height: ", ";\n            align-items: center;\n            margin: ", 'button[type="submit"][name="checkout"]', "calculate", "currency", "includes", ".cart-footer__subtotal", "attributes", "weNexusCartApi", "2775886AoKBxf", "px;\n           \n         }\n         \n         .wenexus-package-protection__image {            \n            max-width: ", "format", ".cart-recap", "toFixed", ";\n            max-width: ", "px ", "cart-footer", "getElementsByClassName", "package title", "27IuxExc", "cartUpdate", "textAlign", "translateX(20px)", "24409570LTqngS", "#7b7b7b", '" alt="logo" />\n            </div>\n            <div class="wenexus-package-protection__desc">\n                <h5>', ".sub--total-cart", "setItem", "1TpfHZm", "wenexus-package-protection", "querySelector", "form.sticky-cart__inner", ".subtotal .money ", "refreshPriceUI", "get", "style", "backgroundColor", "NumberFormat", ".wenexus-package-protection__toggle input", "[name='checkout']", "items_subtotal_price", "package-protection-enabled", "className", "afterbegin", ".order-summary-card", ".items-baseline", "getCheckboxContainer", "100%", ".button-container", "disabled", "toString", "11MSgLWN", "api", "some", ".wt-cart__footer__body", "click", "checked", "/pages/package-protection", "refreshWidget", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753", "querySelectorAll", ".cart__footer-inner", "4otXmNu", ".subtotal", "true", "en-US", ".protection-price", "disabledDescription", ";\n         }\n\n         .wenexus-package-protection__desc h5 {\n            font-size:16px;\n            margin: 0;\n            font-weight: bold;            \n         }\n         \n         .wenexus-package-protection__desc p {           \n            font-size: 13px;\n            font-weight: ", ".CartDrawer__Total", ".cart-drawer__bottom", "#22c55e", "628110AEyAml", ".cart-count", "cart-items", "disabled description", "#2c7e3f", "#cart-subtotal", "px;\n         }\n         \n         .wenexus-package-protection__image img {\n            width: 65px;\n            height: 65px;\n         }\n         .wenexus-package-protection__desc{\n            text-align: ", ".cart--total-price", "cart-notification", ".cart-summary-line", ".cart-table__checkoutWrp", "createElement", "wenexus-package-protection-description", "childNodes", "ELEMENT_NODE", "getItem", "px;   \n                   \n         }\n         \n         .wenexus-package-protection__content {\n            display: flex;\n            justify-content: space-between;\n            align-items: center;\n            gap: ", ".cart__subtotal", "replace", ".more", ".cart__total", "\n      </style>", ".totals__subtotal-value", ".main-cart_cart-totals-wrap", "disabledCheckoutButton", "css", "thumbnail", "forEach", ".cart-totals", ".drawer__footer", "shouldUse", ".toggle-switch", "free theme", ".quick-cart__footer", "5370501FYlqJV", "cart-count-bubble", "getStyleMarkup", ".cart-footer__summary", "getPrice", "enabled description", ".totals", "before", '<a href="https://', "https://cdn.shopify.com/s/files/1/1652/8827/files/g4990.png?v=1708754054", ".cart-subtotal", "space-between", ";\n            gap: ", "cart-drawer-items", "</strong></p>\n            </div>\n        </div>\n      ", ".total-holder"];
-    _0x5444 = function() {
-      return _0x460eaa;
-    };
-    return _0x5444();
-  }
-  function _0x4285(_0x4bdca6, _0x386dd4) {
-    const _0x54440e = _0x5444();
-    return _0x4285 = function(_0x4285ce, _0x8d2f2c) {
-      _0x4285ce = _0x4285ce - 331;
-      let _0x545b6e = _0x54440e[_0x4285ce];
-      return _0x545b6e;
-    }, _0x4285(_0x4bdca6, _0x386dd4);
-  }
-  (function(_0x1b986d, _0x3edf3a) {
-    const _0x3b6a3f = _0x4285, _0x3034ed = _0x1b986d();
+  (function(_0x25828e, _0x25bd3d) {
+    const _0x3e3198 = _0x6c47, _0x4fb022 = _0x25828e();
     while (!![]) {
       try {
-        const _0x4025a5 = -parseInt(_0x3b6a3f(497)) / 1 * (parseInt(_0x3b6a3f(478)) / 2) + -parseInt(_0x3b6a3f(403)) / 3 + parseInt(_0x3b6a3f(359)) / 4 * (-parseInt(_0x3b6a3f(451)) / 5) + parseInt(_0x3b6a3f(447)) / 6 + parseInt(_0x3b6a3f(369)) / 7 + parseInt(_0x3b6a3f(452)) / 8 * (parseInt(_0x3b6a3f(488)) / 9) + parseInt(_0x3b6a3f(492)) / 10 * (parseInt(_0x3b6a3f(348)) / 11);
-        if (_0x4025a5 === _0x3edf3a)
+        const _0x266dca = parseInt(_0x3e3198(594)) / 1 + parseInt(_0x3e3198(644)) / 2 + -parseInt(_0x3e3198(603)) / 3 + -parseInt(_0x3e3198(500)) / 4 + -parseInt(_0x3e3198(504)) / 5 * (-parseInt(_0x3e3198(542)) / 6) + parseInt(_0x3e3198(498)) / 7 * (parseInt(_0x3e3198(581)) / 8) + parseInt(_0x3e3198(577)) / 9 * (-parseInt(_0x3e3198(571)) / 10);
+        if (_0x266dca === _0x25bd3d)
           break;
         else
-          _0x3034ed["push"](_0x3034ed["shift"]());
-      } catch (_0x125a4d) {
-        _0x3034ed["push"](_0x3034ed["shift"]());
+          _0x4fb022["push"](_0x4fb022["shift"]());
+      } catch (_0x4d5cc2) {
+        _0x4fb022["push"](_0x4fb022["shift"]());
       }
     }
-  })(_0x5444, 952503);
-  const checkTheme = (_0x141fa8) => {
-    const _0x5786d0 = _0x4285, _0x3ed6d5 = window[_0x5786d0(439)][_0x5786d0(462)] || {};
-    return _0x141fa8 == null ? void 0 : _0x141fa8[_0x5786d0(350)]((_0x2172d8) => Object["values"](_0x2172d8[_0x5786d0(476)])[_0x5786d0(350)]((_0x524dda) => Object["values"](_0x3ed6d5)[_0x5786d0(474)](_0x524dda)));
+  })(_0x3bd3, 805295);
+  const checkTheme = (_0x3a2810) => {
+    const _0x5165f9 = _0x6c47, _0x32280c = window[_0x5165f9(519)][_0x5165f9(501)] || {};
+    return _0x3a2810 == null ? void 0 : _0x3a2810["some"]((_0x354c8f) => Object[_0x5165f9(496)](_0x354c8f["attributes"])["some"]((_0x26ef70) => Object[_0x5165f9(496)](_0x32280c)[_0x5165f9(539)](_0x26ef70)));
   };
   class PackageProtectionClientBasic {
-    constructor(_0x4b32a2) {
-      __publicField(this, _g, _0x2b0fa1(412));
-      __publicField(this, _h, _0x2b0fa1(354));
+    constructor(_0x5a3444) {
+      __publicField(this, _f, "https://cdn.shopify.com/s/files/1/1652/8827/files/g4990.png?v=1708754054");
+      __publicField(this, "infoPageLink", "/pages/package-protection");
       __publicField(this, "containers", /* @__PURE__ */ new Map());
-      __publicField(this, _i, _0x2b0fa1(487));
-      __publicField(this, "enabledDescription", _0x2b0fa1(408));
-      __publicField(this, "disabledDescription", _0x2b0fa1(372));
-      __publicField(this, _j, _0x2b0fa1(368));
-      __publicField(this, _k, ![]);
-      __publicField(this, _l, "");
-      __publicField(this, _m, _0x2b0fa1(433));
-      this["api"] = _0x4b32a2;
+      __publicField(this, "title", _0x4b16bb(610));
+      __publicField(this, _g, _0x4b16bb(562));
+      __publicField(this, _h, "disabled description");
+      __publicField(this, "buttonColor", _0x4b16bb(619));
+      __publicField(this, _i, ![]);
+      __publicField(this, _j, "");
+      __publicField(this, _k, "left");
+      const _0x347354 = _0x6c47;
+      this[_0x347354(637)] = _0x5a3444;
     }
-    ["formatPrice"](_0x49b44b, _0x20cb50) {
-      const _0x5c4ddf = _0x2b0fa1;
-      return new Intl[_0x5c4ddf(334)](_0x5c4ddf(362), { "style": _0x5c4ddf(473), "maximumFractionDigits": 2, "minimumFractionDigits": 2, "currency": _0x20cb50 })[_0x5c4ddf(480)](_0x49b44b);
+    ["formatPrice"](_0x42c464, _0x7512a6) {
+      const _0xa58ef7 = _0x4b16bb;
+      return new Intl[_0xa58ef7(544)](_0xa58ef7(630), { "style": "currency", "maximumFractionDigits": 2, "minimumFractionDigits": 2, "currency": _0x7512a6 })[_0xa58ef7(614)](_0x42c464);
     }
-    async [(_g = _0x2b0fa1(395), _h = _0x2b0fa1(426), _i = _0x2b0fa1(450), _j = _0x2b0fa1(437), _k = _0x2b0fa1(353), _l = _0x2b0fa1(394), _m = _0x2b0fa1(490), _0x2b0fa1(407))]() {
-      const _0x16728d = _0x2b0fa1, { coercedPrice: _0x372e75 } = await this[_0x16728d(349)][_0x16728d(472)](), _0x48ea1c = await window["weNexusCartApi"][_0x16728d(331)]();
-      return this["formatPrice"](Number(_0x372e75), _0x48ea1c[_0x16728d(473)]);
+    async [(_f = _0x4b16bb(629), _g = _0x4b16bb(516), _h = _0x4b16bb(527), _i = _0x4b16bb(569), _j = _0x4b16bb(554), _k = _0x4b16bb(526), _0x4b16bb(582))]() {
+      const _0x5bfc43 = _0x4b16bb, { coercedPrice: _0x398888 } = await this["api"][_0x5bfc43(649)](), _0x581d45 = await window[_0x5bfc43(494)][_0x5bfc43(611)]();
+      return this["formatPrice"](Number(_0x398888), _0x581d45[_0x5bfc43(613)]);
     }
-    [_0x2b0fa1(465)]() {
-      const _0x3a1125 = _0x2b0fa1;
-      let _0x589ba7 = "";
-      return Array[_0x3a1125(455)](document[_0x3a1125(357)](_0x3a1125(363)))[_0x3a1125(396)]((_0x1acdf5) => {
-        const _0x57e34e = _0x3a1125;
-        _0x589ba7 = _0x1acdf5 == null ? void 0 : _0x1acdf5[_0x57e34e(441)];
-      }), Number(_0x589ba7[_0x3a1125(387)](/[^0-9.]/g, ""));
+    [_0x4b16bb(574)]() {
+      const _0x3b66ea = _0x4b16bb;
+      let _0x16509a = "";
+      return Array[_0x3b66ea(560)](document[_0x3b66ea(518)](_0x3b66ea(622)))[_0x3b66ea(596)]((_0x1404e3) => {
+        const _0x17f29a = _0x3b66ea;
+        _0x16509a = _0x1404e3 == null ? void 0 : _0x1404e3[_0x17f29a(570)];
+      }), Number(_0x16509a[_0x3b66ea(583)](/[^0-9.]/g, ""));
     }
-    async ["getDescription"]() {
-      const _0x4a9730 = _0x2b0fa1;
-      return "" + (this[_0x4a9730(353)] ? this[_0x4a9730(464)] : this["disabledDescription"]);
+    async [_0x4b16bb(638)]() {
+      const _0x3a33c3 = _0x4b16bb;
+      return "" + (this["checked"] ? this[_0x3a33c3(516)] : this[_0x3a33c3(527)]);
     }
-    async [_0x2b0fa1(463)]() {
-      const _0x32a055 = _0x2b0fa1;
-      return this[_0x32a055(353)];
+    async [_0x4b16bb(609)]() {
+      const _0x1ff206 = _0x4b16bb;
+      return this[_0x1ff206(569)];
     }
-    async [_0x2b0fa1(343)](_0x44787c, _0x3a7e34) {
-      const _0x48639e = _0x2b0fa1, _0x36a01b = document[_0x48639e(380)]("div"), _0x475e2f = await this[_0x48639e(407)](), _0x102a07 = await this["getDescription"]();
-      _0x36a01b["insertAdjacentHTML"](_0x48639e(340), "\n      <style>" + this["css"] + '</style>\n        <div class="wenexus-package-protection__content">\n            <div class="wenexus-package-protection__image">\n                <img src="' + this[_0x48639e(395)] + _0x48639e(494) + this["title"] + " \n                " + (this["infoPageLink"] ? _0x48639e(411) + this[_0x48639e(426)] + '" target="_blank" style="color:blue;">ⓘ</a> ' : "") + _0x48639e(453) + _0x102a07 + _0x48639e(443) + (_0x3a7e34 ? _0x48639e(353) : "") + ' style="position:absolute; width:100%; height:100%; left:0; z-index:99; opacity:0; margin:0px; cursor:pointer; display: block; clip:unset;">\n\n            <div class="toggle-container" style="display: flex;  width: 35px; height: 13px; background-color: ' + (_0x3a7e34 ? this[_0x48639e(437)] : "#7b7b7b") + '; position: relative; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border-radius: 9999px; cursor: pointer; transition: background-color 0.5s ease-out;">\n                <span class="toggle-switch" style="height: 11px; width: 11px; position: absolute; top: 1.3px; left: 2px; background-color: white; border-radius: 9999px; ' + (_0x3a7e34 ? "transform: translateX(20px);" : "") + _0x48639e(436) + _0x475e2f + _0x48639e(417));
-      const _0x146c71 = _0x36a01b[_0x48639e(499)](_0x48639e(335)), _0x30545a = _0x36a01b["querySelector"](_0x48639e(422)), _0x3aebeb = _0x36a01b[_0x48639e(499)](_0x48639e(400));
-      _0x36a01b[_0x48639e(339)] = _0x48639e(498), _0x146c71["addEventListener"](_0x48639e(352), () => {
-        const _0x21fa14 = _0x48639e;
-        _0x5dde57(), this["checked"] = _0x146c71[_0x21fa14(353)];
+    async ["getCheckboxContainer"](_0x275072, _0x13f641) {
+      const _0x1b936b = _0x4b16bb, _0x565f16 = document[_0x1b936b(525)](_0x1b936b(535)), _0x639147 = await this[_0x1b936b(582)](), _0x130959 = await this[_0x1b936b(638)]();
+      _0x565f16["insertAdjacentHTML"](_0x1b936b(586), _0x1b936b(493) + this["css"] + _0x1b936b(549) + this[_0x1b936b(629)] + _0x1b936b(499) + this[_0x1b936b(568)] + " \n                " + (this[_0x1b936b(556)] ? _0x1b936b(646) + this["infoPageLink"] + _0x1b936b(640) : "") + _0x1b936b(541) + _0x130959 + ' </span></p>\n            </div>\n        </div>\n        <div class="wenexus-package-protection__toggle" >\n        \n        <div style="position:relative;">\n            <input type="checkbox" ' + (_0x13f641 ? "checked" : "") + ' style="position:absolute; width:100%; height:100%; left:0; z-index:99; opacity:0; margin:0px; cursor:pointer; display: block; clip:unset;">\n\n            <div class="toggle-container" style="display: flex;  width: 35px; height: 13px; background-color: ' + (_0x13f641 ? this[_0x1b936b(553)] : _0x1b936b(537)) + '; position: relative; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border-radius: 9999px; cursor: pointer; transition: background-color 0.5s ease-out;">\n                <span class="toggle-switch" style="height: 11px; width: 11px; position: absolute; top: 1.3px; left: 2px; background-color: white; border-radius: 9999px; ' + (_0x13f641 ? "transform: translateX(20px);" : "") + ' transition: all 0.3s ease-out; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); display: flex; align-items: center; justify-content: center;"></span>\n            </div>\n          <p style="margin:0px; font-size:10px; text-align:center;"><strong class="protection-price">' + _0x639147 + "</strong></p>\n            </div>\n        </div>\n      ");
+      const _0x2727a6 = _0x565f16[_0x1b936b(576)](_0x1b936b(618)), _0x3b6e8b = _0x565f16["querySelector"](".toggle-container"), _0x75e716 = _0x565f16[_0x1b936b(576)](".toggle-switch");
+      _0x565f16[_0x1b936b(523)] = _0x1b936b(625), _0x2727a6[_0x1b936b(502)](_0x1b936b(621), () => {
+        const _0x4aa49c = _0x1b936b;
+        _0x5e4a22(), this[_0x4aa49c(569)] = _0x2727a6["checked"];
       });
-      const _0x5dde57 = () => {
-        const _0x348d62 = _0x48639e;
-        _0x30545a[_0x348d62(332)][_0x348d62(333)] = _0x146c71[_0x348d62(353)] ? this[_0x348d62(437)] : _0x348d62(493), _0x3aebeb[_0x348d62(332)][_0x348d62(425)] = _0x146c71[_0x348d62(353)] ? _0x348d62(491) : _0x348d62(446);
+      const _0x5e4a22 = () => {
+        const _0x1ff88a = _0x1b936b;
+        _0x3b6e8b["style"][_0x1ff88a(620)] = _0x2727a6[_0x1ff88a(569)] ? this["buttonColor"] : _0x1ff88a(537), _0x75e716[_0x1ff88a(588)]["transform"] = _0x2727a6[_0x1ff88a(569)] ? _0x1ff88a(520) : _0x1ff88a(595);
       };
-      return _0x5dde57(), this["containers"]["set"](_0x44787c, _0x36a01b), { "container": _0x36a01b, "checkbox": _0x146c71 };
+      return _0x5e4a22(), this[_0x1b936b(508)][_0x1b936b(551)](_0x275072, _0x565f16), { "container": _0x565f16, "checkbox": _0x2727a6 };
     }
-    async [_0x2b0fa1(405)]({ accentColor: _0x1efffb, imageWidth = 56, containerGap = [0, 10], contentGap = [0, 10], descriptionFontWeight = "normal", descriptionMargin = [0, 0, 0, 0], hideDescriptionPage = !![], containerMargin = [0, 0, 8, 0], containerJustify = _0x2b0fa1(414), extraStyles = "", textAlign = _0x2b0fa1(433), containerMaxWidth = _0x2b0fa1(344) }) {
-      const _0x5d1ea2 = _0x2b0fa1;
-      return _0x5d1ea2(427) + containerJustify + _0x5d1ea2(470) + (containerMargin == null ? void 0 : containerMargin["join"](_0x5d1ea2(484))) + _0x5d1ea2(415) + containerGap[0] + " " + containerGap[1] + _0x5d1ea2(385) + contentGap[0] + " " + contentGap[1] + _0x5d1ea2(479) + (imageWidth ?? 65) + _0x5d1ea2(469) + (imageWidth ?? 65) + _0x5d1ea2(375) + textAlign + _0x5d1ea2(483) + containerMaxWidth + _0x5d1ea2(365) + descriptionFontWeight + _0x5d1ea2(429) + (descriptionMargin == null ? void 0 : descriptionMargin["join"]("px ")) + "px;\n         }\n         \n         .wenexus-package-protection__desc a {\n            text-decoration: none;\n            font-size:inherit;\n            outline: 0;\n            color: #222;\n            transition: .3s;\n            " + (hideDescriptionPage ? "display: none;" : "") + "\n         }\n         \n         .wenexus-package-protection__toggle {\n            accent-color: " + _0x1efffb + _0x5d1ea2(468) + extraStyles + _0x5d1ea2(390);
+    async [_0x4b16bb(607)]({ accentColor: _0x247aa4, imageWidth = 56, containerGap = [0, 10], contentGap = [0, 10], descriptionFontWeight = "normal", descriptionMargin = [0, 0, 0, 0], hideDescriptionPage = !![], containerMargin = [0, 0, 8, 0], containerJustify = "space-between", extraStyles = "", textAlign = "left", containerMaxWidth = _0x4b16bb(643) }) {
+      const _0x4d687f = _0x4b16bb;
+      return _0x4d687f(575) + containerJustify + ";\n            align-items: center;\n            margin: " + (containerMargin == null ? void 0 : containerMargin[_0x4d687f(631)](_0x4d687f(599))) + _0x4d687f(589) + containerGap[0] + " " + containerGap[1] + "px;   \n                   \n         }\n         \n         .wenexus-package-protection__content {\n            display: flex;\n            justify-content: space-between;\n            align-items: center;\n            gap: " + contentGap[0] + " " + contentGap[1] + _0x4d687f(517) + (imageWidth ?? 65) + "px;\n            max-height: " + (imageWidth ?? 65) + _0x4d687f(495) + textAlign + _0x4d687f(548) + containerMaxWidth + _0x4d687f(593) + descriptionFontWeight + _0x4d687f(545) + (descriptionMargin == null ? void 0 : descriptionMargin[_0x4d687f(631)](_0x4d687f(599))) + _0x4d687f(513) + (hideDescriptionPage ? _0x4d687f(633) : "") + _0x4d687f(601) + _0x247aa4 + " !important;\n            zoom: 1.55;\n         }\n         \n         " + extraStyles + "\n      </style>";
     }
-    [_0x2b0fa1(444)]() {
-      const _0x1a5edb = _0x2b0fa1;
-      return [{ "selector": _0x1a5edb(471), "insertPosition": _0x1a5edb(410) }];
+    [_0x4b16bb(573)]() {
+      const _0x102716 = _0x4b16bb;
+      return [{ "selector": 'button[type="submit"][name="checkout"]', "insertPosition": _0x102716(584) }];
     }
-    async [_0x2b0fa1(502)]() {
-      this["containers"]["forEach"](async (_0x110c4c) => {
-        const _0x328583 = _0x4285;
-        _0x110c4c[_0x328583(499)](_0x328583(363))["textContent"] = await this[_0x328583(407)]();
+    async [_0x4b16bb(546)]() {
+      const _0x6c9883 = _0x4b16bb;
+      this["containers"][_0x6c9883(596)](async (_0x4de901) => {
+        const _0x30838e = _0x6c9883;
+        _0x4de901[_0x30838e(576)](".protection-price")["textContent"] = await this[_0x30838e(582)]();
       });
     }
-    async [_0x2b0fa1(355)]() {
-      const _0x49b3a0 = _0x2b0fa1, _0x5b4970 = [".wt-cart__footer", _0x49b3a0(351), "#main-cart-footer", _0x49b3a0(398), _0x49b3a0(358), _0x49b3a0(402), _0x49b3a0(485), _0x49b3a0(471), ".cart__footer", _0x49b3a0(500), _0x49b3a0(431), ".cart-total-box", ".cart-drawer__container", _0x49b3a0(434), _0x49b3a0(406), _0x49b3a0(367), _0x49b3a0(418), _0x49b3a0(392), _0x49b3a0(419), ".main-cart_widget--totals", _0x49b3a0(438), _0x49b3a0(442), _0x49b3a0(466), _0x49b3a0(379), _0x49b3a0(413), 'div[data-element="subtotal-block"]', _0x49b3a0(421), _0x49b3a0(461), _0x49b3a0(467), _0x49b3a0(475), _0x49b3a0(397), _0x49b3a0(341), _0x49b3a0(388), _0x49b3a0(360), _0x49b3a0(501), ".cart-drawer-footer-total", _0x49b3a0(366), _0x49b3a0(454), ".cart-header-details", _0x49b3a0(495), _0x49b3a0(342), _0x49b3a0(460), _0x49b3a0(374), _0x49b3a0(389), _0x49b3a0(376), _0x49b3a0(445), _0x49b3a0(449), _0x49b3a0(459), ".cart-drawer__total", _0x49b3a0(386), _0x49b3a0(391), "#CartDetails", _0x49b3a0(432), _0x49b3a0(378), _0x49b3a0(456), _0x49b3a0(481), _0x49b3a0(370), ".cart-total-price", _0x49b3a0(386), _0x49b3a0(409), ".ajaxcart__price", ".cart__row--table"], _0x3b62d0 = await window[_0x49b3a0(477)][_0x49b3a0(331)](), _0x40645e = (_0x5de5c4 = 0) => {
-        const _0x3d441e = _0x49b3a0;
-        _0x5b4970[_0x3d441e(396)]((_0x2d84e2) => {
-          const _0x513d8d = _0x3d441e;
-          let _0x399b6b = document[_0x513d8d(357)](_0x2d84e2);
-          function _0x279585(_0x3e32c8) {
-            const _0x39c1f2 = _0x513d8d, _0x3391dc = Number(_0x3b62d0[_0x39c1f2(337)] / 100)["toFixed"](2), _0x26242f = Number(_0x3b62d0[_0x39c1f2(337)] / 100 + _0x5de5c4)[_0x39c1f2(482)](2);
-            if ((_0x3e32c8 == null ? void 0 : _0x3e32c8[_0x39c1f2(458)]) === (Node == null ? void 0 : Node[_0x39c1f2(448)])) {
-              if (_0x5de5c4 === 0) {
-                const _0x56ba06 = localStorage[_0x39c1f2(384)](_0x39c1f2(337));
-                _0x3e32c8[_0x39c1f2(435)] = _0x3e32c8[_0x39c1f2(435)][_0x39c1f2(387)](new RegExp("\\b" + _0x56ba06 + "\\b", "g"), _0x26242f);
+    async [_0x4b16bb(592)]() {
+      const _0x30efd7 = _0x4b16bb, _0x3f0329 = [_0x30efd7(529), _0x30efd7(578), _0x30efd7(522), _0x30efd7(608), _0x30efd7(639), _0x30efd7(590), _0x30efd7(514), _0x30efd7(488), _0x30efd7(531), "form.sticky-cart__inner", _0x30efd7(534), _0x30efd7(530), _0x30efd7(509), ".cart-template__summary", _0x30efd7(561), ".cart-drawer__bottom", _0x30efd7(591), _0x30efd7(604), _0x30efd7(641), _0x30efd7(632), ".accordion-wrap", _0x30efd7(555), _0x30efd7(600), ".cart-table__checkoutWrp", ".cart-subtotal", 'div[data-element="subtotal-block"]', "#cart-drawer-live-region-subtotal", _0x30efd7(598), _0x30efd7(547), ".cart-footer__subtotal", ".cart-totals", _0x30efd7(528), _0x30efd7(585), _0x30efd7(487), ".subtotal .money ", _0x30efd7(559), _0x30efd7(492), _0x30efd7(634), ".cart-header-details", _0x30efd7(511), _0x30efd7(605), _0x30efd7(505), _0x30efd7(497), _0x30efd7(540), _0x30efd7(521), _0x30efd7(558), _0x30efd7(623), ".cart-items__total", _0x30efd7(564), _0x30efd7(648), _0x30efd7(579), _0x30efd7(489), _0x30efd7(565), _0x30efd7(617), _0x30efd7(647), _0x30efd7(536), _0x30efd7(510), _0x30efd7(557), _0x30efd7(648), _0x30efd7(490), _0x30efd7(506), ".cart__row--table"], _0x369a1d = await window["weNexusCartApi"]["get"](), _0x36226b = (_0x30e55d = 0) => {
+        _0x3f0329["forEach"]((_0x339057) => {
+          const _0xc22a3 = _0x6c47;
+          let _0x54a0d0 = document["querySelectorAll"](_0x339057);
+          function _0x23a804(_0x41c8e4) {
+            const _0x4b3c2d = _0x6c47, _0x210f95 = Number(_0x369a1d["items_subtotal_price"] / 100)["toFixed"](2), _0x36f872 = Number(_0x369a1d[_0x4b3c2d(533)] / 100 + _0x30e55d)["toFixed"](2);
+            if ((_0x41c8e4 == null ? void 0 : _0x41c8e4[_0x4b3c2d(616)]) === (Node == null ? void 0 : Node["TEXT_NODE"])) {
+              if (_0x30e55d === 0) {
+                const _0x21b594 = localStorage[_0x4b3c2d(642)](_0x4b3c2d(533));
+                _0x41c8e4[_0x4b3c2d(597)] = _0x41c8e4[_0x4b3c2d(597)][_0x4b3c2d(583)](new RegExp("\\b" + _0x21b594 + "\\b", "g"), _0x36f872);
               } else
-                localStorage[_0x39c1f2(496)]("items_subtotal_price", _0x26242f), _0x3e32c8[_0x39c1f2(435)] = _0x3e32c8[_0x39c1f2(435)][_0x39c1f2(387)](new RegExp("\\b" + _0x3391dc + "\\b", "g"), _0x26242f);
+                localStorage["setItem"]("items_subtotal_price", _0x36f872), _0x41c8e4[_0x4b3c2d(597)] = _0x41c8e4[_0x4b3c2d(597)]["replace"](new RegExp("\\b" + _0x210f95 + "\\b", "g"), _0x36f872);
             } else
-              (_0x3e32c8 == null ? void 0 : _0x3e32c8[_0x39c1f2(458)]) === (Node == null ? void 0 : Node[_0x39c1f2(383)]) && Array[_0x39c1f2(455)](_0x3e32c8["childNodes"])[_0x39c1f2(396)](_0x279585);
+              (_0x41c8e4 == null ? void 0 : _0x41c8e4[_0x4b3c2d(616)]) === (Node == null ? void 0 : Node[_0x4b3c2d(602)]) && Array[_0x4b3c2d(560)](_0x41c8e4[_0x4b3c2d(503)])[_0x4b3c2d(596)](_0x23a804);
           }
-          _0x399b6b["forEach"]((_0x4879af) => {
-            _0x279585(_0x4879af);
+          _0x54a0d0[_0xc22a3(596)]((_0x47343b) => {
+            _0x23a804(_0x47343b);
           });
         });
       };
       setTimeout(() => {
-        const _0x353b05 = _0x49b3a0, _0xaf7f64 = this["getWidgetPrice"](), _0x24eabd = localStorage["getItem"](_0x353b05(338));
-        let _0x5829f0 = "";
-        _0x24eabd === "true" ? (_0x5829f0 = this[_0x353b05(464)], _0x40645e(_0xaf7f64), _0x40645e(_0xaf7f64)) : (_0x5829f0 = this[_0x353b05(364)], _0x40645e(), _0x40645e());
-        const _0x48452e = document[_0x353b05(486)](_0x353b05(381));
-        Array[_0x353b05(455)](_0x48452e)["forEach"]((_0x483848) => _0x483848[_0x353b05(441)] = _0x5829f0 + " ");
+        const _0x1c7ebc = _0x30efd7, _0x4bfe16 = this[_0x1c7ebc(574)](), _0x15386e = localStorage["getItem"](_0x1c7ebc(563));
+        let _0x1437df = "";
+        _0x15386e === "true" ? (_0x1437df = this[_0x1c7ebc(516)], _0x36226b(_0x4bfe16), _0x36226b(_0x4bfe16)) : (_0x1437df = this["disabledDescription"], _0x36226b(), _0x36226b());
+        const _0x5a81fe = document[_0x1c7ebc(567)]("wenexus-package-protection-description");
+        Array["from"](_0x5a81fe)[_0x1c7ebc(596)]((_0x499dd7) => _0x499dd7[_0x1c7ebc(570)] = _0x1437df + " ");
       }, 500);
     }
-    [_0x2b0fa1(393)]() {
-      const _0x20ca1f = _0x2b0fa1, _0x247be8 = document[_0x20ca1f(357)](_0x20ca1f(336));
-      _0x247be8[_0x20ca1f(396)]((_0x463d96) => {
-        const _0x27fbb8 = _0x20ca1f;
-        _0x463d96[_0x27fbb8(346)] = !![];
+    [_0x4b16bb(512)]() {
+      const _0x1295bd = _0x4b16bb, _0x21113b = document[_0x1295bd(518)](_0x1295bd(543));
+      _0x21113b[_0x1295bd(596)]((_0x26351a) => {
+        const _0x40e97a = _0x1295bd;
+        _0x26351a[_0x40e97a(572)] = !![];
       });
     }
-    [_0x2b0fa1(424)]() {
-      const _0x10c376 = _0x2b0fa1, _0x3d8b21 = document[_0x10c376(357)]("[name='checkout']");
-      _0x3d8b21[_0x10c376(396)]((_0x179c45) => {
-        const _0x3a6759 = _0x10c376;
-        _0x179c45[_0x3a6759(346)] = ![];
+    [_0x4b16bb(550)]() {
+      const _0x1957bb = _0x4b16bb, _0x3e6bbe = document["querySelectorAll"](_0x1957bb(543));
+      _0x3e6bbe[_0x1957bb(596)]((_0x1ea69b) => {
+        const _0x17e2c6 = _0x1957bb;
+        _0x1ea69b[_0x17e2c6(572)] = ![];
       });
     }
-    [_0x2b0fa1(489)]() {
-      window["location"]["reload"]();
+    [_0x4b16bb(486)]() {
+      const _0x375775 = _0x4b16bb;
+      window[_0x375775(645)]["reload"]();
     }
-    ["cartBubble"]() {
+    [_0x4b16bb(515)]() {
     }
+  }
+  function _0x3bd3() {
+    const _0x24762b = [".cart-footer__summary", "enabled description", "package-protection-enabled", ".cart-drawer__total", ".cart__footer ", "free theme", "getElementsByClassName", "title", "checked", "innerHTML", "7386550TnnYzs", "disabled", "getInsertionPointSelectors", "getWidgetPrice", "\n      <style>\n         .wenexus-package-protection {\n            display: flex;\n            width: 100%;\n            max-width: 500px; \n            min-height: 70px;           \n            justify-content: ", "querySelector", "9QMtKdI", ".wt-cart__footer__body", ".totals__subtotal-value", "TEXT_NODE", "104whtEul", "getPrice", "replace", "before", ".more", "afterbegin", "toFixed", "style", ";\n            gap: ", ".quick-cart__footer", ".total-holder", "refreshWidget", ";\n         }\n\n         .wenexus-package-protection__desc h5 {\n            font-size:16px;\n            margin: 0;\n            font-weight: bold;            \n         }\n         \n         .wenexus-package-protection__desc p {           \n            font-size: 13px;\n            font-weight: ", "993682CaeqIT", "translateX(0)", "forEach", "textContent", "div[data-cart-subtotal-block]", "px ", ".template__cart__footer", "\n         }\n         \n         .wenexus-package-protection__toggle {\n            accent-color: ", "ELEMENT_NODE", "3920568rLszgk", ".main-cart_cart-totals-wrap", ".items-baseline", "log", "getStyleMarkup", ".drawer__footer", "getChecked", "package title", "get", "space-between", "currency", "format", "cart-count-bubble", "nodeType", ".cart-summary-line", ".wenexus-package-protection__toggle input", "#22c55e", "backgroundColor", "click", ".protection-price", ".cart-drawer__summary-total", ".totals__total-value, .totals, .cart-preview__total-price-value", "wenexus-package-protection", "onCartUpdate", "true", "getElementsByTagName", "thumbnail", "en-US", "join", ".main-cart_widget--totals", "display: none;", ".Cart__Total", "cart-notification", "cart-items", "api", "getDescription", ".cart__footer-inner", '" target="_blank" style="color:blue;">ⓘ</a> ', ".cart-drawer_foot-wrap", "getItem", "100%", "1106348PzuLsf", "location", '<a href="https://', ".cart__details", ".cart__subtotal", "calculate", "#2c7e3f", "cartUpdate", ".subtotal", 'button[type="submit"][name="checkout"]', "#CartDetails", ".totals", ".cart__ctas", ".CartDrawer__Total", "\n      <style>", "weNexusCartApi", "px;\n         }\n         \n         .wenexus-package-protection__image img {\n            width: 50px;\n            height: 50px;\n         }\n         .wenexus-package-protection__desc{\n            text-align: ", "values", "#cart-subtotal", "305263hSRJfR", '" alt="logo" />\n            </div>\n            <div class="wenexus-package-protection__desc">\n                <h5>', "1020028bMxChp", "theme", "addEventListener", "childNodes", "236200saYrEU", ".cart-drawer__totals", ".ajaxcart__price", ".cart-preview__btns-wrap", "containers", ".cart-drawer__container", ".cart-count", ".sub--total-cart", "disabledCheckoutButton", "px;\n         }\n         \n         .wenexus-package-protection__desc a {\n            text-decoration: none;\n            font-size:inherit;\n            outline: 0;\n            color: #222;\n            transition: .3s;\n            ", "cart-footer", "cartBubble", "enabledDescription", "px;\n           \n         }\n         \n         .wenexus-package-protection__image {            \n            max-width: ", "querySelectorAll", "Shopify", "translateX(20px)", ".cart--total-price", "#main-cart-footer", "className", "item_count", "createElement", "textAlign", "disabledDescription", ".order-summary-card", ".wt-cart__footer", ".cart-total-box", ".cart__footer", ".button-container", "items_subtotal_price", "form#CartPageForm", "div", ".cart-recap", "#7b7b7b", "toString", "includes", ".cart__total", '\n                </h5>\n                <p> <span class="wenexus-package-protection-description">', "126AtVwQi", "[name='checkout']", "NumberFormat", ";\n            margin: ", "refreshPriceUI", "subtotal-price", ";\n            max-width: ", '</style>\n        <div class="wenexus-package-protection__content">\n            <div class="wenexus-package-protection__image">\n                <img src="', "enabledCheckoutButton", "set", "wenexus-package-protection-description", "buttonColor", "css", ".shopping-cart", "infoPageLink", ".cart-total-price", ".cart__summary-total", ".cart-drawer-footer-total", "from"];
+    _0x3bd3 = function() {
+      return _0x24762b;
+    };
+    return _0x3bd3();
   }
   class PackageProtectionClientShopifyFreeTheme extends PackageProtectionClientBasic {
     constructor() {
       super(...arguments);
-      __publicField(this, _n, _0x2b0fa1(356));
+      __publicField(this, _l, "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753");
     }
-    static [(_n = _0x2b0fa1(395), _0x2b0fa1(399))]() {
+    static ["shouldUse"]() {
       return checkTheme(freeThemes);
     }
-    [_0x2b0fa1(444)](_0x1e1f11, _0x387257) {
-      const _0x5b8ce3 = _0x2b0fa1;
-      return [{ "selector": _0x387257 ?? _0x5b8ce3(428), "insertPosition": _0x1e1f11 ?? _0x5b8ce3(410) }, { "selector": _0x5b8ce3(430), "insertPosition": "before", "boundaryParents": new Set(Array["from"](document[_0x5b8ce3(357)](_0x5b8ce3(377)))) }, { "selector": _0x5b8ce3(345), "insertPosition": _0x5b8ce3(410) }, { "selector": _0x5b8ce3(457), "insertPosition": _0x5b8ce3(410) }];
+    [(_l = _0x4b16bb(629), _0x4b16bb(573))](_0x2f93f3, _0x3b4f7d) {
+      const _0x4918a0 = _0x4b16bb;
+      return [{ "selector": _0x3b4f7d ?? _0x4918a0(491), "insertPosition": _0x2f93f3 ?? _0x4918a0(584) }, { "selector": ".cart-notification__links", "insertPosition": _0x4918a0(584), "boundaryParents": new Set(Array[_0x4918a0(560)](document[_0x4918a0(518)](_0x4918a0(635)))) }, { "selector": _0x4918a0(532), "insertPosition": "before" }, { "selector": _0x4918a0(507), "insertPosition": _0x4918a0(584) }];
     }
-    async [_0x2b0fa1(405)](_0x2b8f39) {
-      const _0x246935 = _0x2b0fa1;
-      return super[_0x246935(405)]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": _0x246935(414), "titleFontSize": 1.8, "descriptionFontSize": 1.1, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], ..._0x2b8f39, "accentColor": _0x246935(373) });
+    async [_0x4b16bb(607)](_0x2b25b7) {
+      const _0x35f14a = _0x4b16bb;
+      return super[_0x35f14a(607)]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": _0x35f14a(612), "titleFontSize": 1.8, "descriptionFontSize": 1.1, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], ..._0x2b25b7, "accentColor": _0x35f14a(485) });
     }
-    async [_0x2b0fa1(355)]() {
-      const _0x529366 = _0x2b0fa1, _0x1d9930 = [_0x529366(420)], _0x51523c = await window["weNexusCartApi"][_0x529366(331)](), _0x5f1b02 = (_0x36a56f = 0) => {
-        _0x1d9930["forEach"]((_0x245386) => {
-          const _0x17b8b3 = _0x4285;
-          let _0x180560 = document[_0x17b8b3(357)](_0x245386);
-          function _0xd2cdd6(_0x4c257e) {
-            const _0x3b339a = _0x17b8b3, _0x5ce89c = Number(_0x51523c["items_subtotal_price"] / 100)["toFixed"](2), _0x1ae6df = Number(_0x51523c[_0x3b339a(337)] / 100 + _0x36a56f)[_0x3b339a(482)](2);
-            if ((_0x4c257e == null ? void 0 : _0x4c257e[_0x3b339a(458)]) === (Node == null ? void 0 : Node[_0x3b339a(448)])) {
-              if (_0x36a56f === 0) {
-                const _0xd526ff = localStorage[_0x3b339a(384)](_0x3b339a(337));
-                _0x4c257e[_0x3b339a(435)] = _0x4c257e[_0x3b339a(435)][_0x3b339a(387)](new RegExp("\\b" + _0xd526ff + "\\b", "g"), _0x1ae6df);
+    async [_0x4b16bb(592)]() {
+      const _0x57a3bb = _0x4b16bb, _0x2e1e08 = [_0x57a3bb(624)], _0x3a77b0 = await window[_0x57a3bb(494)][_0x57a3bb(611)](), _0x2ecf1e = (_0x248771 = 0) => {
+        const _0x2d5f5f = _0x57a3bb;
+        _0x2e1e08[_0x2d5f5f(596)]((_0x57765d) => {
+          const _0x22b828 = _0x2d5f5f;
+          let _0x252f95 = document[_0x22b828(518)](_0x57765d);
+          function _0x89a1b3(_0x41a4ef) {
+            const _0x2078f5 = _0x22b828, _0x4dee10 = Number(_0x3a77b0[_0x2078f5(533)] / 100)[_0x2078f5(587)](2), _0x2e20a9 = Number(_0x3a77b0[_0x2078f5(533)] / 100 + _0x248771)[_0x2078f5(587)](2);
+            if ((_0x41a4ef == null ? void 0 : _0x41a4ef["nodeType"]) === (Node == null ? void 0 : Node[_0x2078f5(580)])) {
+              if (_0x248771 === 0) {
+                const _0x8b66d3 = localStorage[_0x2078f5(642)]("items_subtotal_price");
+                _0x41a4ef["textContent"] = _0x41a4ef[_0x2078f5(597)][_0x2078f5(583)](new RegExp("\\b" + _0x8b66d3 + "\\b", "g"), _0x2e20a9);
               } else
-                localStorage[_0x3b339a(496)]("items_subtotal_price", _0x1ae6df), _0x4c257e[_0x3b339a(435)] = _0x4c257e["textContent"][_0x3b339a(387)](new RegExp("\\b" + _0x5ce89c + "\\b", "g"), _0x1ae6df);
+                localStorage["setItem"](_0x2078f5(533), _0x2e20a9), _0x41a4ef["textContent"] = _0x41a4ef[_0x2078f5(597)][_0x2078f5(583)](new RegExp("\\b" + _0x4dee10 + "\\b", "g"), _0x2e20a9);
             } else
-              (_0x4c257e == null ? void 0 : _0x4c257e["nodeType"]) === (Node == null ? void 0 : Node[_0x3b339a(383)]) && Array["from"](_0x4c257e[_0x3b339a(382)])[_0x3b339a(396)](_0xd2cdd6);
+              (_0x41a4ef == null ? void 0 : _0x41a4ef[_0x2078f5(616)]) === (Node == null ? void 0 : Node[_0x2078f5(602)]) && Array[_0x2078f5(560)](_0x41a4ef[_0x2078f5(503)])[_0x2078f5(596)](_0x89a1b3);
           }
-          _0x180560[_0x17b8b3(396)]((_0x4b2c2a) => {
-            _0xd2cdd6(_0x4b2c2a);
+          _0x252f95[_0x22b828(596)]((_0x57b208) => {
+            _0x89a1b3(_0x57b208);
           });
         });
       };
       setTimeout(() => {
-        const _0x80f526 = _0x529366, _0xced286 = this[_0x80f526(465)](), _0xe40205 = localStorage[_0x80f526(384)](_0x80f526(338));
-        let _0x3f92e7 = "";
-        _0xe40205 === _0x80f526(361) ? (_0x3f92e7 = this["enabledDescription"], _0x5f1b02(_0xced286), _0x5f1b02(_0xced286)) : (_0x3f92e7 = this[_0x80f526(364)], _0x5f1b02(), _0x5f1b02());
-        const _0x35da4e = document[_0x80f526(486)](_0x80f526(381));
-        Array[_0x80f526(455)](_0x35da4e)["forEach"]((_0x1a54e8) => _0x1a54e8["innerHTML"] = _0x3f92e7 + " ");
-      }, 500);
-    }
-    [_0x2b0fa1(489)]() {
-      const _0x1cfe15 = _0x2b0fa1;
-      console["log"](_0x1cfe15(401)), Array[_0x1cfe15(455)](document[_0x1cfe15(440)](_0x1cfe15(371)))[_0x1cfe15(396)]((_0x38d586) => _0x38d586["onCartUpdate"]()), Array["from"](document[_0x1cfe15(440)](_0x1cfe15(416)))[_0x1cfe15(396)]((_0x10df89) => _0x10df89["onCartUpdate"]());
-    }
-    async [_0x2b0fa1(423)]() {
-      const _0x5a2637 = _0x2b0fa1, _0x543775 = (await window[_0x5a2637(477)]["get"]())["item_count"];
-      let _0x36370f = document[_0x5a2637(486)](_0x5a2637(404));
-      Array["from"](_0x36370f)["forEach"]((_0x17f76b) => {
-        const _0x48beba = _0x5a2637;
-        _0x17f76b[_0x48beba(382)][_0x48beba(396)]((_0x298094) => {
-          const _0xf0ce1e = _0x48beba;
-          _0x298094[_0xf0ce1e(441)] && (_0x298094[_0xf0ce1e(441)] = _0x543775[_0xf0ce1e(347)]());
-        });
-      });
-    }
-  }
-  function _0x2b74() {
-    const _0x2e6af8 = ["refreshWidget", "lastElementChild", "end", "enterpriseTheme", "wenexus-package-protection-description", "total_price", "formatPrice", "location", "shouldUse", "button[name='checkout']", "Checkout - ", "get", "2016915eGAcPV", "2620IcIfGy", "25938fVZrny", "6zKbMaB", "doesCheckoutContainSubtotal", "forEach", "4DbwQdg", "weNexusCartApi", "innerHTML", "5221139alrbMW", "#2c7e3f", "test", "cartUpdate", "443708SDsgqn", "textContent", "getInsertionPointSelectors", "822066INAeOV", "currency", "true", "thumbnail", "250px", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753", "553128vZjhuk", "enabledDescription", "querySelector", "54669uPFqzY"];
-    _0x2b74 = function() {
-      return _0x2e6af8;
-    };
-    return _0x2b74();
-  }
-  function _0x5e34(_0x26cdeb, _0x45eeb3) {
-    const _0x2b7401 = _0x2b74();
-    return _0x5e34 = function(_0x5e34a9, _0x46819e) {
-      _0x5e34a9 = _0x5e34a9 - 176;
-      let _0x2f45b2 = _0x2b7401[_0x5e34a9];
-      return _0x2f45b2;
-    }, _0x5e34(_0x26cdeb, _0x45eeb3);
-  }
-  const _0x1e0166 = _0x5e34;
-  (function(_0x2c4406, _0xab82b6) {
-    const _0x2ecea3 = _0x5e34, _0x1a756b = _0x2c4406();
-    while (!![]) {
-      try {
-        const _0x22f399 = parseInt(_0x2ecea3(179)) / 1 + -parseInt(_0x2ecea3(182)) / 2 + parseInt(_0x2ecea3(191)) / 3 * (parseInt(_0x2ecea3(210)) / 4) + parseInt(_0x2ecea3(204)) / 5 + parseInt(_0x2ecea3(207)) / 6 * (parseInt(_0x2ecea3(213)) / 7) + -parseInt(_0x2ecea3(188)) / 8 + -parseInt(_0x2ecea3(206)) / 9 * (parseInt(_0x2ecea3(205)) / 10);
-        if (_0x22f399 === _0xab82b6)
-          break;
-        else
-          _0x1a756b["push"](_0x1a756b["shift"]());
-      } catch (_0x825b7f) {
-        _0x1a756b["push"](_0x1a756b["shift"]());
-      }
-    }
-  })(_0x2b74, 375933);
-  class PackageProtectionClientEnterpriseTheme extends PackageProtectionClientBasic {
-    constructor() {
-      super(...arguments);
-      __publicField(this, _o, _0x1e0166(187));
-    }
-    static [(_o = _0x1e0166(185), _0x1e0166(200))]() {
-      return checkTheme(enterpriseTheme);
-    }
-    [_0x1e0166(181)]() {
-      const _0x3d7e56 = _0x1e0166;
-      return [{ "selector": _0x3d7e56(201), "insertPosition": "before" }];
-    }
-    async ["getStyleMarkup"](_0x308e1e) {
-      const _0x20dc42 = _0x1e0166;
-      return super["getStyleMarkup"]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": _0x20dc42(194), "titleFontSize": 1, "descriptionFontSize": 0.8, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], "containerMaxWidth": _0x20dc42(186), ..._0x308e1e, "accentColor": _0x20dc42(176) });
-    }
-    [_0x1e0166(208)](_0xbc1683) {
-      const _0x1850eb = _0x1e0166;
-      if (!_0xbc1683)
-        return ![];
-      const _0x2a03f9 = /checkout/i, _0x27bfd3 = /\b\d+(\.\d{2})?\b/;
-      return _0x2a03f9[_0x1850eb(177)](_0xbc1683) && _0x27bfd3[_0x1850eb(177)](_0xbc1683);
-    }
-    async [_0x1e0166(192)]() {
-      const _0x31e013 = _0x1e0166;
-      console["log"](_0x31e013(195));
-      const _0x423baa = [".cart__summary div p", 'button[name="checkout"]'], _0x3be22e = await window[_0x31e013(211)][_0x31e013(203)](), _0x366e1d = (_0x58e0e3 = 0) => {
-        const _0x81cb7 = _0x31e013;
-        _0x423baa[_0x81cb7(209)]((_0x1ff1aa) => {
-          const _0x2c3240 = _0x81cb7;
-          let _0x187a18 = document[_0x2c3240(190)](_0x1ff1aa);
-          if (_0x187a18 && this["doesCheckoutContainSubtotal"](_0x187a18[_0x2c3240(180)])) {
-            _0x187a18["textContent"] = "Checkout - " + this[_0x2c3240(198)](Number(_0x3be22e[_0x2c3240(197)] / 100 + _0x58e0e3), _0x3be22e[_0x2c3240(183)]);
-            return;
-          }
-          if (_0x187a18 && _0x187a18[_0x2c3240(193)])
-            _0x187a18[_0x2c3240(193)][_0x2c3240(212)] = _0x2c3240(202) + this[_0x2c3240(198)](Number(_0x3be22e["total_price"] / 100 + _0x58e0e3), _0x3be22e[_0x2c3240(183)]);
-          else
-            _0x187a18 && (_0x187a18[_0x2c3240(212)] = this[_0x2c3240(198)](Number(_0x3be22e["total_price"] / 100 + _0x58e0e3), _0x3be22e[_0x2c3240(183)]));
-        });
-      };
-      setTimeout(() => {
-        const _0x5164a2 = _0x31e013, _0x2a8539 = this["getWidgetPrice"](), _0x27f4c7 = localStorage["getItem"]("package-protection-enabled");
-        let _0x316631 = "";
-        _0x27f4c7 === _0x5164a2(184) ? (_0x316631 = this[_0x5164a2(189)], _0x366e1d(_0x2a8539), _0x366e1d(_0x2a8539)) : (_0x316631 = this["disabledDescription"], _0x366e1d(), _0x366e1d());
-        const _0x3b2614 = document["getElementsByClassName"](_0x5164a2(196));
-        Array["from"](_0x3b2614)[_0x5164a2(209)]((_0x3a4ffd) => _0x3a4ffd[_0x5164a2(212)] = _0x316631 + " ");
-      }, 500);
-    }
-    [_0x1e0166(178)]() {
-      const _0x281206 = _0x1e0166;
-      window[_0x281206(199)]["reload"]();
-    }
-  }
-  const _0x8d253d = _0x2f2c;
-  (function(_0x59a4b7, _0x51131f) {
-    const _0x2d056a = _0x2f2c, _0x53b4aa = _0x59a4b7();
-    while (!![]) {
-      try {
-        const _0x4d7274 = parseInt(_0x2d056a(175)) / 1 + -parseInt(_0x2d056a(182)) / 2 + parseInt(_0x2d056a(219)) / 3 + -parseInt(_0x2d056a(110)) / 4 * (-parseInt(_0x2d056a(120)) / 5) + -parseInt(_0x2d056a(218)) / 6 + -parseInt(_0x2d056a(118)) / 7 + parseInt(_0x2d056a(232)) / 8;
-        if (_0x4d7274 === _0x51131f)
-          break;
-        else
-          _0x53b4aa["push"](_0x53b4aa["shift"]());
-      } catch (_0x40a540) {
-        _0x53b4aa["push"](_0x53b4aa["shift"]());
-      }
-    }
-  })(_0x2cbe, 287265);
-  function _0x2f2c(_0x5a8c70, _0x5c3202) {
-    const _0x2cbe24 = _0x2cbe();
-    return _0x2f2c = function(_0x2f2c0c, _0x52e5de) {
-      _0x2f2c0c = _0x2f2c0c - 101;
-      let _0x378818 = _0x2cbe24[_0x2f2c0c];
-      return _0x378818;
-    }, _0x2f2c(_0x5a8c70, _0x5c3202);
-  }
-  function _0x2cbe() {
-    const _0x4edbac = [".cart-page__block-container", ".footer-ctas", ".cart-submit", ".quick-cart__total", "div[data-cart-footer]", ".sub-total", ".cart__footer", '.cart__summary button[name="checkout"]', "div.ajax-cart__summary-wrapper.js-cart-summary", ".mini-cart-footer", "textContent", ".add-to-cart-wrap", ".proceed-to-checkout", "4WNbQYD", ".cart-template__footer-actions", "display", ".sticky-menu container", "setItem", ".cart__summary", ".cart-mini-subtotal", "weNexusCartApi", "1903328jIRDEV", "before", "899905MlHvNl", ".main-cart__footer__fine-print", ".theme-button--secondary", ".cart-drawer--footer", ".cart-total-item", "#CartDetails", ".ajaxcart__footer", "form.ajax-cart__cart-form.grid__wrapper.narrow.mb4.js-cart-form div.ajax-cart__buttons", ".cart-footer", ".checkout-btns", ".main-cart__footer__total", "enabledDescription", "replace", "nodeType", "universal-1", "getWidgetPrice", ".cart-btn", ".cart-buttons", ".thb-cart-form--proceed", ".mini-cart-footer-actions", ".cart-totals", ".cart__footer--buttons", "wenexus-package-protection-description", ".cart__blocks", "cart-drawer-buttons-block", ".cart-total", "getItem", ".cart-drawer-subtotal__main-content", "form#cart button#cart-notification-checkout", "style", "after", "package-protection-enabled", "disabledDescription", "from", "get", ".drawer__footer-actions", ".cart-drawer--buttons-container", "#mini-cart-toggle", ".thb-cart-form--cart-collaterals", ".drawer__footer details", 'div[slot="footer"]', "product-variant__input", ".cart-sidebar__footer", ".cart__buttons-container", ".cart-checkout", "div#CartDrawer", ".drawer__footer__inner", "toFixed", ".cart__ctas", ".mini-cart__total", ".mini-cart__recap", "forEach", ".drawer__footer-buttons", ".cart-mini-actions", ".xo-cart-totals", "307795PMuBsD", ".f-cart-drawer__subtotal-value", ".f-cart-drawer__buttons", ".drawer__footer-body", "#total-bottom", ".buy-buttons--compact", "add", "969862RCjods", ".cart__subtotal", "form.f8vl.f8vl-initialized p.link-btn.text-justify", "refreshWidget", "div.cart-purchase__checkout-section div.bottom-cart-wrapper", ".mini-cart__button-container", ".cart-ctas", "querySelector", ".money[data-cart-total]", ".cart__details", "div.py-24.flex div.md\\:ml-auto.max-sm\\:w-full div.flex.flex-col.items-end.gap-8 button", "getInsertionPointSelectors", ".cart-drawer__action-buttons", ".header-minicart-footer-wrapper", ".cart-total-box", '.wenexus-package-protection__toggle input[type="checkbox"]', ".totle-price", "unset", ".mini-cart__buttons", "getElementsByClassName", "childNodes", ".cart-checkout-container", ".cart-drawer__footer  p.rte", 'xo-cart-will-change button[type="submit"][name="checkout"]', ".cart__checkout", ".cart__details--row", ".side-panel-footer", ".drawer__footer", ".cart-total-price", ".cart-btn-container", "items_subtotal_price", "cartUpdate", "div.mini-cart__footer div.cart-summary__meta a.button", ".cart-template__cart-total", ".cart-template__footer", 'button[type="submit"][name="checkout"]', "373026qwvesa", "1146585ntLOPE", "querySelectorAll", ".cart-form__totals", ".cart-summary", 'safe-sticky button[name="checkout"]', ".xo-cart-mini-footer__group", "main.drawer__inner.min-h-0.h-full small.text-caption", "reload", 'button[form="mini-cart-form"]', "form.f8vl.f8vl-initialized ul.l4tt.form-group", "true", "classList", ".cart-drawer__cart-total", "1890400ioiFHG"];
-    _0x2cbe = function() {
-      return _0x4edbac;
-    };
-    return _0x2cbe();
-  }
-  class PackageProtectionClientUniversalTheme extends PackageProtectionClientBasic {
-    static ["shouldUse"]() {
-      return checkTheme(universalTheme);
-    }
-    [_0x8d253d(193)]() {
-      const _0x93fb69 = _0x8d253d;
-      return [{ "selector": _0x93fb69(234), "insertPosition": "before" }, { "selector": _0x93fb69(144), "insertPosition": "before" }, { "selector": _0x93fb69(137), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(168), "insertPosition": "before" }, { "selector": ".cart-summary__button", "insertPosition": "before" }, { "selector": _0x93fb69(235), "insertPosition": _0x93fb69(119) }, { "selector": ".cart-drawer__checkout-buttons", "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(204), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(159), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(104), "insertPosition": "before" }, { "selector": ".checkout-buttons", "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(177), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(172), "insertPosition": "before" }, { "selector": _0x93fb69(141), "insertPosition": "before" }, { "selector": _0x93fb69(125), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(225), "insertPosition": "after" }, { "selector": _0x93fb69(192), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(184), "insertPosition": _0x93fb69(119) }, { "selector": "fieldset aside p.link-btn.wide", "insertPosition": "before" }, { "selector": _0x93fb69(203), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(186), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(214), "insertPosition": _0x93fb69(119) }, { "selector": 'form.cart__wrapper div.cart-summary .cart-summary__buttons button[name="checkout"]', "insertPosition": "before" }, { "selector": _0x93fb69(148), "insertPosition": "before" }, { "selector": _0x93fb69(127), "insertPosition": _0x93fb69(119) }, { "selector": "form.ajax-cart__cart-form.grid__wrapper.edge.js-cart-form div.ajax-cart__buttons", "insertPosition": "before" }, { "selector": _0x93fb69(122), "insertPosition": _0x93fb69(119) }, { "selector": ".ajaxcart__footer", "insertPosition": "before" }, { "selector": _0x93fb69(163), "insertPosition": "before" }, { "selector": _0x93fb69(111), "insertPosition": _0x93fb69(119) }, { "selector": ".cart__footer-actions", "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(236), "insertPosition": _0x93fb69(150) }, { "selector": ".cart-drawer__footer--buttons", "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(129), "insertPosition": _0x93fb69(119) }, { "selector": ".cart-drawer-buttons", "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(109), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(156), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(138), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(200), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(188), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(139), "insertPosition": _0x93fb69(119) }, { "selector": ".cart-template__checkout-buttons", "insertPosition": "before" }, { "selector": _0x93fb69(108), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(155), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(206), "insertPosition": _0x93fb69(119) }, { "selector": ".cart-sidebar__footer-actions", "insertPosition": _0x93fb69(119) }, { "selector": ".cart-modal-buttons", "insertPosition": _0x93fb69(119) }, { "selector": "add-order-note", "insertPosition": "after" }, { "selector": _0x93fb69(121), "insertPosition": _0x93fb69(150) }, { "selector": _0x93fb69(195), "insertPosition": _0x93fb69(119) }, { "selector": ".sticky-menu-buttons-slideout-closed", "insertPosition": _0x93fb69(119) }, { "selector": 'button[aria-label="Agree to Terms"]', "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(194), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(173), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(164), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(187), "insertPosition": "before" }, { "selector": ".cart-recap__notices", "insertPosition": _0x93fb69(150) }, { "selector": _0x93fb69(180), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(227), "insertPosition": "before" }, { "selector": _0x93fb69(136), "insertPosition": _0x93fb69(119) }, { "selector": _0x93fb69(211), "insertPosition": "before" }, { "selector": _0x93fb69(224), "insertPosition": "before" }, { "selector": _0x93fb69(205), "insertPosition": _0x93fb69(119) }, { "selector": '.checkout-row input[type="submit"][name="checkout"]', "insertPosition": _0x93fb69(119) }, { "selector": ".overlay-buy_button", "insertPosition": "before" }, { "selector": _0x93fb69(223), "insertPosition": "before" }];
-    }
-    async [_0x8d253d(185)]() {
-      const _0x5a7b94 = _0x8d253d;
-      console["log"](_0x5a7b94(134));
-      const _0x3e758d = [".cart-details-footer", _0x5a7b94(147), ".cart-subtotal", _0x5a7b94(166), _0x5a7b94(103), ".cart-summary__total-price-row", _0x5a7b94(209), ".subtotal-row", ".cart-drawer__summary", _0x5a7b94(101), _0x5a7b94(115), ".cart-drawer__footer", ".checkout-subtotal-container__right", _0x5a7b94(176), _0x5a7b94(178), _0x5a7b94(207), _0x5a7b94(191), "#CartTotal", "form.sticky-in-panel ", "ul.l4tt.m15.form-group ", "fieldset aside ul.l4tt.form-group", _0x5a7b94(228), "div.cart-notification__links", "div.ajax-cart__final-details", "div.cart-purchase__buttons", _0x5a7b94(165), "div#main-cart-footer", _0x5a7b94(162), ".mini-cart__footer", _0x5a7b94(222), _0x5a7b94(126), _0x5a7b94(143), _0x5a7b94(216), ".quick-cart__footer", _0x5a7b94(183), ".cart-drawer__subtotal", _0x5a7b94(196), _0x5a7b94(169), _0x5a7b94(123), _0x5a7b94(158), _0x5a7b94(208), _0x5a7b94(145), _0x5a7b94(128), _0x5a7b94(106), _0x5a7b94(231), _0x5a7b94(215), _0x5a7b94(233), ".cart-sidebar__footer", _0x5a7b94(140), _0x5a7b94(102), _0x5a7b94(130), _0x5a7b94(195), _0x5a7b94(113), _0x5a7b94(179), _0x5a7b94(190), _0x5a7b94(116), ".checkout-subtotal-container", _0x5a7b94(124), _0x5a7b94(198), _0x5a7b94(157), _0x5a7b94(160), "safe-sticky", _0x5a7b94(170), ".card__section", _0x5a7b94(227), ".cart__recap", _0x5a7b94(174), ".xo-cart-mini-footer__price", _0x5a7b94(210), _0x5a7b94(221), _0x5a7b94(217), _0x5a7b94(160)], _0x1bb68 = await window[_0x5a7b94(117)][_0x5a7b94(154)](), _0x1a5e22 = document[_0x5a7b94(189)](_0x5a7b94(197));
-      if (_0x1a5e22)
-        _0x1a5e22[_0x5a7b94(230)][_0x5a7b94(181)](_0x5a7b94(161));
-      const _0xa2b0e5 = () => {
-        const _0x13feef = _0x5a7b94, _0x2448a1 = document[_0x13feef(189)](_0x13feef(105));
-        if (_0x2448a1)
-          _0x2448a1[_0x13feef(149)][_0x13feef(112)] = _0x13feef(199);
-      };
-      _0xa2b0e5();
-      const _0x2cd488 = (_0xb6687a = 0) => {
-        const _0x1a31b9 = _0x5a7b94;
-        _0x3e758d[_0x1a31b9(171)]((_0x151288) => {
-          const _0x4502c5 = _0x1a31b9;
-          let _0x499b86 = document[_0x4502c5(220)](_0x151288);
-          function _0x101da4(_0x144485) {
-            const _0x33bb60 = _0x4502c5, _0x46e494 = Number(_0x1bb68[_0x33bb60(212)] / 100)[_0x33bb60(167)](2), _0x29533b = Number(_0x1bb68[_0x33bb60(212)] / 100 + _0xb6687a)[_0x33bb60(167)](2);
-            if ((_0x144485 == null ? void 0 : _0x144485[_0x33bb60(133)]) === (Node == null ? void 0 : Node["TEXT_NODE"])) {
-              if (_0xb6687a === 0) {
-                const _0x4e1085 = localStorage[_0x33bb60(146)]("items_subtotal_price");
-                _0x144485[_0x33bb60(107)] = _0x144485[_0x33bb60(107)][_0x33bb60(132)](new RegExp("\\b" + _0x4e1085 + "\\b", "g"), _0x29533b);
-              } else
-                localStorage[_0x33bb60(114)]("items_subtotal_price", _0x29533b), _0x144485[_0x33bb60(107)] = _0x144485[_0x33bb60(107)][_0x33bb60(132)](new RegExp("\\b" + _0x46e494 + "\\b", "g"), _0x29533b);
-            } else
-              (_0x144485 == null ? void 0 : _0x144485["nodeType"]) === (Node == null ? void 0 : Node["ELEMENT_NODE"]) && Array["from"](_0x144485[_0x33bb60(202)])["forEach"](_0x101da4);
-          }
-          _0x499b86[_0x4502c5(171)]((_0x3e305f) => {
-            _0x101da4(_0x3e305f);
-          });
-        });
-      };
-      setTimeout(() => {
-        const _0x255e16 = _0x5a7b94, _0x501cb2 = this[_0x255e16(135)](), _0x15bbe1 = localStorage[_0x255e16(146)](_0x255e16(151));
-        let _0x9f28bb = "";
-        _0x15bbe1 === _0x255e16(229) ? (_0x9f28bb = this[_0x255e16(131)], _0x2cd488(_0x501cb2), _0x2cd488(_0x501cb2)) : (_0x9f28bb = this[_0x255e16(152)], _0x2cd488(), _0x2cd488());
-        const _0x4754c6 = document[_0x255e16(201)](_0x255e16(142));
-        Array[_0x255e16(153)](_0x4754c6)[_0x255e16(171)]((_0x44ed97) => _0x44ed97["innerHTML"] = _0x9f28bb + " ");
-      }, 500);
-    }
-    [_0x8d253d(213)]() {
-      const _0x50e065 = _0x8d253d;
-      window["location"][_0x50e065(226)]();
-    }
-  }
-  const _0x18478e = _0x149f;
-  (function(_0xe88857, _0x1d2112) {
-    const _0x26de39 = _0x149f, _0x196eec = _0xe88857();
-    while (!![]) {
-      try {
-        const _0x1a80bc = -parseInt(_0x26de39(331)) / 1 + parseInt(_0x26de39(329)) / 2 * (parseInt(_0x26de39(340)) / 3) + -parseInt(_0x26de39(366)) / 4 * (-parseInt(_0x26de39(312)) / 5) + -parseInt(_0x26de39(319)) / 6 * (-parseInt(_0x26de39(332)) / 7) + -parseInt(_0x26de39(326)) / 8 * (parseInt(_0x26de39(338)) / 9) + -parseInt(_0x26de39(347)) / 10 * (-parseInt(_0x26de39(371)) / 11) + parseInt(_0x26de39(355)) / 12 * (-parseInt(_0x26de39(330)) / 13);
-        if (_0x1a80bc === _0x1d2112)
-          break;
-        else
-          _0x196eec["push"](_0x196eec["shift"]());
-      } catch (_0x1bc59c) {
-        _0x196eec["push"](_0x196eec["shift"]());
-      }
-    }
-  })(_0x179d, 254214);
-  function _0x179d() {
-    const _0x3922d8 = ["innerHTML", ".cart-drawer__summary-total", ".sub--total-cart", ".cart-subtotal", ".cart__subtotal", "nodeType", "toFixed", "144klUzzx", ".template__cart__footer", ".subtotal", ".cart__row--table", ".Cart__Total", ".order-summary-card", "true", "querySelectorAll", "getElementsByClassName", ".cart-drawer__container", ".cart-drawer-footer-total", "212xVkaDQ", ".cart-drawer_foot-wrap", "wenexus-package-protection-description", ".total-holder", ".cart-total-price", "110RoymHU", "universal-for-sub-1", ".ajaxcart__price", ".cart__details", "form#CartPageForm", ".cart-footer__subtotal", ".cart-recap", "#CartDetails", "enabledDescription", "ELEMENT_NODE", "items_subtotal_price", "TEXT_NODE", "cartUpdate", ".wt-cart__footer__body", ".main-cart_cart-totals-wrap", "form.sticky-cart__inner", ".CartDrawer__Total", "location", "textContent", ".cart-total-box", "forEach", "#cart-subtotal", "6595jtBHmn", ".cart--total-price", ".cart-template__summary", "#main-cart-footer", ".cart__summary-total", "subtotal-price", "from", "1032gSjTDz", "replace", ".shopping-cart", 'button[type="submit"][name="checkout"]', ".cart-drawer__totals", ".cart__footer-inner", ".cart-header-details", "956944NZLprL", "shouldUse", "cart-footer", "483396oXujqf", "681811lqiInc", "314321gvXlwO", "17164OqAmwz", "#cart-drawer-live-region-subtotal", 'div[data-element="subtotal-block"]', ".more", ".totals__subtotal-value", ".cart-drawer__bottom", "9gXNYxm", ".cart__footer ", "6OieIvK", ".cart-count", "get", "refreshWidget", ".cart-footer__summary", ".cart-table__checkoutWrp", "log", "342470EgdNtu"];
-    _0x179d = function() {
-      return _0x3922d8;
-    };
-    return _0x179d();
-  }
-  function _0x149f(_0xc8d69, _0x6a93ab) {
-    const _0x179df3 = _0x179d();
-    return _0x149f = function(_0x149f32, _0x3cc58d) {
-      _0x149f32 = _0x149f32 - 309;
-      let _0x314786 = _0x179df3[_0x149f32];
-      return _0x314786;
-    }, _0x149f(_0xc8d69, _0x6a93ab);
-  }
-  class PackageProtectionClientUniversalForSubTotalTheme extends PackageProtectionClientBasic {
-    static [_0x18478e(327)]() {
-      return checkTheme(universalForSubTotalTheme);
-    }
-    async [_0x18478e(343)]() {
-      const _0x3b3dfe = _0x18478e;
-      console[_0x3b3dfe(346)](_0x3b3dfe(372));
-      const _0x5a4acb = [".wt-cart__footer", _0x3b3dfe(384), _0x3b3dfe(315), ".drawer__footer", _0x3b3dfe(324), ".quick-cart__footer", _0x3b3dfe(328), _0x3b3dfe(322), ".cart__footer", _0x3b3dfe(386), _0x3b3dfe(375), _0x3b3dfe(309), _0x3b3dfe(364), _0x3b3dfe(314), _0x3b3dfe(344), _0x3b3dfe(337), _0x3b3dfe(369), _0x3b3dfe(385), _0x3b3dfe(367), ".main-cart_widget--totals", ".accordion-wrap", _0x3b3dfe(321), _0x3b3dfe(356), _0x3b3dfe(345), _0x3b3dfe(351), _0x3b3dfe(334), _0x3b3dfe(333), "div[data-cart-subtotal-block]", _0x3b3dfe(317), _0x3b3dfe(376), ".cart-totals", _0x3b3dfe(360), _0x3b3dfe(335), _0x3b3dfe(357), ".subtotal .money ", _0x3b3dfe(365), _0x3b3dfe(387), _0x3b3dfe(359), _0x3b3dfe(325), _0x3b3dfe(350), ".items-baseline", _0x3b3dfe(323), _0x3b3dfe(311), ".cart__total", _0x3b3dfe(313), _0x3b3dfe(316), _0x3b3dfe(349), ".cart-items__total", ".cart-drawer__total", _0x3b3dfe(352), _0x3b3dfe(336), _0x3b3dfe(378), _0x3b3dfe(339), ".cart-summary-line", _0x3b3dfe(374), _0x3b3dfe(377), _0x3b3dfe(341), _0x3b3dfe(370), _0x3b3dfe(352), _0x3b3dfe(373), _0x3b3dfe(358)], _0x288af9 = await window["weNexusCartApi"][_0x3b3dfe(342)](), _0x3c73ec = (_0x489324 = 0) => {
-        const _0x4e843f = _0x3b3dfe;
-        _0x5a4acb[_0x4e843f(310)]((_0x750fee) => {
-          const _0x275c66 = _0x4e843f;
-          let _0x3442e6 = document[_0x275c66(362)](_0x750fee);
-          function _0x5b3ad8(_0x2f92e4) {
-            const _0x4cb2d9 = _0x275c66, _0x26a4e5 = Number(_0x288af9[_0x4cb2d9(381)] / 100)[_0x4cb2d9(354)](2), _0x5b7e98 = Number(_0x288af9["items_subtotal_price"] / 100 + _0x489324)[_0x4cb2d9(354)](2);
-            if ((_0x2f92e4 == null ? void 0 : _0x2f92e4["nodeType"]) === (Node == null ? void 0 : Node[_0x4cb2d9(382)])) {
-              if (_0x489324 === 0) {
-                const _0x2f9b4a = localStorage["getItem"](_0x4cb2d9(381));
-                _0x2f92e4[_0x4cb2d9(389)] = _0x2f92e4[_0x4cb2d9(389)][_0x4cb2d9(320)](new RegExp("\\b" + _0x2f9b4a + "\\b", "g"), _0x5b7e98);
-              } else
-                localStorage["setItem"](_0x4cb2d9(381), _0x5b7e98), _0x2f92e4[_0x4cb2d9(389)] = _0x2f92e4[_0x4cb2d9(389)]["replace"](new RegExp("\\b" + _0x26a4e5 + "\\b", "g"), _0x5b7e98);
-            } else
-              (_0x2f92e4 == null ? void 0 : _0x2f92e4[_0x4cb2d9(353)]) === (Node == null ? void 0 : Node[_0x4cb2d9(380)]) && Array[_0x4cb2d9(318)](_0x2f92e4["childNodes"])["forEach"](_0x5b3ad8);
-          }
-          _0x3442e6["forEach"]((_0x5b4696) => {
-            _0x5b3ad8(_0x5b4696);
-          });
-        });
-      };
-      setTimeout(() => {
-        const _0x12eeb5 = _0x3b3dfe, _0x12938c = this["getWidgetPrice"](), _0x2c2332 = localStorage["getItem"]("package-protection-enabled");
-        let _0x25b879 = "";
-        _0x2c2332 === _0x12eeb5(361) ? (_0x25b879 = this[_0x12eeb5(379)], _0x3c73ec(_0x12938c), _0x3c73ec(_0x12938c)) : (_0x25b879 = this["disabledDescription"], _0x3c73ec(), _0x3c73ec());
-        const _0x5af07f = document[_0x12eeb5(363)](_0x12eeb5(368));
-        Array[_0x12eeb5(318)](_0x5af07f)[_0x12eeb5(310)]((_0x186a6b) => _0x186a6b[_0x12eeb5(348)] = _0x25b879 + " ");
-      }, 500);
-    }
-    [_0x18478e(383)]() {
-      const _0x8a5e6f = _0x18478e;
-      window[_0x8a5e6f(388)]["reload"]();
-    }
-  }
-  const _0x4ccf12 = _0x1b44;
-  (function(_0xc2b136, _0x26b2bf) {
-    const _0x11f436 = _0x1b44, _0x4e66be = _0xc2b136();
-    while (!![]) {
-      try {
-        const _0x37a0a4 = -parseInt(_0x11f436(408)) / 1 * (parseInt(_0x11f436(356)) / 2) + parseInt(_0x11f436(394)) / 3 + -parseInt(_0x11f436(353)) / 4 * (parseInt(_0x11f436(409)) / 5) + -parseInt(_0x11f436(380)) / 6 * (-parseInt(_0x11f436(351)) / 7) + parseInt(_0x11f436(370)) / 8 + parseInt(_0x11f436(411)) / 9 + parseInt(_0x11f436(401)) / 10 * (-parseInt(_0x11f436(383)) / 11);
-        if (_0x37a0a4 === _0x26b2bf)
-          break;
-        else
-          _0x4e66be["push"](_0x4e66be["shift"]());
-      } catch (_0x4bfd6b) {
-        _0x4e66be["push"](_0x4e66be["shift"]());
-      }
-    }
-  })(_0x21bc, 626257);
-  function _0x1b44(_0x2dbf9b, _0x526bc1) {
-    const _0x21bc3a = _0x21bc();
-    return _0x1b44 = function(_0x1b4442, _0x42314d) {
-      _0x1b4442 = _0x1b4442 - 341;
-      let _0x2d9ffa = _0x21bc3a[_0x1b4442];
-      return _0x2d9ffa;
-    }, _0x1b44(_0x2dbf9b, _0x526bc1);
-  }
-  function _0x21bc() {
-    const _0x905611 = [".totals__subtotal-value", ".wenexus-theme-support", "forEach", "disabledDescription", "parentElement", ".drawer-inner__footer", "9025000jyAEVi", "div.total.row", "from", ".subtotal_amount", "querySelectorAll", "shouldUse", ".cart__item-subtotal", "reload", ".cart__total", "before", "6vBUHCQ", "wenexus-package-protection-description", ".f-drawer__footer", "3048749hoSwAM", ".vendors", ".product-price", "getWidgetPrice", "refreshWidget", ".cart-amount", ".cart-drawer__footer", "weNexusCartApi", ".cart-totals", ".cart-summary ", "getItem", "872403vQcWfU", "add", "get", ".sub-total", "items_subtotal_price", "cart-dynamic", "TEXT_NODE", "10HyDZiG", ".cart-drawer-price-total", "package-protection-enabled", "div[data-cart-footer]", "innerHTML", ".cart-popup__footer", ".liveCartFooter", "271982PgAwNq", "2935UIhsBp", ".cart__footer-inner", "3257163tVHDKA", "true", ".minicart-top__wrapper", "replace", "cart-dynamic.flex.gap-4.flex-col", "textContent", "#CartTotal", 'button[name="checkout"][type="submit"], input[name="checkout"][type="submit"],button[name="checkout"], a[href="/checkout"], input[type="submit"][value="Checkout"]', 'span[x-html="formatMoney(state.total_price)"]', "marginBottom", ".cart-drawer__text", "toFixed", "wenexus-theme-support", "2213085XewHuY", ".cart-tot2", "6280xqzWAQ", ".cart-footer_wrapper", ".cart-drawer-footer", "2hTjzjd", ".cart-total", 'data-island[x-data="CartFooter"]', "getElementsByClassName", "ELEMENT_NODE", "nodeType", ".total-amount", "p[data-cart-subtotal]"];
-    _0x21bc = function() {
-      return _0x905611;
-    };
-    return _0x21bc();
-  }
-  class PackageProtectionClientSwitchTheme extends PackageProtectionClientBasic {
-    static [_0x4ccf12(375)]() {
-      return checkTheme(switchTheme);
-    }
-    ["getInsertionPointSelectors"]() {
-      const _0x24b439 = _0x4ccf12, _0x217d67 = document["querySelectorAll"](_0x24b439(345));
-      return _0x217d67[_0x24b439(366)]((_0x3b4667) => {
-        const _0x107df6 = _0x24b439;
-        _0x3b4667[_0x107df6(368)] && _0x3b4667[_0x107df6(368)]["classList"][_0x107df6(395)](_0x107df6(350));
-      }), [{ "selector": _0x24b439(365), "insertPosition": _0x24b439(379) }];
-    }
-    async [_0x4ccf12(387)]() {
-      const _0x29c106 = _0x4ccf12;
-      console["log"]("switch-1");
-      const _0x552599 = [_0x29c106(404), _0x29c106(346), "#main-cart-footer", ".cart__controls", _0x29c106(410), _0x29c106(348), _0x29c106(388), _0x29c106(389), _0x29c106(373), _0x29c106(376), _0x29c106(402), ".cart-summary-price", _0x29c106(371), _0x29c106(342), 'div[x-show="cart.total_price > 0"]', _0x29c106(369), ".cart-form__footer", _0x29c106(413), _0x29c106(354), _0x29c106(406), _0x29c106(382), ".totals", _0x29c106(392), _0x29c106(352), _0x29c106(355), _0x29c106(363), _0x29c106(407), ".table-container", _0x29c106(385), _0x29c106(384), ".subtotal .theme-money", _0x29c106(357), _0x29c106(358), _0x29c106(378), ".cart__footer ", _0x29c106(344), _0x29c106(399), _0x29c106(397), _0x29c106(391), _0x29c106(362), ".wbcarthtotal", _0x29c106(364), ".cart-drawer__subtotal"], _0x2e097c = await window[_0x29c106(390)][_0x29c106(396)](), _0x32e284 = Array[_0x29c106(372)](document[_0x29c106(374)](_0x29c106(348)));
-      _0x32e284[_0x29c106(366)]((_0x5f2b1d) => {
-        const _0x253679 = _0x29c106;
-        _0x5f2b1d["style"][_0x253679(347)] = "70px";
-      });
-      const _0x22e3a9 = (_0x536b65 = 0) => {
-        const _0x4995ce = _0x29c106;
-        _0x552599[_0x4995ce(366)]((_0x2a652b) => {
-          const _0x41ca8a = _0x4995ce;
-          let _0x159235 = document[_0x41ca8a(374)](_0x2a652b);
-          function _0x5b93dd(_0x2261ab) {
-            const _0x8fad66 = _0x41ca8a, _0x4b83c4 = Number(_0x2e097c[_0x8fad66(398)] / 100)[_0x8fad66(349)](2), _0x22bd8f = Number(_0x2e097c[_0x8fad66(398)] / 100 + _0x536b65)[_0x8fad66(349)](2);
-            if ((_0x2261ab == null ? void 0 : _0x2261ab[_0x8fad66(361)]) === (Node == null ? void 0 : Node[_0x8fad66(400)])) {
-              if (_0x536b65 === 0) {
-                const _0x79524 = localStorage[_0x8fad66(393)](_0x8fad66(398));
-                _0x2261ab[_0x8fad66(343)] = _0x2261ab[_0x8fad66(343)][_0x8fad66(341)](new RegExp("\\b" + _0x79524 + "\\b", "g"), _0x22bd8f);
-              } else
-                localStorage["setItem"](_0x8fad66(398), _0x22bd8f), _0x2261ab[_0x8fad66(343)] = _0x2261ab[_0x8fad66(343)][_0x8fad66(341)](new RegExp("\\b" + _0x4b83c4 + "\\b", "g"), _0x22bd8f);
-            } else
-              (_0x2261ab == null ? void 0 : _0x2261ab["nodeType"]) === (Node == null ? void 0 : Node[_0x8fad66(360)]) && Array[_0x8fad66(372)](_0x2261ab["childNodes"])[_0x8fad66(366)](_0x5b93dd);
-          }
-          _0x159235["forEach"]((_0x2880f9) => {
-            _0x5b93dd(_0x2880f9);
-          });
-        });
-      };
-      setTimeout(() => {
-        const _0x251ddd = _0x29c106, _0x2215c3 = this[_0x251ddd(386)](), _0x3bcff9 = localStorage[_0x251ddd(393)](_0x251ddd(403));
-        let _0x13fb43 = "";
-        _0x3bcff9 === _0x251ddd(412) ? (_0x13fb43 = this["enabledDescription"], _0x22e3a9(_0x2215c3), _0x22e3a9(_0x2215c3)) : (_0x13fb43 = this[_0x251ddd(367)], _0x22e3a9(), _0x22e3a9());
-        const _0x146e4d = document[_0x251ddd(359)](_0x251ddd(381));
-        Array[_0x251ddd(372)](_0x146e4d)[_0x251ddd(366)]((_0x4a5cac) => _0x4a5cac[_0x251ddd(405)] = _0x13fb43 + " ");
+        const _0x88a45 = _0x57a3bb, _0x501b48 = this[_0x88a45(574)](), _0x24ff53 = localStorage[_0x88a45(642)]("package-protection-enabled");
+        let _0x2993bc = "";
+        _0x24ff53 === _0x88a45(627) ? (_0x2993bc = this["enabledDescription"], _0x2ecf1e(_0x501b48), _0x2ecf1e(_0x501b48)) : (_0x2993bc = this["disabledDescription"], _0x2ecf1e(), _0x2ecf1e());
+        const _0x2440fe = document["getElementsByClassName"](_0x88a45(552));
+        Array[_0x88a45(560)](_0x2440fe)[_0x88a45(596)]((_0x59659f) => _0x59659f[_0x88a45(570)] = _0x2993bc + " ");
       }, 500);
     }
     ["cartUpdate"]() {
-      const _0x37d554 = _0x4ccf12;
-      window["location"][_0x37d554(377)]();
+      const _0x2a1773 = _0x4b16bb;
+      console[_0x2a1773(606)](_0x2a1773(566)), Array[_0x2a1773(560)](document[_0x2a1773(628)](_0x2a1773(636)))[_0x2a1773(596)]((_0x5a9ffe) => _0x5a9ffe["onCartUpdate"]()), Array[_0x2a1773(560)](document["getElementsByTagName"]("cart-drawer-items"))[_0x2a1773(596)]((_0x47ea65) => _0x47ea65[_0x2a1773(626)]());
+    }
+    async [_0x4b16bb(515)]() {
+      const _0x40e3f0 = _0x4b16bb, _0x293f8f = (await window[_0x40e3f0(494)][_0x40e3f0(611)]())[_0x40e3f0(524)];
+      let _0x29ce38 = document[_0x40e3f0(567)](_0x40e3f0(615));
+      Array[_0x40e3f0(560)](_0x29ce38)[_0x40e3f0(596)]((_0x73bf1a) => {
+        const _0x1f2d9d = _0x40e3f0;
+        _0x73bf1a["childNodes"][_0x1f2d9d(596)]((_0x5d40e6) => {
+          const _0x5196b2 = _0x1f2d9d;
+          _0x5d40e6[_0x5196b2(570)] && (_0x5d40e6[_0x5196b2(570)] = _0x293f8f[_0x5196b2(538)]());
+        });
+      });
     }
   }
-  function _0x588e() {
-    const _0x197fff = ["disabledDescription", "before", "6534luKdIS", "70hEKWWa", "reload", "innerHTML", "div.cart__item-sub.cart__item-row.cart__item--subtotal span[aria-hidden='true']", "443110azMqyr", "log", ".cart__summary div.flex.justify-between.items-center.mt-6 p.font-bold", "3ftMuoX", "getItem", "div.cart-drawer__summary.relative.cart-drawer__summary--top.cart-drawer--checkout--sticky-true.cart-drawer--checkout--sticky-desktop-true.cart-drawer--checkout--sticky-mobile-true div.flex.flex-wrap.justify-between.items-center.mb-4 div.font-bold", "wenexus-package-protection-description", "2231075kLCBkd", "refreshWidget", "package-protection-enabled", "location", "getInsertionPointSelectors", "getElementsByClassName", "cartUpdate", "132vvUfsU", "getStyleMarkup", "weNexusCartApi", "split", "</sup> ", "120695eNCkTK", "getWidgetPrice", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753", "1712AVqpMu", ".cart__summary div.flex.justify-between.items-center p.mb-0.font-bold", "exponent subtotal theme", "635980iABaNd", "160386ZlCfTl", "currency", "true", "250px", "361080qsyKhq", "from", "forEach"];
-    _0x588e = function() {
-      return _0x197fff;
+  function _0x5728() {
+    const _0x1d340a = ["formatPrice", "test", "#2c7e3f", "textContent", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753", "15SQunBK", "250px", ".cart__summary div p", "3390462PnTmHr", "innerHTML", "3190556VbarXA", "forEach", "Checkout - ", "currency", "11207040elDRzw", "763248GmJWqM", "package-protection-enabled", "true", "total_price", "thumbnail", "wenexus-package-protection-description", "lastElementChild", "70usWFaF", "3344550kjOPPZ", "querySelector", "weNexusCartApi", "getElementsByClassName", "getStyleMarkup", "2mTxNBF", "get", "reload", 'button[name="checkout"]', "enabledDescription", "229722mJSxrY", "getWidgetPrice", "doesCheckoutContainSubtotal", "10030293mpFNql", "cartUpdate"];
+    _0x5728 = function() {
+      return _0x1d340a;
     };
-    return _0x588e();
+    return _0x5728();
   }
-  const _0x3dc803 = _0x2adb;
-  (function(_0xb01967, _0x332889) {
-    const _0xd7e572 = _0x2adb, _0x1dbda8 = _0xb01967();
+  const _0x4c0d22 = _0x29bf;
+  (function(_0x140903, _0x329aac) {
+    const _0x430c72 = _0x29bf, _0x5d6295 = _0x140903();
     while (!![]) {
       try {
-        const _0x17052c = -parseInt(_0xd7e572(168)) / 1 + -parseInt(_0xd7e572(175)) / 2 * (-parseInt(_0xd7e572(192)) / 3) + -parseInt(_0xd7e572(174)) / 4 + parseInt(_0xd7e572(196)) / 5 + parseInt(_0xd7e572(179)) / 6 * (-parseInt(_0xd7e572(185)) / 7) + -parseInt(_0xd7e572(171)) / 8 * (-parseInt(_0xd7e572(184)) / 9) + parseInt(_0xd7e572(189)) / 10 * (parseInt(_0xd7e572(163)) / 11);
-        if (_0x17052c === _0x332889)
+        const _0x338663 = -parseInt(_0x430c72(385)) / 1 + parseInt(_0x430c72(398)) / 2 * (-parseInt(_0x430c72(403)) / 3) + parseInt(_0x430c72(418)) / 4 + parseInt(_0x430c72(413)) / 5 * (-parseInt(_0x430c72(393)) / 6) + -parseInt(_0x430c72(406)) / 7 + parseInt(_0x430c72(384)) / 8 + parseInt(_0x430c72(416)) / 9 * (parseInt(_0x430c72(392)) / 10);
+        if (_0x338663 === _0x329aac)
           break;
         else
-          _0x1dbda8["push"](_0x1dbda8["shift"]());
-      } catch (_0x3943c8) {
-        _0x1dbda8["push"](_0x1dbda8["shift"]());
+          _0x5d6295["push"](_0x5d6295["shift"]());
+      } catch (_0x2dbe2b) {
+        _0x5d6295["push"](_0x5d6295["shift"]());
       }
     }
-  })(_0x588e, 332014);
-  function _0x2adb(_0xd87175, _0x2ec9d9) {
-    const _0x588e1f = _0x588e();
-    return _0x2adb = function(_0x2adbad, _0x2c1391) {
-      _0x2adbad = _0x2adbad - 160;
-      let _0x242bc3 = _0x588e1f[_0x2adbad];
-      return _0x242bc3;
-    }, _0x2adb(_0xd87175, _0x2ec9d9);
+  })(_0x5728, 890549);
+  function _0x29bf(_0x494ad0, _0x94aa8f) {
+    const _0x5728fb = _0x5728();
+    return _0x29bf = function(_0x29bf9a, _0x253647) {
+      _0x29bf9a = _0x29bf9a - 381;
+      let _0x23d57a = _0x5728fb[_0x29bf9a];
+      return _0x23d57a;
+    }, _0x29bf(_0x494ad0, _0x94aa8f);
+  }
+  class PackageProtectionClientEnterpriseTheme extends PackageProtectionClientBasic {
+    constructor() {
+      super(...arguments);
+      __publicField(this, _m, _0x4c0d22(412));
+    }
+    static ["shouldUse"]() {
+      return checkTheme(enterpriseTheme);
+    }
+    ["getInsertionPointSelectors"]() {
+      return [{ "selector": "button[name='checkout']", "insertPosition": "before" }];
+    }
+    async [(_m = _0x4c0d22(389), _0x4c0d22(397))](_0x5ace78) {
+      const _0x10cb29 = _0x4c0d22;
+      return super[_0x10cb29(397)]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": "end", "titleFontSize": 1, "descriptionFontSize": 0.8, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], "containerMaxWidth": _0x10cb29(414), ..._0x5ace78, "accentColor": _0x10cb29(410) });
+    }
+    [_0x4c0d22(405)](_0x4df344) {
+      const _0x4eb8b3 = _0x4c0d22;
+      if (!_0x4df344)
+        return ![];
+      const _0x5a57cc = /checkout/i, _0x5943c3 = /\b\d+(\.\d{2})?\b/;
+      return _0x5a57cc[_0x4eb8b3(409)](_0x4df344) && _0x5943c3[_0x4eb8b3(409)](_0x4df344);
+    }
+    async ["refreshWidget"]() {
+      const _0x5cc408 = _0x4c0d22;
+      console["log"]("enterpriseTheme");
+      const _0xcccf9e = [_0x5cc408(415), _0x5cc408(401)], _0x1791b0 = await window[_0x5cc408(395)][_0x5cc408(399)](), _0xc4bda9 = (_0xb93a09 = 0) => {
+        const _0x413435 = _0x5cc408;
+        _0xcccf9e[_0x413435(381)]((_0x31acd5) => {
+          const _0xc5dfc4 = _0x413435;
+          let _0xbeda65 = document[_0xc5dfc4(394)](_0x31acd5);
+          if (_0xbeda65 && this["doesCheckoutContainSubtotal"](_0xbeda65[_0xc5dfc4(411)])) {
+            _0xbeda65[_0xc5dfc4(411)] = _0xc5dfc4(382) + this["formatPrice"](Number(_0x1791b0[_0xc5dfc4(388)] / 100 + _0xb93a09), _0x1791b0["currency"]);
+            return;
+          }
+          if (_0xbeda65 && _0xbeda65[_0xc5dfc4(391)])
+            _0xbeda65["lastElementChild"][_0xc5dfc4(417)] = _0xc5dfc4(382) + this[_0xc5dfc4(408)](Number(_0x1791b0["total_price"] / 100 + _0xb93a09), _0x1791b0[_0xc5dfc4(383)]);
+          else
+            _0xbeda65 && (_0xbeda65["innerHTML"] = this[_0xc5dfc4(408)](Number(_0x1791b0[_0xc5dfc4(388)] / 100 + _0xb93a09), _0x1791b0[_0xc5dfc4(383)]));
+        });
+      };
+      setTimeout(() => {
+        const _0x35125a = _0x5cc408, _0x502bf1 = this[_0x35125a(404)](), _0x67272e = localStorage["getItem"](_0x35125a(386));
+        let _0x1177ec = "";
+        _0x67272e === _0x35125a(387) ? (_0x1177ec = this[_0x35125a(402)], _0xc4bda9(_0x502bf1), _0xc4bda9(_0x502bf1)) : (_0x1177ec = this["disabledDescription"], _0xc4bda9(), _0xc4bda9());
+        const _0x484844 = document[_0x35125a(396)](_0x35125a(390));
+        Array["from"](_0x484844)["forEach"]((_0x2eebb4) => _0x2eebb4["innerHTML"] = _0x1177ec + " ");
+      }, 500);
+    }
+    [_0x4c0d22(407)]() {
+      const _0x385ab0 = _0x4c0d22;
+      window["location"][_0x385ab0(400)]();
+    }
+  }
+  const _0x19f6a4 = _0x1f48;
+  (function(_0x2d529f, _0x3a622f) {
+    const _0x2fb74f = _0x1f48, _0xfd3a5a = _0x2d529f();
+    while (!![]) {
+      try {
+        const _0xb861ac = -parseInt(_0x2fb74f(351)) / 1 * (-parseInt(_0x2fb74f(339)) / 2) + parseInt(_0x2fb74f(340)) / 3 + -parseInt(_0x2fb74f(354)) / 4 + -parseInt(_0x2fb74f(324)) / 5 + -parseInt(_0x2fb74f(268)) / 6 * (parseInt(_0x2fb74f(327)) / 7) + -parseInt(_0x2fb74f(252)) / 8 + parseInt(_0x2fb74f(325)) / 9;
+        if (_0xb861ac === _0x3a622f)
+          break;
+        else
+          _0xfd3a5a["push"](_0xfd3a5a["shift"]());
+      } catch (_0x2e9bb7) {
+        _0xfd3a5a["push"](_0xfd3a5a["shift"]());
+      }
+    }
+  })(_0x3c2e, 947248);
+  function _0x1f48(_0x31bddc, _0x2801fd) {
+    const _0x3c2ed1 = _0x3c2e();
+    return _0x1f48 = function(_0x1f481d, _0x4de94b) {
+      _0x1f481d = _0x1f481d - 225;
+      let _0x5cc315 = _0x3c2ed1[_0x1f481d];
+      return _0x5cc315;
+    }, _0x1f48(_0x31bddc, _0x2801fd);
+  }
+  class PackageProtectionClientUniversalTheme extends PackageProtectionClientBasic {
+    static [_0x19f6a4(367)]() {
+      return checkTheme(universalTheme);
+    }
+    [_0x19f6a4(337)]() {
+      const _0x3809ab = _0x19f6a4;
+      return [{ "selector": _0x3809ab(247), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(236), "insertPosition": "before" }, { "selector": ".cart-buttons", "insertPosition": "before" }, { "selector": _0x3809ab(229), "insertPosition": "before" }, { "selector": _0x3809ab(227), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(250), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(296), "insertPosition": "before" }, { "selector": _0x3809ab(345), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(244), "insertPosition": "before" }, { "selector": _0x3809ab(240), "insertPosition": "before" }, { "selector": ".checkout-buttons", "insertPosition": _0x3809ab(288) }, { "selector": ".f-cart-drawer__buttons", "insertPosition": "before" }, { "selector": ".drawer__footer-buttons", "insertPosition": _0x3809ab(288) }, { "selector": ".cart__footer--buttons", "insertPosition": _0x3809ab(288) }, { "selector": "#CartDetails", "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(249), "insertPosition": _0x3809ab(264) }, { "selector": _0x3809ab(353), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(289), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(243), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(346), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(241), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(310), "insertPosition": _0x3809ab(288) }, { "selector": 'form.cart__wrapper div.cart-summary .cart-summary__buttons button[name="checkout"]', "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(286), "insertPosition": "before" }, { "selector": _0x3809ab(362), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(361), "insertPosition": "before" }, { "selector": _0x3809ab(308), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(226), "insertPosition": _0x3809ab(288) }, { "selector": ".cart__buttons-container", "insertPosition": _0x3809ab(288) }, { "selector": ".cart-template__footer-actions", "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(341), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(304), "insertPosition": "after" }, { "selector": _0x3809ab(316), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(303), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(285), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(260), "insertPosition": "before" }, { "selector": _0x3809ab(338), "insertPosition": "before" }, { "selector": _0x3809ab(237), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(297), "insertPosition": _0x3809ab(288) }, { "selector": ".cart-ctas", "insertPosition": "before" }, { "selector": _0x3809ab(300), "insertPosition": "before" }, { "selector": ".cart-template__checkout-buttons", "insertPosition": "before" }, { "selector": ".add-to-cart-wrap", "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(276), "insertPosition": "before" }, { "selector": _0x3809ab(261), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(238), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(282), "insertPosition": _0x3809ab(288) }, { "selector": "add-order-note", "insertPosition": _0x3809ab(264) }, { "selector": ".main-cart__footer__fine-print", "insertPosition": "after" }, { "selector": ".header-minicart-footer-wrapper", "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(283), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(309), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(255), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(332), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(311), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(281), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(326), "insertPosition": _0x3809ab(264) }, { "selector": _0x3809ab(333), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(248), "insertPosition": _0x3809ab(288) }, { "selector": ".cart-btn", "insertPosition": _0x3809ab(288) }, { "selector": ".cart-btn-container", "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(279), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(272), "insertPosition": _0x3809ab(288) }, { "selector": '.checkout-row input[type="submit"][name="checkout"]', "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(364), "insertPosition": _0x3809ab(288) }, { "selector": _0x3809ab(302), "insertPosition": "before" }];
+    }
+    async [_0x19f6a4(253)]() {
+      const _0x39fa43 = _0x19f6a4;
+      console[_0x39fa43(313)]("universal-1");
+      const _0x3afcea = [_0x39fa43(363), _0x39fa43(331), _0x39fa43(228), _0x39fa43(343), _0x39fa43(266), _0x39fa43(298), _0x39fa43(275), ".subtotal-row", _0x39fa43(239), _0x39fa43(270), _0x39fa43(225), ".cart-drawer__footer", _0x39fa43(295), _0x39fa43(299), _0x39fa43(271), _0x39fa43(256), _0x39fa43(329), _0x39fa43(307), _0x39fa43(322), _0x39fa43(305), _0x39fa43(317), _0x39fa43(273), _0x39fa43(369), _0x39fa43(233), _0x39fa43(291), _0x39fa43(234), "div#main-cart-footer", _0x39fa43(246), _0x39fa43(320), _0x39fa43(335), ".ajaxcart__footer", _0x39fa43(355), _0x39fa43(242), ".quick-cart__footer", _0x39fa43(334), ".cart-drawer__subtotal", _0x39fa43(301), _0x39fa43(294), _0x39fa43(342), ".thb-cart-form--cart-collaterals", ".side-panel-footer", _0x39fa43(352), _0x39fa43(267), ".mini-cart-footer", ".cart-drawer__cart-total", _0x39fa43(366), _0x39fa43(347), _0x39fa43(246), _0x39fa43(259), _0x39fa43(257), ".main-cart__footer__total", _0x39fa43(287), _0x39fa43(235), "#total-bottom", _0x39fa43(319), _0x39fa43(357), _0x39fa43(312), _0x39fa43(265), _0x39fa43(370), _0x39fa43(350), 'div[slot="footer"]', _0x39fa43(306), ".mini-cart__recap", _0x39fa43(314), _0x39fa43(248), _0x39fa43(318), ".xo-cart-totals", _0x39fa43(231), _0x39fa43(251), _0x39fa43(263), 'button[type="submit"][name="checkout"]', 'div[slot="footer"]'], _0x183c24 = await window[_0x39fa43(280)][_0x39fa43(358)](), _0x380a7c = document[_0x39fa43(284)]('.wenexus-package-protection__toggle input[type="checkbox"]');
+      if (_0x380a7c)
+        _0x380a7c[_0x39fa43(230)][_0x39fa43(356)](_0x39fa43(254));
+      const _0x500f2c = () => {
+        const _0x28204e = _0x39fa43, _0x56a61c = document[_0x28204e(284)](_0x28204e(365));
+        if (_0x56a61c)
+          _0x56a61c[_0x28204e(323)][_0x28204e(360)] = _0x28204e(290);
+      };
+      _0x500f2c();
+      const _0x3e8e29 = (_0x53eee8 = 0) => {
+        const _0x428f59 = _0x39fa43;
+        _0x3afcea[_0x428f59(293)]((_0x3b086b) => {
+          const _0x24e662 = _0x428f59;
+          let _0x4a3c89 = document[_0x24e662(278)](_0x3b086b);
+          function _0x36d165(_0x5fa7d5) {
+            const _0x2a440a = _0x24e662, _0x4150eb = Number(_0x183c24["items_subtotal_price"] / 100)[_0x2a440a(368)](2), _0x28f4d5 = Number(_0x183c24[_0x2a440a(344)] / 100 + _0x53eee8)[_0x2a440a(368)](2);
+            if ((_0x5fa7d5 == null ? void 0 : _0x5fa7d5["nodeType"]) === (Node == null ? void 0 : Node["TEXT_NODE"])) {
+              if (_0x53eee8 === 0) {
+                const _0x75c1ba = localStorage["getItem"](_0x2a440a(344));
+                _0x5fa7d5["textContent"] = _0x5fa7d5[_0x2a440a(232)][_0x2a440a(321)](new RegExp("\\b" + _0x75c1ba + "\\b", "g"), _0x28f4d5);
+              } else
+                localStorage[_0x2a440a(359)](_0x2a440a(344), _0x28f4d5), _0x5fa7d5[_0x2a440a(232)] = _0x5fa7d5[_0x2a440a(232)][_0x2a440a(321)](new RegExp("\\b" + _0x4150eb + "\\b", "g"), _0x28f4d5);
+            } else
+              (_0x5fa7d5 == null ? void 0 : _0x5fa7d5[_0x2a440a(269)]) === (Node == null ? void 0 : Node[_0x2a440a(258)]) && Array[_0x2a440a(277)](_0x5fa7d5[_0x2a440a(349)])["forEach"](_0x36d165);
+          }
+          _0x4a3c89[_0x24e662(293)]((_0x1f86c6) => {
+            _0x36d165(_0x1f86c6);
+          });
+        });
+      };
+      setTimeout(() => {
+        const _0xc188c7 = _0x39fa43, _0x1db93f = this[_0xc188c7(328)](), _0x30a870 = localStorage[_0xc188c7(348)](_0xc188c7(315));
+        let _0xa32072 = "";
+        _0x30a870 === _0xc188c7(245) ? (_0xa32072 = this["enabledDescription"], _0x3e8e29(_0x1db93f), _0x3e8e29(_0x1db93f)) : (_0xa32072 = this[_0xc188c7(274)], _0x3e8e29(), _0x3e8e29());
+        const _0xf2d1f6 = document[_0xc188c7(292)](_0xc188c7(262));
+        Array[_0xc188c7(277)](_0xf2d1f6)[_0xc188c7(293)]((_0x5c7278) => _0x5c7278[_0xc188c7(330)] = _0xa32072 + " ");
+      }, 500);
+    }
+    [_0x19f6a4(336)]() {
+      window["location"]["reload"]();
+    }
+  }
+  function _0x3c2e() {
+    const _0x22a63c = ["shouldUse", "toFixed", "div.cart-notification__links", ".totle-price", ".cart__summary", ".ajaxcart__footer", ".cart-summary__button", ".cart-subtotal", ".cart__ctas", "classList", ".xo-cart-mini-footer__price", "textContent", "div.ajax-cart__final-details", "div#CartDrawer", ".sticky-menu container", "cart-drawer-buttons-block", ".thb-cart-form--proceed", ".cart-sidebar__footer-actions", ".cart-drawer__summary", '.cart__summary button[name="checkout"]', "div.cart-purchase__checkout-section div.bottom-cart-wrapper", ".cart-template__footer", "fieldset aside p.link-btn.wide", ".drawer__footer details", "true", ".cart-sidebar__footer", ".footer-ctas", 'button[form="mini-cart-form"]', "main.drawer__inner.min-h-0.h-full small.text-caption", ".cart-submit", ".cart-total-price", "11263456WWvijs", "refreshWidget", "product-variant__input", ".cart-drawer__action-buttons", ".cart__details--row", ".sub-total", "ELEMENT_NODE", ".cart-totals", ".proceed-to-checkout", ".cart__checkout", "wenexus-package-protection-description", ".cart-form__totals", "after", ".cart-total-item", ".cart__footer", ".cart-footer", "6MZxAAq", "nodeType", "div[data-cart-footer]", ".drawer__footer-body", 'xo-cart-will-change button[type="submit"][name="checkout"]', "form.f8vl.f8vl-initialized ul.l4tt.form-group", "disabledDescription", ".drawer__footer", ".drawer__footer-actions", "from", "querySelectorAll", ".xo-cart-mini-footer__group", "weNexusCartApi", ".mini-cart__button-container", ".cart-modal-buttons", ".sticky-menu-buttons-slideout-closed", "querySelector", ".cart-drawer-buttons", "form#cart button#cart-notification-checkout", ".header-minicart-footer-wrapper", "before", "form.f8vl.f8vl-initialized p.link-btn.text-justify", "unset", "div.cart-purchase__buttons", "getElementsByClassName", "forEach", ".mini-cart__total", ".checkout-subtotal-container__right", ".cart-drawer__checkout-buttons", ".mini-cart__buttons", ".cart-summary__total-price-row", ".f-cart-drawer__subtotal-value", ".mini-cart-footer-actions", ".cart-total-box", 'safe-sticky button[name="checkout"]', ".checkout-btns", ".quick-cart__total", "ul.l4tt.m15.form-group ", "safe-sticky", "#CartTotal", ".theme-button--secondary", 'button[aria-label="Agree to Terms"]', "div.mini-cart__footer div.cart-summary__meta a.button", ".cart-checkout", ".checkout-subtotal-container", "log", ".card__section", "package-protection-enabled", ".cart-drawer__footer--buttons", "fieldset aside ul.l4tt.form-group", ".cart__recap", ".money[data-cart-total]", ".mini-cart__footer", "replace", "form.sticky-in-panel ", "style", "5837880ZpHkkG", "33626205ICnnyV", ".cart-recap__notices", "10760533ykOjvm", "getWidgetPrice", ".cart__details", "innerHTML", ".cart-drawer-subtotal__main-content", ".cart-mini-actions", ".buy-buttons--compact", ".cart__subtotal", ".cart-summary", "cartUpdate", "getInsertionPointSelectors", ".cart-drawer--buttons-container", "9566FxleeX", "4631841cRoaxM", ".cart__footer-actions", ".cart-drawer--footer", ".drawer__footer__inner", "items_subtotal_price", ".cart-drawer__footer  p.rte", ".cart-checkout-container", ".cart-page__block-container", "getItem", "childNodes", "#mini-cart-toggle", "302PDWfVk", ".cart-total", "div.py-24.flex div.md\\:ml-auto.max-sm\\:w-full div.flex.flex-col.items-end.gap-8 button", "6658732miMAgt", ".cart__blocks", "add", ".cart-mini-subtotal", "get", "setItem", "display", "form.ajax-cart__cart-form.grid__wrapper.edge.js-cart-form div.ajax-cart__buttons", "form.ajax-cart__cart-form.grid__wrapper.narrow.mb4.js-cart-form div.ajax-cart__buttons", ".cart-details-footer", ".overlay-buy_button", "div.ajax-cart__summary-wrapper.js-cart-summary", ".cart-template__cart-total"];
+    _0x3c2e = function() {
+      return _0x22a63c;
+    };
+    return _0x3c2e();
+  }
+  const _0x2d089d = _0x1d68;
+  function _0x5aff() {
+    const _0x1407aa = ['button[type="submit"][name="checkout"]', ".Cart__Total", ".order-summary-card", ".cart-drawer__totals", ".cart-drawer__container", ".cart-items__total", ".main-cart_cart-totals-wrap", "3917910ButHoZ", "weNexusCartApi", ".main-cart_widget--totals", "cartUpdate", ".cart-recap", "2287072IDKFOb", "#cart-subtotal", ".cart__footer-inner", "textContent", "9UMAWkj", "shouldUse", "1686366jmuXSS", ".wt-cart__footer__body", "subtotal-price", ".cart__total", "forEach", "#CartDetails", ".totals__subtotal-value", ".cart--total-price", "#cart-drawer-live-region-subtotal", "14262DLIVNV", "log", ".cart-drawer-footer-total", ".ajaxcart__price", ".quick-cart__footer", "disabledDescription", ".more", ".cart__summary-total", ".cart-footer__summary", ".cart-table__checkoutWrp", "form.sticky-cart__inner", "refreshWidget", "12azECEM", ".cart-total-price", "#main-cart-footer", "getWidgetPrice", "from", ".subtotal", "universal-for-sub-1", ".shopping-cart", "getItem", ".accordion-wrap", "querySelectorAll", "childNodes", "getElementsByClassName", ".cart__details", "152257ZXyXln", "nodeType", "package-protection-enabled", "wenexus-package-protection-description", "items_subtotal_price", "get", "ELEMENT_NODE", ".sub--total-cart", ".wt-cart__footer", ".cart__footer ", ".template__cart__footer", "true", ".cart__subtotal", "949036VpaaSG", "24oBVbwB", "toFixed", "cart-footer", ".items-baseline", "121755ZVVsRE", ".cart-drawer_foot-wrap", "replace", "location", ".cart__row--table", "13eYhyLQ"];
+    _0x5aff = function() {
+      return _0x1407aa;
+    };
+    return _0x5aff();
+  }
+  (function(_0x2d278a, _0x1f4777) {
+    const _0x56dc7e = _0x1d68, _0x23ad98 = _0x2d278a();
+    while (!![]) {
+      try {
+        const _0xbe5eff = parseInt(_0x56dc7e(369)) / 1 * (parseInt(_0x56dc7e(397)) / 2) + -parseInt(_0x56dc7e(388)) / 3 + -parseInt(_0x56dc7e(409)) / 4 * (parseInt(_0x56dc7e(364)) / 5) + parseInt(_0x56dc7e(360)) / 6 * (parseInt(_0x56dc7e(346)) / 7) + -parseInt(_0x56dc7e(382)) / 8 * (-parseInt(_0x56dc7e(386)) / 9) + parseInt(_0x56dc7e(377)) / 10 + parseInt(_0x56dc7e(359)) / 11;
+        if (_0xbe5eff === _0x1f4777)
+          break;
+        else
+          _0x23ad98["push"](_0x23ad98["shift"]());
+      } catch (_0x32bb1f) {
+        _0x23ad98["push"](_0x23ad98["shift"]());
+      }
+    }
+  })(_0x5aff, 308483);
+  function _0x1d68(_0x2a59e7, _0x21425a) {
+    const _0x5afffd = _0x5aff();
+    return _0x1d68 = function(_0x1d6864, _0x3c00ea) {
+      _0x1d6864 = _0x1d6864 - 344;
+      let _0x388cf4 = _0x5afffd[_0x1d6864];
+      return _0x388cf4;
+    }, _0x1d68(_0x2a59e7, _0x21425a);
+  }
+  class PackageProtectionClientUniversalForSubTotalTheme extends PackageProtectionClientBasic {
+    static [_0x2d089d(387)]() {
+      return checkTheme(universalForSubTotalTheme);
+    }
+    async [_0x2d089d(408)]() {
+      const _0x43b9b8 = _0x2d089d;
+      console[_0x43b9b8(398)](_0x43b9b8(415));
+      const _0x530322 = [_0x43b9b8(354), _0x43b9b8(389), _0x43b9b8(411), ".drawer__footer", _0x43b9b8(384), _0x43b9b8(401), _0x43b9b8(362), _0x43b9b8(370), ".cart__footer", _0x43b9b8(407), "form#CartPageForm", ".cart-total-box", _0x43b9b8(374), ".cart-template__summary", _0x43b9b8(405), ".cart-drawer__bottom", ".total-holder", _0x43b9b8(376), _0x43b9b8(365), _0x43b9b8(379), _0x43b9b8(418), _0x43b9b8(416), _0x43b9b8(356), _0x43b9b8(406), ".cart-subtotal", 'div[data-element="subtotal-block"]', _0x43b9b8(396), "div[data-cart-subtotal-block]", _0x43b9b8(390), ".cart-footer__subtotal", ".cart-totals", _0x43b9b8(372), _0x43b9b8(403), _0x43b9b8(414), ".subtotal .money ", _0x43b9b8(399), ".CartDrawer__Total", _0x43b9b8(371), ".cart-header-details", _0x43b9b8(353), _0x43b9b8(363), _0x43b9b8(373), _0x43b9b8(383), _0x43b9b8(391), _0x43b9b8(395), _0x43b9b8(404), ".cart-drawer__summary-total", _0x43b9b8(375), ".cart-drawer__total", _0x43b9b8(358), _0x43b9b8(394), _0x43b9b8(393), _0x43b9b8(355), ".cart-summary-line", _0x43b9b8(345), _0x43b9b8(381), ".cart-count", _0x43b9b8(410), _0x43b9b8(358), _0x43b9b8(400), _0x43b9b8(368)], _0x36440e = await window[_0x43b9b8(378)][_0x43b9b8(351)](), _0x16203d = (_0x44646d = 0) => {
+        const _0xddb84e = _0x43b9b8;
+        _0x530322[_0xddb84e(392)]((_0x39124d) => {
+          const _0x14ff1a = _0xddb84e;
+          let _0x5c11ac = document[_0x14ff1a(419)](_0x39124d);
+          function _0x3cee9e(_0x5e437d) {
+            const _0x17f48d = _0x14ff1a, _0x13824c = Number(_0x36440e[_0x17f48d(350)] / 100)[_0x17f48d(361)](2), _0x5ad8b1 = Number(_0x36440e[_0x17f48d(350)] / 100 + _0x44646d)[_0x17f48d(361)](2);
+            if ((_0x5e437d == null ? void 0 : _0x5e437d["nodeType"]) === (Node == null ? void 0 : Node["TEXT_NODE"])) {
+              if (_0x44646d === 0) {
+                const _0x52df8a = localStorage[_0x17f48d(417)](_0x17f48d(350));
+                _0x5e437d[_0x17f48d(385)] = _0x5e437d["textContent"]["replace"](new RegExp("\\b" + _0x52df8a + "\\b", "g"), _0x5ad8b1);
+              } else
+                localStorage["setItem"](_0x17f48d(350), _0x5ad8b1), _0x5e437d[_0x17f48d(385)] = _0x5e437d[_0x17f48d(385)][_0x17f48d(366)](new RegExp("\\b" + _0x13824c + "\\b", "g"), _0x5ad8b1);
+            } else
+              (_0x5e437d == null ? void 0 : _0x5e437d[_0x17f48d(347)]) === (Node == null ? void 0 : Node[_0x17f48d(352)]) && Array["from"](_0x5e437d[_0x17f48d(420)])[_0x17f48d(392)](_0x3cee9e);
+          }
+          _0x5c11ac[_0x14ff1a(392)]((_0x35bcd7) => {
+            _0x3cee9e(_0x35bcd7);
+          });
+        });
+      };
+      setTimeout(() => {
+        const _0x12a2cf = _0x43b9b8, _0x4ffd22 = this[_0x12a2cf(412)](), _0x4fe3a6 = localStorage[_0x12a2cf(417)](_0x12a2cf(348));
+        let _0x3f50ca = "";
+        _0x4fe3a6 === _0x12a2cf(357) ? (_0x3f50ca = this["enabledDescription"], _0x16203d(_0x4ffd22), _0x16203d(_0x4ffd22)) : (_0x3f50ca = this[_0x12a2cf(402)], _0x16203d(), _0x16203d());
+        const _0x3d137e = document[_0x12a2cf(344)](_0x12a2cf(349));
+        Array[_0x12a2cf(413)](_0x3d137e)[_0x12a2cf(392)]((_0x3b1e82) => _0x3b1e82["innerHTML"] = _0x3f50ca + " ");
+      }, 500);
+    }
+    [_0x2d089d(380)]() {
+      const _0x55dc13 = _0x2d089d;
+      window[_0x55dc13(367)]["reload"]();
+    }
+  }
+  const _0x16d1f7 = _0x3b7f;
+  (function(_0xa2f3f2, _0x52da14) {
+    const _0x3be994 = _0x3b7f, _0x472c35 = _0xa2f3f2();
+    while (!![]) {
+      try {
+        const _0x5bbb1b = -parseInt(_0x3be994(343)) / 1 * (-parseInt(_0x3be994(304)) / 2) + parseInt(_0x3be994(320)) / 3 * (-parseInt(_0x3be994(371)) / 4) + parseInt(_0x3be994(373)) / 5 * (parseInt(_0x3be994(349)) / 6) + parseInt(_0x3be994(309)) / 7 * (-parseInt(_0x3be994(364)) / 8) + parseInt(_0x3be994(312)) / 9 + -parseInt(_0x3be994(322)) / 10 + parseInt(_0x3be994(345)) / 11 * (parseInt(_0x3be994(310)) / 12);
+        if (_0x5bbb1b === _0x52da14)
+          break;
+        else
+          _0x472c35["push"](_0x472c35["shift"]());
+      } catch (_0xbe1509) {
+        _0x472c35["push"](_0x472c35["shift"]());
+      }
+    }
+  })(_0x1f3a, 171684);
+  function _0x3b7f(_0x283780, _0x4e6fa6) {
+    const _0x1f3a15 = _0x1f3a();
+    return _0x3b7f = function(_0x3b7fad, _0x567ad0) {
+      _0x3b7fad = _0x3b7fad - 304;
+      let _0x3bad10 = _0x1f3a15[_0x3b7fad];
+      return _0x3bad10;
+    }, _0x3b7f(_0x283780, _0x4e6fa6);
+  }
+  function _0x1f3a() {
+    const _0x22570f = ["#CartTotal", ".cart__controls", "switch-1", ".cart__total", ".cart-popup__footer", ".subtotal_amount", "forEach", ".table-container", "log", ".cart__footer-inner", ".cart-drawer-footer", ".cart-total", ".wbcarthtotal", "8eIGmKX", "items_subtotal_price", "p[data-cart-subtotal]", "ELEMENT_NODE", "true", "replace", "disabledDescription", "652OGHJuv", "getElementsByClassName", "5FWkvRM", "add", "get", ".liveCartFooter", "weNexusCartApi", "childNodes", ".vendors", 'div[x-show="cart.total_price > 0"]', "refreshWidget", "72042mzhmuj", ".totals", "cart-dynamic", ".cart-drawer__text", "parentElement", "1657607BpDVMJ", "14868BOtFma", "querySelectorAll", "2024919CCZFhP", 'data-island[x-data="CartFooter"]', "innerHTML", "#main-cart-footer", ".drawer-inner__footer", "getWidgetPrice", "textContent", "nodeType", "513cNhkKs", 'button[name="checkout"][type="submit"], input[name="checkout"][type="submit"],button[name="checkout"], a[href="/checkout"], input[type="submit"][value="Checkout"]', "660840vSLgHe", "setItem", ".cart__footer ", ".subtotal .theme-money", "before", ".total-amount", ".product-price", ".cart-drawer__subtotal", 'span[x-html="formatMoney(state.total_price)"]', ".cart-form__footer", "cartUpdate", "marginBottom", ".wenexus-theme-support", "toFixed", ".cart-summary-price", ".cart-footer_wrapper", "div.total.row", "style", "getItem", ".totals__subtotal-value", "from", "7NAksny", "cart-dynamic.flex.gap-4.flex-col", "33PqwPoj", ".cart__item-subtotal", "reload", "getInsertionPointSelectors", "129522CJHUTq", "70px"];
+    _0x1f3a = function() {
+      return _0x22570f;
+    };
+    return _0x1f3a();
+  }
+  class PackageProtectionClientSwitchTheme extends PackageProtectionClientBasic {
+    static ["shouldUse"]() {
+      return checkTheme(switchTheme);
+    }
+    [_0x16d1f7(348)]() {
+      const _0x3c72b4 = _0x16d1f7, _0x58a794 = document[_0x3c72b4(311)](_0x3c72b4(321));
+      return _0x58a794[_0x3c72b4(357)]((_0x1c6026) => {
+        const _0x45eccb = _0x3c72b4;
+        _0x1c6026[_0x45eccb(308)] && _0x1c6026[_0x45eccb(308)]["classList"][_0x45eccb(374)]("wenexus-theme-support");
+      }), [{ "selector": _0x3c72b4(334), "insertPosition": _0x3c72b4(326) }];
+    }
+    async [_0x16d1f7(381)]() {
+      const _0x43234b = _0x16d1f7;
+      console[_0x43234b(359)](_0x43234b(353));
+      const _0x4e6375 = ["div[data-cart-footer]", _0x43234b(330), _0x43234b(315), _0x43234b(352), _0x43234b(360), _0x43234b(307), ".cart-amount", ".cart-drawer__footer", _0x43234b(356), _0x43234b(346), ".cart-drawer-price-total", _0x43234b(336), _0x43234b(338), _0x43234b(344), _0x43234b(380), _0x43234b(316), _0x43234b(331), ".minicart-top__wrapper", _0x43234b(337), _0x43234b(355), ".f-drawer__footer", _0x43234b(305), ".cart-summary ", ".cart-tot2", _0x43234b(361), _0x43234b(366), _0x43234b(376), _0x43234b(358), _0x43234b(328), _0x43234b(379), _0x43234b(325), _0x43234b(362), _0x43234b(313), _0x43234b(354), _0x43234b(324), _0x43234b(351), _0x43234b(306), ".sub-total", ".cart-totals", _0x43234b(327), _0x43234b(363), _0x43234b(341), _0x43234b(329)], _0xfbac12 = await window[_0x43234b(377)][_0x43234b(375)](), _0x5c2bb8 = Array["from"](document["querySelectorAll"](_0x43234b(307)));
+      _0x5c2bb8["forEach"]((_0x468256) => {
+        const _0x19e3b0 = _0x43234b;
+        _0x468256[_0x19e3b0(339)][_0x19e3b0(333)] = _0x19e3b0(350);
+      });
+      const _0x2bb493 = (_0x17622e = 0) => {
+        const _0x2b2183 = _0x43234b;
+        _0x4e6375[_0x2b2183(357)]((_0x15f01a) => {
+          const _0x536987 = _0x2b2183;
+          let _0x50b79c = document[_0x536987(311)](_0x15f01a);
+          function _0x76ac24(_0x16f38c) {
+            const _0x1a1eed = _0x536987, _0x1f663d = Number(_0xfbac12[_0x1a1eed(365)] / 100)[_0x1a1eed(335)](2), _0x531e43 = Number(_0xfbac12[_0x1a1eed(365)] / 100 + _0x17622e)[_0x1a1eed(335)](2);
+            if ((_0x16f38c == null ? void 0 : _0x16f38c["nodeType"]) === (Node == null ? void 0 : Node["TEXT_NODE"])) {
+              if (_0x17622e === 0) {
+                const _0x55241e = localStorage[_0x1a1eed(340)]("items_subtotal_price");
+                _0x16f38c[_0x1a1eed(318)] = _0x16f38c[_0x1a1eed(318)][_0x1a1eed(369)](new RegExp("\\b" + _0x55241e + "\\b", "g"), _0x531e43);
+              } else
+                localStorage[_0x1a1eed(323)](_0x1a1eed(365), _0x531e43), _0x16f38c[_0x1a1eed(318)] = _0x16f38c["textContent"][_0x1a1eed(369)](new RegExp("\\b" + _0x1f663d + "\\b", "g"), _0x531e43);
+            } else
+              (_0x16f38c == null ? void 0 : _0x16f38c[_0x1a1eed(319)]) === (Node == null ? void 0 : Node[_0x1a1eed(367)]) && Array["from"](_0x16f38c[_0x1a1eed(378)])[_0x1a1eed(357)](_0x76ac24);
+          }
+          _0x50b79c[_0x536987(357)]((_0x39a5a0) => {
+            _0x76ac24(_0x39a5a0);
+          });
+        });
+      };
+      setTimeout(() => {
+        const _0x3ebab7 = _0x43234b, _0xc2163a = this[_0x3ebab7(317)](), _0x1070cf = localStorage[_0x3ebab7(340)]("package-protection-enabled");
+        let _0x5019a8 = "";
+        _0x1070cf === _0x3ebab7(368) ? (_0x5019a8 = this["enabledDescription"], _0x2bb493(_0xc2163a), _0x2bb493(_0xc2163a)) : (_0x5019a8 = this[_0x3ebab7(370)], _0x2bb493(), _0x2bb493());
+        const _0x5c63cb = document[_0x3ebab7(372)]("wenexus-package-protection-description");
+        Array[_0x3ebab7(342)](_0x5c63cb)["forEach"]((_0x535091) => _0x535091[_0x3ebab7(314)] = _0x5019a8 + " ");
+      }, 500);
+    }
+    [_0x16d1f7(332)]() {
+      const _0x1fbd4a = _0x16d1f7;
+      window["location"][_0x1fbd4a(347)]();
+    }
+  }
+  const _0x372bd5 = _0x2b37;
+  (function(_0x24e75a, _0x3faf84) {
+    const _0x217739 = _0x2b37, _0x59a1d7 = _0x24e75a();
+    while (!![]) {
+      try {
+        const _0x55f57b = parseInt(_0x217739(169)) / 1 + parseInt(_0x217739(192)) / 2 * (-parseInt(_0x217739(193)) / 3) + -parseInt(_0x217739(176)) / 4 + parseInt(_0x217739(177)) / 5 * (parseInt(_0x217739(195)) / 6) + parseInt(_0x217739(187)) / 7 + -parseInt(_0x217739(179)) / 8 + parseInt(_0x217739(198)) / 9;
+        if (_0x55f57b === _0x3faf84)
+          break;
+        else
+          _0x59a1d7["push"](_0x59a1d7["shift"]());
+      } catch (_0x4451b3) {
+        _0x59a1d7["push"](_0x59a1d7["shift"]());
+      }
+    }
+  })(_0x2199, 136128);
+  function _0x2b37(_0x3d57e3, _0x1a7d26) {
+    const _0x219935 = _0x2199();
+    return _0x2b37 = function(_0x2b37dd, _0x4125ef) {
+      _0x2b37dd = _0x2b37dd - 154;
+      let _0x20dc0c = _0x219935[_0x2b37dd];
+      return _0x20dc0c;
+    }, _0x2b37(_0x3d57e3, _0x1a7d26);
+  }
+  function _0x2199() {
+    const _0x55b37e = ["before", "126362JFsldi", "innerHTML", "true", "formatPrice", "end", "total_price", "get", "940424HYBYow", "25JYAqvv", "enabledDescription", "1750312DFXFsc", "thumbnail", ".cart__summary div.flex.justify-between.items-center p.mb-0.font-bold", "</sup> ", "getElementsByClassName", "log", "getItem", "exponent subtotal theme", "1806259cxXpjt", "from", "getInsertionPointSelectors", "getStyleMarkup", "div.cart__item-sub.cart__item-row.cart__item--subtotal span[aria-hidden='true']", "14dRlizs", "89949paOYXr", "wenexus-package-protection-description", "318786eHHHgK", "getWidgetPrice", 'button[name="checkout"]', "1348650JYPEws", "package-protection-enabled", "forEach", "weNexusCartApi", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753", "cartUpdate", "disabledDescription", "currency", "split", ".cart__summary div.flex.justify-between.items-center.mt-6 p.font-bold", "reload", "querySelector", "250px", "refreshWidget", "shouldUse"];
+    _0x2199 = function() {
+      return _0x55b37e;
+    };
+    return _0x2199();
   }
   class PackageProtectionClientUniversalExponentSubtotalTheme extends PackageProtectionClientBasic {
     constructor() {
       super(...arguments);
-      __publicField(this, "thumbnail", _0x3dc803(170));
+      __publicField(this, _n, _0x372bd5(157));
     }
-    static ["shouldUse"]() {
+    static [(_n = _0x372bd5(180), _0x372bd5(167))]() {
       return checkTheme(universalForExponentSubtotal);
     }
-    [_0x3dc803(160)]() {
-      const _0x48850d = _0x3dc803;
-      return [{ "selector": 'button[name="checkout"]', "insertPosition": _0x48850d(183) }];
+    [_0x372bd5(189)]() {
+      const _0x15ecfe = _0x372bd5;
+      return [{ "selector": _0x15ecfe(197), "insertPosition": _0x15ecfe(168) }];
     }
-    async [_0x3dc803(164)](_0x7758c8) {
-      const _0x4d6363 = _0x3dc803;
-      return super[_0x4d6363(164)]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": "end", "titleFontSize": 1, "descriptionFontSize": 0.8, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], "containerMaxWidth": _0x4d6363(178), ..._0x7758c8, "accentColor": "#2c7e3f" });
+    async [_0x372bd5(190)](_0x3820b3) {
+      const _0x2bd481 = _0x372bd5;
+      return super[_0x2bd481(190)]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": _0x2bd481(173), "titleFontSize": 1, "descriptionFontSize": 0.8, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], "containerMaxWidth": _0x2bd481(165), ..._0x3820b3, "accentColor": "#2c7e3f" });
     }
-    async [_0x3dc803(197)]() {
-      const _0x50718a = _0x3dc803;
-      console[_0x50718a(190)](_0x50718a(173));
-      const _0x5303df = [_0x50718a(194), _0x50718a(172), _0x50718a(191), _0x50718a(188)], _0x4091cc = await window[_0x50718a(165)]["get"](), _0x24b263 = (_0x2e8081 = 0) => {
-        _0x5303df["forEach"]((_0x53f58b) => {
-          const _0x12c450 = _0x2adb;
-          let _0xcbb83 = document["querySelector"](_0x53f58b);
-          if (_0xcbb83) {
-            const _0x109d95 = this["formatPrice"](Number(_0x4091cc["total_price"] / 100 + _0x2e8081), _0x4091cc[_0x12c450(176)]), _0x17ff21 = _0x109d95[_0x12c450(166)](".");
-            _0xcbb83["innerHTML"] = _0x17ff21[0] + "<sup>" + _0x17ff21[1] + _0x12c450(167) + _0x4091cc[_0x12c450(176)];
+    async [_0x372bd5(166)]() {
+      const _0x13b4cb = _0x372bd5;
+      console[_0x13b4cb(184)](_0x13b4cb(186));
+      const _0x219173 = ["div.cart-drawer__summary.relative.cart-drawer__summary--top.cart-drawer--checkout--sticky-true.cart-drawer--checkout--sticky-desktop-true.cart-drawer--checkout--sticky-mobile-true div.flex.flex-wrap.justify-between.items-center.mb-4 div.font-bold", _0x13b4cb(181), _0x13b4cb(162), _0x13b4cb(191)], _0x597d33 = await window[_0x13b4cb(156)][_0x13b4cb(175)](), _0x237e19 = (_0x1a389a = 0) => {
+        const _0x495dfd = _0x13b4cb;
+        _0x219173[_0x495dfd(155)]((_0xc1f509) => {
+          const _0x3c84df = _0x495dfd;
+          let _0x343903 = document[_0x3c84df(164)](_0xc1f509);
+          if (_0x343903) {
+            const _0x407a16 = this[_0x3c84df(172)](Number(_0x597d33[_0x3c84df(174)] / 100 + _0x1a389a), _0x597d33[_0x3c84df(160)]), _0x50fadf = _0x407a16[_0x3c84df(161)](".");
+            _0x343903[_0x3c84df(170)] = _0x50fadf[0] + "<sup>" + _0x50fadf[1] + _0x3c84df(182) + _0x597d33[_0x3c84df(160)];
           }
         });
       };
       setTimeout(() => {
-        const _0x5112d1 = _0x50718a, _0x50bcb9 = this[_0x5112d1(169)](), _0x54a940 = localStorage[_0x5112d1(193)](_0x5112d1(198));
-        let _0xc0a04e = "";
-        _0x54a940 === _0x5112d1(177) ? (_0xc0a04e = this["enabledDescription"], _0x24b263(_0x50bcb9), _0x24b263(_0x50bcb9)) : (_0xc0a04e = this[_0x5112d1(182)], _0x24b263(), _0x24b263());
-        const _0x29318b = document[_0x5112d1(161)](_0x5112d1(195));
-        Array[_0x5112d1(180)](_0x29318b)[_0x5112d1(181)]((_0x4512de) => _0x4512de[_0x5112d1(187)] = _0xc0a04e + " ");
+        const _0x12bc27 = _0x13b4cb, _0x1e7c5f = this[_0x12bc27(196)](), _0x255312 = localStorage[_0x12bc27(185)](_0x12bc27(154));
+        let _0x4d7d0b = "";
+        _0x255312 === _0x12bc27(171) ? (_0x4d7d0b = this[_0x12bc27(178)], _0x237e19(_0x1e7c5f), _0x237e19(_0x1e7c5f)) : (_0x4d7d0b = this[_0x12bc27(159)], _0x237e19(), _0x237e19());
+        const _0x358c41 = document[_0x12bc27(183)](_0x12bc27(194));
+        Array[_0x12bc27(188)](_0x358c41)[_0x12bc27(155)]((_0x15c098) => _0x15c098[_0x12bc27(170)] = _0x4d7d0b + " ");
       }, 500);
     }
-    [_0x3dc803(162)]() {
-      const _0x2c1f96 = _0x3dc803;
-      window[_0x2c1f96(199)][_0x2c1f96(186)]();
+    [_0x372bd5(158)]() {
+      const _0x2acfc8 = _0x372bd5;
+      window["location"][_0x2acfc8(163)]();
     }
   }
-  const _0x4809a8 = _0x426c;
-  (function(_0x552cc2, _0x337cbf) {
-    const _0x12e65f = _0x426c, _0x30d6dd = _0x552cc2();
+  function _0x581b(_0x4ed1c3, _0x2d7a66) {
+    const _0x44b0fe = _0x44b0();
+    return _0x581b = function(_0x581bde, _0x3650fa) {
+      _0x581bde = _0x581bde - 320;
+      let _0x2b8d6a = _0x44b0fe[_0x581bde];
+      return _0x2b8d6a;
+    }, _0x581b(_0x4ed1c3, _0x2d7a66);
+  }
+  const _0x23de19 = _0x581b;
+  (function(_0xc1c487, _0x507910) {
+    const _0x4181c8 = _0x581b, _0x55b8d5 = _0xc1c487();
     while (!![]) {
       try {
-        const _0x211af4 = -parseInt(_0x12e65f(457)) / 1 + -parseInt(_0x12e65f(485)) / 2 * (parseInt(_0x12e65f(456)) / 3) + parseInt(_0x12e65f(474)) / 4 * (-parseInt(_0x12e65f(451)) / 5) + parseInt(_0x12e65f(473)) / 6 + -parseInt(_0x12e65f(463)) / 7 + -parseInt(_0x12e65f(478)) / 8 * (-parseInt(_0x12e65f(475)) / 9) + parseInt(_0x12e65f(443)) / 10;
-        if (_0x211af4 === _0x337cbf)
+        const _0x509aa0 = parseInt(_0x4181c8(356)) / 1 + parseInt(_0x4181c8(346)) / 2 * (parseInt(_0x4181c8(323)) / 3) + parseInt(_0x4181c8(333)) / 4 * (parseInt(_0x4181c8(355)) / 5) + -parseInt(_0x4181c8(320)) / 6 + parseInt(_0x4181c8(341)) / 7 * (parseInt(_0x4181c8(340)) / 8) + -parseInt(_0x4181c8(321)) / 9 + -parseInt(_0x4181c8(322)) / 10;
+        if (_0x509aa0 === _0x507910)
           break;
         else
-          _0x30d6dd["push"](_0x30d6dd["shift"]());
-      } catch (_0x28ecd1) {
-        _0x30d6dd["push"](_0x30d6dd["shift"]());
+          _0x55b8d5["push"](_0x55b8d5["shift"]());
+      } catch (_0x42b050) {
+        _0x55b8d5["push"](_0x55b8d5["shift"]());
       }
     }
-  })(_0x34df, 837104);
+  })(_0x44b0, 693289);
   class PackageProtectionClientKingdomTheme extends PackageProtectionClientBasic {
     constructor() {
       super(...arguments);
-      __publicField(this, _p, _0x4809a8(469));
+      __publicField(this, _o, _0x23de19(342));
     }
-    static [(_p = _0x4809a8(465), _0x4809a8(481))]() {
+    static [(_o = _0x23de19(351), _0x23de19(339))]() {
       return checkTheme(kingdomTheme);
     }
-    [_0x4809a8(453)]() {
-      const _0x4d2796 = _0x4809a8;
-      return [{ "selector": _0x4d2796(472), "insertPosition": _0x4d2796(452) }, { "selector": _0x4d2796(446), "insertPosition": "before" }];
+    [_0x23de19(337)]() {
+      const _0x5ad969 = _0x23de19;
+      return [{ "selector": _0x5ad969(357), "insertPosition": _0x5ad969(347) }, { "selector": _0x5ad969(334), "insertPosition": _0x5ad969(347) }];
     }
-    async [_0x4809a8(454)](_0x455b11) {
-      const _0x14a901 = _0x4809a8;
-      return super[_0x14a901(454)]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": _0x14a901(460), "titleFontSize": 1, "descriptionFontSize": 0.8, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], "containerMaxWidth": "250px", ..._0x455b11, "accentColor": _0x14a901(476) });
+    async [_0x23de19(336)](_0xcd94c3) {
+      const _0x3bea85 = _0x23de19;
+      return super[_0x3bea85(336)]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": _0x3bea85(324), "titleFontSize": 1, "descriptionFontSize": 0.8, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], "containerMaxWidth": _0x3bea85(354), ..._0xcd94c3, "accentColor": _0x3bea85(348) });
     }
-    async [_0x4809a8(468)]() {
-      const _0xcdc848 = _0x4809a8;
-      console[_0xcdc848(466)](_0xcdc848(459));
-      const _0x1b59c4 = [_0xcdc848(448), _0xcdc848(480)], _0x562bc5 = await window[_0xcdc848(471)][_0xcdc848(464)](), _0x5e71b4 = (_0x1d4957 = 0) => {
-        const _0xb1f4a5 = _0xcdc848;
-        _0x1b59c4[_0xb1f4a5(486)]((_0x2f1ab8) => {
-          const _0x232236 = _0xb1f4a5;
-          let _0x277455 = document[_0x232236(479)](_0x2f1ab8);
-          if (_0x277455 && _0x277455["lastElementChild"])
-            _0x277455[_0x232236(477)][_0x232236(447)] = _0x232236(467) + this["formatPrice"](Number(_0x562bc5[_0x232236(455)] / 100 + _0x1d4957), _0x562bc5["currency"]);
+    async ["refreshWidget"]() {
+      const _0x4b51f8 = _0x23de19;
+      console["log"](_0x4b51f8(325));
+      const _0x39b50b = ["#CartTotal strong", ".cart-summary-line"], _0x132e12 = await window["weNexusCartApi"][_0x4b51f8(335)](), _0x4ee3f9 = (_0x45a7fd = 0) => {
+        const _0xa6b2f2 = _0x4b51f8;
+        _0x39b50b[_0xa6b2f2(338)]((_0x478896) => {
+          const _0x36389f = _0xa6b2f2;
+          let _0x230b60 = document["querySelector"](_0x478896);
+          if (_0x230b60 && _0x230b60["lastElementChild"])
+            _0x230b60["lastElementChild"][_0x36389f(327)] = _0x36389f(329) + this[_0x36389f(330)](Number(_0x132e12[_0x36389f(345)] / 100 + _0x45a7fd), _0x132e12[_0x36389f(349)]);
           else
-            _0x277455 && (_0x277455[_0x232236(447)] = this["formatPrice"](Number(_0x562bc5[_0x232236(455)] / 100 + _0x1d4957), _0x562bc5["currency"]));
+            _0x230b60 && (_0x230b60[_0x36389f(327)] = this[_0x36389f(330)](Number(_0x132e12[_0x36389f(345)] / 100 + _0x45a7fd), _0x132e12[_0x36389f(349)]));
         });
       };
       setTimeout(() => {
-        const _0x58cfa1 = _0xcdc848, _0x5f340e = this[_0x58cfa1(458)](), _0x2e1560 = localStorage[_0x58cfa1(462)](_0x58cfa1(450));
-        let _0x5ab5d6 = "";
-        _0x2e1560 === _0x58cfa1(470) ? (_0x5ab5d6 = this["enabledDescription"], _0x5e71b4(_0x5f340e), _0x5e71b4(_0x5f340e)) : (_0x5ab5d6 = this[_0x58cfa1(482)], _0x5e71b4(), _0x5e71b4());
-        const _0x279c41 = document[_0x58cfa1(484)](_0x58cfa1(445));
-        Array[_0x58cfa1(461)](_0x279c41)[_0x58cfa1(486)]((_0x19d15b) => _0x19d15b["innerHTML"] = _0x5ab5d6 + " ");
+        const _0x1b24ac = _0x4b51f8, _0x1a3870 = this[_0x1b24ac(352)](), _0x50e1a0 = localStorage[_0x1b24ac(328)](_0x1b24ac(344));
+        let _0x32e2a2 = "";
+        _0x50e1a0 === "true" ? (_0x32e2a2 = this[_0x1b24ac(353)], _0x4ee3f9(_0x1a3870), _0x4ee3f9(_0x1a3870)) : (_0x32e2a2 = this["disabledDescription"], _0x4ee3f9(), _0x4ee3f9());
+        const _0x4a047a = document[_0x1b24ac(331)](_0x1b24ac(332));
+        Array["from"](_0x4a047a)[_0x1b24ac(338)]((_0x2f5edb) => _0x2f5edb[_0x1b24ac(327)] = _0x32e2a2 + " ");
       }, 500);
     }
-    [_0x4809a8(444)]() {
-      const _0x287fcd = _0x4809a8;
-      window[_0x287fcd(449)][_0x287fcd(483)]();
+    [_0x23de19(326)]() {
+      const _0x3a25e2 = _0x23de19;
+      window[_0x3a25e2(343)][_0x3a25e2(350)]();
     }
   }
-  function _0x426c(_0x37095a, _0x31d923) {
-    const _0x34df74 = _0x34df();
-    return _0x426c = function(_0x426c85, _0x20150e) {
-      _0x426c85 = _0x426c85 - 443;
-      let _0x49c46c = _0x34df74[_0x426c85];
-      return _0x49c46c;
-    }, _0x426c(_0x37095a, _0x31d923);
-  }
-  function _0x34df() {
-    const _0x3299e6 = ["9746076bFeaTo", "4ALfjoF", "7718931PvlHaF", "#2c7e3f", "lastElementChild", "8eisAYM", "querySelector", ".cart-summary-line", "shouldUse", "disabledDescription", "reload", "getElementsByClassName", "24xkgRjZ", "forEach", "3488540lUlCfn", "cartUpdate", "wenexus-package-protection-description", ".cart-buttons", "innerHTML", "#CartTotal strong", "location", "package-protection-enabled", "149540NIoBAj", "before", "getInsertionPointSelectors", "getStyleMarkup", "total_price", "175641wnGNUE", "885193ODnDiV", "getWidgetPrice", "kingdomTheme", "end", "from", "getItem", "2632630KqsqQL", "get", "thumbnail", "log", "SUBTOTAL ", "refreshWidget", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753", "true", "weNexusCartApi", "button[name='checkout']"];
-    _0x34df = function() {
-      return _0x3299e6;
+  function _0x44b0() {
+    const _0x5ee29a = ["shouldUse", "40784vleVez", "777dUIckt", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753", "location", "package-protection-enabled", "total_price", "2741078XMtJDj", "before", "#2c7e3f", "currency", "reload", "thumbnail", "getWidgetPrice", "enabledDescription", "250px", "5oTfBNt", "889534jisxLN", "button[name='checkout']", "5300094mjlYrF", "4731012dxtPyt", "18003770CKktqw", "3SshHNK", "end", "kingdomTheme", "cartUpdate", "innerHTML", "getItem", "SUBTOTAL ", "formatPrice", "getElementsByClassName", "wenexus-package-protection-description", "4306928TFfmYo", ".cart-buttons", "get", "getStyleMarkup", "getInsertionPointSelectors", "forEach"];
+    _0x44b0 = function() {
+      return _0x5ee29a;
     };
-    return _0x34df();
+    return _0x44b0();
   }
-  function _0x3fed() {
-    const _0xe1d27f = ["getInsertionPointSelectors", "end", "get", "wenexus-package-protection-description", "1468996VuzRvM", "</button>\n              ", ".cart__aside-inner button[type='submit'].cart__checkout-button", 'button[form="mini-cart-form"][type="submit"]', ".cart__total-container span:nth-of-type(2)", "padding", "querySelectorAll", "568120kJscmc", "1701504RAmynQ", "4KtTgUY", "doesSelectorContainSubtotal", "total_price", "2394510xFraZz", "getWidgetPrice", ".cartTotalSelector", "enabledDescription", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753", '\n               <span class="checkout-button__lock"><svg focusable="false" width="17" height="17" class="icon icon--lock   " viewBox="0 0 17 17">\n                <path d="M2.5 7V15H14.5V7H2.5Z" stroke="currentColor" stroke-width="1.5" fill="none"></path>\n                <path d="M5.5 4C5.5 2.34315 6.84315 1 8.5 1V1C10.1569 1 11.5 2.34315 11.5 4V7H5.5V4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>\n                <circle cx="8.5" cy="11" r="0.5" stroke="currentColor"></circle>\n              </svg></span>Checkout<span class="square-separator"></span>', "disabledDescription", "BUTTON", "forEach", "Shopify", "test", "package-protection-enabled", "26362488zgKeBy", "cartUpdate", "getStyleMarkup", "Focal", "div.shipping_msg.bottompad-half.clearfix shipping-message", "formatPrice", "textContent", "Toyo theme", "doesSelectorContainCheckoutWord", "3297960NzXSPQ", "#2c7e3f", "location", "schema_name", "thumbnail", "553864mHCMYl", "#total-cart-top", "tagName", "9LIwzTQ", "Checkout -", "true", "log", "250px", "getItem", "innerHTML", "before", "currency", ".cart-buttons"];
-    _0x3fed = function() {
-      return _0xe1d27f;
-    };
-    return _0x3fed();
+  function _0x1f02(_0x39246c, _0x1b2038) {
+    const _0x2c7080 = _0x2c70();
+    return _0x1f02 = function(_0x1f02aa, _0x95c1b3) {
+      _0x1f02aa = _0x1f02aa - 160;
+      let _0x5db946 = _0x2c7080[_0x1f02aa];
+      return _0x5db946;
+    }, _0x1f02(_0x39246c, _0x1b2038);
   }
-  const _0x431cfe = _0x42bb;
-  (function(_0x49795d, _0x3dd6fb) {
-    const _0x3bd004 = _0x42bb, _0x52c40c = _0x49795d();
+  const _0x46aee8 = _0x1f02;
+  (function(_0x71210, _0x18a4fd) {
+    const _0x1979b5 = _0x1f02, _0x17092c = _0x71210();
     while (!![]) {
       try {
-        const _0x37edae = -parseInt(_0x3bd004(199)) / 1 + -parseInt(_0x3bd004(216)) / 2 + -parseInt(_0x3bd004(173)) / 3 * (parseInt(_0x3bd004(170)) / 4) + parseInt(_0x3bd004(168)) / 5 + -parseInt(_0x3bd004(194)) / 6 + -parseInt(_0x3bd004(169)) / 7 + -parseInt(_0x3bd004(185)) / 8 * (-parseInt(_0x3bd004(202)) / 9);
-        if (_0x37edae === _0x3dd6fb)
+        const _0x58d5c2 = parseInt(_0x1979b5(180)) / 1 * (-parseInt(_0x1979b5(170)) / 2) + parseInt(_0x1979b5(188)) / 3 * (parseInt(_0x1979b5(209)) / 4) + parseInt(_0x1979b5(187)) / 5 * (-parseInt(_0x1979b5(208)) / 6) + -parseInt(_0x1979b5(202)) / 7 * (-parseInt(_0x1979b5(164)) / 8) + -parseInt(_0x1979b5(199)) / 9 * (-parseInt(_0x1979b5(185)) / 10) + parseInt(_0x1979b5(218)) / 11 + parseInt(_0x1979b5(215)) / 12;
+        if (_0x58d5c2 === _0x18a4fd)
           break;
         else
-          _0x52c40c["push"](_0x52c40c["shift"]());
-      } catch (_0x2749b2) {
-        _0x52c40c["push"](_0x52c40c["shift"]());
+          _0x17092c["push"](_0x17092c["shift"]());
+      } catch (_0x1b6471) {
+        _0x17092c["push"](_0x17092c["shift"]());
       }
     }
-  })(_0x3fed, 529671);
-  function _0x42bb(_0x2a8eb1, _0x214820) {
-    const _0x3fedff = _0x3fed();
-    return _0x42bb = function(_0x42bbf2, _0x148862) {
-      _0x42bbf2 = _0x42bbf2 - 164;
-      let _0xe5698 = _0x3fedff[_0x42bbf2];
-      return _0xe5698;
-    }, _0x42bb(_0x2a8eb1, _0x214820);
+  })(_0x2c70, 206934);
+  function _0x2c70() {
+    const _0x2ec71b = ["innerHTML", ".cart-buttons", "shouldUse", "1117300jZtNdW", "schema_name", "410YwrVof", "3VZpwwp", "wenexus-package-protection-description", "total_price", "get", "250px", ".wenexus-package-protection span.toggle-switch", "doesSelectorContainCheckoutWord", "#2c7e3f", "BUTTON", "end", ".cart-price", "9Wfnfke", "after", "Focal", "7GbLDvb", ".cartTotalSelector", "true", "querySelectorAll", "textContent", "getStyleMarkup", "24912rGSjLk", "101148sFPtDn", "</button>\n              ", "log", "theme", "padding", "refreshWidget", "2929596XGVYug", "formatPrice", "test", "2252811aOPNHJ", "thumbnail", "forEach", "getInsertionPointSelectors", "doesSelectorContainSubtotal", "1367000RqQfah", "tagName", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753", "Checkout -", '\n               <span class="checkout-button__lock"><svg focusable="false" width="17" height="17" class="icon icon--lock   " viewBox="0 0 17 17">\n                <path d="M2.5 7V15H14.5V7H2.5Z" stroke="currentColor" stroke-width="1.5" fill="none"></path>\n                <path d="M5.5 4C5.5 2.34315 6.84315 1 8.5 1V1C10.1569 1 11.5 2.34315 11.5 4V7H5.5V4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>\n                <circle cx="8.5" cy="11" r="0.5" stroke="currentColor"></circle>\n              </svg></span>Checkout<span class="square-separator"></span>', "reload", "209428kvfRBU", "location", "getItem", 'button[form="mini-cart-form"][type="submit"]', "currency", "cartUpdate", "from", "getWidgetPrice", "enabledDescription", "before", "2PMLgCA", "disabledDescription"];
+    _0x2c70 = function() {
+      return _0x2ec71b;
+    };
+    return _0x2c70();
   }
   class PackageProtectionClientToyoTheme extends PackageProtectionClientBasic {
     constructor() {
       super(...arguments);
-      __publicField(this, _q, _0x431cfe(177));
+      __publicField(this, _p, _0x46aee8(166));
     }
-    static ["shouldUse"]() {
+    static [(_p = _0x46aee8(160), _0x46aee8(184))]() {
       return checkTheme(toyoTheme);
     }
-    [(_q = _0x431cfe(198), _0x431cfe(212))]() {
-      const _0x2560db = _0x431cfe;
-      return [{ "selector": _0x2560db(211), "insertPosition": _0x2560db(209) }, { "selector": ".cart-buttons-container", "insertPosition": _0x2560db(209) }, { "selector": _0x2560db(189), "insertPosition": "after" }, { "selector": _0x2560db(218), "insertPosition": _0x2560db(209) }, { "selector": _0x2560db(164), "insertPosition": "before" }];
+    [_0x46aee8(162)]() {
+      const _0x8b25f = _0x46aee8;
+      return [{ "selector": _0x8b25f(183), "insertPosition": _0x8b25f(179) }, { "selector": ".cart-buttons-container", "insertPosition": "before" }, { "selector": "div.shipping_msg.bottompad-half.clearfix shipping-message", "insertPosition": _0x8b25f(200) }, { "selector": ".cart__aside-inner button[type='submit'].cart__checkout-button", "insertPosition": _0x8b25f(179) }, { "selector": _0x8b25f(173), "insertPosition": _0x8b25f(179) }];
     }
-    async ["getStyleMarkup"](_0xf8fe37) {
-      const _0x5eb8bb = _0x431cfe;
-      return super[_0x5eb8bb(187)]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": _0x5eb8bb(213), "titleFontSize": 1, "descriptionFontSize": 0.8, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], "containerMaxWidth": _0x5eb8bb(206), ..._0xf8fe37, "accentColor": _0x5eb8bb(195) });
+    async [_0x46aee8(207)](_0x10d082) {
+      const _0x35f9b2 = _0x46aee8;
+      return super[_0x35f9b2(207)]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": _0x35f9b2(197), "titleFontSize": 1, "descriptionFontSize": 0.8, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], "containerMaxWidth": _0x35f9b2(192), ..._0x10d082, "accentColor": _0x35f9b2(195) });
     }
-    [_0x431cfe(171)](_0xe0ed51) {
-      const _0x4afcb5 = _0x431cfe;
-      if (!_0xe0ed51)
+    [_0x46aee8(163)](_0x5b52fe) {
+      const _0x15a7e2 = _0x46aee8;
+      if (!_0x5b52fe)
         return ![];
-      const _0x37ecf4 = /\b\d+(\.\d{2})?\b/;
-      return _0x37ecf4[_0x4afcb5(183)](_0xe0ed51);
+      const _0xa1bd10 = /\b\d+(\.\d{2})?\b/;
+      return _0xa1bd10[_0x15a7e2(217)](_0x5b52fe);
     }
-    [_0x431cfe(193)](_0x298299) {
-      const _0x4c1e77 = _0x431cfe, _0x2df5ba = /(\d{4})\b/;
-      return _0x2df5ba[_0x4c1e77(183)](_0x298299);
+    [_0x46aee8(194)](_0x54089) {
+      const _0x47427c = _0x46aee8, _0x4aa364 = /(\d{4})\b/;
+      return _0x4aa364[_0x47427c(217)](_0x54089);
     }
-    async ["refreshWidget"]() {
-      const _0x143ded = _0x431cfe;
-      console[_0x143ded(205)](_0x143ded(192));
-      const _0x28ce49 = document[_0x143ded(167)](".wenexus-package-protection span.toggle-switch");
-      _0x28ce49["forEach"]((_0x16d13b) => {
-        const _0x1867f4 = _0x143ded;
-        _0x16d13b["style"][_0x1867f4(166)] = "0";
+    async [_0x46aee8(214)]() {
+      const _0x42afba = _0x46aee8;
+      console[_0x42afba(211)]("Toyo theme");
+      const _0x431866 = document[_0x42afba(205)](_0x42afba(193));
+      _0x431866[_0x42afba(161)]((_0x2195a0) => {
+        const _0x275435 = _0x42afba;
+        _0x2195a0["style"][_0x275435(213)] = "0";
       });
-      const _0x2b25c1 = [".cart-total-price", ".cart-price", _0x143ded(175), _0x143ded(200), _0x143ded(165), _0x143ded(164)], _0x413824 = await window["weNexusCartApi"][_0x143ded(214)](), _0x3fe3fc = (_0x2e5da2 = 0) => {
-        const _0x625a3 = _0x143ded;
-        _0x2b25c1[_0x625a3(181)]((_0x5b4894) => {
-          const _0x3eabb6 = _0x625a3, _0x3409a7 = (_0x3a1e2d) => {
-            const _0x159bc8 = _0x42bb;
-            console[_0x159bc8(205)](this[_0x159bc8(193)](_0x3a1e2d[_0x159bc8(191)]));
-            if (_0x3a1e2d && this[_0x159bc8(171)](_0x3a1e2d[_0x159bc8(191)])) {
-              if (_0x3a1e2d[_0x159bc8(201)] === _0x159bc8(180) && window[_0x159bc8(182)]["theme"][_0x159bc8(197)] === _0x159bc8(188)) {
-                const _0x2f62ac = this[_0x159bc8(190)](Number(_0x413824[_0x159bc8(172)] / 100 + _0x2e5da2), _0x413824[_0x159bc8(210)]);
-                _0x3a1e2d[_0x159bc8(208)] = _0x159bc8(178) + _0x2f62ac + _0x159bc8(217);
+      const _0x239f84 = [".cart-total-price", _0x42afba(198), _0x42afba(203), "#total-cart-top", ".cart__total-container span:nth-of-type(2)", _0x42afba(173)], _0x39cba0 = await window["weNexusCartApi"][_0x42afba(191)](), _0x11dcf6 = (_0x4b3d57 = 0) => {
+        const _0x262634 = _0x42afba;
+        _0x239f84[_0x262634(161)]((_0x32fd34) => {
+          const _0x2e07cc = _0x262634, _0x9681e3 = (_0x30a243) => {
+            const _0x393bf2 = _0x1f02;
+            console[_0x393bf2(211)](this[_0x393bf2(194)](_0x30a243[_0x393bf2(206)]));
+            if (_0x30a243 && this[_0x393bf2(163)](_0x30a243[_0x393bf2(206)])) {
+              if (_0x30a243[_0x393bf2(165)] === _0x393bf2(196) && window["Shopify"][_0x393bf2(212)][_0x393bf2(186)] === _0x393bf2(201)) {
+                const _0x560052 = this[_0x393bf2(216)](Number(_0x39cba0[_0x393bf2(190)] / 100 + _0x4b3d57), _0x39cba0["currency"]);
+                _0x30a243["innerHTML"] = _0x393bf2(168) + _0x560052 + _0x393bf2(210);
                 return;
               }
-              const _0x29681c = _0x3a1e2d[_0x159bc8(191)];
-              if (this[_0x159bc8(193)](_0x29681c)) {
-                console[_0x159bc8(205)](_0x29681c), _0x3a1e2d[_0x159bc8(191)] = _0x159bc8(203) + this[_0x159bc8(190)](Number(_0x413824[_0x159bc8(172)] / 100 + _0x2e5da2), _0x413824[_0x159bc8(210)]) + " " + _0x413824[_0x159bc8(210)];
+              const _0x44c505 = _0x30a243[_0x393bf2(206)];
+              if (this["doesSelectorContainCheckoutWord"](_0x44c505)) {
+                console["log"](_0x44c505), _0x30a243[_0x393bf2(206)] = _0x393bf2(167) + this[_0x393bf2(216)](Number(_0x39cba0["total_price"] / 100 + _0x4b3d57), _0x39cba0[_0x393bf2(174)]) + " " + _0x39cba0[_0x393bf2(174)];
                 return;
               }
-              _0x3a1e2d["textContent"] = this[_0x159bc8(190)](Number(_0x413824[_0x159bc8(172)] / 100 + _0x2e5da2), _0x413824[_0x159bc8(210)]) + " " + _0x413824["currency"];
+              _0x30a243[_0x393bf2(206)] = this[_0x393bf2(216)](Number(_0x39cba0[_0x393bf2(190)] / 100 + _0x4b3d57), _0x39cba0[_0x393bf2(174)]) + " " + _0x39cba0["currency"];
               return;
             }
           };
-          let _0xc778c5 = document["querySelectorAll"](_0x5b4894);
-          _0xc778c5[_0x3eabb6(181)]((_0x230389) => {
-            _0x3409a7(_0x230389);
+          let _0x4d1b6f = document[_0x2e07cc(205)](_0x32fd34);
+          _0x4d1b6f[_0x2e07cc(161)]((_0x2499bc) => {
+            _0x9681e3(_0x2499bc);
           });
         });
       };
       setTimeout(() => {
-        const _0x1600e1 = _0x143ded, _0x1cde5f = this[_0x1600e1(174)](), _0x2db642 = localStorage[_0x1600e1(207)](_0x1600e1(184));
-        let _0x189b3e = "";
-        _0x2db642 === _0x1600e1(204) ? (_0x189b3e = this[_0x1600e1(176)], _0x3fe3fc(_0x1cde5f), _0x3fe3fc(_0x1cde5f)) : (_0x189b3e = this[_0x1600e1(179)], _0x3fe3fc(), _0x3fe3fc());
-        const _0x328146 = document["getElementsByClassName"](_0x1600e1(215));
-        Array["from"](_0x328146)[_0x1600e1(181)]((_0x26a3f6) => _0x26a3f6[_0x1600e1(208)] = _0x189b3e + " ");
+        const _0x389598 = _0x42afba, _0x358908 = this[_0x389598(177)](), _0x4496a3 = localStorage[_0x389598(172)]("package-protection-enabled");
+        let _0x567a7e = "";
+        _0x4496a3 === _0x389598(204) ? (_0x567a7e = this[_0x389598(178)], _0x11dcf6(_0x358908), _0x11dcf6(_0x358908)) : (_0x567a7e = this[_0x389598(181)], _0x11dcf6(), _0x11dcf6());
+        const _0x2b0488 = document["getElementsByClassName"](_0x389598(189));
+        Array[_0x389598(176)](_0x2b0488)[_0x389598(161)]((_0x4fa7d2) => _0x4fa7d2[_0x389598(182)] = _0x567a7e + " ");
       }, 500);
     }
-    [_0x431cfe(186)]() {
-      const _0x454c44 = _0x431cfe;
-      window[_0x454c44(196)]["reload"]();
+    [_0x46aee8(175)]() {
+      const _0x462701 = _0x46aee8;
+      window[_0x462701(171)][_0x462701(169)]();
     }
   }
-  const _0x4d4e0c = _0x4c93;
-  (function(_0x33b16c, _0x236a65) {
-    const _0x56a5b3 = _0x4c93, _0x3ee550 = _0x33b16c();
+  const _0xb3383b = _0xe0f8;
+  function _0xe0f8(_0x558263, _0x3ad5f5) {
+    const _0x5230a2 = _0x5230();
+    return _0xe0f8 = function(_0xe0f81e, _0x2f3c35) {
+      _0xe0f81e = _0xe0f81e - 202;
+      let _0x41fcfc = _0x5230a2[_0xe0f81e];
+      return _0x41fcfc;
+    }, _0xe0f8(_0x558263, _0x3ad5f5);
+  }
+  (function(_0x490183, _0x417bee) {
+    const _0x31632c = _0xe0f8, _0x12afe2 = _0x490183();
     while (!![]) {
       try {
-        const _0x478f21 = parseInt(_0x56a5b3(493)) / 1 + parseInt(_0x56a5b3(473)) / 2 + parseInt(_0x56a5b3(495)) / 3 + parseInt(_0x56a5b3(528)) / 4 + -parseInt(_0x56a5b3(512)) / 5 + parseInt(_0x56a5b3(483)) / 6 * (parseInt(_0x56a5b3(499)) / 7) + parseInt(_0x56a5b3(478)) / 8 * (-parseInt(_0x56a5b3(488)) / 9);
-        if (_0x478f21 === _0x236a65)
+        const _0xc1f8 = -parseInt(_0x31632c(259)) / 1 + -parseInt(_0x31632c(209)) / 2 + -parseInt(_0x31632c(239)) / 3 + parseInt(_0x31632c(235)) / 4 + -parseInt(_0x31632c(203)) / 5 * (parseInt(_0x31632c(233)) / 6) + -parseInt(_0x31632c(212)) / 7 * (parseInt(_0x31632c(225)) / 8) + parseInt(_0x31632c(204)) / 9;
+        if (_0xc1f8 === _0x417bee)
           break;
         else
-          _0x3ee550["push"](_0x3ee550["shift"]());
-      } catch (_0x2c6294) {
-        _0x3ee550["push"](_0x3ee550["shift"]());
+          _0x12afe2["push"](_0x12afe2["shift"]());
+      } catch (_0x91e55d) {
+        _0x12afe2["push"](_0x12afe2["shift"]());
       }
     }
-  })(_0x245f, 872031);
-  function _0x245f() {
-    const _0x338a98 = ["from", "enabledDescription", "3650364duZIKl", ".cart_notification_links_inner", 'input[name="checkout"]', "childNodes", "2253672wIsfqZ", "add", "weNexusCartApi", "querySelector", "getWidgetPrice", "290216sroiPD", "toFixed", "setItem", "[name='checkout']", "getElementsByClassName", "350502teqjHo", ".cart-total-price", "getAttribute", "style", "before", "423OMhWqD", "package-protection-enabled", "div.ajax-cart__summary-wrapper.js-cart-summary", "querySelectorAll", "getInsertionPointSelectors", "79258mDLsxg", ".cart__footer", "2940450UUAgRM", "thumbnail", ".cart-drawer-subtotal__main-content", 'button[name="checkout"]', "21EDHiaH", "items_subtotal_price", ".cart-details-footer", "setAttribute", "cartUpdate", "forEach", "replace", "Space theme", "tagName", "log", "get", "div.border--b-width.w-full.p-4.color__bg-tertiary.color__tertiary.color__border-divider-1", "innerHTML", "3485180aaRLpO", "getStyleMarkup", "getItem", "ELEMENT_NODE", "TEXT_NODE", "nodeType", "end", "value", "location", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753", "div.cart__blocks cart-note", "textContent", "classList", '.wenexus-package-protection__toggle input[type="checkbox"]'];
-    _0x245f = function() {
-      return _0x338a98;
+  })(_0x5230, 389675);
+  function _0x5230() {
+    const _0x23fea4 = ["weNexusCartApi", "getStyleMarkup", "replace", "true", "getAttribute", "textContent", ".cart-buttons", "enabledDescription", "nodeType", "#2c7e3f", "50VrRLkt", "18766197QSwezD", "refreshWidget", "childNodes", "[name='checkout']", "getInsertionPointSelectors", "813932CaKNNz", "querySelector", "div.ajax-cart__summary-wrapper.js-cart-summary", "427eTtFqc", ".cart-total-price", "wenexus-package-protection-description", "setItem", ".cart__footer", "reload", "disabledDescription", "get", "thumbnail", "setAttribute", "location", "end", "after", "42384ohqKJp", "INPUT", "div.cart__blocks cart-note", "product-variant__input", "aside", ".cart_notification_links_inner", "getWidgetPrice", "add", "148098VvmLqQ", "innerHTML", "2013320eTZZFd", '.wenexus-package-protection__toggle input[type="checkbox"]', "log", "getElementsByClassName", "1867743tlhfXg", "shouldUse", "getItem", "Space theme", "querySelectorAll", "div.border--b-width.w-full.p-4.color__bg-tertiary.color__tertiary.color__border-divider-1", "before", "TEXT_NODE", "value", "tagName", ".cart-drawer-subtotal__main-content", "forEach", "items_subtotal_price", "unset", "cartUpdate", "https://cdn.shopify.com/s/files/1/0010/3134/0085/files/pp-caliconnected.png?v=1716625753", "from", "ELEMENT_NODE", "classList", "display", "599233wkEVGf", "node element is input"];
+    _0x5230 = function() {
+      return _0x23fea4;
     };
-    return _0x245f();
-  }
-  function _0x4c93(_0x11b104, _0x32b504) {
-    const _0x245f0a = _0x245f();
-    return _0x4c93 = function(_0x4c9351, _0xaec4a8) {
-      _0x4c9351 = _0x4c9351 - 472;
-      let _0x5d78fa = _0x245f0a[_0x4c9351];
-      return _0x5d78fa;
-    }, _0x4c93(_0x11b104, _0x32b504);
+    return _0x5230();
   }
   class PackageProtectionClientBrickSpaceTheme extends PackageProtectionClientBasic {
     constructor() {
       super(...arguments);
-      __publicField(this, _r, _0x4d4e0c(521));
+      __publicField(this, _q, _0xb3383b(254));
     }
-    static ["shouldUse"]() {
+    static [(_q = _0xb3383b(220), _0xb3383b(240))]() {
       return checkTheme(brickSpaceLabTheme);
     }
-    [(_r = _0x4d4e0c(496), _0x4d4e0c(492))]() {
-      const _0x1642dc = _0x4d4e0c;
-      return [{ "selector": _0x1642dc(481), "insertPosition": _0x1642dc(487) }, { "selector": _0x1642dc(522), "insertPosition": "after" }, { "selector": ".cart-buttons", "insertPosition": _0x1642dc(487) }];
+    [_0xb3383b(208)]() {
+      const _0x548f0d = _0xb3383b;
+      return [{ "selector": _0x548f0d(207), "insertPosition": _0x548f0d(245) }, { "selector": _0x548f0d(227), "insertPosition": _0x548f0d(224) }, { "selector": _0x548f0d(267), "insertPosition": "before" }];
     }
-    async ["getStyleMarkup"](_0x36c634) {
-      const _0x5c8f1b = _0x4d4e0c;
-      return super[_0x5c8f1b(513)]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": _0x5c8f1b(518), "titleFontSize": 1, "descriptionFontSize": 0.8, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], "containerMaxWidth": "250px", ..._0x36c634, "accentColor": "#2c7e3f" });
+    async [_0xb3383b(262)](_0x546426) {
+      const _0x2fb0c7 = _0xb3383b;
+      return super[_0x2fb0c7(262)]({ "imageWidth": 66, "containerMargin": [10, 0, 12, 0], "containerJustify": _0x2fb0c7(223), "titleFontSize": 1, "descriptionFontSize": 0.8, "hideDescriptionPage": ![], "descriptionMargin": [2, 0, 0, 0], "containerMaxWidth": "250px", ..._0x546426, "accentColor": _0x2fb0c7(202) });
     }
-    async ["refreshWidget"]() {
-      const _0x26cd08 = _0x4d4e0c;
-      console[_0x26cd08(508)](_0x26cd08(506));
-      const _0x2ee8c6 = [_0x26cd08(501), _0x26cd08(497), _0x26cd08(510), _0x26cd08(498), "aside", _0x26cd08(530), _0x26cd08(484), _0x26cd08(494), _0x26cd08(529)], _0xc1483c = await window[_0x26cd08(475)][_0x26cd08(509)](), _0x3035cb = document[_0x26cd08(476)](_0x26cd08(525));
-      if (_0x3035cb)
-        _0x3035cb[_0x26cd08(524)][_0x26cd08(474)]("product-variant__input");
-      const _0x2cd96c = () => {
-        const _0x1127b7 = _0x26cd08, _0x9c67a0 = document["querySelector"](_0x1127b7(490));
-        if (_0x9c67a0)
-          _0x9c67a0[_0x1127b7(486)]["display"] = "unset";
+    async [_0xb3383b(205)]() {
+      const _0x2f8a63 = _0xb3383b;
+      console[_0x2f8a63(237)](_0x2f8a63(242));
+      const _0x4f582d = [".cart-details-footer", _0x2f8a63(249), _0x2f8a63(244), 'button[name="checkout"]', _0x2f8a63(229), 'input[name="checkout"]', _0x2f8a63(213), _0x2f8a63(216), _0x2f8a63(230)], _0x1ec3c6 = await window[_0x2f8a63(261)][_0x2f8a63(219)](), _0x129a31 = document[_0x2f8a63(210)](_0x2f8a63(236));
+      if (_0x129a31)
+        _0x129a31[_0x2f8a63(257)][_0x2f8a63(232)](_0x2f8a63(228));
+      const _0x33056b = () => {
+        const _0x43a64d = _0x2f8a63, _0x483518 = document["querySelector"](_0x43a64d(211));
+        if (_0x483518)
+          _0x483518["style"][_0x43a64d(258)] = _0x43a64d(252);
       };
-      _0x2cd96c();
-      const _0x305d74 = (_0x3076d6 = 0) => {
-        _0x2ee8c6["forEach"]((_0x57eb4e) => {
-          const _0x4c56ef = _0x4c93;
-          let _0x4a53c3 = document[_0x4c56ef(491)](_0x57eb4e);
-          function _0x2c79f4(_0x6062c4) {
-            const _0x540d88 = _0x4c56ef, _0x3ee1ab = Number(_0xc1483c[_0x540d88(500)] / 100)["toFixed"](2), _0x484112 = Number(_0xc1483c[_0x540d88(500)] / 100 + _0x3076d6)[_0x540d88(479)](2), _0x309364 = () => {
-              const _0xbce484 = _0x540d88;
-              console[_0xbce484(508)]("node element is input");
-              if (_0x3076d6 === 0) {
-                const _0x1d5a71 = localStorage[_0xbce484(514)](_0xbce484(500)), _0x3f2c5f = _0x6062c4[_0xbce484(485)](_0xbce484(519));
-                if (!_0x3f2c5f)
+      _0x33056b();
+      const _0x21d3f2 = (_0x8e9762 = 0) => {
+        const _0x1d7b37 = _0x2f8a63;
+        _0x4f582d[_0x1d7b37(250)]((_0x4911d5) => {
+          const _0x25e23c = _0x1d7b37;
+          let _0x1f7618 = document[_0x25e23c(243)](_0x4911d5);
+          function _0x509ca7(_0x5540df) {
+            const _0x20d7ae = _0x25e23c, _0x349bf5 = Number(_0x1ec3c6["items_subtotal_price"] / 100)["toFixed"](2), _0x5618f6 = Number(_0x1ec3c6["items_subtotal_price"] / 100 + _0x8e9762)["toFixed"](2), _0x375c44 = () => {
+              const _0x781538 = _0xe0f8;
+              console["log"](_0x781538(260));
+              if (_0x8e9762 === 0) {
+                const _0x9f0db8 = localStorage[_0x781538(241)](_0x781538(251)), _0x12e51e = _0x5540df[_0x781538(265)](_0x781538(247));
+                if (!_0x12e51e)
                   return;
-                const _0xbe4f4c = _0x3f2c5f["replace"](new RegExp("\\b" + _0x1d5a71 + "\\b", "g"), _0x484112);
-                _0x6062c4[_0xbce484(502)](_0xbce484(519), _0xbe4f4c);
+                const _0x441880 = _0x12e51e["replace"](new RegExp("\\b" + _0x9f0db8 + "\\b", "g"), _0x5618f6);
+                _0x5540df[_0x781538(221)](_0x781538(247), _0x441880);
               } else {
-                localStorage[_0xbce484(480)](_0xbce484(500), _0x484112);
-                const _0x4c3818 = _0x6062c4[_0xbce484(485)](_0xbce484(519));
-                if (!_0x4c3818)
+                localStorage[_0x781538(215)](_0x781538(251), _0x5618f6);
+                const _0x4e9154 = _0x5540df[_0x781538(265)](_0x781538(247));
+                if (!_0x4e9154)
                   return;
-                const _0x91cd7d = _0x4c3818[_0xbce484(505)](new RegExp("\\b" + _0x3ee1ab + "\\b", "g"), _0x484112);
-                _0x6062c4["setAttribute"](_0xbce484(519), _0x91cd7d);
+                const _0x499c75 = _0x4e9154[_0x781538(263)](new RegExp("\\b" + _0x349bf5 + "\\b", "g"), _0x5618f6);
+                _0x5540df["setAttribute"](_0x781538(247), _0x499c75);
               }
             };
-            if (_0x6062c4[_0x540d88(507)] === "INPUT") {
-              _0x309364();
+            if (_0x5540df[_0x20d7ae(248)] === _0x20d7ae(226)) {
+              _0x375c44();
               return;
             }
-            if ((_0x6062c4 == null ? void 0 : _0x6062c4[_0x540d88(517)]) === (Node == null ? void 0 : Node[_0x540d88(516)])) {
-              if (_0x3076d6 === 0) {
-                const _0x24064f = localStorage[_0x540d88(514)](_0x540d88(500));
-                _0x6062c4[_0x540d88(523)] = _0x6062c4[_0x540d88(523)]["replace"](new RegExp("\\b" + _0x24064f + "\\b", "g"), _0x484112);
+            if ((_0x5540df == null ? void 0 : _0x5540df[_0x20d7ae(269)]) === (Node == null ? void 0 : Node[_0x20d7ae(246)])) {
+              if (_0x8e9762 === 0) {
+                const _0xd914fb = localStorage["getItem"](_0x20d7ae(251));
+                _0x5540df["textContent"] = _0x5540df["textContent"][_0x20d7ae(263)](new RegExp("\\b" + _0xd914fb + "\\b", "g"), _0x5618f6);
               } else
-                localStorage[_0x540d88(480)](_0x540d88(500), _0x484112), _0x6062c4["textContent"] = _0x6062c4[_0x540d88(523)][_0x540d88(505)](new RegExp("\\b" + _0x3ee1ab + "\\b", "g"), _0x484112);
+                localStorage[_0x20d7ae(215)](_0x20d7ae(251), _0x5618f6), _0x5540df[_0x20d7ae(266)] = _0x5540df[_0x20d7ae(266)][_0x20d7ae(263)](new RegExp("\\b" + _0x349bf5 + "\\b", "g"), _0x5618f6);
             } else
-              (_0x6062c4 == null ? void 0 : _0x6062c4[_0x540d88(517)]) === (Node == null ? void 0 : Node[_0x540d88(515)]) && Array[_0x540d88(526)](_0x6062c4[_0x540d88(472)])[_0x540d88(504)](_0x2c79f4);
+              (_0x5540df == null ? void 0 : _0x5540df[_0x20d7ae(269)]) === (Node == null ? void 0 : Node[_0x20d7ae(256)]) && Array[_0x20d7ae(255)](_0x5540df[_0x20d7ae(206)])[_0x20d7ae(250)](_0x509ca7);
           }
-          _0x4a53c3[_0x4c56ef(504)]((_0x42628e) => {
-            _0x2c79f4(_0x42628e);
+          _0x1f7618["forEach"]((_0x45a97d) => {
+            _0x509ca7(_0x45a97d);
           });
         });
       };
       setTimeout(() => {
-        const _0x43aa34 = _0x26cd08, _0x221065 = this[_0x43aa34(477)](), _0x18b3f7 = localStorage[_0x43aa34(514)](_0x43aa34(489));
-        let _0x55432d = "";
-        _0x18b3f7 === "true" ? (_0x55432d = this[_0x43aa34(527)], _0x305d74(_0x221065), _0x305d74(_0x221065)) : (_0x55432d = this["disabledDescription"], _0x305d74(), _0x305d74());
-        const _0x4ebee0 = document[_0x43aa34(482)]("wenexus-package-protection-description");
-        Array["from"](_0x4ebee0)[_0x43aa34(504)]((_0x41258e) => _0x41258e[_0x43aa34(511)] = _0x55432d + " ");
+        const _0x2aae44 = _0x2f8a63, _0x35744c = this[_0x2aae44(231)](), _0x1810d1 = localStorage[_0x2aae44(241)]("package-protection-enabled");
+        let _0x158edd = "";
+        _0x1810d1 === _0x2aae44(264) ? (_0x158edd = this[_0x2aae44(268)], _0x21d3f2(_0x35744c), _0x21d3f2(_0x35744c)) : (_0x158edd = this[_0x2aae44(218)], _0x21d3f2(), _0x21d3f2());
+        const _0x318e87 = document[_0x2aae44(238)](_0x2aae44(214));
+        Array[_0x2aae44(255)](_0x318e87)[_0x2aae44(250)]((_0x47c1e8) => _0x47c1e8[_0x2aae44(234)] = _0x158edd + " ");
       }, 500);
     }
-    [_0x4d4e0c(503)]() {
-      const _0x1196f3 = _0x4d4e0c;
-      window[_0x1196f3(520)]["reload"]();
+    [_0xb3383b(253)]() {
+      const _0x81b707 = _0xb3383b;
+      window[_0x81b707(222)][_0x81b707(217)]();
     }
   }
-  function _0x3728(_0x5bfdda, _0x543c06) {
-    const _0x36af58 = _0x36af();
-    return _0x3728 = function(_0x372829, _0x5bb2a5) {
-      _0x372829 = _0x372829 - 110;
-      let _0x7460e6 = _0x36af58[_0x372829];
-      return _0x7460e6;
-    }, _0x3728(_0x5bfdda, _0x543c06);
-  }
-  const _0x41305d = _0x3728;
-  (function(_0x332028, _0x4d14f2) {
-    const _0x377caa = _0x3728, _0x339e4e = _0x332028();
+  const _0x1a52e6 = _0xbcaf;
+  (function(_0x27b61c, _0x4ff845) {
+    const _0x485780 = _0xbcaf, _0xa7a104 = _0x27b61c();
     while (!![]) {
       try {
-        const _0x482ca2 = parseInt(_0x377caa(156)) / 1 * (-parseInt(_0x377caa(170)) / 2) + parseInt(_0x377caa(168)) / 3 * (parseInt(_0x377caa(181)) / 4) + parseInt(_0x377caa(172)) / 5 + parseInt(_0x377caa(130)) / 6 + -parseInt(_0x377caa(132)) / 7 * (-parseInt(_0x377caa(209)) / 8) + -parseInt(_0x377caa(173)) / 9 * (-parseInt(_0x377caa(126)) / 10) + -parseInt(_0x377caa(119)) / 11 * (parseInt(_0x377caa(133)) / 12);
-        if (_0x482ca2 === _0x4d14f2)
+        const _0x5c0c1c = -parseInt(_0x485780(320)) / 1 + -parseInt(_0x485780(305)) / 2 * (-parseInt(_0x485780(355)) / 3) + -parseInt(_0x485780(373)) / 4 * (-parseInt(_0x485780(413)) / 5) + -parseInt(_0x485780(417)) / 6 * (parseInt(_0x485780(353)) / 7) + parseInt(_0x485780(313)) / 8 + parseInt(_0x485780(324)) / 9 + -parseInt(_0x485780(375)) / 10;
+        if (_0x5c0c1c === _0x4ff845)
           break;
         else
-          _0x339e4e["push"](_0x339e4e["shift"]());
-      } catch (_0x30f281) {
-        _0x339e4e["push"](_0x339e4e["shift"]());
+          _0xa7a104["push"](_0xa7a104["shift"]());
+      } catch (_0x178f7a) {
+        _0xa7a104["push"](_0xa7a104["shift"]());
       }
     }
-  })(_0x36af, 534362);
+  })(_0x1e0b, 948231);
+  function _0x1e0b() {
+    const _0x502b36 = ["refreshWidget", "setItem", "switchColor", "complete", "reduce", "toLowerCase", "setVariants", "remove", "weNexusCartApi", "href", "enabled", "performance", "disabled", "click", "some", "sku", "items", "PERCENTAGE", "318820BKmgjS", ".wenexus-package-protection", "disabledDescription", "forEach", "2856KJstlb", "title", "key", "wenexus-shipping-protection", "boundaryParents", "false", "cartMaxPrice", "interactive", "productVariants", "keydown", "protectionFees", "css", "none", "excludedPackageProtectionVariants", "34vZdoPl", "#52c939", "readystatechange", "BASED_ON_CART_VALUE", "packageProtectionProductAndVariants", "addListener", 'button[name="checkout"]', "every", "7857792bpUXmW", "checked", "beforebegin", "/checkout", "FIXED_PRICE", "cartUpdate", "package-protection-enabled", "643772AswfAG", "filter", "afterbegin", "refreshPriceUI", "12517821ksGojq", "insertPosition", "selector", "push", "replaceWith", "Enter", "location", "from", "percentage", "beforeend", "head", "disabledCheckoutButton", "variant_id", "theme_store_id", "FIXED_MULTIPLE", "find", "shouldUse", "pageshow", "flat", "enabledDescription", "toString", "cartMinPrice", "price", "replace", "undefined", "querySelectorAll", "Debutify", "display", "getInsertionPointSelectors", "749rvNyoc", "theme", "208254tkmFSS", "function", "fixedMultiplePlan", "insurancePriceType", "WeNexusQuerySelectorLive", "gid://shopify/ProductVariant/", "inside", "submit", "addEventListener", "cssSelector", "length", "change", "afterend", "map", "reload", "insertAdjacentElement", "preventDefault", "add", "32kGYUQh", "WeNexusShipGuardPackageProtectionSettings", "24203760UbVAoH", "navigation", "position", "true", "persisted", "before", "FIXED", "includes", "style", "enabledCheckoutButton", "Powerhouse-theme", "schema_name", "Shopify", "defaultSetting", "readyState", "No package protection client found", "getItem", "error", "insuranceDisplayButton", "pop"];
+    _0x1e0b = function() {
+      return _0x502b36;
+    };
+    return _0x1e0b();
+  }
+  function _0xbcaf(_0xdf9eb2, _0x33eecb) {
+    const _0x1e0b7c = _0x1e0b();
+    return _0xbcaf = function(_0xbcaf84, _0x43fadd) {
+      _0xbcaf84 = _0xbcaf84 - 292;
+      let _0x271d27 = _0x1e0b7c[_0xbcaf84];
+      return _0x271d27;
+    }, _0xbcaf(_0xdf9eb2, _0x33eecb);
+  }
   async function packageProtection() {
     var _a2, _b2, _c2, _d2;
-    const _0x220b0f = _0x3728, _0x4d82ec = window["WeNexusShipGuardPackageProtectionSettings"], _0x31f46d = [PackageProtectionClientShopifyFreeTheme, PackageProtectionClientEnterpriseTheme, PackageProtectionClientUniversalTheme, PackageProtectionClientUniversalForSubTotalTheme, PackageProtectionClientSwitchTheme, PackageProtectionClientUniversalExponentSubtotalTheme, PackageProtectionClientKingdomTheme, PackageProtectionClientToyoTheme, PackageProtectionClientBrickSpaceTheme, PackageProtectionClientBasic], _0x456476 = _0x31f46d[_0x220b0f(143)]((_0x40b593) => {
-      const _0x1bf28a = _0x220b0f;
-      if (_0x40b593["shouldUse"])
-        return _0x40b593[_0x1bf28a(121)]();
+    const _0xc6408f = _0xbcaf, _0x1ce545 = window[_0xc6408f(374)], _0x2f5073 = [PackageProtectionClientShopifyFreeTheme, PackageProtectionClientEnterpriseTheme, PackageProtectionClientUniversalTheme, PackageProtectionClientUniversalForSubTotalTheme, PackageProtectionClientSwitchTheme, PackageProtectionClientUniversalExponentSubtotalTheme, PackageProtectionClientKingdomTheme, PackageProtectionClientToyoTheme, PackageProtectionClientBrickSpaceTheme, PackageProtectionClientBasic], _0x1e798c = _0x2f5073[_0xc6408f(339)]((_0x36d549) => {
+      const _0x5472ff = _0xc6408f;
+      if (_0x36d549["shouldUse"])
+        return _0x36d549[_0x5472ff(340)]();
       return !![];
     });
-    if (!_0x456476)
-      return console[_0x220b0f(157)](_0x220b0f(174));
-    const _0x40de3a = async () => (await window[_0x220b0f(138)][_0x220b0f(215)]())[_0x220b0f(141)];
-    let _0xc7e62d = await _0x40de3a();
-    const _0x3b9f52 = (_b2 = (_a2 = window[_0x220b0f(146)]) == null ? void 0 : _a2[_0x220b0f(229)]) == null ? void 0 : _b2["map"]((_0x7898c1) => {
-      const _0x35b7e9 = _0x220b0f;
-      return _0x7898c1[_0x35b7e9(192)]["map"]((_0x153d53) => Number(_0x153d53["id"][_0x35b7e9(178)](_0x35b7e9(206), "")));
-    })[_0x220b0f(223)](), _0x4b0492 = async () => {
-      const _0x3dc2fc = _0x220b0f, _0x218f5b = await _0x40de3a(), _0x51270c = [];
-      for (let _0x1544e8 = 0; _0x1544e8 < _0x218f5b[_0x3dc2fc(220)]; _0x1544e8++) {
-        const _0x3be38e = _0x218f5b[_0x1544e8]["variant_id"];
-        !(_0x3b9f52 == null ? void 0 : _0x3b9f52["includes"](_0x3be38e)) && (_0x218f5b[_0x1544e8][_0x3dc2fc(163)] !== "wenexus-shipping-protection" && _0x51270c[_0x3dc2fc(154)](_0x218f5b[_0x1544e8]));
+    if (!_0x1e798c)
+      return console[_0xc6408f(392)](_0xc6408f(390));
+    const _0x260d3b = async () => (await window[_0xc6408f(403)]["get"]())[_0xc6408f(411)];
+    let _0x40687a = await _0x260d3b();
+    const _0x49d01c = (_b2 = (_a2 = window[_0xc6408f(374)]) == null ? void 0 : _a2[_0xc6408f(309)]) == null ? void 0 : _b2["map"]((_0x4e8d06) => {
+      const _0x5b8d68 = _0xc6408f;
+      return _0x4e8d06[_0x5b8d68(304)][_0x5b8d68(368)]((_0x50dff6) => Number(_0x50dff6["id"][_0x5b8d68(347)](_0x5b8d68(360), "")));
+    })[_0xc6408f(342)](), _0x3d9ec5 = async () => {
+      const _0x491c36 = _0xc6408f, _0xce8bce = await _0x260d3b(), _0x1daba0 = [];
+      for (let _0x3f89ef = 0; _0x3f89ef < _0xce8bce[_0x491c36(365)]; _0x3f89ef++) {
+        const _0x159a6b = _0xce8bce[_0x3f89ef][_0x491c36(336)];
+        !(_0x49d01c == null ? void 0 : _0x49d01c["includes"](_0x159a6b)) && (_0xce8bce[_0x3f89ef][_0x491c36(410)] !== "wenexus-shipping-protection" && _0x1daba0[_0x491c36(327)](_0xce8bce[_0x3f89ef]));
       }
-      return _0x51270c;
-    }, _0x42d632 = (_0x4d82ec == null ? void 0 : _0x4d82ec["insuranceDisplayButton"]) ?? ![], _0x4c1d4e = () => {
-      const _0x2629af = _0x220b0f, _0x182270 = localStorage["getItem"](_0x2629af(158));
-      if (_0x182270 === _0x2629af(194))
+      return _0x1daba0;
+    }, _0x50d10f = (_0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(393)]) ?? ![], _0x24fc9d = () => {
+      const _0x23aa01 = _0xc6408f, _0x1dc7f6 = localStorage[_0x23aa01(391)](_0x23aa01(319));
+      if (_0x1dc7f6 === _0x23aa01(296))
         return ![];
-      if (_0x182270 === _0x2629af(123))
+      if (_0x1dc7f6 === _0x23aa01(378))
         return !![];
-      if (_0x182270 === null)
-        return localStorage[_0x2629af(184)](_0x2629af(158), _0x42d632[_0x2629af(128)]()), _0x42d632;
-      return _0x182270 === _0x2629af(123);
-    }, _0x25c8c4 = new PackageProtectionApi(Number(_0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(197)]), _0x4c1d4e()), _0x55788c = new _0x456476(_0x25c8c4);
-    let _0x46399a = [];
-    !(_0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(193)]) ? _0x46399a = ((_c2 = _0x55788c["getInsertionPointSelectors"]) == null ? void 0 : _c2.call(_0x55788c, (_0x4d82ec == null ? void 0 : _0x4d82ec["position"][_0x220b0f(137)]()) ?? _0x220b0f(231), _0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(177)])) || [] : _0x46399a = ((_d2 = _0x55788c[_0x220b0f(225)]) == null ? void 0 : _d2.call(_0x55788c, "before")) || [];
-    const _0x4c9609 = _0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(153)], _0x301ba1 = _0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(212)], _0xb155b = _0x4c9609 == null ? void 0 : _0x4c9609[_0x220b0f(147)]((_0x242121) => {
-      const _0x36e948 = _0x220b0f, _0x486683 = _0x301ba1 == null ? void 0 : _0x301ba1[_0x36e948(143)]((_0x126f9b) => Number(_0x126f9b[_0x36e948(227)]) === Number(_0x242121["protectionFees"]));
-      if (_0x486683)
-        return { "max": Number(_0x242121[_0x36e948(131)]), "min": Number(_0x242121[_0x36e948(201)]), "variantId": Number(_0x486683["id"]), "price": Number(_0x486683["price"]) };
+      if (_0x1dc7f6 === null)
+        return localStorage[_0x23aa01(396)]("package-protection-enabled", _0x50d10f[_0x23aa01(344)]()), _0x50d10f;
+      return _0x1dc7f6 === _0x23aa01(378);
+    }, _0x517ecb = new PackageProtectionApi(Number(_0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(332)]), _0x24fc9d()), _0x1a3c9d = new _0x1e798c(_0x517ecb);
+    let _0x591d3d = [];
+    !(_0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(388)]) ? _0x591d3d = ((_c2 = _0x1a3c9d[_0xc6408f(352)]) == null ? void 0 : _c2.call(_0x1a3c9d, (_0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(377)][_0xc6408f(400)]()) ?? "before", _0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(364)])) || [] : _0x591d3d = ((_d2 = _0x1a3c9d[_0xc6408f(352)]) == null ? void 0 : _d2.call(_0x1a3c9d, _0xc6408f(380))) || [];
+    const _0x8e6a3a = _0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(357)], _0x30014a = _0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(299)], _0x237d77 = _0x8e6a3a == null ? void 0 : _0x8e6a3a["map"]((_0x121ec8) => {
+      const _0x5707c4 = _0xc6408f, _0xf17652 = _0x30014a == null ? void 0 : _0x30014a[_0x5707c4(339)]((_0x3e5c2e) => Number(_0x3e5c2e[_0x5707c4(346)]) === Number(_0x121ec8[_0x5707c4(301)]));
+      if (_0xf17652)
+        return { "max": Number(_0x121ec8[_0x5707c4(297)]), "min": Number(_0x121ec8[_0x5707c4(345)]), "variantId": Number(_0xf17652["id"]), "price": Number(_0xf17652[_0x5707c4(346)]) };
       return null;
-    })[_0x220b0f(183)]((_0x291a87) => _0x291a87 !== null);
-    if ((_0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(191)]) === _0x220b0f(236))
-      _0x25c8c4[_0x220b0f(140)](PackageProtectionType[_0x220b0f(196)], _0xb155b);
+    })[_0xc6408f(321)]((_0x329d85) => _0x329d85 !== null);
+    if ((_0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(358)]) === _0xc6408f(338))
+      _0x517ecb[_0xc6408f(401)](PackageProtectionType[_0xc6408f(308)], _0x237d77);
     else {
-      if ((_0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(191)]) === _0x220b0f(136)) {
-        const _0x324f27 = _0x4d82ec == null ? void 0 : _0x4d82ec["productVariants"][0];
-        _0x25c8c4[_0x220b0f(140)](PackageProtectionType["FIXED"], { "price": Number(_0x324f27["price"]), "variantId": Number(_0x324f27["id"]) });
+      if ((_0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(358)]) === _0xc6408f(317)) {
+        const _0x751e00 = _0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(299)][0];
+        _0x517ecb[_0xc6408f(401)](PackageProtectionType[_0xc6408f(381)], { "price": Number(_0x751e00[_0xc6408f(346)]), "variantId": Number(_0x751e00["id"]) });
       } else
-        (_0x4d82ec == null ? void 0 : _0x4d82ec["insurancePriceType"]) === _0x220b0f(175) && _0x25c8c4[_0x220b0f(140)](PackageProtectionType[_0x220b0f(175)], _0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(212)][_0x220b0f(171)]((_0x47400b, _0x100907) => {
-          const _0x4f32db = _0x220b0f;
-          return _0x47400b[_0x100907[_0x4f32db(227)]] = Number(_0x100907["id"]), _0x47400b;
+        (_0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(358)]) === _0xc6408f(412) && _0x517ecb["setVariants"](PackageProtectionType[_0xc6408f(412)], _0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(299)][_0xc6408f(399)]((_0x49b2fe, _0x55c8ba) => {
+          const _0x42ffdc = _0xc6408f;
+          return _0x49b2fe[_0x55c8ba[_0x42ffdc(346)]] = Number(_0x55c8ba["id"]), _0x49b2fe;
         }, {}));
     }
-    _0x55788c[_0x220b0f(149)] = _0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(179)], _0x55788c["title"] = _0x4d82ec == null ? void 0 : _0x4d82ec["title"], _0x55788c[_0x220b0f(152)] = _0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(152)], _0x55788c["disabledDescription"] = _0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(162)], _0x55788c[_0x220b0f(200)] = _0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(186)], _0x55788c[_0x220b0f(204)] = _0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(204)], _0x55788c[_0x220b0f(226)] = _0x4d82ec == null ? void 0 : _0x4d82ec[_0x220b0f(114)], _0x55788c[_0x220b0f(150)] = _0x4c1d4e();
-    typeof _0x55788c[_0x220b0f(190)] === _0x220b0f(182) && document["head"]["insertAdjacentHTML"](_0x220b0f(202), await _0x55788c[_0x220b0f(190)]({ "accentColor": _0x220b0f(180), "imageWidth": 48 }));
-    const _0x1dc7b7 = () => {
-      const _0x29525d = _0x220b0f;
-      window[_0x29525d(129)](_0x29525d(135), function(_0x285bba) {
-        const _0x501d3d = _0x29525d;
-        var _0x4fc06c = _0x285bba["persisted"] || typeof window[_0x501d3d(216)] != "undefined" && window["performance"][_0x501d3d(221)][_0x501d3d(142)] === 2;
-        _0x4fc06c && window["location"][_0x501d3d(203)]();
+    _0x1a3c9d["thumbnail"] = _0x1ce545 == null ? void 0 : _0x1ce545["iconUrl"], _0x1a3c9d[_0xc6408f(292)] = _0x1ce545 == null ? void 0 : _0x1ce545["title"], _0x1a3c9d[_0xc6408f(343)] = _0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(343)], _0x1a3c9d["disabledDescription"] = _0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(415)], _0x1a3c9d["buttonColor"] = _0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(397)], _0x1a3c9d[_0xc6408f(302)] = _0x1ce545 == null ? void 0 : _0x1ce545[_0xc6408f(302)], _0x1a3c9d["infoPageLink"] = _0x1ce545 == null ? void 0 : _0x1ce545["policyUrl"], _0x1a3c9d["checked"] = _0x24fc9d();
+    typeof _0x1a3c9d["getStyleMarkup"] === _0xc6408f(356) && document[_0xc6408f(334)]["insertAdjacentHTML"](_0xc6408f(333), await _0x1a3c9d["getStyleMarkup"]({ "accentColor": _0xc6408f(306), "imageWidth": 48 }));
+    const _0x28acf2 = () => {
+      const _0x44ae52 = _0xc6408f;
+      window[_0x44ae52(363)](_0x44ae52(341), function(_0x4b677d) {
+        const _0x58a01f = _0x44ae52;
+        var _0x4c40ea = _0x4b677d[_0x58a01f(379)] || typeof window[_0x58a01f(406)] != _0x58a01f(348) && window[_0x58a01f(406)][_0x58a01f(376)]["type"] === 2;
+        _0x4c40ea && window["location"][_0x58a01f(369)]();
       });
-    }, _0x11723c = new window["WeNexusQuerySelectorLive"](_0x220b0f(127));
-    _0x11723c[_0x220b0f(176)](async (_0x552e39) => {
-      const _0x1672ae = _0x220b0f;
-      _0x55788c[_0x1672ae(218)](), _0x55788c["refreshWidget"]();
-      const _0x2e0b9c = await _0x4b0492();
-      let _0x4a3c1a = ![];
-      Array[_0x1672ae(230)](_0x552e39)[_0x1672ae(195)]((_0x42a209) => {
-        const _0x4dcb1f = _0x1672ae;
-        _0x42a209[_0x4dcb1f(129)](_0x4dcb1f(166), (_0x586a3c) => {
-          const _0x6a9be1 = _0x4dcb1f;
-          _0x586a3c["key"] === _0x6a9be1(219) && _0x586a3c[_0x6a9be1(210)]();
+    }, _0x3ef218 = new window[_0xc6408f(359)]("form[action$='/cart']");
+    _0x3ef218[_0xc6408f(310)](async (_0x20f08a) => {
+      const _0x44cf12 = _0xc6408f;
+      _0x1a3c9d["cartBubble"](), _0x1a3c9d[_0x44cf12(395)]();
+      const _0x2192ec = await _0x3d9ec5();
+      let _0x1a861b = ![];
+      Array["from"](_0x20f08a)[_0x44cf12(416)]((_0x352bd2) => {
+        const _0xf039a0 = _0x44cf12;
+        _0x352bd2[_0xf039a0(363)](_0xf039a0(300), (_0x520f07) => {
+          const _0x528b1e = _0xf039a0;
+          _0x520f07[_0x528b1e(293)] === _0x528b1e(329) && _0x520f07[_0x528b1e(371)]();
         });
-        const _0x4e0e1c = document[_0x4dcb1f(169)](_0x4dcb1f(208)), _0x2d8b9e = window[_0x4dcb1f(122)][_0x4dcb1f(115)][_0x4dcb1f(151)];
-        (_0x2d8b9e === _0x4dcb1f(167) || _0x2d8b9e === _0x4dcb1f(235)) && _0x4e0e1c[_0x4dcb1f(195)]((_0xf351a9) => {
-          const _0x52309b = _0x4dcb1f;
-          _0xf351a9[_0x52309b(129)]("click", async (_0x40526f) => {
-            const _0x4d4ca8 = _0x52309b;
-            if (_0x4a3c1a)
+        const _0x541338 = document[_0xf039a0(349)]('button[name="checkout"][type="submit"]'), _0x42dbbe = window[_0xf039a0(387)][_0xf039a0(354)][_0xf039a0(386)];
+        (_0x42dbbe === _0xf039a0(350) || _0x42dbbe === _0xf039a0(385)) && _0x541338[_0xf039a0(416)]((_0x1f6e85) => {
+          const _0x3b1b15 = _0xf039a0;
+          _0x1f6e85[_0x3b1b15(363)](_0x3b1b15(408), async (_0x1ea725) => {
+            const _0x59ca87 = _0x3b1b15;
+            if (_0x1a861b)
               return;
-            _0x40526f[_0x4d4ca8(210)](), _0x55788c[_0x4d4ca8(188)](), _0x4a3c1a = !![], _0x4c1d4e() && _0x2e0b9c[_0x4d4ca8(220)] > 0 ? await _0x25c8c4[_0x4d4ca8(125)]() : await _0x25c8c4[_0x4d4ca8(148)](), setTimeout(() => {
-              const _0x1ef25f = _0x4d4ca8;
-              _0x1dc7b7(), window["location"][_0x1ef25f(117)] = _0x1ef25f(211);
+            _0x1ea725[_0x59ca87(371)](), _0x1a3c9d["disabledCheckoutButton"](), _0x1a861b = !![], _0x24fc9d() && _0x2192ec["length"] > 0 ? await _0x517ecb[_0x59ca87(372)]() : await _0x517ecb["remove"](), setTimeout(() => {
+              const _0x145bcf = _0x59ca87;
+              _0x28acf2(), window[_0x145bcf(330)]["href"] = "/checkout";
             }, 1e3);
           });
-        }), _0x42a209[_0x4dcb1f(129)](_0x4dcb1f(198), async (_0x17554b) => {
-          const _0xe98e94 = _0x4dcb1f;
-          if (_0x4a3c1a)
+        }), _0x352bd2[_0xf039a0(363)](_0xf039a0(362), async (_0x5188e2) => {
+          const _0x51f32a = _0xf039a0;
+          if (_0x1a861b)
             return;
-          _0x17554b[_0xe98e94(210)](), _0x55788c[_0xe98e94(188)](), _0x4a3c1a = !![], _0x4c1d4e() && _0x2e0b9c[_0xe98e94(220)] > 0 ? await _0x25c8c4[_0xe98e94(125)]() : await _0x25c8c4[_0xe98e94(148)](), _0x1dc7b7(), window[_0xe98e94(111)][_0xe98e94(117)] = _0xe98e94(211);
+          _0x5188e2[_0x51f32a(371)](), _0x1a3c9d[_0x51f32a(335)](), _0x1a861b = !![], _0x24fc9d() && _0x2192ec[_0x51f32a(365)] > 0 ? await _0x517ecb["add"]() : await _0x517ecb[_0x51f32a(402)](), _0x28acf2(), window[_0x51f32a(330)][_0x51f32a(404)] = _0x51f32a(316);
         });
       });
-    }), window[_0x220b0f(138)][_0x220b0f(176)](async (_0x9b8aed, _0x2f6cf5, _0x13bdc7) => {
-      const _0x4ef7de = _0x220b0f;
-      _0x55788c[_0x4ef7de(188)](), await _0x13bdc7(), await _0x55788c[_0x4ef7de(233)](), await _0x55788c[_0x4ef7de(165)](), _0x55788c[_0x4ef7de(159)]();
-      const _0xcb1488 = await _0x40de3a();
+    }), window["weNexusCartApi"][_0xc6408f(310)](async (_0x59d8b4, _0x5d80f6, _0x413ae4) => {
+      const _0x547af3 = _0xc6408f;
+      _0x1a3c9d["disabledCheckoutButton"](), await _0x413ae4(), await _0x1a3c9d[_0x547af3(323)](), await _0x1a3c9d[_0x547af3(395)](), _0x1a3c9d[_0x547af3(384)]();
+      const _0x58cfe2 = await _0x260d3b();
       setTimeout(() => {
-        const _0x12355e = _0x4ef7de;
-        if (_0xcb1488[_0x12355e(220)] > 0 && (_0x4d82ec == null ? void 0 : _0x4d82ec[_0x12355e(229)][_0x12355e(220)]) > 0 && window[_0x12355e(122)][_0x12355e(115)][_0x12355e(237)] === 887) {
-          const _0x1c9c0f = _0x4d82ec == null ? void 0 : _0x4d82ec[_0x12355e(229)][_0x12355e(147)]((_0x3bb89e) => _0x3bb89e[_0x12355e(192)][_0x12355e(147)]((_0x488a4c) => Number(_0x488a4c["id"][_0x12355e(217)]("/")[_0x12355e(164)]()))), _0x298145 = _0xcb1488[_0x12355e(161)]((_0x426de6) => _0x1c9c0f["some"]((_0x4e11af) => _0x4e11af[_0x12355e(185)](_0x426de6["id"])));
-          _0x298145 && Array["from"](document[_0x12355e(169)](_0x12355e(213)))[_0x12355e(195)]((_0x334d4f) => _0x334d4f[_0x12355e(205)][_0x12355e(232)] = _0x12355e(187));
+        const _0x49d9ef = _0x547af3;
+        if (_0x58cfe2[_0x49d9ef(365)] > 0 && (_0x1ce545 == null ? void 0 : _0x1ce545[_0x49d9ef(309)][_0x49d9ef(365)]) > 0 && window["Shopify"][_0x49d9ef(354)][_0x49d9ef(337)] === 887) {
+          const _0x5a9627 = _0x1ce545 == null ? void 0 : _0x1ce545[_0x49d9ef(309)][_0x49d9ef(368)]((_0x1a4df2) => _0x1a4df2[_0x49d9ef(304)][_0x49d9ef(368)]((_0x206bed) => Number(_0x206bed["id"]["split"]("/")[_0x49d9ef(394)]()))), _0x4166ba = _0x58cfe2[_0x49d9ef(312)]((_0x22a8fc) => _0x5a9627[_0x49d9ef(409)]((_0x51f370) => _0x51f370[_0x49d9ef(382)](_0x22a8fc["id"])));
+          _0x4166ba && Array[_0x49d9ef(331)](document[_0x49d9ef(349)](_0x49d9ef(414)))["forEach"]((_0x1bb7f0) => _0x1bb7f0[_0x49d9ef(383)][_0x49d9ef(351)] = _0x49d9ef(303));
         }
       }, 100);
     }, !![]);
-    for (const _0x2d00f0 of _0x46399a) {
-      if (_0x2d00f0[_0x220b0f(121)] && !_0x2d00f0[_0x220b0f(121)]())
+    for (const _0x1c5646 of _0x591d3d) {
+      if (_0x1c5646[_0xc6408f(340)] && !_0x1c5646["shouldUse"]())
         continue;
-      const _0x38a5be = new window[_0x220b0f(112)](_0x2d00f0[_0x220b0f(139)], _0x2d00f0[_0x220b0f(110)]);
-      _0x38a5be[_0x220b0f(176)](async (_0x4cc22d) => {
-        const _0x7b0666 = _0x220b0f;
-        _0xc7e62d = await _0x40de3a(), _0x55788c["refreshWidget"]();
-        const _0x20334e = await _0xc7e62d["find"]((_0x40a64b) => _0x40a64b[_0x7b0666(163)] === _0x7b0666(214));
-        (_0x20334e == null ? void 0 : _0x20334e["sku"]) && (await _0x25c8c4[_0x7b0666(148)](), _0x55788c[_0x7b0666(199)]());
-        _0x1dc7b7();
-        const _0x5a44b1 = await _0x4b0492();
-        for (const _0x4fd1a0 of _0x4cc22d) {
-          let _0x2d8bc8 = ![];
-          const { container: _0x21a65d, checkbox: _0x8b2ddf } = await _0x55788c[_0x7b0666(120)](_0x2d00f0, _0x5a44b1[_0x7b0666(220)] > 0 ? _0x4c1d4e() : ![]);
-          if (_0x5a44b1[_0x7b0666(220)] == 0 && _0x2d8bc8 && window[_0x7b0666(122)]["theme"]["theme_store_id"] === 887)
+      const _0x43dda2 = new window[_0xc6408f(359)](_0x1c5646[_0xc6408f(326)], _0x1c5646[_0xc6408f(295)]);
+      _0x43dda2[_0xc6408f(310)](async (_0x484d52) => {
+        const _0x334da9 = _0xc6408f;
+        _0x40687a = await _0x260d3b(), _0x1a3c9d[_0x334da9(395)]();
+        const _0x297096 = await _0x40687a[_0x334da9(339)]((_0x523827) => _0x523827[_0x334da9(410)] === _0x334da9(294));
+        (_0x297096 == null ? void 0 : _0x297096[_0x334da9(410)]) && (await _0x517ecb["remove"](), _0x1a3c9d[_0x334da9(318)]());
+        _0x28acf2();
+        const _0x4f9174 = await _0x3d9ec5();
+        for (const _0x41cdb2 of _0x484d52) {
+          let _0x5ecb6e = ![];
+          const { container: _0x11b729, checkbox: _0x183737 } = await _0x1a3c9d["getCheckboxContainer"](_0x1c5646, _0x4f9174[_0x334da9(365)] > 0 ? _0x24fc9d() : ![]);
+          if (_0x4f9174[_0x334da9(365)] == 0 && _0x5ecb6e && window["Shopify"][_0x334da9(354)][_0x334da9(337)] === 887)
             ;
           else {
-            _0x2d8bc8 = !![];
-            switch (_0x2d00f0[_0x7b0666(144)]) {
-              case _0x7b0666(231):
-                _0x4fd1a0[_0x7b0666(189)](_0x7b0666(155), _0x21a65d);
+            _0x5ecb6e = !![];
+            switch (_0x1c5646[_0x334da9(325)]) {
+              case _0x334da9(380):
+                _0x41cdb2[_0x334da9(370)](_0x334da9(315), _0x11b729);
                 break;
-              case _0x7b0666(160):
-                _0x4fd1a0[_0x7b0666(189)](_0x7b0666(234), _0x21a65d);
+              case "after":
+                _0x41cdb2[_0x334da9(370)](_0x334da9(367), _0x11b729);
                 break;
-              case _0x7b0666(118):
-                _0x4fd1a0[_0x7b0666(189)](_0x7b0666(113), _0x21a65d);
+              case _0x334da9(361):
+                _0x41cdb2["insertAdjacentElement"](_0x334da9(322), _0x11b729);
                 break;
-              case _0x7b0666(178):
-                _0x4fd1a0[_0x7b0666(116)](_0x21a65d);
+              case "replace":
+                _0x41cdb2[_0x334da9(328)](_0x11b729);
                 break;
             }
-            _0x8b2ddf["addEventListener"](_0x7b0666(134), async () => {
-              const _0x57129e = _0x7b0666;
-              localStorage[_0x57129e(184)](_0x57129e(158), _0x8b2ddf[_0x57129e(150)][_0x57129e(128)]()), _0x25c8c4[_0x57129e(228)] = _0x4c1d4e(), _0x8b2ddf[_0x57129e(222)] = !![];
-              const _0x45a4e7 = document[_0x57129e(169)](_0x57129e(145));
-              _0x45a4e7[_0x57129e(195)]((_0xf2db63) => _0xf2db63[_0x57129e(222)] = !![]), _0x55788c[_0x57129e(165)](), _0x8b2ddf[_0x57129e(222)] = ![], _0x45a4e7[_0x57129e(195)]((_0x138195) => _0x138195["disabled"] = ![]);
+            _0x183737[_0x334da9(363)](_0x334da9(366), async () => {
+              const _0x2955f3 = _0x334da9;
+              localStorage[_0x2955f3(396)](_0x2955f3(319), _0x183737[_0x2955f3(314)][_0x2955f3(344)]()), _0x517ecb[_0x2955f3(405)] = _0x24fc9d(), _0x183737[_0x2955f3(407)] = !![];
+              const _0x56c10e = document[_0x2955f3(349)](_0x2955f3(311));
+              _0x56c10e[_0x2955f3(416)]((_0x4ab598) => _0x4ab598["disabled"] = !![]), _0x1a3c9d[_0x2955f3(395)](), _0x183737[_0x2955f3(407)] = ![], _0x56c10e[_0x2955f3(416)]((_0x170ac2) => _0x170ac2["disabled"] = ![]);
             });
           }
         }
       });
     }
   }
-  function _0x36af() {
-    const _0x4afe44 = ["readystatechange", "getInsertionPointSelectors", "infoPageLink", "price", "enabled", "packageProtectionProductAndVariants", "from", "before", "display", "refreshPriceUI", "afterend", "Powerhouse-theme", "FIXED_MULTIPLE", "theme_store_id", "boundaryParents", "location", "WeNexusQuerySelectorLive", "afterbegin", "policyUrl", "theme", "replaceWith", "href", "inside", "3080759GrGmbe", "getCheckboxContainer", "shouldUse", "Shopify", "true", "readyState", "add", "230bBrxiS", "form[action$='/cart']", "toString", "addEventListener", "4246014csBijw", "cartMaxPrice", "3784207ZalXUH", "84MNSCjZ", "change", "pageshow", "FIXED_PRICE", "toLowerCase", "weNexusCartApi", "selector", "setVariants", "items", "type", "find", "insertPosition", 'button[name="checkout"]', "WeNexusShipGuardPackageProtectionSettings", "map", "remove", "thumbnail", "checked", "schema_name", "enabledDescription", "fixedMultiplePlan", "push", "beforebegin", "7547TKFEys", "error", "package-protection-enabled", "enabledCheckoutButton", "after", "every", "disabledDescription", "sku", "pop", "refreshWidget", "keydown", "Debutify", "1941FYAwVb", "querySelectorAll", "94oudaOb", "reduce", "3406895paImRZ", "45774ajVogn", "No package protection client found", "PERCENTAGE", "addListener", "cssSelector", "replace", "iconUrl", "#52c939", "4964XNnRNe", "function", "filter", "setItem", "includes", "switchColor", "none", "disabledCheckoutButton", "insertAdjacentElement", "getStyleMarkup", "insurancePriceType", "excludedPackageProtectionVariants", "defaultSetting", "false", "forEach", "BASED_ON_CART_VALUE", "percentage", "submit", "cartUpdate", "buttonColor", "cartMinPrice", "beforeend", "reload", "css", "style", "gid://shopify/ProductVariant/", "complete", 'button[name="checkout"][type="submit"]', "8bzqJSQ", "preventDefault", "/checkout", "productVariants", ".wenexus-package-protection", "wenexus-shipping-protection", "get", "performance", "split", "cartBubble", "Enter", "length", "navigation", "disabled", "flat"];
-    _0x36af = function() {
-      return _0x4afe44;
-    };
-    return _0x36af();
-  }
-  document[_0x41305d(124)] !== _0x41305d(207) ? document[_0x41305d(129)](_0x41305d(224), () => {
-    const _0x4455d4 = _0x41305d;
-    (document[_0x4455d4(124)] === "interactive" || document[_0x4455d4(124)] === _0x4455d4(207)) && packageProtection();
+  document["readyState"] !== _0x1a52e6(398) ? document[_0x1a52e6(363)](_0x1a52e6(307), () => {
+    const _0x5788df = _0x1a52e6;
+    (document[_0x5788df(389)] === _0x5788df(298) || document[_0x5788df(389)] === "complete") && packageProtection();
   }) : packageProtection();
 })();
  })();
