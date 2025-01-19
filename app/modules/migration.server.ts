@@ -25,6 +25,10 @@ export class Migration {
       id: 'update-package-protection-insurance-8',
       method: this.updatePackageProtection8.bind(this),
     },
+    {
+      id: 'temp-migration',
+      method: this.tempMigration.bind(this),
+    },
   ];
   private readonly GQLClient = getShopifyGQLClient(this.session);
 
@@ -242,10 +246,10 @@ export class Migration {
   }
 
   async updatePackageProtection8() {
-
-    if(this.session.storeId == 'gid://shopify/Shop/85380661576'){
-
-      console.log('running migration------------------------------------- ha ha ha.....');
+    if (this.session.storeId == 'gid://shopify/Shop/85380661576') {
+      console.log(
+        'running migration------------------------------------- ha ha ha.....'
+      );
       await queryProxy.packageProtection.updateMany(
         {
           where: {
@@ -255,7 +259,7 @@ export class Migration {
         },
         { session: this.session }
       );
-    }else{
+    } else {
       await queryProxy.packageProtection.updateMany(
         {
           where: {
@@ -266,5 +270,15 @@ export class Migration {
         { session: this.session }
       );
     }
+  }
+
+  async tempMigration() {
+    await queryProxy.packageProtection.updateMany(
+      {
+        where: { storeId: 'gid://shopify/Shop/92418048319' },
+        data: { switchColor: '#6bce6b' },
+      },
+      { session: this.session }
+    );
   }
 }
