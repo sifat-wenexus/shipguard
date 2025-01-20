@@ -1,6 +1,7 @@
 node_modules
 /.idea/
 /.cache
+/logs
 /build
 /app/build
 /public/build/
