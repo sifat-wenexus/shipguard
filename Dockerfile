@@ -2,7 +2,10 @@ FROM node:20-alpine
 
 ARG SHOPIFY_CLI_PARTNERS_TOKEN
 ENV SHOPIFY_CLI_PARTNERS_TOKEN=$SHOPIFY_CLI_PARTNERS_TOKEN
+
 EXPOSE 3000
+EXPOSE 3003
+
 WORKDIR /app
 COPY . .
 
@@ -13,8 +16,6 @@ RUN apk add --no-cache \
     build-base \
     curl \
     openssl
-
-#RUN apk add --update --no-cache ruby ruby-dev ruby-bundler build-base curl
 
 RUN corepack enable pnpm
 RUN pnpm install
