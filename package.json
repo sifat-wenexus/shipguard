@@ -55,6 +55,7 @@
     "jose": "^5.9.3",
     "liquidjs": "^10.17.0",
     "lodash": "^4.17.21",
+    "moment-timezone": "^0.5.46",
     "node-html-parser": "^6.1.13",
     "nodemailer": "^6.9.15",
     "prisma": "^5.20.0",
