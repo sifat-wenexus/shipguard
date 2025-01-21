@@ -223,14 +223,15 @@ model Job {
   status JobStatus
   name   String
 
-  node            String
-  scheduledAt     DateTime? @db.Timestamptz()
-  maxRetries      Int? // null means infinite
-  tries           Int       @default(0)
-  priority        Int       @default(0)
-  runConcurrently Boolean   @default(false)
-  interval        Int? // in seconds
-  payload         Json?
+  node                  String
+  scheduledAt           DateTime? @db.Timestamptz()
+  scheduledAtTimezoneId String?
+  maxRetries            Int? // null means infinite
+  tries                 Int       @default(0)
+  priority              Int       @default(0)
+  runConcurrently       Boolean   @default(false)
+  interval              Int? // in seconds
+  payload               Json?
 
   executedAt DateTime? @db.Timestamptz()
   createdAt  DateTime  @default(now()) @db.Timestamptz()
@@ -277,11 +278,10 @@ model JobExecution {
   id    Int @id @default(autoincrement())
   jobId Int
 
-  status      JobExecutionStatus
-  currentStep String             @default("execute")
-  prevStep    String?
-  result      Json?
-  progress    Int                @default(0)
+  status   JobExecutionStatus
+  step     String             @default("execute")
+  result   Json?
+  progress Int                @default(0)
 
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @updatedAt @db.Timestamptz()

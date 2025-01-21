@@ -1,5 +1,5 @@
+import { findOfflineSessionByStoreId } from '~/modules/find-offline-session.server';
 import { bulkOperationManager } from '~/modules/bulk-operation-manager.server';
-import { findOfflineSession } from '~/modules/find-offline-session.server';
 import type { Job as BaseJobDetails, JobExecution } from '#prisma-client';
 import type { JobRunner } from '~/modules/job/job-runner.server';
 import { queryProxy } from '~/modules/query/query-proxy';
@@ -17,7 +17,7 @@ export abstract class Job<P = any> {
     public readonly job: JobDetails<P>
   ) {}
 
-  private execution: JobExecution | null = null;
+  private execution: Pick<JobExecution, 'id' | 'status' | 'step' | 'progress' | 'updatedAt'> | null = null;
   private executionCancelled = false;
   private executionPaused = false;
   steps: string[] = ['execute'];
@@ -43,17 +43,7 @@ export abstract class Job<P = any> {
       throw new Error('No storeId provided');
     }
 
-    const store = await prisma.store.findUnique({
-      where: {
-        id: storeId,
-      },
-    });
-
-    if (!store) {
-      throw new Error('Store not found');
-    }
-
-    const session = await findOfflineSession(store.domain);
+    const session = await findOfflineSessionByStoreId(storeId);
 
     if (!session) {
       throw new Error('Session not found');
@@ -62,6 +52,9 @@ export abstract class Job<P = any> {
     const operation = await bulkOperationManager.query(session, query, false);
 
     await queryProxy.job.update({
+      select: {
+        id: true,
+      },
       where: {
         id: this.job.id,
       },
@@ -70,6 +63,8 @@ export abstract class Job<P = any> {
       },
     });
   }
+
+  //
 
   async performShopifyBulkMutation(
     mutation: string,
@@ -80,17 +75,7 @@ export abstract class Job<P = any> {
       throw new Error('No storeId provided');
     }
 
-    const store = await prisma.store.findUnique({
-      where: {
-        id: storeId,
-      },
-    });
-
-    if (!store) {
-      throw new Error('Store not found');
-    }
-
-    const session = await findOfflineSession(store.domain);
+    const session = await findOfflineSessionByStoreId(storeId);
 
     const operation = await bulkOperationManager.mutation(
       session,
@@ -100,6 +85,9 @@ export abstract class Job<P = any> {
     );
 
     await queryProxy.job.update({
+      select: {
+        id: true,
+      },
       where: {
         id: this.job.id,
       },
@@ -119,12 +107,15 @@ export abstract class Job<P = any> {
     const execution = await queryProxy.jobExecution.update({
       where: { id: this.execution?.id },
       data: { progress },
+      select: { id: true, progress: true },
     });
 
     _.merge(this.execution, execution);
   }
 
   async run() {
+    console.log(`[Job] started, id: ${this.job.id}`);
+
     const isRetry = this.job.status === 'FAILED';
     const jobUpdate: Record<string, any> = {
       status: 'RUNNING',
@@ -143,6 +134,13 @@ export abstract class Job<P = any> {
       data: jobUpdate,
       include: {
         Executions: {
+          select: {
+            id: true,
+            status: true,
+            step: true,
+            progress: true,
+            updatedAt: true,
+          },
           take: 1,
           orderBy: {
             id: 'desc',
@@ -159,9 +157,20 @@ export abstract class Job<P = any> {
       // Continue the execution
 
       this.execution = job.Executions[0];
+
+      console.log(
+        `[Job] was already running, resuming from step: ${this.execution.step}, jobId: ${this.job.id}, executionId: ${this.execution.id}`
+      );
     } else if (lastExecution?.status === 'PAUSED') {
       // Continue the paused execution
       this.execution = await queryProxy.jobExecution.update({
+        select: {
+          id: true,
+          status: true,
+          step: true,
+          progress: true,
+          updatedAt: true,
+        },
         where: {
           id: lastExecution.id,
         },
@@ -169,18 +178,32 @@ export abstract class Job<P = any> {
           status: 'RUNNING',
         },
       });
+
+      console.log(
+        `[Job] was paused, resuming from step: ${this.execution.step}, jobId: ${this.job.id}, executionId: ${this.execution.id}`
+      );
     } else if (lastExecution?.status === 'FAILED') {
       // Retry the execution
 
-      this.execution = await queryProxy.jobExecution.create({
+      this.execution = await queryProxy.jobExecution.update({
+        select: {
+          id: true,
+          status: true,
+          step: true,
+          progress: true,
+          updatedAt: true,
+        },
+        where: {
+          id: lastExecution.id,
+        },
         data: {
-          jobId: this.job.id,
           status: 'RUNNING',
-          currentStep: lastExecution.currentStep || this.steps[0],
-          prevStep: lastExecution.prevStep,
-          result: lastExecution.result,
         },
       });
+
+      console.log(
+        `[Job] was failed, retrying from step: ${this.execution.step}, jobId: ${this.job.id}, executionId: ${this.execution.id}`
+      );
     } else {
       // Start a new execution
 
@@ -188,14 +211,22 @@ export abstract class Job<P = any> {
         data: {
           jobId: this.job.id,
           status: 'RUNNING',
-          currentStep: this.steps[0],
+          step: !lastExecution?.step ? this.steps[0] : this.steps[this.steps.indexOf(lastExecution.step) + 1],
         },
       });
+
+      console.log(
+        `[Job] started a new execution, jobId: ${this.job.id}, executionId: ${this.execution.id}`
+      );
     }
 
     let error: any = null;
 
     if (typeof (this as any).beforeRun === 'function') {
+      console.log(
+        `[Job] running beforeRun, jobId: ${this.job.id}, executionId: ${this.execution.id}`
+      );
+
       try {
         await (this as any).beforeRun();
       } catch (e) {
@@ -204,7 +235,7 @@ export abstract class Job<P = any> {
     }
 
     for (
-      let i = this.steps.indexOf(this.execution.currentStep);
+      let i = this.steps.indexOf(this.execution.step);
       i < this.steps.length;
       i++
     ) {
@@ -213,6 +244,10 @@ export abstract class Job<P = any> {
       const currentStep = this.steps[i];
       const nextStep = this.steps[i + 1];
 
+      console.log(
+        `[Job] running step: ${currentStep}, jobId: ${this.job.id}, executionId: ${this.execution.id}`
+      );
+
       try {
         result = await this[currentStep]();
       } catch (e) {
@@ -220,9 +255,11 @@ export abstract class Job<P = any> {
         console.error(e);
       }
 
+      console.log(
+        `[Job] finished step: ${currentStep}, jobId: ${this.job.id}, executionId: ${this.execution.id}`
+      );
+
       const executionUpdate: Record<string, any> = {
-        currentStep: error ? currentStep : nextStep,
-        prevStep: error ? this.execution.prevStep : currentStep,
         status: error
           ? 'FAILED'
           : this.executionCancelled
@@ -230,18 +267,22 @@ export abstract class Job<P = any> {
             : this.executionPaused && nextStep
               ? 'PAUSED'
               : 'SUCCEEDED',
-        result: {
-          ...((this.execution.result as Record<string, any>) || {}),
-          [currentStep]: error
-            ? _.isEmpty(JSON.parse(JSON.stringify(error)))
-              ? { message: error?.message, stack: error?.stack }
-              : error
-            : result,
-        },
+        result: error
+          ? _.isEmpty(JSON.parse(JSON.stringify(error)))
+            ? { message: error?.message, stack: error?.stack }
+            : error
+          : result,
         executedAt: new Date(),
       };
 
       const execution = await queryProxy.jobExecution.update({
+        select: {
+          id: true,
+          status: true,
+          step: true,
+          progress: true,
+          updatedAt: true,
+        },
         where: {
           id: this.execution.id,
         },
@@ -251,6 +292,16 @@ export abstract class Job<P = any> {
 
       if (error || this.executionPaused || this.executionCancelled) {
         break;
+      }
+
+      if (nextStep) {
+        this.execution = await queryProxy.jobExecution.create({
+          data: {
+            jobId: this.job.id,
+            status: 'RUNNING',
+            step: nextStep,
+          },
+        });
       }
     }
 
@@ -277,8 +328,13 @@ export abstract class Job<P = any> {
     })) as any;
     _.merge(this.job, job);
 
+    console.log(
+      `[Job] finished, jobId: ${this.job.id}, status: ${this.job.status}`
+    );
+
     if (!this.executionPaused) {
       await queryProxy.jobExecution.update({
+        select: { id: true },
         where: {
           id: this.execution.id,
         },
@@ -288,6 +344,8 @@ export abstract class Job<P = any> {
       });
 
       if (shouldReschedule) {
+        console.log(`[Job] rescheduling, jobId: ${this.job.id}`);
+
         this.runner.scheduleJob(job, true, this.execution);
       }
     }
@@ -314,6 +372,8 @@ export abstract class Job<P = any> {
     }
 
     if (typeof (this as any).afterRun === 'function') {
+      console.log(`[Job] running afterRun, jobId: ${this.job.id}`);
+
       try {
         await (this as any).afterRun();
       } catch (e) {
@@ -323,15 +383,25 @@ export abstract class Job<P = any> {
   }
 
   async getResult<R>(step: string): Promise<R | null> {
-    if (!this.execution) {
-      return null;
-    }
+    const execution = await prisma.jobExecution.findFirst({
+      where: {
+        jobId: this.job.id,
+        step,
+      },
+      select: {
+        result: true,
+      },
+      orderBy: {
+        id: 'desc',
+      }
+    });
 
-    return this.execution.result?.[step] as R | null;
+    return execution?.result as R | null;
   }
 
   async updatePayload(payload: P) {
     return queryProxy.job.update({
+      select: { id: true },
       where: {
         id: this.job.id,
       },

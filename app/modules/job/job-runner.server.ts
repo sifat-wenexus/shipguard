@@ -1,5 +1,6 @@
 import { bulkOperationManager } from '~/modules/bulk-operation-manager.server';
-import type { BulkOperation, Job, JobExecution, Prisma } from '#prisma-client';
+import { BulkOperation, Job, JobExecution, Prisma } from '#prisma-client';
+import { createDateWithTimezone } from '../utils/date-utils';
 import { bigSetTimeout } from '~/modules/big-set-timeout';
 import { queryProxy } from '~/modules/query/query-proxy';
 import type { JobName } from '~/jobs/index.server';
@@ -13,6 +14,7 @@ export interface JobRunnerOptions {
   interval?: number;
   maxRetries?: number;
   scheduleAt?: Date;
+  scheduledAtTimezoneId?: string;
   dependencies?: number[];
   paused?: boolean;
   concurrent?: boolean;
@@ -36,21 +38,37 @@ class Queue {
   }
 
   get batch() {
+    const _items = Array.from(this.items);
+    const itemsByStoreId: Record<string, Set<Job>> = {};
     const storeIds = new Set<string>();
     const items: Job[] = [];
 
-    for (const item of this.items) {
-      if (item.storeId && storeIds.has(item.storeId)) {
-        continue;
+    for (const item of _items) {
+      const storeId = item.storeId || '';
+
+      storeIds.add(storeId);
+      itemsByStoreId[storeId] = itemsByStoreId[storeId] || new Set();
+      itemsByStoreId[storeId].add(item);
+    }
+
+    while (items.length < this.batchSize) {
+      for (const storeId of storeIds) {
+        const storeItems = itemsByStoreId[storeId];
+
+        if (!storeItems.size) {
+          continue;
+        }
+
+        const item = storeItems.values().next().value;
+        storeItems.delete(item!);
+        items.push(item!);
+
+        if (items.length === this.batchSize) {
+          break;
+        }
       }
 
-      items.push(item);
-
-      if (item.storeId) {
-        storeIds.add(item.storeId);
-      }
-
-      if (items.length === this.batchSize) {
+      if (items.length === this.batchSize || !this.concurrent) {
         break;
       }
     }
@@ -59,12 +77,6 @@ class Queue {
   }
 
   async loadJobs() {
-    if (this.loading) {
-      return;
-    }
-
-    this.loading = true;
-
     const query = await queryProxy.job.findMany({
       where: {
         AND: [
@@ -131,6 +143,10 @@ class Queue {
     });
 
     return new Promise((resolve) => {
+      if (query.totalItems > 0) {
+        console.log(`[Queue] Loading ${query.totalItems} jobs from database`);
+      }
+
       query.addListener(async (jobs) => {
         await Promise.all(jobs.map(this.add.bind(this)));
 
@@ -138,13 +154,15 @@ class Queue {
           query.next();
         } else {
           resolve(undefined);
-          this.loading = false;
+          setTimeout(() => this.loadJobs(), 2000);
         }
       });
     });
   }
 
   async add(job: Job, delay?: number) {
+    console.log(`[Queue] Adding job ${job.id} to the queue`);
+
     if (delay) {
       await queryProxy.job.update({
         where: {
@@ -167,6 +185,8 @@ class Queue {
         });
       }, delay);
 
+      console.log(`[Queue] Job ${job.id} scheduled to run in ${delay}ms`);
+
       return;
     }
 
@@ -177,6 +197,8 @@ class Queue {
   remove(job: Job) {
     this.items.delete(job);
     this.ids.delete(job.id);
+
+    console.log(`[Queue] Removed job ${job.id} from the queue`);
   }
 }
 
@@ -195,11 +217,22 @@ export class JobRunner {
         });
 
         if (!job) {
+          console.log(
+            `[JobRunner] No job found for bulk operation ${operation.id}`
+          );
           return;
         }
 
-        const data = await bulkOperationManager.fetchData(operation);
-        await jobRunner.resumeExecution(job.id, data);
+        console.log(
+          `[JobRunner] Resuming job ${job.id} after bulk operation ${operation.id} finished`
+        );
+
+        try {
+          const data = await bulkOperationManager.fetchData(operation);
+          await jobRunner.resumeExecution(job.id, data);
+        } catch (e) {
+          console.error(e);
+        }
       },
       {
         async: true,
@@ -219,10 +252,19 @@ export class JobRunner {
         });
 
         if (!job) {
+          console.log(
+            `[JobRunner] No job found for bulk operation ${operation.id}`
+          );
+
           return;
         }
 
-        await jobRunner.cancel([job.id]);
+        console.log(
+          `[JobRunner] Failing job ${job.id} after bulk operation ${operation.id} failed`
+        );
+
+        // await jobRunner.cancel([job.id]);
+        await jobRunner.failJobs([job.id]);
       },
       {
         async: true,
@@ -231,33 +273,27 @@ export class JobRunner {
 
     setTimeout(() => {
       this.initialize().then(() => {
-        setInterval(() => this.sequentialQueue.loadJobs(), 3000);
-        setInterval(() => this.concurrentQueue.loadJobs(), 4000);
+        setTimeout(() => this.sequentialQueue.loadJobs(), 1000);
+        setTimeout(() => this.concurrentQueue.loadJobs(), 3000);
 
-        setInterval(() => this.runJobs(this.sequentialQueue), 4000);
-        setInterval(() => this.runJobs(this.concurrentQueue), 5000);
-        setInterval(() => this.watchPausedStuckJobs(), 8000);
-
-        setImmediate(() => this.runJobs(this.sequentialQueue));
-        setImmediate(() => this.runJobs(this.concurrentQueue));
-        setImmediate(() => this.watchPausedStuckJobs());
+        setTimeout(() => this.runJobs(this.sequentialQueue), 6000);
+        setTimeout(() => this.runJobs(this.concurrentQueue), 9000);
+        setTimeout(() => this.watchPausedStuckJobs(), 12000);
       });
     }, 10000);
   }
 
   public readonly concurrentQueue = new Queue(100000, true);
   public readonly sequentialQueue = new Queue(50);
-  private watchingPausedStuckJobs = false;
-  private running = false;
 
   private async runJobs(queue: Queue) {
-    if (queue.size === 0 || this.running) {
-      return;
+    if (queue.size === 0) {
+      return setTimeout(() => this.runJobs(queue), 1000);
     }
 
-    this.running = true;
-
     const { batch } = queue;
+
+    console.log(`[Queue] taking ${batch.length} jobs from the queue.`);
 
     await Promise.allSettled(
       batch.map(async (job) => {
@@ -270,16 +306,10 @@ export class JobRunner {
       })
     );
 
-    this.running = false;
+    setTimeout(() => this.runJobs(queue), 1000);
   }
 
   private async watchPausedStuckJobs() {
-    if (this.watchingPausedStuckJobs) {
-      return;
-    }
-
-    this.watchingPausedStuckJobs = true;
-
     const query = await queryProxy.job.findMany({
       where: {
         status: 'PAUSED',
@@ -295,6 +325,10 @@ export class JobRunner {
       },
     });
 
+    if (query.totalItems > 0) {
+      console.log(`[JobRunner] Watching ${query.totalItems} paused jobs`);
+    }
+
     return new Promise((resolve) => {
       query.addListener(async (jobs) => {
         await Promise.all(
@@ -306,8 +340,13 @@ export class JobRunner {
             }
 
             if (bulkOperation.status === 'COMPLETED') {
-              const data = await bulkOperationManager.fetchData(bulkOperation);
-              await this.resumeExecution(job.id, data);
+              try {
+                const data =
+                  await bulkOperationManager.fetchData(bulkOperation);
+                await this.resumeExecution(job.id, data);
+              } catch (e) {
+                console.error(e);
+              }
             } else {
               await this.cancel([job.id]);
             }
@@ -318,7 +357,7 @@ export class JobRunner {
           query.next();
         } else {
           resolve(undefined);
-          this.watchingPausedStuckJobs = false;
+          setTimeout(() => this.watchPausedStuckJobs(), 5000);
         }
       });
     });
@@ -352,6 +391,10 @@ export class JobRunner {
       .then(
         (query) =>
           new Promise((resolve) => {
+            console.log(
+              `[JobRunner] Loading ${query.totalItems} incomplete jobs`
+            );
+
             query.addListener((jobs) => {
               for (const job of jobs) {
                 const queue = job.runConcurrently
@@ -404,6 +447,10 @@ export class JobRunner {
       .then(
         (query) =>
           new Promise((resolve) => {
+            console.log(
+              `[JobRunner] Loading ${query.totalItems} scheduled jobs`
+            );
+
             query.addListener(async (jobs) => {
               for (const job of jobs) {
                 await this.scheduleJob(job, false, job.Executions[0]);
@@ -422,19 +469,34 @@ export class JobRunner {
   async scheduleJob(
     job: Job,
     ignoreScheduledAt?: boolean,
-    lastExecution?: JobExecution
+    lastExecution?: Pick<JobExecution, 'id' | 'updatedAt'>
   ): Promise<any> {
+    console.log(`[JobRunner] Scheduling job ${job.id}`);
+
     const queue = job.runConcurrently
       ? this.concurrentQueue
       : this.sequentialQueue;
     const { scheduledAt, interval } = job;
 
-    if (scheduledAt && !interval) {
+    const scheduledConvert = scheduledAt
+      ? createDateWithTimezone(
+          scheduledAt,
+          job.scheduledAtTimezoneId ?? 'America/New_York'
+        )
+      : null;
+    const nowTime = createDateWithTimezone(
+      new Date(),
+      job.scheduledAtTimezoneId ?? 'America/New_York'
+    );
+
+    if (scheduledConvert && !interval) {
       // It's a scheduled one-time job
 
-      if (scheduledAt.getTime() < Date.now()) {
+      if (scheduledConvert.getTime() < nowTime.getTime()) {
         // Overdue job, set the status to PENDING so it's picked up immediately
+
         return queryProxy.job.update({
+          select: { id: true },
           where: { id: job.id },
           data: {
             status: 'PENDING',
@@ -444,7 +506,7 @@ export class JobRunner {
 
       // Schedule the job to run at the scheduled time
 
-      return queue.add(job, scheduledAt.getTime() - Date.now());
+      return queue.add(job, scheduledConvert.getTime() - nowTime.getTime());
     }
 
     if (!interval) {
@@ -459,11 +521,12 @@ export class JobRunner {
     const intervalInMs = interval * 1000;
     const isOverdue =
       !lastExecution &&
-      ((scheduledAt && scheduledAt.getTime() < Date.now()) ||
+      ((scheduledConvert && scheduledConvert.getTime() < nowTime.getTime()) ||
         createdAt.getTime() + intervalInMs < Date.now());
 
     if (isOverdue) {
       // Overdue job, set the status to PENDING so it's picked up immediately
+
       return queryProxy.job.update({
         where: { id: job.id },
         data: {
@@ -472,10 +535,10 @@ export class JobRunner {
       });
     }
 
-    if (scheduledAt && !ignoreScheduledAt) {
+    if (scheduledConvert && !ignoreScheduledAt) {
       // The job has a scheduled time, schedule it to run at the scheduled time
 
-      return queue.add(job, scheduledAt.getTime() - Date.now());
+      return queue.add(job, scheduledConvert.getTime() - nowTime.getTime());
     }
 
     // Schedule the job to run at the next interval
@@ -489,18 +552,26 @@ export class JobRunner {
   }
 
   async run(options: JobRunnerOptions) {
-    const { name, interval, maxRetries, scheduleAt, payload } = options;
+    const {
+      name,
+      interval,
+      maxRetries,
+      scheduleAt,
+      payload,
+      scheduledAtTimezoneId,
+    } = options;
 
     const job = await queryProxy.job.create({
       data: {
         status: options.paused
           ? 'PAUSED'
           : scheduleAt
-          ? 'SCHEDULED'
-          : 'PENDING',
+            ? 'SCHEDULED'
+            : 'PENDING',
         node: process.env.NODE_ID!,
         storeId: options.storeId,
         scheduledAt: scheduleAt,
+        scheduledAtTimezoneId: scheduledAtTimezoneId,
         Dependencies: {
           createMany: {
             data: (options.dependencies || []).map((id) => ({
@@ -518,15 +589,26 @@ export class JobRunner {
       },
     });
 
+    console.log(`[JobRunner] Created job ${job.id}`);
+
     if (options.paused) {
       return job;
     }
 
     if (scheduleAt) {
+      const scheduledConvert = createDateWithTimezone(
+        new Date(scheduleAt),
+        job.scheduledAtTimezoneId ?? 'America/New_York'
+      );
+      const nowTime = createDateWithTimezone(
+        new Date(),
+        job.scheduledAtTimezoneId ?? 'America/New_York'
+      );
+
       const queue = job.runConcurrently
         ? this.concurrentQueue
         : this.sequentialQueue;
-      await queue.add(job, scheduleAt.getTime() - Date.now());
+      await queue.add(job, scheduledConvert.getTime() - nowTime.getTime());
     }
 
     return job;
@@ -548,8 +630,16 @@ export class JobRunner {
                 },
               ],
             },
-      include: {
+      select: {
+        id: true,
+        scheduledAt: true,
+        interval: true,
         Executions: {
+          select: {
+            id: true,
+            status: true,
+            step: true,
+          },
           take: 1,
           orderBy: [
             {
@@ -564,22 +654,21 @@ export class JobRunner {
       return job;
     }
 
+    console.log(`[JobRunner] Resuming job ${job.id}`);
+
     const execution = job.Executions?.[0];
 
     if (execution?.status === 'PAUSED') {
-      const step = execution.prevStep;
-
-      if (step) {
-        await queryProxy.jobExecution.update({
-          where: { id: execution.id },
-          data: {
-            result: {
-              ...((execution.result || {}) as any),
-              [step]: payload,
-            },
-          },
-        });
-      }
+      await queryProxy.jobExecution.update({
+        select: {
+          id: true,
+        },
+        where: { id: execution.id },
+        data: {
+          result: payload,
+          status: 'SUCCEEDED',
+        },
+      });
     }
 
     await queryProxy.job.update({
@@ -589,8 +678,8 @@ export class JobRunner {
           job.Executions?.[0].status === 'PAUSED'
             ? 'PENDING'
             : job.scheduledAt || job.interval
-            ? 'SCHEDULED'
-            : 'PENDING',
+              ? 'SCHEDULED'
+              : 'PENDING',
       },
     });
 
@@ -599,6 +688,7 @@ export class JobRunner {
 
   async cancel(filterOrIds: number[] | Prisma.JobWhereInput) {
     const jobs = await prisma.job.findMany({
+      select: { id: true, runConcurrently: true },
       where: {
         AND: [
           Array.isArray(filterOrIds)
@@ -642,10 +732,25 @@ export class JobRunner {
 
       queue.timeouts[job.id]?.();
       delete queue.timeouts[job.id];
-      queue.remove(job);
+
+      for (const _job of queue.items) {
+        if (_job.id === job.id) {
+          queue.remove(_job);
+          break;
+        }
+      }
+    }
+
+    if (Array.isArray(filterOrIds)) {
+      console.log(`[JobRunner] Cancelling jobs ${filterOrIds.join(', ')}`);
+    } else {
+      console.log(
+        `[JobRunner] Cancelling job: ${JSON.stringify(filterOrIds, null, 2)}`
+      );
     }
 
     return await queryProxy.job.updateMany({
+      select: { id: true },
       where: {
         id: {
           in: jobs.map((job) => job.id),
@@ -656,13 +761,82 @@ export class JobRunner {
       },
     });
   }
+
+  async failJobs(filterOrIds: number[] | Prisma.JobWhereInput) {
+    const jobs = await prisma.job.findMany({
+      select: { id: true, runConcurrently : true },
+      where: {
+        AND: [
+          Array.isArray(filterOrIds)
+            ? {
+                id: {
+                  in: filterOrIds,
+                },
+              }
+            : filterOrIds,
+
+          {
+            OR: [
+              {
+                status: {
+                  in: ['SCHEDULED', 'PENDING', 'PAUSED'],
+                },
+              },
+              {
+                status: 'FAILED',
+                AND: [
+                  {
+                    maxRetries: null,
+                  },
+                  {
+                    tries: {
+                      lt: queryProxy.job.fields.maxRetries,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    for (const job of jobs) {
+      const queue = job.runConcurrently
+        ? this.concurrentQueue
+        : this.sequentialQueue;
+
+      queue.timeouts[job.id]?.();
+      delete queue.timeouts[job.id];
+
+      for (const _job of queue.items) {
+        if (_job.id === job.id) {
+          queue.remove(_job);
+          break;
+        }
+      }
+    }
+
+    if (Array.isArray(filterOrIds)) {
+      console.log(`[JobRunner] Failing jobs ${filterOrIds.join(', ')}`);
+    } else {
+      console.log(
+        `[JobRunner] Failing job: ${JSON.stringify(filterOrIds, null, 2)}`
+      );
+    }
+
+    return await queryProxy.job.updateMany({
+      select: { id: true },
+      where: {
+        id: {
+          in: jobs.map((job) => job.id),
+        },
+      },
+      data: {
+        status: 'FAILED',
+      },
+    });
+  }
 }
 
-  export const jobRunner = new JobRunner();
-
-// setTimeout(() => {
-//   jobRunner.run({
-//     name: 'analyze-current-theme',
-//     storeId: 'gid://shopify/Shop/54966026377',
-//   });
-// }, 10000);
+export const jobRunner = new JobRunner();
