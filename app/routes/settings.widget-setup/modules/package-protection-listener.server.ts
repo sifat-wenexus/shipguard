@@ -10,7 +10,6 @@ import { queryProxy } from '~/modules/query/query-proxy';
 import { getConfig } from '~/modules/get-config.server';
 import { prisma } from '~/modules/prisma.server';
 import { sleep } from '~/modules/utils/sleep';
-import type { Product } from '#prisma-client';
 import _ from 'lodash';
 
 interface IShopifyBulkVariantUpdate {
@@ -68,8 +67,7 @@ onDBEvtBuffered(
       const session = payload?.session;
 
       console.log(`Package Protection Listener: Processing store ${storeId}`);
-
-      console.log('session', session, payload);
+      
 
       if (!data || !session) {
         console.log('No data or session');
@@ -385,11 +383,7 @@ onDBEvtBuffered(
               });
             }
 
-            const variantsForDelete = await queryProxy.productVariant.findMany({
-              where: { productId: fixedProductId },
-              pageSize: 100,
-            });
-            const variants = await variantsForDelete.firstPage();
+            const variants=await getVariantWithProductId(fixedProductId!,gql)
             if (variants.length > 0) {
               await shopifyBulkVariantsDelete(
                 fixedProductId!,
@@ -502,40 +496,36 @@ onDBEvtBuffered(
               });
             }
 
-            const prevVariants = await queryProxy.productVariant.findMany({
-              pageSize: 100,
-              where: {
-                productId: { equals: percentageProductId },
-              },
-            });
+
+            const variants=await getVariantWithProductId(percentageProductId!,gql)
+
             const productVariantsUpdate: IShopifyBulkVariantUpdate[] = [];
             const option = await getProductWithOption(
               percentageProductId!,
               gql
             );
-            await prevVariants.firstPage().then((variants) => {
-              let price = +data.minimumFee;
-              for (let i = 0; i < variants.length; i++) {
-                productVariantsUpdate.push({
-                  optionValues: [
-                    {
-                      name: Number(price).toFixed(2),
-                      optionName: option[0].name,
-                    },
-                  ],
-                  id: variants[i].id,
-                  taxable: false,
-                  price: Number(price.toFixed(2)),
-                  inventoryItem: {
-                    sku: PRODUCT_SKU,
-                    requiresShipping: false,
-                    tracked: false,
+            let price = +data.minimumFee;
+            for (let i = 0; i < variants.length; i++) {
+              productVariantsUpdate.push({
+                optionValues: [
+                  {
+                    name: Number(price).toFixed(2),
+                    optionName: option[0].name,
                   },
-                });
+                ],
+                id: variants[i].id,
+                taxable: false,
+                price: Number(price.toFixed(2)),
+                inventoryItem: {
+                  sku: PRODUCT_SKU,
+                  requiresShipping: false,
+                  tracked: false,
+                },
+              });
 
-                price += percentageValueIncreaseBy;
-              }
-            });
+              price += percentageValueIncreaseBy;
+            }
+
 
             //bulk update
             const result = await shopifyBulkVariantUpdate(
@@ -589,36 +579,36 @@ onDBEvtBuffered(
               createPercentProduct.productCreate.product.id;
             if (productId) {
               try {
-                const fixedProduct: Partial<Product> = {
-                  title: 'Package Protection',
-                  productType: 'Warranty',
-                  tags: ['insurancetype-fixed', 'wenexus-insurance'],
-                  handle: 'package-protection-fixed',
-                  vendor: store.name,
-                  status: 'PUBLISHED',
-                  storeId: data.storeId,
-                  id: productId,
-                };
-                const percentageProduct: Partial<Product> = {
-                  title: 'Package Protection',
-                  productType: 'Warranty',
-                  handle: 'package-protection-percentage',
-                  tags: ['insurancetype-percentage', 'wenexus-insurance'],
-                  vendor: store.name,
-                  status: 'DRAFT',
-                  storeId: data.storeId,
-                  id: productGqlDraftId,
-                };
-                await queryProxy.product.upsert({
-                  create: fixedProduct,
-                  update: fixedProduct,
-                  where: { id: productId },
-                });
-                await queryProxy.product.upsert({
-                  create: percentageProduct,
-                  update: percentageProduct,
-                  where: { id: productGqlDraftId },
-                });
+                // const fixedProduct: Partial<Product> = {
+                //   title: 'Package Protection',
+                //   productType: 'Warranty',
+                //   tags: ['insurancetype-fixed', 'wenexus-insurance'],
+                //   handle: 'package-protection-fixed',
+                //   vendor: store.name,
+                //   status: 'PUBLISHED',
+                //   storeId: data.storeId,
+                //   id: productId,
+                // };
+                // const percentageProduct: Partial<Product> = {
+                //   title: 'Package Protection',
+                //   productType: 'Warranty',
+                //   handle: 'package-protection-percentage',
+                //   tags: ['insurancetype-percentage', 'wenexus-insurance'],
+                //   vendor: store.name,
+                //   status: 'DRAFT',
+                //   storeId: data.storeId,
+                //   id: productGqlDraftId,
+                // };
+                // await queryProxy.product.upsert({
+                //   create: fixedProduct,
+                //   update: fixedProduct,
+                //   where: { id: productId },
+                // });
+                // await queryProxy.product.upsert({
+                //   create: percentageProduct,
+                //   update: percentageProduct,
+                //   where: { id: productGqlDraftId },
+                // });
 
                 await queryProxy.packageProtection.update({
                   where: { storeId: data.storeId },
@@ -664,9 +654,7 @@ onDBEvtBuffered(
 
               // product creation done for fixed price - now creating product variants
               await sleep(1500);
-              const variantsForDelete = await prisma.productVariant.findMany({
-                where: { productId: productId },
-              });
+              const variantsForDelete=await getVariantWithProductId(productId,gql)
               const option = await getProductWithOption(productId!, gql);
               if (variantsForDelete.length) {
                 await shopifyBulkVariantsDelete(
@@ -816,36 +804,36 @@ onDBEvtBuffered(
               .product.id;
             if (productId) {
               try {
-                const fixedProduct: Partial<Product> = {
-                  title: 'Package Protection',
-                  productType: 'Warranty',
-                  handle: 'package-protection-fixed',
-                  tags: ['insurancetype-fixed', 'wenexus-insurance'],
-                  vendor: store.name,
-                  status: 'PUBLISHED',
-                  storeId: data.storeId,
-                  id: productGqlDraftId,
-                };
-                const percentageProduct: Partial<Product> = {
-                  title: 'Package Protection',
-                  productType: 'Warranty',
-                  handle: 'package-protection-percentage',
-                  tags: ['insurancetype-percentage', 'wenexus-insurance'],
-                  vendor: store.name,
-                  status: 'DRAFT',
-                  storeId: data.storeId,
-                  id: productId,
-                };
-                await queryProxy.product.upsert({
-                  create: fixedProduct,
-                  update: fixedProduct,
-                  where: { id: productGqlDraftId },
-                });
-                await queryProxy.product.upsert({
-                  create: percentageProduct,
-                  update: percentageProduct,
-                  where: { id: productId },
-                });
+                // const fixedProduct: Partial<Product> = {
+                //   title: 'Package Protection',
+                //   productType: 'Warranty',
+                //   handle: 'package-protection-fixed',
+                //   tags: ['insurancetype-fixed', 'wenexus-insurance'],
+                //   vendor: store.name,
+                //   status: 'PUBLISHED',
+                //   storeId: data.storeId,
+                //   id: productGqlDraftId,
+                // };
+                // const percentageProduct: Partial<Product> = {
+                //   title: 'Package Protection',
+                //   productType: 'Warranty',
+                //   handle: 'package-protection-percentage',
+                //   tags: ['insurancetype-percentage', 'wenexus-insurance'],
+                //   vendor: store.name,
+                //   status: 'DRAFT',
+                //   storeId: data.storeId,
+                //   id: productId,
+                // };
+                // await queryProxy.product.upsert({
+                //   create: fixedProduct,
+                //   update: fixedProduct,
+                //   where: { id: productGqlDraftId },
+                // });
+                // await queryProxy.product.upsert({
+                //   create: percentageProduct,
+                //   update: percentageProduct,
+                //   where: { id: productId },
+                // });
                 await queryProxy.packageProtection.update({
                   where: { storeId: data.storeId },
                   data: {
@@ -1280,4 +1268,37 @@ const productPublish = async (productId: string, gql: GraphqlClient) => {
     },
     tries: 20,
   });
+};
+
+const getVariantWithProductId = async (productId: string,gql:GraphqlClient) => {
+  const result = await gql.query<any>({
+    data: {
+      query: `
+        #graphql
+        query {
+          product(id: "${productId}") {
+            variants(first: 250){
+              nodes {
+                id
+                price
+              }
+            }
+          }
+        }
+      `,
+    },
+  });
+  const productData = result.body.data;
+  if (!productData || !productData.product || !productData.product.variants) {
+    throw new Error('Invalid product data structure.');
+  }
+
+  // Extract variants
+  const variants = productData.product.variants.nodes;
+
+  // Map and return only id and price
+  return variants.map((variant) => ({
+    id: variant.id,
+    price: variant.price,
+  }));
 };

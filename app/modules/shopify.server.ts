@@ -34,12 +34,6 @@ export const shopify = shopifyApp({
   restResources,
   webhooks: {
     APP_UNINSTALLED: webhookHandler,
-    PRODUCTS_UPDATE: webhookHandler,
-    PRODUCTS_CREATE: webhookHandler,
-    PRODUCTS_DELETE: webhookHandler,
-    COLLECTIONS_UPDATE: webhookHandler,
-    COLLECTIONS_CREATE: webhookHandler,
-    COLLECTIONS_DELETE: webhookHandler,
     // BULK_OPERATIONS_FINISH: webhookHandler,
     ORDERS_CREATE: webhookHandler,
     ORDERS_UPDATED: webhookHandler,

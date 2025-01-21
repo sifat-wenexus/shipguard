@@ -2,6 +2,8 @@ import { json, LoaderFunction } from '@remix-run/node';
 import { findOfflineSession } from '~/modules/find-offline-session.server';
 import { prisma } from '~/modules/prisma.server';
 import { PRODUCT_SKU } from '~/routes/settings.widget-setup/modules/package-protection-listener.server';
+import { getShopifyGQLClient } from '~/modules/shopify.server';
+
 export const loader: LoaderFunction = async ({ request }) => {
   const params = new URL(request.url);
   const queryParams = Object.fromEntries(params.searchParams.entries());
@@ -9,6 +11,40 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (!session) {
     throw new Error(`Session not found!`);
   }
+  const gql = getShopifyGQLClient(session);
+  const getVariantWithProductId = async (productId: string) => {
+    const result = await gql.query<any>({
+      data: {
+        query: `
+          #graphql
+          query {
+            product(id: "${productId}") {
+              variants(first: 250){
+                nodes {
+                  id
+                  price
+                }
+              }
+            }
+          }
+        `,
+      },
+    });
+    const productData = result.body.data;
+    if (!productData || !productData.product || !productData.product.variants) {
+      throw new Error('Invalid product data structure.');
+    }
+
+    // Extract variants
+    const variants = productData.product.variants.nodes;
+
+    // Map and return only id and price
+    return variants.map((variant) => ({
+      id: variant.id,
+      price: variant.price,
+    }));
+  };
+
   const data = await prisma.packageProtection.findFirst({
     where: { storeId: session.storeId },
     include: {
@@ -47,12 +83,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   let variantId: string = '';
   let variantPrice: any = 0.0;
   if (data?.insurancePriceType === 'FIXED_PRICE') {
-    const variant = await prisma.product.findFirst({
-      where: { id: data.fixedProductId! },
-      include: { Variants: { select: { id: true, price: true } } },
-    });
-    variantId = variant?.Variants[0].id!;
-    variantPrice = variant?.Variants[0].price!;
+    const variants = await getVariantWithProductId(data.fixedProductId!);
+    variantId = variants[0].id!;
+    variantPrice = variants[0].price!;
   }
   if (data?.insurancePriceType === 'FIXED_MULTIPLE') {
     function getProtectionFees(totalAmount) {
@@ -72,37 +105,28 @@ export const loader: LoaderFunction = async ({ request }) => {
         return rule.protectionFees;
       } else {
         return null;
-        // return Math.max(
-        //   ...fixedMultiplePlanArray?.map((rule) =>
-        //     parseFloat(rule.protectionFees)
-        //   )
-        // );
+
       }
     }
+
     const fixedMultipleAmount = getProtectionFees(totalAmount);
     if (fixedMultipleAmount) {
-      const variant = await prisma.product.findFirst({
-        where: { id: data?.fixedProductId! },
-        include: {
-          Variants: {
-            where: { price: { equals: fixedMultipleAmount } },
-            select: { id: true, price: true },
-          },
-        },
-      });
-      variantId = variant?.Variants[0].id!;
-      variantPrice = fixedMultipleAmount;
+      const variants = await getVariantWithProductId(data.fixedProductId!);
+      const variant=variants.find(
+        (variant) => Number(variant.price) === Number(fixedMultipleAmount)
+      )
+
+      variantId = variant?.id;
+      variantPrice = variant?.price;
     } else {
       hide = true;
     }
   }
   let v: any = [];
   if (data?.insurancePriceType === 'PERCENTAGE') {
-    const productAndVariants = await prisma.product.findFirst({
-      where: { id: data.percentageProductId! },
-      include: { Variants: { select: { id: true, price: true } } },
-    });
-    const variants = productAndVariants?.Variants.sort(
+
+    const variants1 = await getVariantWithProductId(data.percentageProductId!);
+    const variants = variants1.sort(
       (a: any, b: any) => a.price - b.price
     );
     const percentValue = (Number(totalAmount) * data.percentage) / 100;
@@ -116,8 +140,8 @@ export const loader: LoaderFunction = async ({ request }) => {
         variantPrice = variants[variants.length - 1].price!;
       } else {
         const variant = variants?.find((v) => Number(v.price) >= percentValue);
-        variantId = variant?.id!;
-        variantPrice = variant?.price!;
+        variantId = variant?.id;
+        variantPrice = variant?.price;
         v = variant;
       }
     }
