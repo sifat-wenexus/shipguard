@@ -6,8 +6,12 @@ import type { Session } from '~/shopify-api/lib';
 import { prisma } from '~/modules/prisma.server';
 
 async function init() {
+  console.log(`[Init] Process started`);
+
+  const start = Date.now();
+
   const app = await prisma.app.findFirst();
- // jobRunner.run({name: 'send-email',storeId:'gid://shopify/Shop/55079829551',payload:{uninstalled:false}});
+  // jobRunner.run({name: 'send-email',storeId:'gid://shopify/Shop/55079829551',payload:{uninstalled:false}});
   if (app?.url !== process.env.APP_URL) {
     const query = await queryProxy.store.findMany({
       select: { domain: true },
@@ -51,13 +55,17 @@ async function init() {
       for (const { domain } of data) {
         let session: Session;
 
+        console.log(`[Init] Processing ${domain}`);
+
         try {
           session = await findOfflineSession(domain);
         } catch (e) {
+          console.log(`[Init] Could not find session for ${domain}`);
           continue;
         }
 
         try {
+          console.log(`[Init] Attempting migration for ${domain}`);
           await Migration.attempt(session);
         } catch (e) {
           console.error(e);
@@ -143,6 +151,8 @@ async function init() {
 
       if (query.hasNext) {
         query.next();
+      } else {
+        console.log(`[Init] Done in ${(Date.now() - start) / 1000} seconds`);
       }
     });
   } catch (e) {

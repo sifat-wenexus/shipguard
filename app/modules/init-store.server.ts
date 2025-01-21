@@ -15,10 +15,10 @@ export async function upsertStore(session: Session, afterAuth = false) {
     if (!hasStore) {
       // send mail for app first install
       jobRunner.run({name: 'send-email',storeId:session.storeId,payload:{uninstalled:false}});
-      console.log(`Initializing store ${session.shop}`);
+      console.log(`[InitStore] Initializing store ${session.shop}`);
 
     } else {
-      console.log(`Updating store ${session.shop}`);
+      console.log(`[InitStore] Updating store ${session.shop}`);
     }
 
     const client = getShopifyGQLClient(session);
@@ -132,11 +132,11 @@ export async function upsertStore(session: Session, afterAuth = false) {
 
     if (!hasStore) {
       emitter.emit('store.init', store);
-      console.log(`Initialized store ${session.shop}`);
+      console.log(`[InitStore] Initialized store ${session.shop}`);
     }
 
     return store;
   } catch (err) {
-    console.error('store event error:', err);
+    console.error(err);
   }
 }
