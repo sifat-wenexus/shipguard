@@ -291,7 +291,7 @@ export class WebhookManager {
         try {
           session = await findOfflineSessionByStoreId(webhook.storeId);
         } catch (e) {
-          return console.error(e);
+          console.error(e);
         }
       }
 
