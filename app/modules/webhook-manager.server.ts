@@ -51,7 +51,7 @@ export class WebhookManager {
         },
       });
 
-      console.log(`Found ${webhooks.length} webhooks to process`);
+      console.log(`[WebhookManager] Found ${webhooks.length} webhooks to process`);
 
       const webhooksByStores = _.groupBy(webhooks, 'storeId');
       const storesById = _.keyBy(stores, 'id');
@@ -70,7 +70,7 @@ export class WebhookManager {
 
         for (const topic in webhooksByTopics) {
           if (this.lazyTopics.hasOwnProperty(topic)) {
-            console.log(`Running lazy topic: ${topic}`);
+            console.log(`[WebhookManager] Running lazy topic: ${topic}`);
             this.lazyTopics[topic].runJob(webhooksByTopics[topic]);
 
             await prisma.webhook.updateMany({
@@ -111,7 +111,7 @@ export class WebhookManager {
 
       for (const storeId in this.stores) {
         this.stores[storeId].readyToRun = true;
-        console.log(`Store ready to process webhooks: ${storeId}`);
+        console.log(`[WebhookManager] Store ready to process: ${storeId}`);
       }
     });
 
@@ -133,7 +133,7 @@ export class WebhookManager {
 
     emitter.on('store.ready', (store: Store) => {
       this.stores[store.id].readyToRun = true;
-      console.log(`Store ready to process webhooks: ${store.id}`);
+      console.log(`[WebhookManager] Store ready to process: ${store.id}`);
 
       while (this.stores[store.id].pendingWebhooks.size > 0) {
         const pendingWebhooks = Array.from(
@@ -199,10 +199,10 @@ export class WebhookManager {
       },
     });
 
-    console.log(`New webhook: ${ctx.topic}, ${ctx.webhookId}`);
+    console.log(`[WebhookManager] Webhook: ${ctx.topic}, ${ctx.webhookId}`);
 
     if (webhook) {
-      console.log(`Webhook already exists: ${ctx.topic}, ${ctx.webhookId}`);
+      console.log(`[WebhookManager] Webhook already exists: ${ctx.topic}, ${ctx.webhookId}`);
 
       return new Response('OK', { status: 200 });
     }
@@ -228,7 +228,7 @@ export class WebhookManager {
     }
 
     if (!storeId) {
-      console.log(`Unauthorized: ${ctx.topic}, ${ctx.webhookId}`);
+      console.log(`[WebhookManager] Unauthorized: ${ctx.topic}, ${ctx.webhookId}`);
       return new Response('Unauthorized', { status: 401 });
     }
 
@@ -251,10 +251,10 @@ export class WebhookManager {
       update: data,
     });
 
-    console.log(`Created webhook: ${ctx.topic}, ${ctx.webhookId}`);
+    console.log(`[WebhookManager] Created webhook: ${ctx.topic}, ${ctx.webhookId}`);
 
     setImmediate(async () => {
-      console.log(`Handling webhook: ${ctx.topic}, ${ctx.webhookId}`);
+      console.log(`[WebhookManager] Handling webhook: ${ctx.topic}, ${ctx.webhookId}`);
       await this.handleWebhook(webhook, true, true, ctx.session);
     });
 
@@ -270,12 +270,12 @@ export class WebhookManager {
     const storeInfo = this.stores[webhook.storeId];
 
     if (!storeInfo) {
-      console.log(`Store not found: ${webhook.topic}, ${webhook.id}`);
+      console.log(`[WebhookManager] Store not found: ${webhook.topic}, ${webhook.id}`);
       return;
     }
 
     if (checkReady && !storeInfo.readyToRun) {
-      console.log(`Store not ready to run: ${webhook.topic}, ${webhook.id}`);
+      console.log(`[WebhookManager] Store not ready to run: ${webhook.topic}, ${webhook.id}`);
       return storeInfo.pendingWebhooks.add(webhook);
     }
 
@@ -283,20 +283,20 @@ export class WebhookManager {
       !this.lazyTopics.hasOwnProperty(webhook.topic) ||
       storeInfo.lazyReferences.size === 0
     ) {
-      console.log(`No lazy topic: ${webhook.topic}, ${webhook.id}`);
+      console.log(`[WebhookManager] No lazy topic: ${webhook.topic}, ${webhook.id}`);
 
       if (!session) {
-        console.log(`Fetching session: ${webhook.topic}, ${webhook.id}`);
+        console.log(`[WebhookManager] Fetching session: ${webhook.topic}, ${webhook.id}`);
 
         try {
           session = await findOfflineSessionByStoreId(webhook.storeId);
         } catch (e) {
-          console.error(e);
+          console.log(`[WebhookManager] Session not found: ${webhook.topic}, ${webhook.id}`);
         }
       }
 
       try {
-        console.log(`Emitting webhook: ${webhook.topic}, ${webhook.id}`);
+        console.log(`[WebhookManager] Emitting webhook: ${webhook.topic}, ${webhook.id}`);
         emitter.emit(webhook.topic, {
           storeId: webhook.storeId,
           shop: session?.shop,
@@ -311,7 +311,7 @@ export class WebhookManager {
       }
 
       if (update) {
-        console.log(`Updating webhook: ${webhook.topic}, ${webhook.id}`);
+        console.log(`[WebhookManager] Updating webhook: ${webhook.topic}, ${webhook.id}`);
 
         await prisma.webhook.update({
           where: {

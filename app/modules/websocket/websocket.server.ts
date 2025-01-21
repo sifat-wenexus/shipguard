@@ -59,7 +59,7 @@ export class WebsocketServer {
     .listen(Number(process.env.WEBSOCKET_PORT ?? 3003), (listenSocket) => {
       if (listenSocket) {
         console.log(
-          'Websocket server listening on port',
+          '[WebsocketServer] listening on port',
           process.env.WEBSOCKET_PORT ?? 3003
         );
       } else {
