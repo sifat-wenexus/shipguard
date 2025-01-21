@@ -50,14 +50,14 @@ export class Migration {
       return;
     }
 
-    console.log(`Running migrations for ${this.session.shop}`);
+    console.log(`[Migration] Running for ${this.session.shop}`);
 
     const lastMigration = _.last(this.order);
 
     if (lastMigrationId && lastMigrationId === lastMigration?.id) {
       // No migrations to run or all migrations have been run
 
-      return console.log(`No migrations to run for ${this.session.shop}`);
+      return console.log(`[Migration] Nothing to run for ${this.session.shop}`);
     }
 
     const store = await queryProxy.store.update({
@@ -84,7 +84,7 @@ export class Migration {
 
           for (const migration of this.order.slice(lastIndex + 1)) {
             console.log(
-              `Running migration ${migration.id} for ${this.session.shop}`
+              `[Migration] Running ${migration.id} for ${this.session.shop}`
             );
 
             try {
@@ -122,7 +122,7 @@ export class Migration {
 
       emitter.emit('store.ready', store);
 
-      console.log(`Finished migrations for ${this.session.shop}`);
+      console.log(`[Migration] Finished ${this.session.shop}`);
     }
   }
 
