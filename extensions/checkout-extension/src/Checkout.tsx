@@ -32,7 +32,7 @@ const Extension = () => {
   const [loading, setLoading] = useState(false);
   // console.log(hide);
   const baseUrl = 'https://shipguard.app';
-  // const baseUrl = 'https://jefferson-developed-coast-livecam.trycloudflare.com';
+  // const baseUrl = 'https://sponsor-portions-evident-beverage.trycloudflare.com';
 
 
   const totalAmount = cartLine

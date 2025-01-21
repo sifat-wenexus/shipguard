@@ -1,5 +1,4 @@
 import type { WebhookListenerArgs } from '~/types/webhook-listener-args';
-import { jobRunner } from '~/modules/job/job-runner.server';
 import { emitter } from '~/modules/emitter.server';
 import { shopify } from '~/modules/shopify.server';
 import type { Store, Webhook } from '#prisma-client';
@@ -155,30 +154,7 @@ export class WebhookManager {
   }
 
   private lazyTopics: LazyTopics = {
-    COLLECTIONS_UPDATE: {
-      job: 'import-products',
-      runJob: (webhooks) =>
-        jobRunner.run({
-          name: 'import-products',
-          storeId: webhooks[0].storeId,
-          maxRetries: 5,
-          payload: {
-            collectionIds: webhooks.map((webhook) => webhook.objectId),
-          },
-        }),
-    },
-    PRODUCTS_UPDATE: {
-      job: 'import-products',
-      runJob: (webhooks) =>
-        jobRunner.run({
-          name: 'import-products',
-          storeId: webhooks[0].storeId,
-          maxRetries: 5,
-          payload: {
-            productIds: webhooks.map((webhook) => webhook.objectId),
-          },
-        }),
-    },
+
   };
   private stores: StoreInfo = {};
 

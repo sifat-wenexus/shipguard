@@ -14,21 +14,14 @@ export class Migration {
       method: this.initialization.bind(this),
     },
     {
-      id: 'sync-collections-and-products',
-      method: this.syncCollectionsAndProducts.bind(this),
-    },
-    {
       id: 'import-orders',
       method: this.importOrders.bind(this),
     },
-    {
-      id: 'update-package-protection-insurance-8',
-      method: this.updatePackageProtection8.bind(this),
-    },
-    {
-      id: 'temp-migration',
-      method: this.tempMigration.bind(this),
-    },
+    // {
+    //   id: 'update-package-protection-insurance-8',
+    //   method: this.updatePackageProtection8.bind(this),
+    // },
+
   ];
   private readonly GQLClient = getShopifyGQLClient(this.session);
 
@@ -237,48 +230,34 @@ export class Migration {
     });
   }
 
-  syncCollectionsAndProducts() {
-    return jobRunner.run({
-      name: 'import-products',
-      storeId: this.session.storeId,
-      maxRetries: 5,
-    });
-  }
 
-  async updatePackageProtection8() {
-    if (this.session.storeId == 'gid://shopify/Shop/85380661576') {
-      console.log(
-        'running migration------------------------------------- ha ha ha.....'
-      );
-      await queryProxy.packageProtection.updateMany(
-        {
-          where: {
-            insuranceDisplayButton: false,
-          },
-          data: { insuranceDisplayButton: true },
-        },
-        { session: this.session }
-      );
-    } else {
-      await queryProxy.packageProtection.updateMany(
-        {
-          where: {
-            insuranceDisplayButton: true,
-          },
-          data: { insuranceDisplayButton: false },
-        },
-        { session: this.session }
-      );
-    }
-  }
 
-  async tempMigration() {
-    await queryProxy.packageProtection.updateMany(
-      {
-        where: { storeId: 'gid://shopify/Shop/92418048319' },
-        data: { switchColor: '#6bce6b' },
-      },
-      { session: this.session }
-    );
-  }
+  // async updatePackageProtection8() {
+  //   if (this.session.storeId == 'gid://shopify/Shop/85380661576') {
+  //     console.log(
+  //       'running migration------------------------------------- ha ha ha.....'
+  //     );
+  //     await queryProxy.packageProtection.updateMany(
+  //       {
+  //         where: {
+  //           insuranceDisplayButton: false,
+  //         },
+  //         data: { insuranceDisplayButton: true },
+  //       },
+  //       { session: this.session }
+  //     );
+  //   } else {
+  //     await queryProxy.packageProtection.updateMany(
+  //       {
+  //         where: {
+  //           insuranceDisplayButton: true,
+  //         },
+  //         data: { insuranceDisplayButton: false },
+  //       },
+  //       { session: this.session }
+  //     );
+  //   }
+  // }
+
+
 }
