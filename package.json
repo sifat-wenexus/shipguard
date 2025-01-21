@@ -5,6 +5,7 @@
   "scripts": {
     "build": "NODE_ENV=production remix build --sourcemap",
     "dev": "shopify app dev",
+    "dev:prod": "NODE_ID=0 remix dev",
     "config:link": "shopify app config link",
     "config:push": "shopify app config push",
     "generate": "shopify app generate",

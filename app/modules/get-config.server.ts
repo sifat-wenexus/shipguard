@@ -1,4 +1,3 @@
-import * as process from 'node:process';
 import toml from '@iarna/toml';
 import path from 'path';
 import fs from 'fs';
@@ -8,7 +7,6 @@ let _config: null | {
   apiSecretKey: string;
   scopes: string[];
   appUrl: URL;
-  name: string;
 } = null;
 
 export function getConfig() {
@@ -16,29 +14,30 @@ export function getConfig() {
     return _config;
   }
 
-  const shopifyAppTomlFile =
-    process.env.NODE_ENV === 'production'
-      ? 'shopify.app.prod.toml'
-      : 'shopify.app.toml';
+  let shopifyAppToml: Record<string, any> | null = null;
 
-  console.log('Loading Shopify app config from ', shopifyAppTomlFile);
+  if (process.env.NODE_ENV !== 'production') {
+    const files = ['../shopify.app.toml', '../shopify.app.prod.toml'];
 
-  const shopifyAppToml = toml.parse(
-    fs.readFileSync(path.resolve(__dirname, '../', shopifyAppTomlFile), 'utf-8')
-  ) as Record<string, any>;
+    for (const file of files) {
+      try {
+        const content = fs.readFileSync(path.resolve(__dirname, file), 'utf8');
+        shopifyAppToml = toml.parse(content) as Record<string, any>;
+        break;
+      } catch (e) {
 
-  process.env.APP_URL = shopifyAppToml.application_url;
+      }
+    }
+  }
 
   _config = {
-    apiKey: shopifyAppToml.client_id || process.env.SHOPIFY_API_KEY!,
+    apiKey: process.env.SHOPIFY_API_KEY!,
     apiSecretKey: process.env.SHOPIFY_API_SECRET || '',
     scopes:
-      shopifyAppToml.access_scopes?.scopes?.split(',') ??
-      process.env.SCOPES?.split(','),
+      shopifyAppToml?.scopes?.split(',') ?? process.env.SCOPES?.split(','),
     appUrl: new URL(
-      shopifyAppToml.application_url ?? process.env.SHOPIFY_APP_URL ?? ''
+      shopifyAppToml?.application_url ?? process.env.SHOPIFY_APP_URL ?? ''
     ),
-    name: shopifyAppToml.name || '',
   };
 
   return _config;
