@@ -15,6 +15,7 @@ module.exports = {
       node_args: ['--inspect=127.0.0.1:7000'],
       log_file: './logs/combined.log',
       error_file: './logs/err.log',
+      max_memory_restart: '1G',
     },
   ],
 };
