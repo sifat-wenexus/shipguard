@@ -28,6 +28,15 @@ ALTER TABLE "_CollectionToProduct" DROP CONSTRAINT "_CollectionToProduct_A_fkey"
 -- DropForeignKey
 ALTER TABLE "_CollectionToProduct" DROP CONSTRAINT "_CollectionToProduct_B_fkey";
 
+-- DropView
+DROP VIEW "ProductTag";
+
+-- DropView
+DROP VIEW "ProductType";
+
+-- DropView
+DROP VIEW "ProductVendor";
+
 -- DropTable
 DROP TABLE "_CollectionToProduct";
 
