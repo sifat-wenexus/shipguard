@@ -4,7 +4,7 @@ const fs = require('fs');
 module.exports = {
   apps: [
     {
-      name: 'Sales & Discounts',
+      name: 'ShipGuard',
       exec_mode: 'fork',
       increment_var: 'PORT',
       script: './node_modules/@remix-run/serve/dist/cli.js',
